@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using NLog;
 
 namespace CoCo
 {
@@ -29,6 +30,19 @@ namespace CoCo
 
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
+
+#if DEBUG
+
+        // NOTE: Logger is thread-safe
+        private static readonly Logger _logger;
+
+        static EditorClassifier()
+        {
+            NLog.Initialize();
+            _logger = LogManager.GetLogger(nameof(_logger));
+        }
+
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
@@ -72,6 +86,9 @@ namespace CoCo
         /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
+#if DEBUG
+            _logger.Info("Handle span that start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
+#endif
             var result = new List<ClassificationSpan>();
 
             // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
