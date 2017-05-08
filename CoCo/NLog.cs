@@ -16,7 +16,6 @@ namespace CoCo
                 Directory.CreateDirectory(appDataLocal);
             }
 
-            LoggingConfiguration config = new LoggingConfiguration();
             FileTarget fileTarget = new FileTarget("File");
             FileTarget fileDebugTarget = new FileTarget("File debug");
 
@@ -26,6 +25,7 @@ namespace CoCo
             fileDebugTarget.Layout = "${date}___${level}___${message}${newline}${stacktrace}";
             fileDebugTarget.FileName = $"{appDataLocal}\\file_debug.log";
 
+            LoggingConfiguration config = new LoggingConfiguration();
             config.AddTarget(fileTarget);
             config.AddTarget(fileDebugTarget);
             config.AddRule(LogLevel.Debug, LogLevel.Debug, fileDebugTarget, "*");

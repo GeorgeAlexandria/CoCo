@@ -23,11 +23,7 @@ namespace CoCo
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
-        /// <summary>
-        /// Classification type.
-        /// </summary>
         private readonly IClassificationType _localFieldType;
-
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
 
@@ -100,13 +96,11 @@ namespace CoCo
             SemanticModel semanticModel = document.GetSemanticModelAsync().Result;
             SyntaxTree syntaxTree = semanticModel.SyntaxTree;
 
-            var test = span.GetText();
-            TextSpan tSpan = new TextSpan(span.Start.Position, span.Length);
-            var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, tSpan, workspace)
+            TextSpan textSpan = new TextSpan(span.Start.Position, span.Length);
+            var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
                 .Where(item => item.ClassificationType == "identifier");
 
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
-
             foreach (var item in classifiedSpans)
             {
                 SyntaxNode node = unitCompilation.FindNode(item.TextSpan).SpecificHandle();
@@ -142,15 +136,15 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Local:
-                        result.Add(new ClassificationSpan(new SnapshotSpan(span.Snapshot, item.TextSpan.Start, item.TextSpan.Length), _localFieldType));
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localFieldType));
                         break;
 
                     case SymbolKind.Namespace:
-                        result.Add(new ClassificationSpan(new SnapshotSpan(span.Snapshot, item.TextSpan.Start, item.TextSpan.Length), _namespaceType));
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _namespaceType));
                         break;
 
                     case SymbolKind.Parameter:
-                        result.Add(new ClassificationSpan(new SnapshotSpan(span.Snapshot, item.TextSpan.Start, item.TextSpan.Length), _parameterType));
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
                         break;
 
                     default:
@@ -160,6 +154,9 @@ namespace CoCo
 
             return result;
         }
+
+        private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
+            new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
 
         #endregion
     }
