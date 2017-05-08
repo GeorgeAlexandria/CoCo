@@ -15,13 +15,9 @@ namespace CoCo
     /// </summary>
     internal static class EditorClassifierClassificationDefinition
     {
-        // This disables "The field is never used" compiler's warning. Justification: the field is
-        // used by MEF.
+        // Disable "The field is never used" compiler's warning. The fields are used by MEF.
 #pragma warning disable 169
 
-        /// <summary>
-        /// Defines the "EditorClassifier" classification type.
-        /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.NamespaceName)]
         private static ClassificationTypeDefinition namespaceDefinition;

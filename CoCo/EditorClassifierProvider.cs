@@ -15,11 +15,10 @@ namespace CoCo
     /// Classifier provider. It adds the classifier to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
-    [ContentType("text")] // This classifier applies to all text files.
+    [ContentType("text")]
     internal class EditorClassifierProvider : IClassifierProvider
     {
-        // Disable "Field is never assigned to..." compiler's warning. Justification: the field is
-        // assigned by MEF.
+        // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
 
         /// <summary>
@@ -30,8 +29,6 @@ namespace CoCo
         private IClassificationTypeRegistryService classificationRegistry;
 
 #pragma warning restore 649
-
-        #region IClassifierProvider
 
         /// <summary>
         /// Gets a classifier for the given text buffer.
@@ -44,7 +41,5 @@ namespace CoCo
         {
             return buffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry));
         }
-
-        #endregion
     }
 }

@@ -22,7 +22,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.LocalFieldName)]
     [Name(Names.LocalFieldName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)] // Set the priority to be after the default classifiers
+    [Order(Before = Priority.Default)]
     internal sealed class LocalFieldFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -38,7 +38,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.ParameterName)]
     [Name(Names.ParameterName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)] // Set the priority to be after the default classifiers
+    [Order(Before = Priority.Default)]
     internal sealed class ParameterFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -46,7 +46,7 @@ namespace CoCo
         /// </summary>
         public ParameterFormat()
         {
-            DisplayName = "A parameters"; // Human readable version of the name
+            DisplayName = "A parameters";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
@@ -55,7 +55,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.NamespaceName)]
     [Name(Names.NamespaceName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)] // Set the priority to be after the default classifiers
+    [Order(Before = Priority.Default)]
     internal sealed class NamespaceFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -63,7 +63,7 @@ namespace CoCo
         /// </summary>
         public NamespaceFormat()
         {
-            DisplayName = "A namespaces"; // Human readable version of the name
+            DisplayName = "A namespaces";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }

@@ -74,55 +74,25 @@ namespace CoCo
         {
             var result = new List<ClassificationSpan>();
 
-            // NOTE: Workspace can be null for "Using directive is unnecessary".
-            // Also workspace can be null when solution/project failed to load and VS gave some
-            // reasons of it
+            // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
+            // be null when solution/project failed to load and VS gave some reasons of it
             Workspace workspace = span.Snapshot.TextBuffer.GetWorkspace();
-
-            //Document document = span.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
-            //var t = span.Snapshot.AsText();
-            //SyntaxTree syntaxTree = document.GetSyntaxTreeAsync().Result;
-
-            //SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(span.Snapshot.AsText());
             Document document = workspace.GetDocument(span.Snapshot.AsText());
-            //Document document2 = workspace2.GetDocument(span.Snapshot.AsText());
-
-            //SemanticModel semanticModel2 = document2.GetSemanticModelAsync().Result;
-            //SyntaxNode root = document2.GetSyntaxRootAsync().Result;
 
             // TODO:
             SemanticModel semanticModel = document.GetSemanticModelAsync().Result;
             SyntaxTree syntaxTree = semanticModel.SyntaxTree;
-
-            //TextSpan forNode = new TextSpan(11593, 4);
-
-            //var t = document.GetSemanticModelAsync().Result;
-            //CancellationToken cancellationToken = new CancellationToken();
-            //CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot(cancellationToken);
-            //NamespaceDeclarationSyntax
-            //unitCompilation.ChildNodes().OfType<NamespaceDeclarationSyntax>().Select(x => x);
-            //CSharpSyntaxTree.ParseText
-            //Classifier.GetClassifiedSpans(syntaxTree.)
-            //span.Snapshot.
-            //span.Snapshot.GetWorkspace();
 
             var test = span.GetText();
             TextSpan tSpan = new TextSpan(span.Start.Position, span.Length);
             var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, tSpan, workspace)
                 .Where(item => item.ClassificationType == "identifier");
 
-            //var fcs = classifiedSpans.Where(s => s.TextSpan.OverlapsWith(tSpan));
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
 
             foreach (var item in classifiedSpans)
             {
                 SyntaxNode node = unitCompilation.FindNode(item.TextSpan).SpecificHandle();
-
-                //SyntaxNode newNode = node;
-                //if (node.Kind() == SyntaxKind.Argument)
-                //{
-                //    newNode = (node as ArgumentSyntax).Expression;
-                //}
 
                 // NOTE: Some kind of nodes, for example ArgumentSyntax, need specific handling
                 ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
@@ -183,39 +153,6 @@ namespace CoCo
         // TODO: it's temporary name
         public static SyntaxNode SpecificHandle(this SyntaxNode node) =>
             node.Kind() == SyntaxKind.Argument ? (node as ArgumentSyntax).Expression : node;
-
-        //public static IEnumerable<ClassifiedSpan> GetClassifiedSpans(
-        //    SemanticModel semanticModel,
-        //    TextSpan textSpan,
-        //    Workspace workspace,
-        //    CancellationToken cancellationToken = default(CancellationToken))
-        //{
-        //    var service = workspace.Services.GetLanguageServices(semanticModel.Language).GetService<IClassificationService>();
-
-        // var syntaxClassifiers = service.GetDefaultSyntaxClassifiers();
-
-        // var extensionManager = workspace.Services.GetService<IExtensionManager>(); var
-        // getNodeClassifiers = extensionManager.CreateNodeExtensionGetter(syntaxClassifiers, c =>
-        // c.SyntaxNodeTypes); var getTokenClassifiers =
-        // extensionManager.CreateTokenExtensionGetter(syntaxClassifiers, c => c.SyntaxTokenKinds);
-
-        // var syntacticClassifications = new List<ClassifiedSpan>(); var semanticClassifications =
-        // new List<ClassifiedSpan>();
-
-        // service.AddSyntacticClassifications(semanticModel.SyntaxTree, textSpan,
-        // syntacticClassifications, cancellationToken);
-        // service.AddSemanticClassifications(semanticModel, textSpan, workspace, getNodeClassifiers,
-        // getTokenClassifiers, semanticClassifications, cancellationToken);
-
-        // var allClassifications = new List<ClassifiedSpan>(semanticClassifications.Where(s =>
-        // s.TextSpan.OverlapsWith(textSpan))); var semanticSet = semanticClassifications.Select(s => s.TextSpan).ToSet();
-
-        // allClassifications.AddRange(syntacticClassifications.Where( s =>
-        // s.TextSpan.OverlapsWith(textSpan) && !semanticSet.Contains(s.TextSpan)));
-        // allClassifications.Sort((s1, s2) => s1.TextSpan.Start - s2.TextSpan.Start);
-
-        //    return allClassifications;
-        //}
 
         //TODO: Check behavior for document that isn't including in solution
         public static Document GetDocument(this Workspace workspace, SourceText text)
