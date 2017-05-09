@@ -27,7 +27,7 @@ namespace CoCo
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
 
-//#if DEBUG
+        //#if DEBUG
 
         // NOTE: Logger is thread-safe
         private static readonly Logger _logger;
@@ -38,7 +38,7 @@ namespace CoCo
             _logger = LogManager.GetLogger(nameof(_logger));
         }
 
-//#endif
+        //#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
@@ -130,7 +130,8 @@ namespace CoCo
                     case SymbolKind.TypeParameter:
                     case SymbolKind.Preprocessing:
                     case SymbolKind.Discard:
-                        // TODO: Log input type and span positions here
+                        _logger.ConditionalInfo("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
+                        _logger.ConditionalInfo("Text was: {0}", node.GetText().ToString());
                         break;
 
                     case SymbolKind.Local:
