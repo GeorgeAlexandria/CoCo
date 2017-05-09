@@ -86,7 +86,7 @@ namespace CoCo
         /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            _logger.ConditionalInfo("Handle span that start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
+            _logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
             var result = new List<ClassificationSpan>();
 
             // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
@@ -105,7 +105,7 @@ namespace CoCo
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
             foreach (var item in classifiedSpans)
             {
-                SyntaxNode node = unitCompilation.FindNode(item.TextSpan).SpecificHandle();
+                SyntaxNode node = unitCompilation.FindNode(item.TextSpan, true).SpecificHandle();
 
                 // NOTE: Some kind of nodes, for example ArgumentSyntax, need specific handling
                 ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
@@ -146,11 +146,14 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Parameter:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                        // NOTE: Skip argument in summaries
+                        if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
+                        {
+                            result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                        }
                         break;
 
                     case SymbolKind.Method:
-                        // TODO: Parameters in summaries have method's color
                         var methodType = (symbol as IMethodSymbol).IsExtensionMethod ? _extensionMethodType : _methodType;
                         result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
