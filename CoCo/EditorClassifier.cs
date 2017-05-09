@@ -26,6 +26,8 @@ namespace CoCo
         private readonly IClassificationType _localFieldType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
+        private readonly IClassificationType _extensionMethodType;
+        private readonly IClassificationType _methodType;
 
         //#if DEBUG
 
@@ -50,6 +52,8 @@ namespace CoCo
             _localFieldType = registry.GetClassificationType(Names.LocalFieldName);
             _namespaceType = registry.GetClassificationType(Names.NamespaceName);
             _parameterType = registry.GetClassificationType(Names.ParameterName);
+            _extensionMethodType = registry.GetClassificationType(Names.ExtensionMethodName);
+            _methodType = registry.GetClassificationType(Names.MethodName);
         }
 
         #region IClassifier
@@ -121,7 +125,6 @@ namespace CoCo
                     case SymbolKind.Event:
                     case SymbolKind.Field:
                     case SymbolKind.Label:
-                    case SymbolKind.Method:
                     case SymbolKind.NetModule:
                     case SymbolKind.NamedType:
                     case SymbolKind.PointerType:
@@ -144,6 +147,12 @@ namespace CoCo
 
                     case SymbolKind.Parameter:
                         result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                        break;
+
+                    case SymbolKind.Method:
+                        // TODO: Parameters in summaries have method's color
+                        var methodType = (symbol as IMethodSymbol).IsExtensionMethod ? _extensionMethodType : _methodType;
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
 
                     default:

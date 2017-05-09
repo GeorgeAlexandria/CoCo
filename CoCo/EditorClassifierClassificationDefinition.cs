@@ -30,6 +30,14 @@ namespace CoCo
         [Name(Names.ParameterName)]
         private static ClassificationTypeDefinition parameterDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.ExtensionMethodName)]
+        private static ClassificationTypeDefinition extensionMethodDefinition;
+
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.MethodName)]
+        private static ClassificationTypeDefinition methodDefinition;
+
 #pragma warning restore 169
     }
 }

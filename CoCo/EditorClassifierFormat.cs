@@ -15,6 +15,8 @@ namespace CoCo
         public const string LocalFieldName = "Local field name";
         public const string ParameterName = "Parameter name";
         public const string NamespaceName = "Namespace name";
+        public const string ExtensionMethodName = "Extension method name";
+        public const string MethodName = "Method name";
     }
 
     // TODO: Need generate a custom options. It gets possibilite to set other available options
@@ -64,6 +66,40 @@ namespace CoCo
         public NamespaceFormat()
         {
             DisplayName = "A namespaces";
+            //this.TextDecorations = System.Windows.TextDecorations.Underline;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.ExtensionMethodName)]
+    [Name(Names.ExtensionMethodName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class ExtensionMethodFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExtensionMethodFormat"/> class.
+        /// </summary>
+        public ExtensionMethodFormat()
+        {
+            DisplayName = "A extension methods";
+            //this.TextDecorations = System.Windows.TextDecorations.Underline;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.MethodName)]
+    [Name(Names.MethodName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class MethodFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MethodFormat"/> class.
+        /// </summary>
+        public MethodFormat()
+        {
+            DisplayName = "A methods";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
