@@ -132,7 +132,7 @@ namespace CoCo
                     case SymbolKind.RangeVariable:
                     case SymbolKind.TypeParameter:
                     case SymbolKind.Preprocessing:
-                    case SymbolKind.Discard:
+                    //case SymbolKind.Discard:
                         _logger.ConditionalInfo("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         _logger.ConditionalInfo("Text was: {0}", node.GetText().ToString());
                         break;
