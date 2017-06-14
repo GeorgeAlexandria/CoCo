@@ -53,6 +53,7 @@
     <Compile Include="EditorClassifierClassificationDefinition.cs" />
     <Compile Include="EditorClassifierFormat.cs" />
     <Compile Include="EditorClassifierProvider.cs" />
+    <Compile Include="Names.cs" />
     <Compile Include="NLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

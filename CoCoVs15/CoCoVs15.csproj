@@ -63,6 +63,9 @@
     <Compile Include="..\CoCo\EditorClassifierProvider.cs">
       <Link>EditorClassifierProvider.cs</Link>
     </Compile>
+    <Compile Include="..\CoCo\Names.cs">
+      <Link>Names.cs</Link>
+    </Compile>
     <Compile Include="..\CoCo\NLog.cs">
       <Link>NLog.cs</Link>
     </Compile>
