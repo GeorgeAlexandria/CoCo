@@ -33,13 +33,13 @@ namespace CoCo
         /// <summary>
         /// Gets a classifier for the given text buffer.
         /// </summary>
-        /// <param name="buffer">The <see cref="ITextBuffer"/> to classify.</param>
+        /// <param name="textBuffer">The <see cref="ITextBuffer"/> to classify.</param>
         /// <returns>
         /// A classifier for the text buffer, or null if the provider cannot do so in its current state.
         /// </returns>
-        public IClassifier GetClassifier(ITextBuffer buffer)
+        public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry));
         }
     }
 }
