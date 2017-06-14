@@ -10,15 +10,6 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace CoCo
 {
-    public static class Names
-    {
-        public const string LocalFieldName = "Local field name";
-        public const string ParameterName = "Parameter name";
-        public const string NamespaceName = "Namespace name";
-        public const string ExtensionMethodName = "Extension method name";
-        public const string MethodName = "Method name";
-    }
-
     // TODO: Need generate a custom options. It gets possibilite to set other available options
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = Names.LocalFieldName)]
