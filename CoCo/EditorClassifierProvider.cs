@@ -15,7 +15,8 @@ namespace CoCo
     /// Classifier provider. It adds the classifier to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
-    [ContentType("text")]
+    [ContentType("CSharp")]
+    //[ContentType("text")]
     internal class EditorClassifierProvider : IClassifierProvider
     {
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
