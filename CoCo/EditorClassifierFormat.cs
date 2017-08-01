@@ -94,4 +94,20 @@ namespace CoCo
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.EventName)]
+    [Name(Names.EventName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class EventFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventFormat"/> class.
+        /// </summary>
+        public EventFormat()
+        {
+            DisplayName = "A events";
+        }
+    }
 }

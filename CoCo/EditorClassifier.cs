@@ -28,6 +28,7 @@ namespace CoCo
         private readonly IClassificationType _parameterType;
         private readonly IClassificationType _extensionMethodType;
         private readonly IClassificationType _methodType;
+        private readonly IClassificationType _eventType;
 
         //#if DEBUG
 
@@ -54,6 +55,7 @@ namespace CoCo
             _parameterType = registry.GetClassificationType(Names.ParameterName);
             _extensionMethodType = registry.GetClassificationType(Names.ExtensionMethodName);
             _methodType = registry.GetClassificationType(Names.MethodName);
+            _eventType = registry.GetClassificationType(Names.EventName);
         }
 
         #region IClassifier
@@ -122,7 +124,6 @@ namespace CoCo
                     case SymbolKind.Assembly:
                     case SymbolKind.DynamicType:
                     case SymbolKind.ErrorType:
-                    case SymbolKind.Event:
                     case SymbolKind.Field:
                     case SymbolKind.Label:
                     case SymbolKind.NetModule:
@@ -132,9 +133,13 @@ namespace CoCo
                     case SymbolKind.RangeVariable:
                     case SymbolKind.TypeParameter:
                     case SymbolKind.Preprocessing:
-                    //case SymbolKind.Discard:
+                        //case SymbolKind.Discard:
                         _logger.ConditionalInfo("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         _logger.ConditionalInfo("Text was: {0}", node.GetText().ToString());
+                        break;
+
+                    case SymbolKind.Event:
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
                         break;
 
                     case SymbolKind.Local:
