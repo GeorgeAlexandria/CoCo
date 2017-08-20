@@ -126,4 +126,20 @@ namespace CoCo
             DisplayName = "A properies";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.FieldName)]
+    [Name(Names.FieldName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class FieldFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FieldFormat"/> class.
+        /// </summary>
+        public FieldFormat()
+        {
+            DisplayName = "A fileds";
+        }
+    }
 }

@@ -9,5 +9,6 @@
         public const string MethodName = "Method name";
         public const string EventName = "Event name";
         public const string PropertyName = "Property name";
+        public const string FieldName = "Field name";
     }
 }

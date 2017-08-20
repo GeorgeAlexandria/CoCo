@@ -24,7 +24,7 @@ namespace CoCo
 
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.LocalFieldName)]
-        private static ClassificationTypeDefinition fieldDefinition;
+        private static ClassificationTypeDefinition localFieldDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.ParameterName)]
@@ -45,6 +45,10 @@ namespace CoCo
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.PropertyName)]
         private static ClassificationTypeDefinition propertyDefinition;
+
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.FieldName)]
+        private static ClassificationTypeDefinition fieldDefinition;
 
 #pragma warning restore 169
     }
