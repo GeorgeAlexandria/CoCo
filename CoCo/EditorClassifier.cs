@@ -51,9 +51,8 @@ namespace CoCo
         /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
         /// </summary>
         /// <param name="registry">Classification registry.</param>
-        internal EditorClassifier(IClassificationTypeRegistryService registry)
+        internal EditorClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
-            //TODO: send ITextBuffer?
             _localFieldType = registry.GetClassificationType(Names.LocalFieldName);
             _namespaceType = registry.GetClassificationType(Names.NamespaceName);
             _parameterType = registry.GetClassificationType(Names.ParameterName);

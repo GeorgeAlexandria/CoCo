@@ -40,7 +40,7 @@ namespace CoCo
         /// </returns>
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry, textBuffer));
         }
     }
 }
