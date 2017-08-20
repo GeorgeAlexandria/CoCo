@@ -50,6 +50,10 @@ namespace CoCo
         [Name(Names.FieldName)]
         private static ClassificationTypeDefinition fieldDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.StaticMethodName)]
+        private static ClassificationTypeDefinition staticMethodDefinition;
+
 #pragma warning restore 169
     }
 }

@@ -10,5 +10,6 @@
         public const string EventName = "Event name";
         public const string PropertyName = "Property name";
         public const string FieldName = "Field name";
+        public const string StaticMethodName = "Static method name";
     }
 }

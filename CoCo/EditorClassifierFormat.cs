@@ -142,4 +142,20 @@ namespace CoCo
             DisplayName = "A fileds";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.StaticMethodName)]
+    [Name(Names.StaticMethodName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class StaticMethodFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StaticMethodFormat"/> class.
+        /// </summary>
+        public StaticMethodFormat()
+        {
+            DisplayName = "A static methods";
+        }
+    }
 }

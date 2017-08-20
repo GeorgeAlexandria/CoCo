@@ -31,6 +31,8 @@ namespace CoCo
         private readonly IClassificationType _eventType;
         private readonly IClassificationType _propertyType;
         private readonly IClassificationType _filedType;
+        private readonly IClassificationType _staticMethodType;
+
 
         //#if DEBUG
 
@@ -60,6 +62,7 @@ namespace CoCo
             _eventType = registry.GetClassificationType(Names.EventName);
             _propertyType = registry.GetClassificationType(Names.PropertyName);
             _filedType = registry.GetClassificationType(Names.FieldName);
+            _staticMethodType = registry.GetClassificationType(Names.StaticMethodName);
         }
 
         #region IClassifier
@@ -171,7 +174,10 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Method:
-                        var methodType = (symbol as IMethodSymbol).IsExtensionMethod ? _extensionMethodType : _methodType;
+                        var methodSymbol = symbol as IMethodSymbol;
+                        var methodType = methodSymbol.IsExtensionMethod
+                            ? _extensionMethodType
+                            : methodSymbol.IsStatic ? _staticMethodType : _methodType;
                         result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
 
