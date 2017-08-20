@@ -42,6 +42,10 @@ namespace CoCo
         [Name(Names.EventName)]
         private static ClassificationTypeDefinition eventDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.PropertyName)]
+        private static ClassificationTypeDefinition propertyDefinition;
+
 #pragma warning restore 169
     }
 }

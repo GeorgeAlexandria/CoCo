@@ -29,6 +29,7 @@ namespace CoCo
         private readonly IClassificationType _extensionMethodType;
         private readonly IClassificationType _methodType;
         private readonly IClassificationType _eventType;
+        private readonly IClassificationType _propertyType;
 
         //#if DEBUG
 
@@ -56,6 +57,7 @@ namespace CoCo
             _extensionMethodType = registry.GetClassificationType(Names.ExtensionMethodName);
             _methodType = registry.GetClassificationType(Names.MethodName);
             _eventType = registry.GetClassificationType(Names.EventName);
+            _propertyType = registry.GetClassificationType(Names.PropertyName);
         }
 
         #region IClassifier
@@ -115,6 +117,8 @@ namespace CoCo
                 {
                     // TODO: Log information about the node and semantic model, because semantic model
                     // didn't retrive information from node in this case
+                    _logger.ConditionalInfo("Nothing is found. Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
+                    _logger.ConditionalInfo("Node is={0}", node.RawKind);
                     continue;
                 }
                 switch (symbol.Kind)
@@ -129,13 +133,16 @@ namespace CoCo
                     case SymbolKind.NetModule:
                     case SymbolKind.NamedType:
                     case SymbolKind.PointerType:
-                    case SymbolKind.Property:
                     case SymbolKind.RangeVariable:
                     case SymbolKind.TypeParameter:
                     case SymbolKind.Preprocessing:
                         //case SymbolKind.Discard:
                         _logger.ConditionalInfo("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         _logger.ConditionalInfo("Text was: {0}", node.GetText().ToString());
+                        break;
+
+                    case SymbolKind.Property:
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _propertyType));
                         break;
 
                     case SymbolKind.Event:

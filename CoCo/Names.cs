@@ -8,5 +8,6 @@
         public const string ExtensionMethodName = "Extension method name";
         public const string MethodName = "Method name";
         public const string EventName = "Event name";
+        public const string PropertyName = "Property name";
     }
 }

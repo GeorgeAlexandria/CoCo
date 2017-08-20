@@ -110,4 +110,20 @@ namespace CoCo
             DisplayName = "A events";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.PropertyName)]
+    [Name(Names.PropertyName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class PropertyFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyFormat"/> class.
+        /// </summary>
+        public PropertyFormat()
+        {
+            DisplayName = "A properies";
+        }
+    }
 }
