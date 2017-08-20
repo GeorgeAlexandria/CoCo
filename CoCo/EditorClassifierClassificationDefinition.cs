@@ -58,6 +58,10 @@ namespace CoCo
         [Name(Names.EnumFiedName)]
         private static ClassificationTypeDefinition enumFieldDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.AliasNamespaceName)]
+        private static ClassificationTypeDefinition AliasNamespaceDefinition;
+
 #pragma warning restore 169
     }
 }

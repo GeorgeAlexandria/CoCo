@@ -33,6 +33,7 @@ namespace CoCo
         private readonly IClassificationType _fieldType;
         private readonly IClassificationType _staticMethodType;
         private readonly IClassificationType _enumFieldType;
+        private readonly IClassificationType _aliasNamespaceType;
 
         //#if DEBUG
 
@@ -63,6 +64,7 @@ namespace CoCo
             _fieldType = registry.GetClassificationType(Names.FieldName);
             _staticMethodType = registry.GetClassificationType(Names.StaticMethodName);
             _enumFieldType = registry.GetClassificationType(Names.EnumFiedName);
+            _aliasNamespaceType = registry.GetClassificationType(Names.AliasNamespaceName);
         }
 
         #region IClassifier
@@ -111,6 +113,9 @@ namespace CoCo
             var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
                 .Where(item => item.ClassificationType == "identifier");
 
+            //var kyewordSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
+            //    .Where(item => item.ClassificationType == "keyword");
+
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
             foreach (var item in classifiedSpans)
             {
@@ -120,6 +125,13 @@ namespace CoCo
                 ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
                 if (symbol == null)
                 {
+                    // NOTE: handle alias in using directive
+                    if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax)
+                    {
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _aliasNamespaceType));
+                        continue;
+                    }
+
                     // TODO: Log information about the node and semantic model, because semantic model
                     // didn't retrive information from node in this case
                     _logger.ConditionalInfo("Nothing is found. Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
@@ -164,7 +176,8 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Namespace:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _namespaceType));
+                        var namesapceType = IsAliasNamespace(symbol, node) ? _namespaceType : _aliasNamespaceType;
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 
                     case SymbolKind.Parameter:
@@ -189,6 +202,21 @@ namespace CoCo
             }
 
             return result;
+        }
+
+        private bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
+        {
+            var strSymbol = symbol.ToString();
+            if (strSymbol == (node as IdentifierNameSyntax).Identifier.Text)
+                return true;
+
+            var fullNamespaceNode = node;
+            while (fullNamespaceNode.Parent is QualifiedNameSyntax)
+            {
+                fullNamespaceNode = fullNamespaceNode.Parent;
+            }
+
+            return strSymbol == fullNamespaceNode.ToString();
         }
 
         private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>

@@ -174,4 +174,20 @@ namespace CoCo
             DisplayName = "A enum field";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.AliasNamespaceName)]
+    [Name(Names.AliasNamespaceName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class AliasNamespaceFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AliasNamespaceFormat"/> class.
+        /// </summary>
+        public AliasNamespaceFormat()
+        {
+            DisplayName = "A alias namespace field";
+        }
+    }
 }

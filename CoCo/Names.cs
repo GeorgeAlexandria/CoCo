@@ -12,5 +12,6 @@
         public const string FieldName = "Field name";
         public const string StaticMethodName = "Static method name";
         public const string EnumFiedName = "Enum field name";
+        public const string AliasNamespaceName = "Alias namespace name";
     }
 }
