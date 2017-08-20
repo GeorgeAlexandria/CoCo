@@ -54,6 +54,10 @@ namespace CoCo
         [Name(Names.StaticMethodName)]
         private static ClassificationTypeDefinition staticMethodDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.EnumFiedName)]
+        private static ClassificationTypeDefinition enumFieldDefinition;
+
 #pragma warning restore 169
     }
 }

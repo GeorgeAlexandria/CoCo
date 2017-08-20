@@ -30,9 +30,9 @@ namespace CoCo
         private readonly IClassificationType _methodType;
         private readonly IClassificationType _eventType;
         private readonly IClassificationType _propertyType;
-        private readonly IClassificationType _filedType;
+        private readonly IClassificationType _fieldType;
         private readonly IClassificationType _staticMethodType;
-
+        private readonly IClassificationType _enumFieldType;
 
         //#if DEBUG
 
@@ -61,8 +61,9 @@ namespace CoCo
             _methodType = registry.GetClassificationType(Names.MethodName);
             _eventType = registry.GetClassificationType(Names.EventName);
             _propertyType = registry.GetClassificationType(Names.PropertyName);
-            _filedType = registry.GetClassificationType(Names.FieldName);
+            _fieldType = registry.GetClassificationType(Names.FieldName);
             _staticMethodType = registry.GetClassificationType(Names.StaticMethodName);
+            _enumFieldType = registry.GetClassificationType(Names.EnumFiedName);
         }
 
         #region IClassifier
@@ -146,7 +147,9 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Field:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _filedType));
+                        var fieldSymbol = (symbol as IFieldSymbol).Type;
+                        var fieldType = fieldSymbol.TypeKind == TypeKind.Enum ? _enumFieldType : _fieldType;
+                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldType));
                         break;
 
                     case SymbolKind.Property:

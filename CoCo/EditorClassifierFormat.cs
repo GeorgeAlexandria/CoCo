@@ -158,4 +158,20 @@ namespace CoCo
             DisplayName = "A static methods";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.EnumFiedName)]
+    [Name(Names.EnumFiedName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class EnumFieldFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EnumFieldFormat"/> class.
+        /// </summary>
+        public EnumFieldFormat()
+        {
+            DisplayName = "A enum field";
+        }
+    }
 }
