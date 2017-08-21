@@ -215,7 +215,7 @@ namespace CoCo
                 return true;
 
             var fullNamespaceNode = node;
-            while (fullNamespaceNode.Parent is QualifiedNameSyntax)
+            while (strSymbol != fullNamespaceNode.ToString() && fullNamespaceNode.Parent is QualifiedNameSyntax)
             {
                 fullNamespaceNode = fullNamespaceNode.Parent;
             }
