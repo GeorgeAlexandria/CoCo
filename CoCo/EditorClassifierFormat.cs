@@ -190,4 +190,20 @@ namespace CoCo
             DisplayName = "A alias namespace field";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.ConstructorMethodName)]
+    [Name(Names.ConstructorMethodName)]
+    [UserVisible(true)]
+    [Order(Before = Priority.Default)]
+    internal sealed class ConstructorMethodFormat : ClassificationFormatDefinition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConstructorMethodFormat"/> class.
+        /// </summary>
+        public ConstructorMethodFormat()
+        {
+            DisplayName = "A constructor method field";
+        }
+    }
 }

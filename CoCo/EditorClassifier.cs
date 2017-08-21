@@ -34,6 +34,7 @@ namespace CoCo
         private readonly IClassificationType _staticMethodType;
         private readonly IClassificationType _enumFieldType;
         private readonly IClassificationType _aliasNamespaceType;
+        private readonly IClassificationType _constructorMethodType;
 
         //#if DEBUG
 
@@ -65,6 +66,7 @@ namespace CoCo
             _staticMethodType = registry.GetClassificationType(Names.StaticMethodName);
             _enumFieldType = registry.GetClassificationType(Names.EnumFiedName);
             _aliasNamespaceType = registry.GetClassificationType(Names.AliasNamespaceName);
+            _constructorMethodType = registry.GetClassificationType(Names.ConstructorMethodName);
         }
 
         #region IClassifier
@@ -97,7 +99,7 @@ namespace CoCo
         /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            _logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
+            //_logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
             var result = new List<ClassificationSpan>();
 
             // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
@@ -134,8 +136,8 @@ namespace CoCo
 
                     // TODO: Log information about the node and semantic model, because semantic model
                     // didn't retrive information from node in this case
-                    _logger.ConditionalInfo("Nothing is found. Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
-                    _logger.ConditionalInfo("Node is={0}", node.RawKind);
+                    _logger.ConditionalInfo("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
+                    _logger.ConditionalInfo("Node is {0} {1}", node.Kind(), node.RawKind);
                     continue;
                 }
                 switch (symbol.Kind)
@@ -190,9 +192,11 @@ namespace CoCo
 
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
-                        var methodType = methodSymbol.IsExtensionMethod
-                            ? _extensionMethodType
-                            : methodSymbol.IsStatic ? _staticMethodType : _methodType;
+                        var methodType = methodSymbol.MethodKind == MethodKind.Constructor
+                            ? _constructorMethodType
+                            : methodSymbol.IsExtensionMethod
+                                ? _extensionMethodType
+                                : methodSymbol.IsStatic ? _staticMethodType : _methodType;
                         result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
 

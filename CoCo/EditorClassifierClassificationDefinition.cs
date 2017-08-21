@@ -62,6 +62,10 @@ namespace CoCo
         [Name(Names.AliasNamespaceName)]
         private static ClassificationTypeDefinition AliasNamespaceDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.ConstructorMethodName)]
+        private static ClassificationTypeDefinition ConstructorMethodDefinition;
+
 #pragma warning restore 169
     }
 }
