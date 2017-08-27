@@ -10,6 +10,10 @@ using NLog.Targets.Wrappers;
 // TODO: remove NLog reference for RELEASE mode from .csproj
 namespace CoCo
 {
+    /// <summary>
+    /// Now <see cref="NLog"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/> 
+    /// and Preprocessor Directives are used for it.
+    /// </summary>
     internal static class NLog
     {
         private const string _debug = "DEBUG";

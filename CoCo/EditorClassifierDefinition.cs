@@ -1,10 +1,4 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="EditorClassifierClassificationDefinition.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
-
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
@@ -13,7 +7,7 @@ namespace CoCo
     /// <summary>
     /// Classification type definition export for EditorClassifier
     /// </summary>
-    internal static class EditorClassifierClassificationDefinition
+    internal static class EditorClassifierDefinition
     {
         // Disable "The field is never used" compiler's warning. The fields are used by MEF.
 #pragma warning disable 169
