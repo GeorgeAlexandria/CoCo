@@ -34,7 +34,7 @@ namespace CoCo
             fileDebugTarget.Layout = $"{format}${{newline}}${{stacktrace}}";
             fileDebugTarget.FileName = $"{appDataLocal}\\file_debug.log";
 
-            BufferingTargetWrapper bufferWrapper = new BufferingTargetWrapper()
+            BufferingTargetWrapper bufferWrapper = new BufferingTargetWrapper
             {
                 WrappedTarget = fileTarget,
                 BufferSize = 300,

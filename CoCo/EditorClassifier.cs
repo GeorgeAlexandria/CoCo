@@ -41,10 +41,10 @@ namespace CoCo
 
         private SemanticModel _semanticModel;
 
-        //#if DEBUG
-
         // NOTE: Logger is thread-safe
         private static readonly Logger _logger;
+
+#if DEBUG
 
         static EditorClassifier()
         {
@@ -52,7 +52,7 @@ namespace CoCo
             _logger = LogManager.GetLogger(nameof(_logger));
         }
 
-        //#endif
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
@@ -99,10 +99,6 @@ namespace CoCo
             }
         }
 
-        #region IClassifier
-
-#pragma warning disable 67
-
         /// <summary>
         /// An event that occurs when the classification of a span of text has changed.
         /// </summary>
@@ -112,8 +108,6 @@ namespace CoCo
         /// affecting the span.
         /// </remarks>
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-
-#pragma warning restore 67
 
         /// <summary>
         /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range
@@ -129,7 +123,7 @@ namespace CoCo
         /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            //_logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
+            _logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
             var result = new List<ClassificationSpan>();
 
             // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
@@ -157,7 +151,7 @@ namespace CoCo
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
             foreach (var item in classifiedSpans)
             {
-                SyntaxNode node = unitCompilation.FindNode(item.TextSpan, true).SpecificHandle();
+                SyntaxNode node = unitCompilation.FindNode(item.TextSpan, true).HandleNode();
 
                 // NOTE: Some kind of nodes, for example ArgumentSyntax, need specific handling
                 ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
@@ -261,46 +255,5 @@ namespace CoCo
 
         private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
             new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
-
-        #endregion
-    }
-
-    // TODO: it's temporary name
-    internal static class Help
-    {
-        // TODO: it's temporary name
-        public static SyntaxNode SpecificHandle(this SyntaxNode node) =>
-            node.Kind() == SyntaxKind.Argument ? (node as ArgumentSyntax).Expression : node;
-
-        //TODO: Check behavior for document that isn't including in solution
-        public static Document GetDocument(this Workspace workspace, SourceText text)
-        {
-            DocumentId id = workspace.GetDocumentIdInCurrentContext(text.Container);
-            if (id == null)
-            {
-                return null;
-            }
-
-            return !workspace.CurrentSolution.ContainsDocument(id)
-                ? workspace.CurrentSolution.WithDocumentText(id, text, PreservationMode.PreserveIdentity).GetDocument(id)
-                : workspace.CurrentSolution.GetDocument(id);
-        }
-
-        public static Document GetOpenDocumentInCurrentContextWithChanges(this SourceText text)
-        {
-            if (Workspace.TryGetWorkspace(text.Container, out var workspace))
-            {
-                var id = workspace.GetDocumentIdInCurrentContext(text.Container);
-                if (id == null || !workspace.CurrentSolution.ContainsDocument(id))
-                {
-                    return null;
-                }
-
-                var sol = workspace.CurrentSolution.WithDocumentText(id, text, PreservationMode.PreserveIdentity);
-                return sol.GetDocument(id);
-            }
-
-            return null;
-        }
     }
 }

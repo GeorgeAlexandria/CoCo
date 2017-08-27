@@ -69,6 +69,12 @@
     <Compile Include="..\CoCo\NLog.cs">
       <Link>NLog.cs</Link>
     </Compile>
+    <Compile Include="..\CoCo\SyntaxNodeExtensions.cs">
+      <Link>SyntaxNodeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\CoCo\WorkspaceExtensions.cs">
+      <Link>WorkspaceExtensions.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
