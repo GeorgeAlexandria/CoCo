@@ -17,7 +17,7 @@ namespace CoCo
         /// </summary>
         public LocalFieldFormat()
         {
-            DisplayName = "A local fields";
+            DisplayName = "CoCo format: local fields";
         }
     }
 
@@ -33,7 +33,7 @@ namespace CoCo
         /// </summary>
         public ParameterFormat()
         {
-            DisplayName = "A parameters";
+            DisplayName = "CoCo format: parameters";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
@@ -50,7 +50,7 @@ namespace CoCo
         /// </summary>
         public NamespaceFormat()
         {
-            DisplayName = "A namespaces";
+            DisplayName = "CoCo format: namespaces";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
@@ -67,7 +67,7 @@ namespace CoCo
         /// </summary>
         public ExtensionMethodFormat()
         {
-            DisplayName = "A extension methods";
+            DisplayName = "CoCo format: extension methods";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
@@ -84,7 +84,7 @@ namespace CoCo
         /// </summary>
         public MethodFormat()
         {
-            DisplayName = "A methods";
+            DisplayName = "CoCo format: methods";
             //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
@@ -101,7 +101,7 @@ namespace CoCo
         /// </summary>
         public EventFormat()
         {
-            DisplayName = "A events";
+            DisplayName = "CoCo format: events";
         }
     }
 
@@ -117,7 +117,7 @@ namespace CoCo
         /// </summary>
         public PropertyFormat()
         {
-            DisplayName = "A properies";
+            DisplayName = "CoCo format: properies";
         }
     }
 
@@ -133,7 +133,7 @@ namespace CoCo
         /// </summary>
         public FieldFormat()
         {
-            DisplayName = "A fileds";
+            DisplayName = "CoCo format: fileds";
         }
     }
 
@@ -149,7 +149,7 @@ namespace CoCo
         /// </summary>
         public StaticMethodFormat()
         {
-            DisplayName = "A static methods";
+            DisplayName = "CoCo format: static methods";
         }
     }
 
@@ -165,7 +165,7 @@ namespace CoCo
         /// </summary>
         public EnumFieldFormat()
         {
-            DisplayName = "A enum field";
+            DisplayName = "CoCo format: enum field";
         }
     }
 
@@ -181,7 +181,7 @@ namespace CoCo
         /// </summary>
         public AliasNamespaceFormat()
         {
-            DisplayName = "A alias namespace field";
+            DisplayName = "CoCo format: alias namespace field";
         }
     }
 
@@ -197,7 +197,7 @@ namespace CoCo
         /// </summary>
         public ConstructorMethodFormat()
         {
-            DisplayName = "A constructor method field";
+            DisplayName = "CoCo format: constructor method field";
         }
     }
 }
