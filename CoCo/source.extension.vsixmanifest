@@ -5,6 +5,8 @@
         <DisplayName>CoCo</DisplayName>
         <Description xml:space="preserve">A code colorizer extension for C# that based on Roslyn</Description>
         <License>LICENSE.txt</License>
+        <Icon>CoCo.png</Icon>
+        <PreviewImage>CoCo_Preview.png</PreviewImage>
         <Tags>Code Syntax Color Highlighting</Tags>
     </Metadata>
     <Installation>
