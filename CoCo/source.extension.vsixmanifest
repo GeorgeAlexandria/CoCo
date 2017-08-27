@@ -3,7 +3,7 @@
     <Metadata>
         <Identity Id="CoCo.69edb42a-941a-4cf8-b6fc-264946141391" Version="1.0" Language="en-US" Publisher="George Aleksandria" />
         <DisplayName>CoCo</DisplayName>
-        <Description xml:space="preserve">A code colorizer extension for C# that based on Roslyn</Description>
+        <Description xml:space="preserve">An open source extension that uses Roslyn to color and decorate our C# code.</Description>
         <License>LICENSE.txt</License>
         <Icon>CoCo.png</Icon>
         <PreviewImage>CoCo_Preview.png</PreviewImage>
