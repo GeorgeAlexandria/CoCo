@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.txt) [![temp](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio 2015 and 2017 extension that uses Roslyn API's for analyzing C# source code
