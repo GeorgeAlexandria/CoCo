@@ -16,7 +16,7 @@ namespace CoCo
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("CSharp")]
-    //[ContentType("text")]
+    [ContentType("text")]
     internal class EditorClassifierProvider : IClassifierProvider
     {
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
@@ -27,7 +27,10 @@ namespace CoCo
         /// type later.
         /// </summary>
         [Import]
-        private IClassificationTypeRegistryService classificationRegistry;
+        private IClassificationTypeRegistryService _classificationRegistry;
+
+        [Import]
+        private ITextDocumentFactoryService _textDocumentFactoryService;
 
 #pragma warning restore 649
 
@@ -40,7 +43,8 @@ namespace CoCo
         /// </returns>
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorClassifier(classificationRegistry, textBuffer));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
+                new EditorClassifier(_classificationRegistry, _textDocumentFactoryService, textBuffer));
         }
     }
 }

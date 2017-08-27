@@ -36,6 +36,11 @@ namespace CoCo
         private readonly IClassificationType _aliasNamespaceType;
         private readonly IClassificationType _constructorMethodType;
 
+        private readonly ITextBuffer _textBuffer;
+        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+
+        private SemanticModel _semanticModel;
+
         //#if DEBUG
 
         // NOTE: Logger is thread-safe
@@ -52,8 +57,13 @@ namespace CoCo
         /// <summary>
         /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
         /// </summary>
-        /// <param name="registry">Classification registry.</param>
-        internal EditorClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
+        /// <param name="registry"></param>
+        /// <param name="textDocumentFactoryService"></param>
+        /// <param name="buffer"></param>
+        internal EditorClassifier(
+            IClassificationTypeRegistryService registry,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            ITextBuffer buffer)
         {
             _localFieldType = registry.GetClassificationType(Names.LocalFieldName);
             _namespaceType = registry.GetClassificationType(Names.NamespaceName);
@@ -67,6 +77,26 @@ namespace CoCo
             _enumFieldType = registry.GetClassificationType(Names.EnumFiedName);
             _aliasNamespaceType = registry.GetClassificationType(Names.AliasNamespaceName);
             _constructorMethodType = registry.GetClassificationType(Names.ConstructorMethodName);
+
+            _textDocumentFactoryService = textDocumentFactoryService;
+            _textBuffer = buffer;
+
+            _textBuffer.Changed += OnTextBufferChanged;
+            _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+        }
+
+        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
+
+        // TODO: it's not good idea subscribe on text document disposed. Try to subscribe on text
+        // document closed.
+        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
+        {
+            if (e.TextDocument.TextBuffer == _textBuffer)
+            {
+                _semanticModel = null;
+                _textBuffer.Changed -= OnTextBufferChanged;
+                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
+            }
         }
 
         #region IClassifier
@@ -103,12 +133,18 @@ namespace CoCo
             var result = new List<ClassificationSpan>();
 
             // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
-            // be null when solution/project failed to load and VS gave some reasons of it
+            // be null when solution/project failed to load and VS gave some reasons of it or when
+            // try to open a file doesn't contained in the current solution
             Workspace workspace = span.Snapshot.TextBuffer.GetWorkspace();
+            if (workspace == null)
+            {
+                // TODO: Add supporting a files that doesn't included to the current solution
+                return result;
+            }
             Document document = workspace.GetDocument(span.Snapshot.AsText());
 
             // TODO:
-            SemanticModel semanticModel = document.GetSemanticModelAsync().Result;
+            SemanticModel semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
             SyntaxTree syntaxTree = semanticModel.SyntaxTree;
 
             TextSpan textSpan = new TextSpan(span.Start.Position, span.Length);
@@ -134,7 +170,7 @@ namespace CoCo
                         continue;
                     }
 
-                    // TODO: Log information about the node and semantic model, because semantic model
+                    // TODO: Log information about a node and semantic model, because semantic model
                     // didn't retrive information from node in this case
                     _logger.ConditionalInfo("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
                     _logger.ConditionalInfo("Node is {0} {1}", node.Kind(), node.RawKind);

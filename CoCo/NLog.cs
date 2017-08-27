@@ -14,7 +14,7 @@ namespace CoCo
     {
         private const string _debug = "DEBUG";
 
-        // NOTE: Config initialization can be extracted in nlog config file
+        // NOTE: Config initialization can be extracted to nlog config file
         [Conditional(_debug)]
         internal static void Initialize()
         {
