@@ -54,8 +54,8 @@
     <Compile Include="..\CoCo\EditorClassifier.cs">
       <Link>EditorClassifier.cs</Link>
     </Compile>
-    <Compile Include="..\CoCo\EditorClassifierClassificationDefinition.cs">
-      <Link>EditorClassifierClassificationDefinition.cs</Link>
+    <Compile Include="..\CoCo\EditorClassifierDefinition.cs">
+      <Link>EditorClassifierDefinition.cs</Link>
     </Compile>
     <Compile Include="..\CoCo\EditorClassifierFormat.cs">
       <Link>EditorClassifierFormat.cs</Link>

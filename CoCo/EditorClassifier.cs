@@ -131,7 +131,6 @@ namespace CoCo
             }
             Document document = workspace.GetDocument(span.Snapshot.AsText());
 
-            // TODO:
             SemanticModel semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
             SyntaxTree syntaxTree = semanticModel.SyntaxTree;
 
@@ -139,15 +138,13 @@ namespace CoCo
             var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
                 .Where(item => item.ClassificationType == "identifier");
 
-            //var kyewordSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
-            //    .Where(item => item.ClassificationType == "keyword");
-
             CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
             foreach (var item in classifiedSpans)
             {
+                // NOTE: Some kind of nodes, for example ArgumentSyntax, should are handled with a
+                // specific way
                 SyntaxNode node = unitCompilation.FindNode(item.TextSpan, true).HandleNode();
 
-                // NOTE: Some kind of nodes, for example ArgumentSyntax, need specific handling
                 ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
                 if (symbol == null)
                 {

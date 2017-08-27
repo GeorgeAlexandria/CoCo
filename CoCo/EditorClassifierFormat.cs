@@ -34,7 +34,6 @@ namespace CoCo
         public ParameterFormat()
         {
             DisplayName = "CoCo format: parameters";
-            //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
 
@@ -51,7 +50,6 @@ namespace CoCo
         public NamespaceFormat()
         {
             DisplayName = "CoCo format: namespaces";
-            //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
 
@@ -68,7 +66,6 @@ namespace CoCo
         public ExtensionMethodFormat()
         {
             DisplayName = "CoCo format: extension methods";
-            //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
 
@@ -85,7 +82,6 @@ namespace CoCo
         public MethodFormat()
         {
             DisplayName = "CoCo format: methods";
-            //this.TextDecorations = System.Windows.TextDecorations.Underline;
         }
     }
 

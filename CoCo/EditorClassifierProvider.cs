@@ -23,6 +23,9 @@ namespace CoCo
         [Import]
         private IClassificationTypeRegistryService _classificationRegistry;
 
+        /// <summary>
+        /// Text document factory to be used for getting a event of text document disposed.
+        /// </summary>
         [Import]
         private ITextDocumentFactoryService _textDocumentFactoryService;
 

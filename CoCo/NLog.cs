@@ -11,7 +11,7 @@ using NLog.Targets.Wrappers;
 namespace CoCo
 {
     /// <summary>
-    /// Now <see cref="NLog"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/> 
+    /// Now <see cref="NLog"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/>
     /// and Preprocessor Directives are used for it.
     /// </summary>
     internal static class NLog
