@@ -22,11 +22,11 @@ Use Visual Studio ***Fonts and Colos*** options to change colors for items. Look
 
 In the Dark theme:
 
-![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1503867609660/277247/1/DarkExample.PNG)
+![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
 
 In the Light/Blue theme:
 
-![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1503867609660/277248/1/LightExample.PNG)
+![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
 
 ## Contributing
 Requests for new features and bug reports will help the project, so please write an issue for they.
