@@ -22,11 +22,42 @@ Use Visual Studio ***Fonts and Colos*** options to change colors for items. Look
 
 (Extension doesn't contain the ***default*** colors, so you need to set they as pointed out above if you want to see how it works)
 
-It's example in the Dark theme:
+List of the values (that's represented in RGB) for the various CoCo colour settings in the Dark theme:
+
+|Item name|Value|
+|----------------------------------------|---------------------:|
+|CoCo format: alias namespace field      |(default) 220 220 220 |
+|CoCo format: constructor method field   |(default) 220 220 220 |
+|CoCo format: enum field                 |  0 193 193 |
+|CoCo format: events                     |(default) 220 220 220 |
+|CoCo format: extenson methods           |233 122   1|
+|CoCo format: fields                     |255 157 255|
+|CoCo format: local fields               |128 128   0|
+|CoCo format: methods                    |187  54   4|
+|CoCo format: namespaces                 |(default) 220 220 220 |
+|CoCo format: parameters                 |128 128 128|
+|CoCo format: properties                 |255   0 255|
+|CoCo format: static methods             |154  82   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
 
-It's example in the Light/Blue theme:
+
+List of the values (that's represented in RGB) for the various CoCo colour settings in the Light/Blue theme:
+
+|Item name|Value|
+|----------------------------------------|---------------------:|
+|CoCo format: Alias namespace field      |128   0 255|
+|CoCo format: constructor method field   |255   0   0|
+|CoCo format: enum field                 |  0 193 193|
+|CoCo format: events                     |200   0 128|
+|CoCo format: extenson methods           |224 118   1|
+|CoCo format: fields                     |174   0 174|
+|CoCo format: local fields               |128 128   0|
+|CoCo format: methods                    |187   0   0|
+|CoCo format: namespace                  |  0 213   0|
+|CoCo format: parameters                 |108 108 108|
+|CoCo format: properties                 |255   0 255|
+|CoCo format: static methods             |163  86   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
 
