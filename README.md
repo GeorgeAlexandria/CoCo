@@ -20,11 +20,13 @@ Use Visual Studio ***Fonts and Colos*** options to change colors for items. Look
 
 # Examples
 
-In the Dark theme:
+(Extension doesn't contain the ***default*** colors, so you need to set they as pointed out above if you want to see how it works)
+
+It's example in the Dark theme:
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
 
-In the Light/Blue theme:
+It's example in the Light/Blue theme:
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
 
