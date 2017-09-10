@@ -177,7 +177,7 @@ namespace CoCo
         /// </summary>
         public AliasNamespaceFormat()
         {
-            DisplayName = "CoCo format: alias namespace field";
+            DisplayName = "CoCo format: alias namespace";
         }
     }
 
@@ -193,7 +193,7 @@ namespace CoCo
         /// </summary>
         public ConstructorMethodFormat()
         {
-            DisplayName = "CoCo format: constructor method field";
+            DisplayName = "CoCo format: constructor method";
         }
     }
 }
