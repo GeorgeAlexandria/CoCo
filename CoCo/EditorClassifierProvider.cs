@@ -10,7 +10,8 @@ namespace CoCo
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("CSharp")]
-    [ContentType("text")]
+    // TODO: uncomment when will try to add analyzing of an annotates, texts and etx
+    //[ContentType("text")]
     internal class EditorClassifierProvider : IClassifierProvider
     {
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
