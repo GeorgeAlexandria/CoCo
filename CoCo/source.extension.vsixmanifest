@@ -6,6 +6,7 @@
         <Description xml:space="preserve">An open source extension that uses Roslyn to color and decorate our C# code.</Description>
         <MoreInfo>https://github.com/GeorgeAlexandria/CoCo</MoreInfo>
         <License>LICENSE.txt</License>
+        <ReleaseNotes>https://github.com/GeorgeAlexandria/CoCo/blob/master/ReleaseNotes.md</ReleaseNotes>
         <Icon>CoCo.png</Icon>
         <PreviewImage>CoCo_Preview.png</PreviewImage>
         <Tags>Code Syntax Color Highlighting</Tags>
