@@ -26,8 +26,8 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 
 |Item name|Value|
 |----------------------------------------|---------------------:|
-|CoCo format: alias namespace field      |(default) 220 220 220 |
-|CoCo format: constructor method field   |(default) 220 220 220 |
+|CoCo format: alias namespace            |(default) 220 220 220 |
+|CoCo format: constructor method         |(default) 220 220 220 |
 |CoCo format: enum field                 |  0 193 193 |
 |CoCo format: events                     |(default) 220 220 220 |
 |CoCo format: extenson methods           |233 122   1|
@@ -46,8 +46,8 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 
 |Item name|Value|
 |----------------------------------------|---------------------:|
-|CoCo format: Alias namespace field      |128   0 255|
-|CoCo format: constructor method field   |255   0   0|
+|CoCo format: Alias namespace            |128   0 255|
+|CoCo format: constructor method         |255   0   0|
 |CoCo format: enum field                 |  0 193 193|
 |CoCo format: events                     |200   0 128|
 |CoCo format: extenson methods           |224 118   1|
