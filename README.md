@@ -16,7 +16,7 @@ Extension supports following elements:
 * Instance fields
 * Enum fields
 
-Use Visual Studio ***Fonts and Colos*** options to change colors for items. Look for items in ***Display Items*** that starts with `CoCo format:`
+Use Visual Studio ***Fonts and Colors*** options to change colors for items. Look for items in ***Display Items*** that starts with `CoCo format:`
 
 # Examples
 

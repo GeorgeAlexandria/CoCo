@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.0.2
+
+**2017-08-11**
+
+ - [x] Fixes
+   - [x] [#12](https://github.com/GeorgeAlexandria/CoCo/issues/12) - Change order of format definitions to enable bold fonts
+
 ## 1.0.1
 
 **2017-09-10**
