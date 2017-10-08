@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
@@ -9,7 +10,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.LocalFieldName)]
     [Name(Names.LocalFieldName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class LocalFieldFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -25,7 +26,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.ParameterName)]
     [Name(Names.ParameterName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ParameterFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -41,7 +42,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.NamespaceName)]
     [Name(Names.NamespaceName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class NamespaceFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -57,7 +58,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.ExtensionMethodName)]
     [Name(Names.ExtensionMethodName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ExtensionMethodFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -73,7 +74,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.MethodName)]
     [Name(Names.MethodName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class MethodFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -89,7 +90,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.EventName)]
     [Name(Names.EventName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class EventFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -105,7 +106,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.PropertyName)]
     [Name(Names.PropertyName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class PropertyFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -121,7 +122,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.FieldName)]
     [Name(Names.FieldName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class FieldFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -137,7 +138,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.StaticMethodName)]
     [Name(Names.StaticMethodName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class StaticMethodFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -153,7 +154,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.EnumFiedName)]
     [Name(Names.EnumFiedName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class EnumFieldFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -169,7 +170,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.AliasNamespaceName)]
     [Name(Names.AliasNamespaceName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class AliasNamespaceFormat : ClassificationFormatDefinition
     {
         /// <summary>
@@ -185,7 +186,7 @@ namespace CoCo
     [ClassificationType(ClassificationTypeNames = Names.ConstructorMethodName)]
     [Name(Names.ConstructorMethodName)]
     [UserVisible(true)]
-    [Order(Before = Priority.Default)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ConstructorMethodFormat : ClassificationFormatDefinition
     {
         /// <summary>
