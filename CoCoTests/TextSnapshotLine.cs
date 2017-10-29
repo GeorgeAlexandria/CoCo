@@ -4,6 +4,18 @@ namespace CoCoTests
 {
     internal class TextSnapshotLine : ITextSnapshotLine
     {
+        public TextSnapshotLine(ITextSnapshot snapshot, int lineNumber, Span extent, int lineBreakLength)
+        {
+            Extent = new SnapshotSpan(snapshot, extent);
+            LineNumber = lineNumber;
+            LineBreakLength = lineBreakLength;
+        }
+
+        public TextSnapshotLine(ITextSnapshot snapshot, TextImageLine lineSpan) :
+            this(snapshot, lineSpan.LineNumber, lineSpan.Extent, lineSpan.LineBreakLength)
+        {
+        }
+
         public ITextSnapshot Snapshot => Extent.Snapshot;
 
         public int LineNumber { get; }
@@ -31,18 +43,6 @@ namespace CoCoTests
         public SnapshotSpan Extent { get; }
 
         public SnapshotSpan ExtentIncludingLineBreak => new SnapshotSpan(Extent.Start, LengthIncludingLineBreak);
-
-        public TextSnapshotLine(ITextSnapshot snapshot, int lineNumber, Span extent, int lineBreakLength)
-        {
-            Extent = new SnapshotSpan(snapshot, extent);
-            LineNumber = lineNumber;
-            LineBreakLength = lineBreakLength;
-        }
-
-        public TextSnapshotLine(ITextSnapshot snapshot, TextImageLine lineSpan) :
-            this(snapshot, lineSpan.LineNumber, lineSpan.Extent, lineSpan.LineBreakLength)
-        {
-        }
 
         public string GetText() => Extent.GetText();
 

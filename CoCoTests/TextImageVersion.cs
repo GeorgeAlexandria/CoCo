@@ -5,11 +5,12 @@ namespace CoCoTests
 {
     internal class TextImageVersion : ITextImageVersion
     {
-        internal TextImageVersion(int versionNumber, int length, object identifier)
+        internal TextImageVersion(int versionNumber, int reiteratedVersionNumber, int length, object identifier)
         {
             VersionNumber = versionNumber;
             Identifier = identifier;
             Length = length;
+            ReiteratedVersionNumber = reiteratedVersionNumber;
         }
 
         public ITextImageVersion Next { get; }
@@ -22,7 +23,7 @@ namespace CoCoTests
 
         public object Identifier { get; }
 
-        public int ReiteratedVersionNumber => throw new NotImplementedException();
+        public int ReiteratedVersionNumber { get; }
 
         public int TrackTo(VersionedPosition other, PointTrackingMode mode)
         {
