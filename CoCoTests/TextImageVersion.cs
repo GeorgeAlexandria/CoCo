@@ -12,15 +12,17 @@ namespace CoCoTests
             Length = length;
         }
 
-        public ITextImageVersion Next { get; private set; }
+        public ITextImageVersion Next { get; }
 
-        public int Length { get; private set; }
+        public int Length { get; }
 
-        public INormalizedTextChangeCollection Changes { get; private set; }
+        public INormalizedTextChangeCollection Changes { get; }
 
         public int VersionNumber { get; }
 
         public object Identifier { get; }
+
+        public int ReiteratedVersionNumber => throw new NotImplementedException();
 
         public int TrackTo(VersionedPosition other, PointTrackingMode mode)
         {
