@@ -8,15 +8,14 @@ namespace CoCoTests
         // The little 31 bits determine the start position of a line' break.
         // The 32 bit determines how many characters are represented in the line' break.
         // If the 32 bit is set it means that line' break contains 2 character otherwise it contains only 1.
-        private readonly List<uint> _lineBreaks;
+        private readonly List<uint> _lineBreaks = new List<uint>();
 
         private const uint lengthOfLineBreakMask = (uint)int.MaxValue + 1;
 
         private const uint positionOfLineBreakMask = int.MaxValue;
 
-        private LineSeparators(int capacity = 0)
+        private LineSeparators()
         {
-            _lineBreaks = capacity >= 0 ? new List<uint>(capacity) : throw new ArgumentOutOfRangeException(nameof(capacity));
         }
 
         public int Length => _lineBreaks.Count;
