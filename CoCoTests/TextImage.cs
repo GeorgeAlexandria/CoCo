@@ -4,25 +4,6 @@ using Microsoft.VisualStudio.Text;
 
 namespace CoCoTests
 {
-    internal class StringOperand
-    {
-        public StringOperand()
-        {
-        }
-
-        public int GetLineNumberFromPosition(int position) => throw new NotImplementedException();
-
-        public void GetLineFromLineNumber(int lineNumber, out Span extent, out int lineBreakLength) => throw new NotImplementedException();
-
-        public int Length;
-
-        public int LineBreakCount;
-
-        public string GetText(Span span) => throw new NotImplementedException();
-
-        public StringOperand GetSubText(Span span) => throw new NotImplementedException();
-    }
-
     internal class TextImage : ITextImage
     {
         private readonly StringOperand _sourceOperand;
@@ -33,7 +14,7 @@ namespace CoCoTests
             _sourceOperand = sourceOperand;
         }
 
-        public char this[int position] => throw new NotImplementedException();
+        public char this[int position] => _sourceOperand[position];
 
         public ITextImageVersion Version { get; }
 

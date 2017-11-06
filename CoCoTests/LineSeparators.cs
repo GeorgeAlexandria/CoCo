@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 namespace CoCoTests
 {
-    internal class LineSeparators : ILineSeparators
+    internal class LineSeparators
     {
-        // The little 31 bits determine the start position of a line' break.
-        // The 32 bit determines how many characters are represented in the line' break.
-        // If the 32 bit is set it means that line' break contains 2 character otherwise it contains only 1.
+        /// <summary>
+        /// The little 31 bits determine the start position of a line' break.
+        /// The 32 bit determines how many characters are represented in the line' break.
+        /// If the 32 bit is set it means that line' break contains 2 character otherwise it contains only 1.
+        /// </summary>
         private readonly List<uint> _lineBreaks = new List<uint>();
 
         private const uint lengthOfLineBreakMask = (uint)int.MaxValue + 1;
@@ -18,7 +20,7 @@ namespace CoCoTests
         {
         }
 
-        public int Length => _lineBreaks.Count;
+        public int Count => _lineBreaks.Count;
 
         public int StartOfLineBreak(int index) => (int)(_lineBreaks[index] & positionOfLineBreakMask);
 
