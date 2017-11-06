@@ -6,10 +6,10 @@ namespace CoCoTests
 {
     internal class TextBuffer : ITextBuffer
     {
-        public TextBuffer(IContentType contentType)
+        public TextBuffer(IContentType contentType, StringOperand source)
         {
             ContentType = contentType;
-            //CurrentSnapshot = new BaseSnapshot();
+            CurrentSnapshot = new TextSnapshot(this, new TextVersion(this, new TextImageVersion(source.Length)), source);
         }
 
         public IContentType ContentType { get; }

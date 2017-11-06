@@ -5,6 +5,10 @@ namespace CoCoTests
 {
     internal class TextImageVersion : ITextImageVersion
     {
+        public TextImageVersion(int length) : this(0, 0, length, new object())
+        {
+        }
+
         internal TextImageVersion(int versionNumber, int reiteratedVersionNumber, int length, object identifier)
         {
             VersionNumber = versionNumber;
