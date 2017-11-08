@@ -155,17 +155,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="ClassificationType.cs" />
+    <Compile Include="Stubs\ClassificationType.cs" />
+    <Compile Include="Stubs\ContentType.cs" />
     <Compile Include="LineSeparators.cs" />
     <Compile Include="StringOperand.cs" />
-    <Compile Include="TextImage.cs" />
-    <Compile Include="TextSnapshot.cs" />
+    <Compile Include="Stubs\TextImage.cs" />
+    <Compile Include="Stubs\TextSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextBuffer.cs" />
-    <Compile Include="TextImageVersion.cs" />
-    <Compile Include="TextSnapshotLine.cs" />
-    <Compile Include="TextVersion.cs" />
-    <Compile Include="TrackingPoint.cs" />
+    <Compile Include="Stubs\TextBuffer.cs" />
+    <Compile Include="Stubs\TextImageVersion.cs" />
+    <Compile Include="Stubs\TextSnapshotLine.cs" />
+    <Compile Include="Stubs\TextVersion.cs" />
+    <Compile Include="Stubs\TrackingPoint.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
