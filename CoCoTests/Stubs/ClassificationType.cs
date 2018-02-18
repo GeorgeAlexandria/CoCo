@@ -26,6 +26,12 @@ namespace CoCoTests
             return false;
         }
 
+        public IClassificationType AddBaseTypes(IEnumerable<IClassificationType> baseTypes)
+        {
+            _baseClassifications.AddRange(baseTypes);
+            return this;
+        }
+
         public IEnumerable<IClassificationType> BaseTypes => _baseClassifications;
     }
 }

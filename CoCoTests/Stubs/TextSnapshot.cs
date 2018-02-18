@@ -11,6 +11,14 @@ namespace CoCoTests
     {
         private readonly ITextVersion2 _version;
 
+        public TextSnapshot(ITextBuffer buffer, ITextVersion2 version, StringOperand source)
+        {
+            _version = version;
+            TextBuffer = buffer;
+            TextImage = new TextImage(version.ImageVersion, source);
+            ContentType = version.TextBuffer.ContentType;
+        }
+
         public IContentType ContentType { get; }
 
         public ITextBuffer TextBuffer { get; }
@@ -36,14 +44,6 @@ namespace CoCoTests
         }
 
         public ITextImage TextImage { get; }
-
-        public TextSnapshot(ITextBuffer buffer, ITextVersion2 version, StringOperand source)
-        {
-            _version = version;
-            TextBuffer = buffer;
-            TextImage = new TextImage(version.ImageVersion, source);
-            ContentType = version.TextBuffer.ContentType;
-        }
 
         public string GetText(int startIndex, int length) => GetText(new Span(startIndex, length));
 

@@ -7,6 +7,12 @@ namespace CoCoTests
     {
         private readonly TextImageVersion _textImageVersion;
 
+        public TextVersion(ITextBuffer textBuffer, TextImageVersion imageVersion)
+        {
+            TextBuffer = textBuffer ?? throw new ArgumentNullException(nameof(textBuffer));
+            _textImageVersion = imageVersion ?? throw new ArgumentNullException(nameof(imageVersion));
+        }
+
         public int VersionNumber => ImageVersion.VersionNumber;
 
         public int ReiteratedVersionNumber => ImageVersion.ReiteratedVersionNumber;
@@ -20,12 +26,6 @@ namespace CoCoTests
         public ITextBuffer TextBuffer { get; }
 
         public ITextImageVersion ImageVersion => _textImageVersion;
-
-        public TextVersion(ITextBuffer textBuffer, TextImageVersion imageVersion)
-        {
-            TextBuffer = textBuffer ?? throw new ArgumentNullException(nameof(textBuffer));
-            _textImageVersion = imageVersion ?? throw new ArgumentNullException(nameof(imageVersion));
-        }
 
         // TODO: isn't completed
         public ITrackingPoint CreateTrackingPoint(int position, PointTrackingMode trackingMode) =>

@@ -6,7 +6,7 @@ namespace CoCoTests
 {
     internal class StringOperand
     {
-        private static readonly StringOperand _empty = new StringOperand();
+        private static readonly StringOperand _empty = new StringOperand(string.Empty);
 
         private readonly int _textSpanStart;
 
@@ -24,10 +24,6 @@ namespace CoCoTests
             _lineBreakSpanStart = 0;
             LineBreakCount = _lineBreaks.Count;
             Length = _source.Length;
-        }
-
-        private StringOperand() : this(string.Empty)
-        {
         }
 
         private StringOperand(string source, LineSeparators lineBreaks, int start, int length, int lineBreakSpanStart, int lineBreakCount)

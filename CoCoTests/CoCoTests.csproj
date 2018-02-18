@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Stubs\ClassificationTypeRegistry.cs" />
     <Compile Include="Stubs\ClassificationType.cs" />
     <Compile Include="Stubs\ContentType.cs" />
     <Compile Include="LineSeparators.cs" />
