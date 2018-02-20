@@ -54,7 +54,7 @@
     <Compile Include="EditorClassifierFormat.cs" />
     <Compile Include="EditorClassifierProvider.cs" />
     <Compile Include="Names.cs" />
-    <Compile Include="NLog.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntaxNodeExtensions.cs" />
     <Compile Include="WorkspaceExtensions.cs" />

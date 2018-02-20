@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.CSharp;
@@ -8,7 +7,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using NLog;
 
 namespace CoCo
 {
@@ -17,6 +15,7 @@ namespace CoCo
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
+        private readonly IClassificationFormatMapService formatMapService;
         private readonly IClassificationType _localFieldType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
@@ -35,25 +34,6 @@ namespace CoCo
 
         private SemanticModel _semanticModel;
 
-        // NOTE: Logger is thread-safe
-        private static readonly Logger _logger;
-
-#if DEBUG
-
-        static EditorClassifier()
-        {
-            NLog.Initialize();
-            _logger = LogManager.GetLogger(nameof(_logger));
-        }
-
-#endif
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EditorClassifier"/> class.
-        /// </summary>
-        /// <param name="registry"></param>
-        /// <param name="textDocumentFactoryService"></param>
-        /// <param name="buffer"></param>
         internal EditorClassifier(
             IClassificationTypeRegistryService registry,
             ITextDocumentFactoryService textDocumentFactoryService,
@@ -77,6 +57,24 @@ namespace CoCo
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+        }
+
+        internal EditorClassifier(Dictionary<string, IClassificationType> classifications, ITextBuffer textBuffer)
+        {
+            _localFieldType = classifications[Names.LocalFieldName];
+            _namespaceType = classifications[Names.NamespaceName];
+            _parameterType = classifications[Names.ParameterName];
+            _extensionMethodType = classifications[Names.ExtensionMethodName];
+            _methodType = classifications[Names.MethodName];
+            _eventType = classifications[Names.EventName];
+            _propertyType = classifications[Names.PropertyName];
+            _fieldType = classifications[Names.FieldName];
+            _staticMethodType = classifications[Names.StaticMethodName];
+            _enumFieldType = classifications[Names.EnumFiedName];
+            _aliasNamespaceType = classifications[Names.AliasNamespaceName];
+            _constructorMethodType = classifications[Names.ConstructorMethodName];
+
+            _textBuffer = textBuffer;
         }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
@@ -117,48 +115,57 @@ namespace CoCo
         /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            _logger.ConditionalInfo("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
-            var result = new List<ClassificationSpan>();
+            Log.Debug("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
 
-            // NOTE: Workspace can be null for "Using directive is unnecessary". Also workspace can
-            // be null when solution/project failed to load and VS gave some reasons of it or when
-            // try to open a file doesn't contained in the current solution
-            Workspace workspace = span.Snapshot.TextBuffer.GetWorkspace();
+            /// NOTE: <see cref="Workspace"/> can be null for "Using directive is unnecessary". Also workspace can
+            /// be null when solution|project failed to load and VS gave some reasons of it or when
+            /// try to open a file doesn't contained in the current solution
+            var workspace = span.Snapshot.TextBuffer.GetWorkspace();
             if (workspace == null)
             {
                 // TODO: Add supporting a files that doesn't included to the current solution
-                return result;
+                return new List<ClassificationSpan>();
             }
-            Document document = workspace.GetDocument(span.Snapshot.AsText());
 
-            SemanticModel semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
-            SyntaxTree syntaxTree = semanticModel.SyntaxTree;
+            var document = workspace.GetDocument(span.Snapshot.AsText());
+            var semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
+            var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
 
-            TextSpan textSpan = new TextSpan(span.Start.Position, span.Length);
-            var classifiedSpans = Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace)
-                .Where(item => item.ClassificationType == "identifier");
+            return GetClassificationSpans(workspace, semanticModel, root, span);
+        }
 
-            CompilationUnitSyntax unitCompilation = syntaxTree.GetCompilationUnitRoot();
-            foreach (var item in classifiedSpans)
+        internal List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
+        {
+            var spans = new List<ClassificationSpan>();
+
+            var textSpan = new TextSpan(span.Start.Position, span.Length);
+            foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                // NOTE: Some kind of nodes, for example ArgumentSyntax, should are handled with a
-                // specific way
-                SyntaxNode node = unitCompilation.FindNode(item.TextSpan, true).HandleNode();
+                if (item.ClassificationType != "identifier")
+                {
+                    continue;
+                }
 
-                ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol ?? semanticModel.GetDeclaredSymbol(node);
+                /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a
+                /// specific way
+                var node = root.FindNode(item.TextSpan, true).HandleNode();
+
+                var info = semanticModel.GetSymbolInfo(node);
+                var symbol = info.Symbol ?? semanticModel.GetDeclaredSymbol(node);
                 if (symbol == null)
                 {
                     // NOTE: handle alias in using directive
                     if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax)
                     {
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _aliasNamespaceType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _aliasNamespaceType));
                         continue;
                     }
 
                     // TODO: Log information about a node and semantic model, because semantic model
                     // didn't retrive information from node in this case
-                    _logger.ConditionalInfo("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
-                    _logger.ConditionalInfo("Node is {0} {1}", node.Kind(), node.RawKind);
+                    Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
+                    Log.Debug("Candidate Reason {0}", info.CandidateReason);
+                    Log.Debug("Node is {0} {1}", node.Kind(), node.RawKind);
                     continue;
                 }
                 switch (symbol.Kind)
@@ -176,38 +183,38 @@ namespace CoCo
                     case SymbolKind.TypeParameter:
                     case SymbolKind.Preprocessing:
                         //case SymbolKind.Discard:
-                        _logger.ConditionalInfo("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
-                        _logger.ConditionalInfo("Text was: {0}", node.GetText().ToString());
+                        Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
+                        Log.Debug("Text was: {0}", node.GetText().ToString());
                         break;
 
                     case SymbolKind.Field:
-                        var fieldSymbol = (symbol as IFieldSymbol).Type;
-                        var fieldType = fieldSymbol.TypeKind == TypeKind.Enum ? _enumFieldType : _fieldType;
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldType));
+                        var fieldType = (symbol as IFieldSymbol).Type;
+                        var fieldClassification = fieldType.TypeKind == TypeKind.Enum ? _enumFieldType : _fieldType;
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldClassification));
                         break;
 
                     case SymbolKind.Property:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _propertyType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _propertyType));
                         break;
 
                     case SymbolKind.Event:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
                         break;
 
                     case SymbolKind.Local:
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localFieldType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localFieldType));
                         break;
 
                     case SymbolKind.Namespace:
                         var namesapceType = IsAliasNamespace(symbol, node) ? _namespaceType : _aliasNamespaceType;
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 
                     case SymbolKind.Parameter:
                         // NOTE: Skip argument in summaries
                         if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
                         {
-                            result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                            spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
                         }
                         break;
 
@@ -218,22 +225,18 @@ namespace CoCo
                             : methodSymbol.IsExtensionMethod
                                 ? _extensionMethodType
                                 : methodSymbol.IsStatic ? _staticMethodType : _methodType;
-                        result.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
-                        break;
-
-                    default:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
                 }
             }
 
-            return result;
+            return spans;
         }
 
-        private bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
+        private static bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
         {
             var strSymbol = symbol.ToString();
-            if (strSymbol == (node as IdentifierNameSyntax).Identifier.Text)
-                return true;
+            if (strSymbol == (node as IdentifierNameSyntax).Identifier.Text) return true;
 
             var fullNamespaceNode = node;
             while (strSymbol != fullNamespaceNode.ToString() && fullNamespaceNode.Parent is QualifiedNameSyntax)
@@ -244,7 +247,7 @@ namespace CoCo
             return strSymbol == fullNamespaceNode.ToString();
         }
 
-        private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
+        private static ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
             new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
     }
 }

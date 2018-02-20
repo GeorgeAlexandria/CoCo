@@ -1,27 +1,34 @@
-﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+
+#if DEBUG
+
+using System;
 using System.IO;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 
+#endif
+
 // TODO: remove NLog reference for RELEASE mode from .csproj
 namespace CoCo
 {
     /// <summary>
-    /// Now <see cref="NLog"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/>
+    /// Now <see cref="Log"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/>
     /// and Preprocessor Directives are used for it.
     /// </summary>
-    internal static class NLog
+    internal static class Log
     {
+#if DEBUG
+        private static Logger _logger;
+#endif
+
         private const string _debug = "DEBUG";
 
-        // NOTE: Config initialization can be extracted to nlog config file
-        [Conditional(_debug)]
-        internal static void Initialize()
+        static Log()
         {
+#if DEBUG
             string appDataLocal = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\CoCo";
             if (!Directory.Exists(appDataLocal))
             {
@@ -56,19 +63,34 @@ namespace CoCo
             //LogManager.ThrowConfigExceptions = true;
             //LogManager.ThrowExceptions = true;
             LogManager.Configuration = config;
+
+            _logger = LogManager.GetLogger(nameof(_logger));
+#endif
         }
 
         // NOTE: it's tiny optimization for string building
         [Conditional(_debug)]
-        internal static void ConditionalInfo<TArg>(this Logger logger, [Localizable(false)] string message, TArg arg) =>
-            logger.Info(message, arg);
+        internal static void Debug<TArg>(string message, TArg arg)
+        {
+#if DEBUG
+            _logger.Info(message, arg);
+#endif
+        }
 
         [Conditional(_debug)]
-        internal static void ConditionalInfo<TArg1, TArg2>(this Logger logger, [Localizable(false)] string message, TArg1 arg1, TArg2 arg2) =>
-            logger.Info(message, arg1, arg2);
+        internal static void Debug<TArg1, TArg2>(string message, TArg1 arg1, TArg2 arg2)
+        {
+#if DEBUG
+            _logger.Info(message, arg1, arg2);
+#endif
+        }
 
         [Conditional(_debug)]
-        internal static void ConditionalInfo<TArg1, TArg2, TArg3>(this Logger logger, [Localizable(false)] string message, TArg1 arg1, TArg2 arg2, TArg3 arg3) =>
-            logger.Info(message, arg1, arg2, arg3);
+        internal static void Debug<TArg1, TArg2, TArg3>(string message, TArg1 arg1, TArg2 arg2, TArg3 arg3)
+        {
+#if DEBUG
+            _logger.Info(message, arg1, arg2, arg3);
+#endif
+        }
     }
 }

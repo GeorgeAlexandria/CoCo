@@ -7,6 +7,6 @@ namespace CoCo
     public static class SyntaxNodeExtensions
     {
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
-           node.Kind() == SyntaxKind.Argument ? (node as ArgumentSyntax).Expression : node;
+           node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression : node;
     }
 }
