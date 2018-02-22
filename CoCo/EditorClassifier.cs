@@ -77,20 +77,6 @@ namespace CoCo
             _textBuffer = textBuffer;
         }
 
-        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
-
-        // TODO: it's not good idea subscribe on text document disposed. Try to subscribe on text
-        // document closed.
-        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
-        {
-            if (e.TextDocument.TextBuffer == _textBuffer)
-            {
-                _semanticModel = null;
-                _textBuffer.Changed -= OnTextBufferChanged;
-                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
-            }
-        }
-
         /// <summary>
         /// An event that occurs when the classification of a span of text has changed.
         /// </summary>
@@ -247,7 +233,21 @@ namespace CoCo
             return strSymbol == fullNamespaceNode.ToString();
         }
 
-        private static ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
+        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
+
+        // TODO: it's not good idea subscribe on text document disposed. Try to subscribe on text
+        // document closed.
+        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
+        {
+            if (e.TextDocument.TextBuffer == _textBuffer)
+            {
+                _semanticModel = null;
+                _textBuffer.Changed -= OnTextBufferChanged;
+                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
+            }
+        }
+
+        private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
             new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
     }
 }
