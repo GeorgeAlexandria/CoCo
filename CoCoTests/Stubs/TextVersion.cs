@@ -15,7 +15,7 @@ namespace CoCoTests
 
         public int VersionNumber => ImageVersion.VersionNumber;
 
-        public int ReiteratedVersionNumber => ImageVersion.ReiteratedVersionNumber;
+        public int ReiteratedVersionNumber => _textImageVersion.ReiteratedVersionNumber;
 
         public ITextVersion Next { get; }
 
