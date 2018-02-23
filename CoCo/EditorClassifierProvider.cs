@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -41,8 +42,14 @@ namespace CoCo
         /// </returns>
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
+            var classificationTypes = new Dictionary<string, IClassificationType>(32);
+            foreach (var name in Names.All)
+            {
+                classificationTypes.Add(name, _classificationRegistry.GetClassificationType(name));
+            }
+
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new EditorClassifier(_classificationRegistry, _textDocumentFactoryService, textBuffer));
+                new EditorClassifier(classificationTypes, _textDocumentFactoryService, textBuffer));
         }
     }
 }

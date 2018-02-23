@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using CoCo;
 using Microsoft.CodeAnalysis;
@@ -35,7 +36,12 @@ namespace CoCoTests
 
                 var root = syntaxTree.GetCompilationUnitRoot();
 
-                var classificationTypes = GetClassificationTypes();
+                var classificationTypes = new Dictionary<string, IClassificationType>(32);
+                foreach (var item in Names.All)
+                {
+                    classificationTypes.Add(item, new ClassificationType(item));
+                }
+
                 var classifier = new EditorClassifier(classificationTypes, buffer);
                 actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
             }
@@ -94,24 +100,6 @@ namespace CoCoTests
                 if (!hasEqualsItem) return false;
             }
             return true;
-        }
-
-        private Dictionary<string, IClassificationType> GetClassificationTypes()
-        {
-            var classifications = new Dictionary<string, IClassificationType>(32);
-            var fields = typeof(Names).GetFields();
-            var count = fields.Length;
-            for (int i = 0; i < count; ++i)
-            {
-                if (!(fields[i].GetRawConstantValue() is string field))
-                {
-                    field = null;
-                    throw new ArgumentException($"Names contains a some strange field: {field}");
-                }
-                classifications.Add(field, new ClassificationType(field));
-            }
-
-            return classifications;
         }
     }
 }

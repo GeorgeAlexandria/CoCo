@@ -15,7 +15,6 @@ namespace CoCo
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
-        private readonly IClassificationFormatMapService formatMapService;
         private readonly IClassificationType _localFieldType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
@@ -35,25 +34,11 @@ namespace CoCo
         private SemanticModel _semanticModel;
 
         internal EditorClassifier(
-            IClassificationTypeRegistryService registry,
+            Dictionary<string, IClassificationType> classifications,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer)
+            ITextBuffer buffer) : this(classifications, buffer)
         {
-            _localFieldType = registry.GetClassificationType(Names.LocalFieldName);
-            _namespaceType = registry.GetClassificationType(Names.NamespaceName);
-            _parameterType = registry.GetClassificationType(Names.ParameterName);
-            _extensionMethodType = registry.GetClassificationType(Names.ExtensionMethodName);
-            _methodType = registry.GetClassificationType(Names.MethodName);
-            _eventType = registry.GetClassificationType(Names.EventName);
-            _propertyType = registry.GetClassificationType(Names.PropertyName);
-            _fieldType = registry.GetClassificationType(Names.FieldName);
-            _staticMethodType = registry.GetClassificationType(Names.StaticMethodName);
-            _enumFieldType = registry.GetClassificationType(Names.EnumFiedName);
-            _aliasNamespaceType = registry.GetClassificationType(Names.AliasNamespaceName);
-            _constructorMethodType = registry.GetClassificationType(Names.ConstructorMethodName);
-
             _textDocumentFactoryService = textDocumentFactoryService;
-            _textBuffer = buffer;
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
@@ -77,9 +62,6 @@ namespace CoCo
             _textBuffer = textBuffer;
         }
 
-        /// <summary>
-        /// An event that occurs when the classification of a span of text has changed.
-        /// </summary>
         /// <remarks>
         /// This event gets raised if a non-text change would affect the classification in some way,
         /// for example typing /* would cause the classification to change in C# without directly
@@ -91,14 +73,6 @@ namespace CoCo
         /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range
         /// of text.
         /// </summary>
-        /// <remarks>
-        /// This method scans the given SnapshotSpan for potential matches for this classification.
-        /// In this instance, it classifies everything and returns each span as a new ClassificationSpan.
-        /// </remarks>
-        /// <param name="span">The span currently being classified.</param>
-        /// <returns>
-        /// A list of ClassificationSpans that represent spans identified to be of this classification.
-        /// </returns>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             Log.Debug("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);

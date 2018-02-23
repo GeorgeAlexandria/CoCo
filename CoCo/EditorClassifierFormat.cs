@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
-namespace CoCo
+namespace CoCo.FormatDefinition
 {
     // TODO: Need generate a custom options. It gets possibilite to set other available options
     [Export(typeof(EditorFormatDefinition))]
@@ -13,9 +13,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class LocalFieldFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocalFieldFormat"/> class.
-        /// </summary>
         public LocalFieldFormat()
         {
             DisplayName = "CoCo format: local fields";
@@ -29,9 +26,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ParameterFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterFormat"/> class.
-        /// </summary>
         public ParameterFormat()
         {
             DisplayName = "CoCo format: parameters";
@@ -45,9 +39,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class NamespaceFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NamespaceFormat"/> class.
-        /// </summary>
         public NamespaceFormat()
         {
             DisplayName = "CoCo format: namespaces";
@@ -61,9 +52,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ExtensionMethodFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ExtensionMethodFormat"/> class.
-        /// </summary>
         public ExtensionMethodFormat()
         {
             DisplayName = "CoCo format: extension methods";
@@ -77,9 +65,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class MethodFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MethodFormat"/> class.
-        /// </summary>
         public MethodFormat()
         {
             DisplayName = "CoCo format: methods";
@@ -93,9 +78,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class EventFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EventFormat"/> class.
-        /// </summary>
         public EventFormat()
         {
             DisplayName = "CoCo format: events";
@@ -109,9 +91,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class PropertyFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PropertyFormat"/> class.
-        /// </summary>
         public PropertyFormat()
         {
             DisplayName = "CoCo format: properies";
@@ -125,9 +104,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class FieldFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FieldFormat"/> class.
-        /// </summary>
         public FieldFormat()
         {
             DisplayName = "CoCo format: fileds";
@@ -141,9 +117,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class StaticMethodFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StaticMethodFormat"/> class.
-        /// </summary>
         public StaticMethodFormat()
         {
             DisplayName = "CoCo format: static methods";
@@ -157,9 +130,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class EnumFieldFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EnumFieldFormat"/> class.
-        /// </summary>
         public EnumFieldFormat()
         {
             DisplayName = "CoCo format: enum field";
@@ -173,9 +143,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class AliasNamespaceFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AliasNamespaceFormat"/> class.
-        /// </summary>
         public AliasNamespaceFormat()
         {
             DisplayName = "CoCo format: alias namespace";
@@ -189,9 +156,6 @@ namespace CoCo
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class ConstructorMethodFormat : ClassificationFormatDefinition
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConstructorMethodFormat"/> class.
-        /// </summary>
         public ConstructorMethodFormat()
         {
             DisplayName = "CoCo format: constructor method";

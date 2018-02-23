@@ -1,4 +1,6 @@
-﻿namespace CoCo
+﻿using System.Collections.Immutable;
+
+namespace CoCo
 {
     public static class Names
     {
@@ -14,5 +16,30 @@
         public const string EnumFiedName = "Enum field name";
         public const string AliasNamespaceName = "Alias namespace name";
         public const string ConstructorMethodName = "Constructor method name";
+
+        private static ImmutableArray<string> _all;
+
+        public static ImmutableArray<string> All
+        {
+            get
+            {
+                if (!_all.IsDefaultOrEmpty) return _all;
+
+                var builder = ImmutableArray.CreateBuilder<string>();
+                builder.Add(LocalFieldName);
+                builder.Add(ParameterName);
+                builder.Add(NamespaceName);
+                builder.Add(ExtensionMethodName);
+                builder.Add(MethodName);
+                builder.Add(EventName);
+                builder.Add(PropertyName);
+                builder.Add(FieldName);
+                builder.Add(StaticMethodName);
+                builder.Add(EnumFiedName);
+                builder.Add(AliasNamespaceName);
+                builder.Add(ConstructorMethodName);
+                return _all = builder.ToImmutable();
+            }
+        }
     }
 }
