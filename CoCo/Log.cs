@@ -11,7 +11,6 @@ using NLog.Targets.Wrappers;
 
 #endif
 
-// TODO: remove NLog reference for RELEASE mode from .csproj
 namespace CoCo
 {
     /// <summary>
