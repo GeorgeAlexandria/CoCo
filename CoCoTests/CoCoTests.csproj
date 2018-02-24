@@ -170,6 +170,7 @@
     <Compile Include="Stubs\TextSnapshotLine.cs" />
     <Compile Include="Stubs\TextVersion.cs" />
     <Compile Include="Stubs\TrackingPoint.cs" />
+    <Compile Include="TestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
