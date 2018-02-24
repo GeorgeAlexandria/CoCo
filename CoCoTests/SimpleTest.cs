@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using CoCo;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -53,26 +53,62 @@ namespace CoCoTests
                 new ClassificationSpan(new SnapshotSpan(buffer.CurrentSnapshot, 38, 1), new ClassificationType(Names.LocalFieldName)),
             };
 
-            Assert.AreEqual(expectedSpans.Count, actualSpans.Count);
+            AssertIsEquivalent(expectedSpans, actualSpans);
+        }
 
-            //Assert.That(actual, Is.All.Matches<ClassificationSpan>(x => Has.Some.Matches<ClassificationSpan>(y => AreClassificationSpanEquals(x, y)).ApplyTo(expected).IsSuccess));
+        private static void AssertIsEquivalent(IEnumerable<ClassificationSpan> expectedSpans, IEnumerable<ClassificationSpan> actualSpans)
+        {
+            var actualList = actualSpans.ToList();
+            var expectedList = expectedSpans.ToList();
 
-            foreach (var expectedSpan in expectedSpans)
+            int i = 0;
+            while (i < actualList.Count)
             {
-                var hasEqualsItem = false;
-                foreach (var actualSpan in actualSpans)
+                var hasEquals = false;
+                for (int j = 0; j < expectedList.Count; ++j)
                 {
-                    if (AreClassificationSpanEquals(expectedSpan, actualSpan))
+                    if (AreClassificationSpanEquals(expectedList[j], actualList[i]))
                     {
-                        hasEqualsItem = true;
+                        expectedList.RemoveAt(j);
+                        actualList.RemoveAt(i);
+                        hasEquals = true;
                         break;
                     }
                 }
-                Assert.IsTrue(hasEqualsItem);
+                if (!hasEquals) ++i;
             }
+
+            if ((actualList.Count | expectedList.Count) == 0)
+            {
+                return;
+            }
+
+            void AppendClassificationSpan(StringBuilder appendBuilder, ClassificationSpan span)
+            {
+                var classificationType = span.ClassificationType;
+                appendBuilder.AppendLine("Item:")
+                    .AppendLine("    Type:")
+                    .Append("        ").AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
+                    .Append("        ").AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine()
+                    .Append("    Span: ").Append(span.Span).AppendLine();
+            }
+
+            var builder = new StringBuilder(1 << 12);
+            if (expectedList.Count > 0) builder.AppendLine().AppendLine("This items were not found:");
+            foreach (var item in expectedList)
+            {
+                AppendClassificationSpan(builder, item);
+            }
+
+            if (actualList.Count > 0) builder.AppendLine().AppendLine("This items were redundant:");
+            foreach (var item in actualList)
+            {
+                AppendClassificationSpan(builder, item);
+            }
+            Assert.Fail(builder.ToString());
         }
 
-        private bool AreClassificationSpanEquals(ClassificationSpan expected, ClassificationSpan actual)
+        private static bool AreClassificationSpanEquals(ClassificationSpan expected, ClassificationSpan actual)
         {
             if (expected == null ^ actual == null) return false;
             if (expected == null) return true;
