@@ -15,5 +15,10 @@ namespace CoCoTests
             string.Equals(Path.GetFullPath(path), path, StringComparison.Ordinal)
                 ? path
                 : Path.GetFullPath(Path.Combine(rootPath, path));
+
+        /// <summary>
+        /// Returns the directory information for the <paramref name="path"/>
+        /// </summary>
+        public static string GetDirectoryName(this string path) => Path.GetDirectoryName(path);
     }
 }

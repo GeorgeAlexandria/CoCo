@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using CoCo;
 using Microsoft.CodeAnalysis;
@@ -13,8 +15,26 @@ namespace CoCoTests
 {
     internal static class TestHelper
     {
-        public static List<ClassificationSpan> GetClassificationSpans(SyntaxTree syntaxTree, SemanticModel semanticModel, TextBuffer buffer)
+        public static string ReadCode(string path)
         {
+            path = GetPathRelativeToTest(path);
+            var code = File.ReadAllText(path);
+            return code;
+        }
+
+        public static List<ClassificationSpan> GetClassificationSpans(string projectPath, TextBuffer buffer)
+        {
+            var code = buffer.CurrentSnapshot.GetText();
+            projectPath = GetPathRelativeToTest(projectPath);
+
+            var references = MsBuild.ResolveAssemblyReferences(projectPath);
+
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+            var semanticModel = CSharpCompilation.Create("TestCompilation")
+                .AddSyntaxTrees(syntaxTree)
+                .AddReferences(references.Select(x => MetadataReference.CreateFromFile(x)))
+                .GetSemanticModel(syntaxTree, true);
+
             List<ClassificationSpan> actualSpans = null;
 
             using (var workspace = new AdhocWorkspace())
@@ -118,6 +138,13 @@ namespace CoCoTests
                 if (!hasEqualsItem) return false;
             }
             return true;
+        }
+
+        private static string GetPathRelativeToTest(string path, [CallerFilePath] string sourceCallerPath = null)
+        {
+            // NOTE: ../CoCoTests/TestHelper.cs
+            var sourceDirectory = sourceCallerPath.GetDirectoryName().GetDirectoryName();
+            return Path.Combine(sourceDirectory, path);
         }
     }
 }

@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CoCoTests")]
-[assembly: AssemblyDescription("Contains collection of tests")]
+[assembly: AssemblyTitle("CSharpIdentifiers")]
+[assembly: AssemblyDescription("Contains collection of the testing codes")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -17,4 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0b57bf2d-6001-4317-9527-96c7cf4b20d1")]
+[assembly: Guid("c91bfa80-61bf-4c54-ae46-40704ef2c7a0")]
