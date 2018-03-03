@@ -21,13 +21,14 @@ namespace CoCoTests
             var searchPaths = GetSearchPaths(project);
             var frameworkDirectories = GetFrameworkDirectories(project);
             var references = GetReferences(project);
+            var explicitReferences = GetExplicitReference(project);
             var appConfigFile = GetAppConfigFile(project);
 
-            // TODO: add reference to mscorlib
             var resolveTask = new ResolveAssemblyReference
             {
                 BuildEngine = new MsBuildEngine(),
                 Assemblies = references,
+                AssemblyFiles = explicitReferences,
                 TargetFrameworkVersion = project.GetPropertyValue("TargetFrameworkVersion"),
                 TargetFrameworkMoniker = project.GetPropertyValue("TargetFrameworkMoniker"),
                 SearchPaths = searchPaths,
@@ -45,6 +46,8 @@ namespace CoCoTests
             {
                 referencesAssemblies.Add(item.ItemSpec);
             }
+
+            ProjectCollection.GlobalProjectCollection.UnloadProject(project);
             return referencesAssemblies;
         }
 
@@ -71,7 +74,7 @@ namespace CoCoTests
                 TargetPath = project.GetPropertyValue("_GenerateBindingRedirectsIntermediateAppConfig").GetFullPath(project.DirectoryPath)
             };
 
-            return findTask.Execute() ? findTask.AppConfigFile.ItemSpec : string.Empty;
+            return findTask.AppConfigFile?.ItemSpec;
         }
 
         private static string[] GetFrameworkDirectories(Project project)
@@ -126,6 +129,22 @@ namespace CoCoTests
                         : item.EvaluatedValue;
                     metadata.Add(item.Name, value);
                 }
+                references.Add(new TaskItem(reference.EvaluatedInclude, metadata));
+            }
+            return references.ToArray();
+        }
+
+        private static TaskItem[] GetExplicitReference(Project project)
+        {
+            var references = new List<TaskItem>(32);
+            foreach (var reference in project.GetItems("_ExplicitReference"))
+            {
+                var metadata = new Dictionary<object, string>(64);
+                foreach (var item in reference.Metadata)
+                {
+                    metadata.Add(item.Name, item.EvaluatedValue);
+                }
+
                 references.Add(new TaskItem(reference.EvaluatedInclude, metadata));
             }
             return references.ToArray();
