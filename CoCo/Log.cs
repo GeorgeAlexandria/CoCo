@@ -91,5 +91,13 @@ namespace CoCo
             _logger.Info(message, arg1, arg2, arg3);
 #endif
         }
+
+        [Conditional(_debug)]
+        internal static void Debug<TArg>(string message, params TArg[] args)
+        {
+#if DEBUG
+            _logger.Info(message, args);
+#endif
+        }
     }
 }
