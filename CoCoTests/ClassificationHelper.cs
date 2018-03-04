@@ -22,15 +22,14 @@ namespace CoCoTests
             return new ClassificationSpan(new SnapshotSpan(buffer.CurrentSnapshot, start, length), new ClassificationType(name));
         }
 
-        public static List<ClassificationSpan> GetClassifications(this TextBuffer buffer, string projectPath)
+        public static List<ClassificationSpan> GetClassifications(this TextBuffer buffer, ProjectInfo project)
         {
             var code = buffer.CurrentSnapshot.GetText();
-            var references = MsBuild.ResolveAssemblyReferences(projectPath);
 
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var semanticModel = CSharpCompilation.Create("TestCompilation")
                 .AddSyntaxTrees(syntaxTree)
-                .AddReferences(references.Select(x => MetadataReference.CreateFromFile(x)))
+                .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
                 .GetSemanticModel(syntaxTree, true);
 
             List<ClassificationSpan> actualSpans = null;

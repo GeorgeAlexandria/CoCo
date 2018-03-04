@@ -19,6 +19,7 @@ namespace CoCoTests
 
         private static string[] allowedAssemblyExtensions = { ".dll" };
 
+        /// TODO: should return not a references, but <see cref="ProjectInfo"/>
         public static List<string> ResolveAssemblyReferences(string projectPath)
         {
             var project = new Project(projectPath);
