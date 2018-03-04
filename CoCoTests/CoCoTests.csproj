@@ -180,6 +180,9 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="TestHelper.cs" />
+    <Compile Include="CommonTests.cs" />
+    <Compile Include="CSharpIdentifierTests.cs" />
     <Compile Include="MsBuild.cs" />
     <Compile Include="MsBuildEngine.cs" />
     <Compile Include="PathExtensions.cs" />
@@ -196,7 +199,8 @@
     <Compile Include="Stubs\TextSnapshotLine.cs" />
     <Compile Include="Stubs\TextVersion.cs" />
     <Compile Include="Stubs\TrackingPoint.cs" />
-    <Compile Include="TestHelper.cs" />
+    <Compile Include="ClassificationHelper.cs" />
+    <Compile Include="TextHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
