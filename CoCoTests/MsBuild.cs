@@ -5,9 +5,14 @@ using System.Linq;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
+using CoCoLog;
 
 namespace CoCoTests
 {
+    // NOTE: describe how to retrieve input arguments
+    // http://source.roslyn.io/#MSBuildFiles/C/ProgramFiles(x86)/MSBuild/14.0/bin_/amd64/Microsoft.Common.CurrentVersion.targets,1820
+    // https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
+    // TODO: fix arguments in tasks
     internal static class MsBuild
     {
         private static string[] searchDelimeters = { Environment.NewLine, ";" };
@@ -24,31 +29,34 @@ namespace CoCoTests
             var explicitReferences = GetExplicitReference(project);
             var appConfigFile = GetAppConfigFile(project);
 
-            var resolveTask = new ResolveAssemblyReference
+            using (var logger = LogManager.GetLogger("ResolveReference"))
             {
-                BuildEngine = new MsBuildEngine(),
-                Assemblies = references,
-                AssemblyFiles = explicitReferences,
-                TargetFrameworkVersion = project.GetPropertyValue("TargetFrameworkVersion"),
-                TargetFrameworkMoniker = project.GetPropertyValue("TargetFrameworkMoniker"),
-                SearchPaths = searchPaths,
-                TargetFrameworkDirectories = frameworkDirectories,
-                TargetedRuntimeVersion = project.GetPropertyValue("TargetedRuntimeVersion"),
-                TargetFrameworkMonikerDisplayName = project.GetPropertyValue("TargetFrameworkMonikerDisplayName"),
-                AppConfigFile = appConfigFile,
-                AllowedAssemblyExtensions = allowedAssemblyExtensions
-            };
+                var resolveTask = new ResolveAssemblyReference
+                {
+                    BuildEngine = new MsBuildEngine(logger),
+                    Assemblies = references,
+                    AssemblyFiles = explicitReferences,
+                    TargetFrameworkVersion = project.GetPropertyValue("TargetFrameworkVersion"),
+                    TargetFrameworkMoniker = project.GetPropertyValue("TargetFrameworkMoniker"),
+                    SearchPaths = searchPaths,
+                    TargetFrameworkDirectories = frameworkDirectories,
+                    TargetedRuntimeVersion = project.GetPropertyValue("TargetedRuntimeVersion"),
+                    TargetFrameworkMonikerDisplayName = project.GetPropertyValue("TargetFrameworkMonikerDisplayName"),
+                    AppConfigFile = appConfigFile,
+                    AllowedAssemblyExtensions = allowedAssemblyExtensions
+                };
 
-            // TODO: Log if it failed
-            resolveTask.Execute();
-            var referencesAssemblies = new List<string>(resolveTask.ResolvedFiles.Length);
-            foreach (var item in resolveTask.ResolvedFiles)
-            {
-                referencesAssemblies.Add(item.ItemSpec);
+                var result = resolveTask.Execute();
+                if (!result) logger.Error("Resolve reference task was failed");
+                var referencesAssemblies = new List<string>(resolveTask.ResolvedFiles.Length);
+                foreach (var item in resolveTask.ResolvedFiles)
+                {
+                    referencesAssemblies.Add(item.ItemSpec);
+                }
+
+                ProjectCollection.GlobalProjectCollection.UnloadProject(project);
+                return referencesAssemblies;
             }
-
-            ProjectCollection.GlobalProjectCollection.UnloadProject(project);
-            return referencesAssemblies;
         }
 
         private static string GetAppConfigFile(Project project)
@@ -65,16 +73,21 @@ namespace CoCoTests
                 primaryList.Add(new TaskItem(projectItem.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
             }
 
-            var findTask = new FindAppConfigFile
+            using (var logger = LogManager.GetLogger("FindAppConfig"))
             {
-                BuildEngine = new MsBuildEngine(),
-                PrimaryList = primaryList.ToArray(),
-                SecondaryList = new TaskItem[0],
-                // NOTE: assume that the appconfig would be at this value
-                TargetPath = project.GetPropertyValue("_GenerateBindingRedirectsIntermediateAppConfig").GetFullPath(project.DirectoryPath)
-            };
+                var findTask = new FindAppConfigFile
+                {
+                    BuildEngine = new MsBuildEngine(logger),
+                    PrimaryList = primaryList.ToArray(),
+                    SecondaryList = new TaskItem[0],
+                    // NOTE: assume that the appconfig would be at this value
+                    TargetPath = project.GetPropertyValue("_GenerateBindingRedirectsIntermediateAppConfig").GetFullPath(project.DirectoryPath)
+                };
 
-            return findTask.AppConfigFile?.ItemSpec;
+                var result = findTask.Execute();
+                if (!result) logger.Error("Find appconfig task was failed");
+                return findTask.AppConfigFile?.ItemSpec;
+            }
         }
 
         private static string[] GetFrameworkDirectories(Project project)
