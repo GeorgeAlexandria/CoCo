@@ -44,7 +44,8 @@ namespace CoCoTests
                     TargetedRuntimeVersion = project.GetPropertyValue("TargetedRuntimeVersion"),
                     TargetFrameworkMonikerDisplayName = project.GetPropertyValue("TargetFrameworkMonikerDisplayName"),
                     AppConfigFile = appConfigFile,
-                    AllowedAssemblyExtensions = allowedAssemblyExtensions
+                    AllowedAssemblyExtensions = allowedAssemblyExtensions,
+                    AutoUnify = "true".Equals(project.GetPropertyValue("AutoUnifyAssemblyReferences"), StringComparison.OrdinalIgnoreCase)
                 };
 
                 var result = resolveTask.Execute();
@@ -64,7 +65,7 @@ namespace CoCoTests
         {
             // TODO: it wouldn't work for a .netcore|.netstandard
             var primaryList = new List<TaskItem>(64);
-            foreach (var projectItem in project.Items.Where(x => x.GetMetadataValue("SubType") == "Designer"))
+            foreach (var projectItem in project.GetItems("None"))
             {
                 var metadata = new Dictionary<string, string>(64);
                 foreach (var item in projectItem.Metadata)
@@ -74,15 +75,26 @@ namespace CoCoTests
                 primaryList.Add(new TaskItem(projectItem.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
             }
 
+            var secondaryList = new List<TaskItem>(64);
+            foreach (var projectItem in project.GetItems("Content"))
+            {
+                var metadata = new Dictionary<string, string>(64);
+                foreach (var item in projectItem.Metadata)
+                {
+                    metadata.Add(item.Name, item.EvaluatedValue);
+                }
+                secondaryList.Add(new TaskItem(projectItem.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
+            }
+
             using (var logger = LogManager.GetLogger("FindAppConfig"))
             {
                 var findTask = new FindAppConfigFile
                 {
                     BuildEngine = new MsBuildEngine(logger),
                     PrimaryList = primaryList.ToArray(),
-                    SecondaryList = new TaskItem[0],
+                    SecondaryList = secondaryList.ToArray(),
                     // NOTE: assume that the appconfig would be at this value
-                    TargetPath = project.GetPropertyValue("_GenerateBindingRedirectsIntermediateAppConfig").GetFullPath(project.DirectoryPath)
+                    TargetPath = project.GetPropertyValue("TargetPath") + ".config"
                 };
 
                 var result = findTask.Execute();
