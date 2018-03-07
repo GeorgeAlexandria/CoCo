@@ -29,6 +29,7 @@ namespace CoCoTests
             var syntaxTree = CSharpSyntaxTree.ParseText(code);
             var semanticModel = CSharpCompilation.Create("TestCompilation")
                 .AddSyntaxTrees(syntaxTree)
+                // TODO: add project references
                 .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
                 .GetSemanticModel(syntaxTree, true);
 

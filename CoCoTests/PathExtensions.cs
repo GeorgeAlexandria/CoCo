@@ -20,5 +20,7 @@ namespace CoCoTests
         /// Returns the directory information for the <paramref name="path"/>
         /// </summary>
         public static string GetDirectoryName(this string path) => Path.GetDirectoryName(path);
+
+        public static bool IsTrue(this string name) => "true".Equals(name, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -13,7 +13,7 @@ namespace CoCoTests
         public void SetUp()
         {
             ProjectPath = TestHelper.GetPathRelativeToTest(ProjectPath);
-            ProjectInfo = new ProjectInfo(MsBuild.ResolveAssemblyReferences(ProjectPath));
+            ProjectInfo = MsBuild.CreateProject(ProjectPath);
         }
     }
 }

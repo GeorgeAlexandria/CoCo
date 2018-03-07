@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CoCoLog;
 using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
-using CoCoLog;
 
 namespace CoCoTests
 {
@@ -15,19 +16,52 @@ namespace CoCoTests
     // TODO: fix arguments in tasks
     internal static class MsBuild
     {
+        /// TODO: use <see cref="WeakReference{T}"/> when <see cref="ProjectInfo"/> would be take a lot of space
+        private static Dictionary<string, ProjectInfo> _cache = new Dictionary<string, ProjectInfo>();
+
         private static string[] searchDelimeters = { Environment.NewLine, ";" };
 
         private static string[] allowedAssemblyExtensions = { ".dll" };
 
-        /// TODO: should return not a references, but <see cref="ProjectInfo"/>
-        public static List<string> ResolveAssemblyReferences(string projectPath)
+        public static ProjectInfo CreateProject(string projectPath)
+        {
+            ProjectInfo projectInfo = null;
+            if (!_cache.TryGetValue(projectPath, out var reference))
+            {
+                projectInfo = ParseProject(projectPath);
+                _cache.Add(projectPath, projectInfo);
+            }
+            return projectInfo;
+        }
+
+        private static ProjectInfo ParseProject(string projectPath)
         {
             var project = new Project(projectPath);
 
+            var assemblyReferences = ResolveAssemblyReferences(project);
+            var references = new List<string>(assemblyReferences.Length);
+            foreach (var item in assemblyReferences)
+            {
+                references.Add(item.ItemSpec);
+            }
+
+            var projectRefereneces = GetProjectReferences(project);
+            var projects = new List<ProjectInfo>(projectRefereneces.Count);
+            foreach (var item in projectRefereneces)
+            {
+                var projectInfo = CreateProject(item.ItemSpec);
+                projects.Add(projectInfo);
+            }
+
+            return new ProjectInfo(references, projects);
+        }
+
+        private static ITaskItem[] ResolveAssemblyReferences(Project project)
+        {
             var searchPaths = GetSearchPaths(project);
             var frameworkDirectories = GetFrameworkDirectories(project);
             var references = GetReferences(project);
-            var explicitReferences = GetExplicitReference(project);
+            var explicitReferences = GetAssemblyFiles(project);
             var appConfigFile = GetAppConfigFile(project);
 
             using (var logger = LogManager.GetLogger("ResolveReference"))
@@ -45,19 +79,13 @@ namespace CoCoTests
                     TargetFrameworkMonikerDisplayName = project.GetPropertyValue("TargetFrameworkMonikerDisplayName"),
                     AppConfigFile = appConfigFile,
                     AllowedAssemblyExtensions = allowedAssemblyExtensions,
-                    AutoUnify = "true".Equals(project.GetPropertyValue("AutoUnifyAssemblyReferences"), StringComparison.OrdinalIgnoreCase)
+                    AutoUnify = project.GetPropertyValue("AutoUnifyAssemblyReferences").IsTrue()
                 };
 
                 var result = resolveTask.Execute();
                 if (!result) logger.Error("Resolve reference task was failed");
-                var referencesAssemblies = new List<string>(resolveTask.ResolvedFiles.Length);
-                foreach (var item in resolveTask.ResolvedFiles)
-                {
-                    referencesAssemblies.Add(item.ItemSpec);
-                }
-
-                ProjectCollection.GlobalProjectCollection.UnloadProject(project);
-                return referencesAssemblies;
+                //ProjectCollection.GlobalProjectCollection.UnloadProject(project);
+                return resolveTask.ResolvedFiles;
             }
         }
 
@@ -110,8 +138,7 @@ namespace CoCoTests
                project.GetPropertyValue("FrameworkPathOverride")
             };
             // NOTE: directly add path to a "Facades".
-            // TODO: Exists the other way to do that?
-            if (string.Equals("true", project.GetPropertyValue("ImplicitlyExpandDesignTimeFacades"), StringComparison.OrdinalIgnoreCase))
+            if (project.GetPropertyValue("ImplicitlyExpandDesignTimeFacades").IsTrue())
             {
                 frameworkDirectories.Add(Path.Combine(frameworkDirectories[0], "Facades"));
             }
@@ -160,7 +187,23 @@ namespace CoCoTests
             return references.ToArray();
         }
 
-        private static TaskItem[] GetExplicitReference(Project project)
+        private static List<ITaskItem> GetProjectReferences(Project project)
+        {
+            var references = new List<ITaskItem>(32);
+            foreach (var reference in project.GetItems("ProjectReference"))
+            {
+                var metadata = new Dictionary<object, string>(64);
+                foreach (var item in reference.Metadata)
+                {
+                    metadata.Add(item.Name, item.EvaluatedValue);
+                }
+
+                references.Add(new TaskItem(reference.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
+            }
+            return references;
+        }
+
+        private static TaskItem[] GetAssemblyFiles(Project project)
         {
             var references = new List<TaskItem>(32);
             foreach (var reference in project.GetItems("_ExplicitReference"))
