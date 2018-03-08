@@ -86,12 +86,13 @@ namespace CoCoTests
 
             void AppendClassificationSpan(StringBuilder appendBuilder, SimplifiedClassificationSpan span)
             {
+                const string tabs = "    ";
                 var classificationType = span.ClassificationType;
                 appendBuilder.AppendLine("Item:")
-                    .AppendLine("    Type:")
-                    .Append("        ").AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
-                    .Append("        ").AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine()
-                    .Append("    Span: ").Append(span.Span).AppendLine();
+                    .Append(tabs).AppendLine("Type:")
+                    .Append(tabs).Append(tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
+                    .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine()
+                    .Append(tabs).AppendLine("Span: ").Append(span.Span).AppendLine();
             }
 
             var builder = new StringBuilder(1 << 12);

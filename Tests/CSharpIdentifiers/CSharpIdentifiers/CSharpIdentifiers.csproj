@@ -38,9 +38,12 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="NamespaceIdentifier.cs" />
+    <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Declarations\Namespace\NamespaceAlias.cs" />
+    <Compile Include="Declarations\Namespace\NamespaceDeclarations.cs" />
     <Compile Include="SimpleExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Declarations\Namespace\TypeAlias.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,6 +1,6 @@
 ﻿namespace CSharpIdentifiers
 {
-    internal class NamespaceIdentifier
+    internal class AccessFromNamespaceIdentifier
     {
         private void Method()
         {
