@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Bin\CoCo.Test.CSharpIdentifiers\Release\</OutputPath>
+    <OutputPath>..\Bin\CoCo.Test\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,7 +53,7 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoCoTests\CoCo.Test.Common.csproj">
+    <ProjectReference Include="..\CoCo.Test.Common\CoCo.Test.Common.csproj">
       <Project>{0b57bf2d-6001-4317-9527-96c7cf4b20d1}</Project>
       <Name>CoCo.Test.Common</Name>
     </ProjectReference>
