@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal class ClassificationType : IClassificationType
     {

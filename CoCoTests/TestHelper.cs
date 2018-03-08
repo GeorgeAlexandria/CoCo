@@ -3,11 +3,11 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
-    internal static class TestHelper
+    public static class TestHelper
     {
-        internal static void AssertIsEquivalent(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
+        public static void AssertIsEquivalent(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
         {
             var (isEquivalent, errorMessage) = ClassificationHelper.AreEquivalent(expectedSpans, actualSpans);
             if (!isEquivalent) Assert.Fail(errorMessage);
@@ -17,7 +17,7 @@ namespace CoCoTests
 
         private static string GetPathRelativeToThis(string path, [CallerFilePath] string sourceCallerPath = null)
         {
-            // NOTE: ../CoCoTests/TestHelper.cs
+            // NOTE: ../CoCo.Test.Common/TestHelper.cs
             var sourceDirectory = sourceCallerPath.GetDirectoryName().GetDirectoryName();
             return Path.Combine(sourceDirectory, path);
         }

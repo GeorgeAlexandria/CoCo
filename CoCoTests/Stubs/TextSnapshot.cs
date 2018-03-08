@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal class TextSnapshot : ITextSnapshot
     {

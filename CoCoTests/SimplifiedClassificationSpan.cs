@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
-    internal class SimplifiedClassificationSpan
+    public class SimplifiedClassificationSpan
     {
         public IClassificationType ClassificationType { get; }
 

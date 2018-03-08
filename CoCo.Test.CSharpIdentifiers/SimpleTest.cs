@@ -1,7 +1,7 @@
-﻿using CoCo;
+﻿using CoCo.Test.Common;
 using NUnit.Framework;
 
-namespace CoCoTests
+namespace CoCo.Test.CSharpIdentifiers
 {
     [TestFixture]
     internal class SimpleTest : CSharpIdentifierTests

@@ -7,6 +7,7 @@ using NLog.Targets.Wrappers;
 
 namespace CoCoLog
 {
+    // TODO: use pool of objects
     public static class LogManager
     {
         public static Logger GetLogger(string name)

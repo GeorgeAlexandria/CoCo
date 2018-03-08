@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Utilities;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal class ContentType : IContentType
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal static class PathExtensions
     {

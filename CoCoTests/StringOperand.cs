@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.Text;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal class StringOperand
     {

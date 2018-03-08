@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CoCo;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
-    internal static class ClassificationHelper
+    public static class ClassificationHelper
     {
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {

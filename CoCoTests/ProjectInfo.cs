@@ -3,10 +3,10 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     [DebuggerDisplay("{ProjectName}")]
-    internal class ProjectInfo
+    public class ProjectInfo
     {
         public ProjectInfo(
             string projectPath,

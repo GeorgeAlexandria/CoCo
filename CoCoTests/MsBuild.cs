@@ -7,7 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     // NOTE: to know more about input arguments in a common tasks just look at
     // https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.Common.CurrentVersion.targets

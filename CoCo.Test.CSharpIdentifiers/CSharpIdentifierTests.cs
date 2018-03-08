@@ -1,4 +1,6 @@
-﻿namespace CoCoTests
+﻿using CoCo.Test.Common;
+
+namespace CoCo.Test.CSharpIdentifiers
 {
     internal class CSharpIdentifierTests : CommonTests
     {

@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     [TestFixture]
-    internal abstract class CommonTests
+    public abstract class CommonTests
     {
         protected abstract string ProjectPath { get; set; }
 

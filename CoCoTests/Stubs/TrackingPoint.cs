@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.Text;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     internal class TrackingPoint : ITrackingPoint
     {

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 
-namespace CoCoTests
+namespace CoCo.Test.Common
 {
     public sealed class MsBuildEngine : IBuildEngine5
     {
