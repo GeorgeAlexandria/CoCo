@@ -180,6 +180,7 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="CommonTests.cs" />

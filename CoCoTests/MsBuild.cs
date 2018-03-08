@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using CoCoLog;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
@@ -10,18 +9,16 @@ using Microsoft.Build.Utilities;
 
 namespace CoCoTests
 {
-    // NOTE: describe how to retrieve input arguments
-    // http://source.roslyn.io/#MSBuildFiles/C/ProgramFiles(x86)/MSBuild/14.0/bin_/amd64/Microsoft.Common.CurrentVersion.targets,1820
-    // https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
-    // TODO: fix arguments in tasks
+    // NOTE: to know more about input arguments in a common tasks just look at
+    // https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.Common.CurrentVersion.targets
     internal static class MsBuild
     {
         /// TODO: use <see cref="WeakReference{T}"/> when <see cref="ProjectInfo"/> would be take a lot of space
-        private static Dictionary<string, ProjectInfo> _cache = new Dictionary<string, ProjectInfo>();
+        private static readonly Dictionary<string, ProjectInfo> _cache = new Dictionary<string, ProjectInfo>(16);
 
-        private static string[] searchDelimeters = { Environment.NewLine, ";" };
+        private static readonly string[] searchDelimeters = { Environment.NewLine, ";" };
 
-        private static string[] allowedAssemblyExtensions = { ".dll" };
+        private static readonly string[] allowedAssemblyExtensions = { ".dll" };
 
         public static ProjectInfo CreateProject(string projectPath)
         {
@@ -56,6 +53,7 @@ namespace CoCoTests
             return new ProjectInfo(references, projects);
         }
 
+        // NOTE: https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
         private static ITaskItem[] ResolveAssemblyReferences(Project project)
         {
             var searchPaths = GetSearchPaths(project);
@@ -64,6 +62,7 @@ namespace CoCoTests
             var explicitReferences = GetAssemblyFiles(project);
             var appConfigFile = GetAppConfigFile(project);
 
+            /// TODO: each project will create the same logger -> use pool of objects in <see cref="LogManager"/>
             using (var logger = LogManager.GetLogger("ResolveReference"))
             {
                 var resolveTask = new ResolveAssemblyReference
@@ -121,7 +120,6 @@ namespace CoCoTests
                     BuildEngine = new MsBuildEngine(logger),
                     PrimaryList = primaryList.ToArray(),
                     SecondaryList = secondaryList.ToArray(),
-                    // NOTE: assume that the appconfig would be at this value
                     TargetPath = project.GetPropertyValue("TargetPath") + ".config"
                 };
 

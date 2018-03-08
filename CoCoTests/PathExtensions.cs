@@ -21,6 +21,7 @@ namespace CoCoTests
         /// </summary>
         public static string GetDirectoryName(this string path) => Path.GetDirectoryName(path);
 
+        // TODO: move to a correct place
         public static bool IsTrue(this string name) => "true".Equals(name, StringComparison.OrdinalIgnoreCase);
     }
 }
