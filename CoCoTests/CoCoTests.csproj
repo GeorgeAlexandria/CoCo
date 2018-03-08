@@ -181,6 +181,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="SimplifiedClassificationSpan.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="CommonTests.cs" />
@@ -202,7 +203,6 @@
     <Compile Include="Stubs\TextVersion.cs" />
     <Compile Include="Stubs\TrackingPoint.cs" />
     <Compile Include="ClassificationHelper.cs" />
-    <Compile Include="TextHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

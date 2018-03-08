@@ -36,15 +36,16 @@ namespace CoCo
         internal EditorClassifier(
             Dictionary<string, IClassificationType> classifications,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : this(classifications, buffer)
+            ITextBuffer buffer) : this(classifications)
         {
+            _textBuffer = buffer;
             _textDocumentFactoryService = textDocumentFactoryService;
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
         }
 
-        internal EditorClassifier(Dictionary<string, IClassificationType> classifications, ITextBuffer textBuffer)
+        internal EditorClassifier(Dictionary<string, IClassificationType> classifications)
         {
             _localFieldType = classifications[Names.LocalFieldName];
             _namespaceType = classifications[Names.NamespaceName];
@@ -58,8 +59,6 @@ namespace CoCo
             _enumFieldType = classifications[Names.EnumFiedName];
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
             _constructorMethodType = classifications[Names.ConstructorMethodName];
-
-            _textBuffer = textBuffer;
         }
 
         /// <remarks>

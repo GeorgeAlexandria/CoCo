@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using CoCo;
@@ -13,34 +14,32 @@ namespace CoCoTests
 {
     internal static class ClassificationHelper
     {
-        public static ClassificationSpan ClassifyAt(this string name, ITextBuffer buffer, int start, int length)
+        public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {
             if (!Names.All.Contains(name))
             {
                 throw new ArgumentOutOfRangeException(nameof(name), $"Argument must be one of {nameof(Names)} constants");
             }
-            return new ClassificationSpan(new SnapshotSpan(buffer.CurrentSnapshot, start, length), new ClassificationType(name));
+            return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
-        public static List<ClassificationSpan> GetClassifications(this TextBuffer buffer, ProjectInfo project)
+        public static List<SimplifiedClassificationSpan> GetClassifications(this string path, ProjectInfo project)
         {
-            var code = buffer.CurrentSnapshot.GetText();
+            path = TestHelper.GetPathRelativeToTest(path);
+            var code = File.ReadAllText(path);
+            var buffer = new TextBuffer(new ContentType("csharp"), new StringOperand(code));
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var semanticModel = CSharpCompilation.Create("TestCompilation")
-                .AddSyntaxTrees(syntaxTree)
-                // TODO: add project references
-                .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
-                .GetSemanticModel(syntaxTree, true);
+            var compilation = CreateCompilation(project);
+            var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(x => string.Equals(x.FilePath, path, StringComparison.OrdinalIgnoreCase));
+            var semanticModel = compilation.GetSemanticModel(syntaxTree, true);
 
             List<ClassificationSpan> actualSpans = null;
-
             using (var workspace = new AdhocWorkspace())
             {
                 var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
 
-                var newProject = workspace.AddProject("TestProject", LanguageNames.CSharp);
-                var newDocument = workspace.AddDocument(newProject.Id, "TestFile.cs", snapshotSpan.Snapshot.AsText());
+                var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
+                var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
                 var root = syntaxTree.GetCompilationUnitRoot();
 
@@ -50,13 +49,15 @@ namespace CoCoTests
                     classificationTypes.Add(item, new ClassificationType(item));
                 }
 
-                var classifier = new EditorClassifier(classificationTypes, buffer);
+                var classifier = new EditorClassifier(classificationTypes);
                 actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
             }
-            return actualSpans;
+            return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
         }
 
-        public static (bool, string) IsEquivalent(IEnumerable<ClassificationSpan> expectedSpans, IEnumerable<ClassificationSpan> actualSpans)
+        public static (bool, string) AreEquivalent(
+            IEnumerable<SimplifiedClassificationSpan> expectedSpans,
+            IEnumerable<SimplifiedClassificationSpan> actualSpans)
         {
             var actualList = actualSpans.ToList();
             var expectedList = expectedSpans.ToList();
@@ -83,7 +84,7 @@ namespace CoCoTests
                 return (true, String.Empty);
             }
 
-            void AppendClassificationSpan(StringBuilder appendBuilder, ClassificationSpan span)
+            void AppendClassificationSpan(StringBuilder appendBuilder, SimplifiedClassificationSpan span)
             {
                 var classificationType = span.ClassificationType;
                 appendBuilder.AppendLine("Item:")
@@ -108,7 +109,7 @@ namespace CoCoTests
             return (false, builder.ToString());
         }
 
-        private static bool AreClassificationSpanEquals(ClassificationSpan expected, ClassificationSpan actual)
+        private static bool AreClassificationSpanEquals(SimplifiedClassificationSpan expected, SimplifiedClassificationSpan actual)
         {
             if (expected == null ^ actual == null) return false;
             if (expected == null) return true;
@@ -136,6 +137,21 @@ namespace CoCoTests
                 if (!hasEqualsItem) return false;
             }
             return true;
+        }
+
+        private static Compilation CreateCompilation(ProjectInfo project)
+        {
+            var trees = new List<SyntaxTree>(project.CompileItems.Length);
+            foreach (var item in project.CompileItems)
+            {
+                var code = File.ReadAllText(item);
+                trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+            }
+            // TODO: improve
+            return CSharpCompilation.Create(project.ProjectName)
+                .AddSyntaxTrees(trees)
+                .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
+                .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
         }
     }
 }

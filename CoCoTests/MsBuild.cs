@@ -50,7 +50,13 @@ namespace CoCoTests
                 projects.Add(projectInfo);
             }
 
-            return new ProjectInfo(references, projects);
+            var compileItems = new List<string>(512);
+            foreach (var item in GetCompileItems(project))
+            {
+                compileItems.Add(item.ItemSpec);
+            }
+
+            return new ProjectInfo(projectPath, references, projects, compileItems);
         }
 
         // NOTE: https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
@@ -65,6 +71,7 @@ namespace CoCoTests
             /// TODO: each project will create the same logger -> use pool of objects in <see cref="LogManager"/>
             using (var logger = LogManager.GetLogger("ResolveReference"))
             {
+                logger.Info("Executing ResolveAssemblyReference task...");
                 var resolveTask = new ResolveAssemblyReference
                 {
                     BuildEngine = new MsBuildEngine(logger),
@@ -82,7 +89,14 @@ namespace CoCoTests
                 };
 
                 var result = resolveTask.Execute();
-                if (!result) logger.Error("Resolve reference task was failed");
+                if (result)
+                {
+                    logger.Info("ResolveAssemblyReference task was successfully done");
+                }
+                else
+                {
+                    logger.Error("ResolveAssemblyReference task was failed");
+                }
                 //ProjectCollection.GlobalProjectCollection.UnloadProject(project);
                 return resolveTask.ResolvedFiles;
             }
@@ -115,6 +129,7 @@ namespace CoCoTests
 
             using (var logger = LogManager.GetLogger("FindAppConfig"))
             {
+                logger.Info("Executing FindAppConfigFile task......");
                 var findTask = new FindAppConfigFile
                 {
                     BuildEngine = new MsBuildEngine(logger),
@@ -124,7 +139,14 @@ namespace CoCoTests
                 };
 
                 var result = findTask.Execute();
-                if (!result) logger.Error("Find appconfig task was failed");
+                if (result)
+                {
+                    logger.Info("FindAppConfigFile task was successfully done");
+                }
+                else
+                {
+                    logger.Error("FindAppConfigFile task was failed");
+                }
                 return findTask.AppConfigFile?.ItemSpec;
             }
         }
@@ -172,7 +194,7 @@ namespace CoCoTests
             var references = new List<TaskItem>(64);
             foreach (var reference in project.GetItems("Reference"))
             {
-                var metadata = new Dictionary<object, string>(64);
+                var metadata = new Dictionary<string, string>(64);
                 foreach (var item in reference.Metadata)
                 {
                     var value = string.Equals(item.Name, "HintPath", StringComparison.OrdinalIgnoreCase)
@@ -190,7 +212,7 @@ namespace CoCoTests
             var references = new List<ITaskItem>(32);
             foreach (var reference in project.GetItems("ProjectReference"))
             {
-                var metadata = new Dictionary<object, string>(64);
+                var metadata = new Dictionary<string, string>(64);
                 foreach (var item in reference.Metadata)
                 {
                     metadata.Add(item.Name, item.EvaluatedValue);
@@ -206,7 +228,7 @@ namespace CoCoTests
             var references = new List<TaskItem>(32);
             foreach (var reference in project.GetItems("_ExplicitReference"))
             {
-                var metadata = new Dictionary<object, string>(64);
+                var metadata = new Dictionary<string, string>(64);
                 foreach (var item in reference.Metadata)
                 {
                     metadata.Add(item.Name, item.EvaluatedValue);
@@ -215,6 +237,22 @@ namespace CoCoTests
                 references.Add(new TaskItem(reference.EvaluatedInclude, metadata));
             }
             return references.ToArray();
+        }
+
+        private static List<TaskItem> GetCompileItems(Project project)
+        {
+            var compiles = new List<TaskItem>(512);
+            foreach (var compile in project.GetItems("Compile"))
+            {
+                var metadata = new Dictionary<string, string>(32);
+                foreach (var item in compile.Metadata)
+                {
+                    metadata.Add(item.Name, item.EvaluatedValue);
+                }
+
+                compiles.Add(new TaskItem(compile.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
+            }
+            return compiles;
         }
     }
 }
