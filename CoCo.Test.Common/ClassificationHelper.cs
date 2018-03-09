@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CoCoLog;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
@@ -13,6 +14,8 @@ namespace CoCo.Test.Common
 {
     public static class ClassificationHelper
     {
+        private static List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
+
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {
             if (!Names.All.Contains(name))
@@ -24,34 +27,48 @@ namespace CoCo.Test.Common
 
         public static List<SimplifiedClassificationSpan> GetClassifications(this string path, ProjectInfo project)
         {
-            path = TestHelper.GetPathRelativeToTest(path);
-            var code = File.ReadAllText(path);
-            var buffer = new TextBuffer(new ContentType("csharp"), new StringOperand(code));
-
-            var compilation = CreateCompilation(project);
-            var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(x => string.Equals(x.FilePath, path, StringComparison.OrdinalIgnoreCase));
-            var semanticModel = compilation.GetSemanticModel(syntaxTree, true);
-
-            List<ClassificationSpan> actualSpans = null;
-            using (var workspace = new AdhocWorkspace())
+            using (var logger = LogManager.GetLogger("Test execution"))
             {
-                var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
-
-                var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
-                var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
-
-                var root = syntaxTree.GetCompilationUnitRoot();
-
-                var classificationTypes = new Dictionary<string, IClassificationType>(32);
-                foreach (var item in Names.All)
+                path = TestHelper.GetPathRelativeToTest(path);
+                if (!File.Exists(path))
                 {
-                    classificationTypes.Add(item, new ClassificationType(item));
+                    logger.Warn("File {0} doesn't exist.", path);
+                    return _empty;
                 }
 
-                var classifier = new EditorClassifier(classificationTypes);
-                actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
+                var code = File.ReadAllText(path);
+                var buffer = new TextBuffer(new ContentType("csharp"), new StringOperand(code));
+
+                var compilation = CreateCompilation(project);
+                var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(x => x.FilePath.EqualsNoCase(path));
+                if (syntaxTree == null)
+                {
+                    logger.Warn("Project {0} doesn't have the file {1}. Check that it's included.", project.ProjectPath, path);
+                    return _empty;
+                }
+                var semanticModel = compilation.GetSemanticModel(syntaxTree, true);
+
+                List<ClassificationSpan> actualSpans = null;
+                using (var workspace = new AdhocWorkspace())
+                {
+                    var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
+
+                    var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
+                    var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
+
+                    var root = syntaxTree.GetCompilationUnitRoot();
+
+                    var classificationTypes = new Dictionary<string, IClassificationType>(32);
+                    foreach (var item in Names.All)
+                    {
+                        classificationTypes.Add(item, new ClassificationType(item));
+                    }
+
+                    var classifier = new EditorClassifier(classificationTypes);
+                    actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
+                }
+                return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
-            return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
         }
 
         public static (bool, string message) Contains(

@@ -7,13 +7,12 @@ namespace CoCo.Test.Common
     {
         protected abstract string ProjectPath { get; set; }
 
-        protected ProjectInfo ProjectInfo { get; private set; }
+        protected abstract ProjectInfo ProjectInfo { get; set; }
 
-        [OneTimeSetUp]
-        public void SetUp()
+        public static ProjectInfo SetUp(ref string projectPath)
         {
-            ProjectPath = TestHelper.GetPathRelativeToTest(ProjectPath);
-            ProjectInfo = MsBuild.CreateProject(ProjectPath);
+            projectPath = TestHelper.GetPathRelativeToTest(projectPath);
+            return MsBuild.CreateProject(projectPath);
         }
     }
 }

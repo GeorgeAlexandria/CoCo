@@ -22,8 +22,7 @@ namespace CoCo.Test.Common
 
         public static ProjectInfo CreateProject(string projectPath)
         {
-            ProjectInfo projectInfo = null;
-            if (!_cache.TryGetValue(projectPath, out var reference))
+            if (!_cache.TryGetValue(projectPath, out ProjectInfo projectInfo))
             {
                 projectInfo = ParseProject(projectPath);
                 _cache.Add(projectPath, projectInfo);
@@ -197,7 +196,7 @@ namespace CoCo.Test.Common
                 var metadata = new Dictionary<string, string>(64);
                 foreach (var item in reference.Metadata)
                 {
-                    var value = string.Equals(item.Name, "HintPath", StringComparison.OrdinalIgnoreCase)
+                    var value = item.Name.EqualsNoCase("HintPath")
                         ? item.EvaluatedValue.GetFullPath(project.DirectoryPath)
                         : item.EvaluatedValue;
                     metadata.Add(item.Name, value);

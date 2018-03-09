@@ -39,6 +39,11 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
+    <Compile Include="Declarations\Methods\Constructor.cs" />
+    <Compile Include="Declarations\Methods\Method.cs" />
+    <Compile Include="Declarations\Methods\StaticMethod.cs" />
+    <Compile Include="Declarations\Namespace\StaticType.cs" />
     <Compile Include="Declarations\Namespace\InsideNamespace.cs" />
     <Compile Include="Declarations\Namespace\Alias.cs" />
     <Compile Include="Declarations\Namespace\SimpleDeclaration.cs" />

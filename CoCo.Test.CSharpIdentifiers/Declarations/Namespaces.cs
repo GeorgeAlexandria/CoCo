@@ -3,7 +3,6 @@ using NUnit.Framework;
 
 namespace CoCo.Test.CSharpIdentifiers.Declarations
 {
-    [TestFixture]
     internal class Namespaces : CSharpIdentifierTests
     {
         [Test]
@@ -36,6 +35,15 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                     Names.NamespaceName.ClassifyAt(67, 6),
                     Names.NamespaceName.ClassifyAt(74, 11),
                     Names.NamespaceName.ClassifyAt(86, 7));
+        }
+
+        [Test]
+        public void NamespaceTest_StaticType()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Namespace\StaticType.cs".GetClassifications(ProjectInfo)
+                .AssertIsEquivalent(
+                    Names.NamespaceName.ClassifyAt(13, 6),
+                    Names.NamespaceName.ClassifyAt(20, 9));
         }
 
         [Test]

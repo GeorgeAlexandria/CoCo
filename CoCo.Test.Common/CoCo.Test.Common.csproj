@@ -186,6 +186,7 @@
     <Compile Include="ClassificationComparer.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="SimplifiedClassificationSpan.cs" />
+    <Compile Include="StringExtensions.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="CommonTests.cs" />
     <Compile Include="MsBuild.cs" />
