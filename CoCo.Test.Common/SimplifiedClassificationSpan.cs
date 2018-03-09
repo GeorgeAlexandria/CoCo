@@ -16,16 +16,10 @@ namespace CoCo.Test.Common
             Span = span;
         }
 
-        public override bool Equals(object obj) => ClassificationComparer.Instance.Equals(this, (SimplifiedClassificationSpan)obj);
+        public override bool Equals(object obj) => Equals(obj as SimplifiedClassificationSpan);
 
         public override int GetHashCode() => ClassificationComparer.Instance.GetHashCode(this);
 
         public bool Equals(SimplifiedClassificationSpan other) => ClassificationComparer.Instance.Equals(this, other);
-
-        public static bool operator ==(SimplifiedClassificationSpan x, SimplifiedClassificationSpan y) =>
-            ClassificationComparer.Instance.Equals(x, y);
-
-        public static bool operator !=(SimplifiedClassificationSpan x, SimplifiedClassificationSpan y) =>
-            !ClassificationComparer.Instance.Equals(x, y);
     }
 }

@@ -55,95 +55,87 @@ namespace CoCo.Test.Common
         }
 
         public static (bool, string message) Contains(
-            this IEnumerable<SimplifiedClassificationSpan> actualSpans,
-            IEnumerable<SimplifiedClassificationSpan> expectedSpans)
+            IEnumerable<SimplifiedClassificationSpan> currentCollection,
+            IEnumerable<SimplifiedClassificationSpan> otherCollection)
         {
-            var actualSet = new HashSet<SimplifiedClassificationSpan>(actualSpans);
-            var expectedList = new List<SimplifiedClassificationSpan>(expectedSpans);
+            var currentSet = new HashSet<SimplifiedClassificationSpan>(currentCollection);
+            var otherList = new List<SimplifiedClassificationSpan>(otherCollection);
 
             int i = 0;
-            while (i < expectedList.Count && actualSet.Count > 0)
+            while (i < otherList.Count && currentSet.Count > 0)
             {
-                if (actualSet.Remove(expectedList[i]))
+                if (currentSet.Remove(otherList[i]))
                 {
-                    expectedList.RemoveAt(i);
+                    otherList.RemoveAt(i);
                     continue;
                 }
                 ++i;
             }
 
-            if (expectedList.Count == 0) return (true, String.Empty);
+            if (otherList.Count == 0) return (true, String.Empty);
 
             var builder = new StringBuilder(1 << 12);
-            var actualSetBySpan = actualSet.ToDictionary(x => x.Span);
+            var actualSetBySpan = currentSet.ToDictionary(x => x.Span);
             i = 0;
-            while (i < expectedList.Count && actualSetBySpan.Count > 0)
+            while (i < otherList.Count && actualSetBySpan.Count > 0)
             {
-                var expectedClassification = expectedList[i];
+                var expectedClassification = otherList[i];
                 if (actualSetBySpan.TryRemoveValue(expectedClassification.Span, out var value))
                 {
-                    /// NOTE: expected <see cref="SimplifiedClassificationSpan"/> has incorrect <see cref="IClassificationType"/>
                     builder
-                        .AppendSpan(expectedClassification.Span)
-                        .AppendLine("Expected type:").AppenClassificationType(expectedClassification.ClassificationType)
+                        .AppendLine().AppendLine($"Classification at {expectedClassification.Span} has incorrect type:")
+                        .AppendLine("Expected:").AppenClassificationType(expectedClassification.ClassificationType)
                         .AppendLine("But was:").AppenClassificationType(value.ClassificationType);
                 }
                 else
                 {
                     builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(expectedClassification);
                 }
-                expectedList.RemoveAt(i++);
+                otherList.RemoveAt(i++);
             }
 
-            if (expectedList.Count > 0)
+            if (otherList.Count > 0)
             {
-                foreach (var item in expectedList)
+                foreach (var item in otherList)
                 {
                     builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(item);
                 }
             }
-
             return (false, builder.ToString());
         }
 
         public static (bool, string) AreEquivalent(
-            IEnumerable<SimplifiedClassificationSpan> expectedSpans,
-            IEnumerable<SimplifiedClassificationSpan> actualSpans)
+            IEnumerable<SimplifiedClassificationSpan> leftSpans,
+            IEnumerable<SimplifiedClassificationSpan> rightSpans)
         {
-            var actualList = actualSpans.ToList();
-            var expectedList = expectedSpans.ToList();
+            var leftSet = new HashSet<SimplifiedClassificationSpan>(rightSpans);
+            var rightList = leftSpans.ToList();
 
             int i = 0;
-            while (i < actualList.Count && expectedList.Count > 0)
+            while (i < rightList.Count && leftSet.Count > 0)
             {
-                var hasEquals = false;
-                for (int j = 0; j < expectedList.Count; ++j)
+                if (leftSet.Remove(rightList[i]))
                 {
-                    if (ClassificationComparer.Instance.Equals(expectedList[j], actualList[i]))
-                    {
-                        expectedList.RemoveAt(j);
-                        actualList.RemoveAt(i);
-                        hasEquals = true;
-                        break;
-                    }
+                    rightList.RemoveAt(i);
+                    continue;
                 }
-                if (!hasEquals) ++i;
+                ++i;
             }
 
-            if ((actualList.Count | expectedList.Count) == 0)
+            if ((leftSet.Count | rightList.Count) == 0)
             {
                 return (true, String.Empty);
             }
 
             var builder = new StringBuilder(1 << 12);
-            if (expectedList.Count > 0) builder.AppendLine().AppendLine("This items were not found:");
-            foreach (var item in expectedList)
+            if (rightList.Count > 0) builder.AppendLine().AppendLine("This items were not found:");
+            foreach (var item in rightList)
             {
                 AppendClassificationSpan(builder, item);
             }
 
-            if (actualList.Count > 0) builder.AppendLine().AppendLine("This items were redundant:");
-            foreach (var item in actualList)
+            if (leftSet.Count > 0) builder.AppendLine().AppendLine("This items were redundant:");
+            foreach (var item in leftSet)
             {
                 AppendClassificationSpan(builder, item);
             }
@@ -155,8 +147,8 @@ namespace CoCo.Test.Common
         private static void AppendClassificationSpan(this StringBuilder builder, SimplifiedClassificationSpan span) =>
             builder
             .AppendLine("Item:")
-            .AppenClassificationType(span.ClassificationType)
-            .AppendSpan(span.Span);
+            .AppendSpan(span.Span)
+            .AppenClassificationType(span.ClassificationType);
 
         private static StringBuilder AppenClassificationType(this StringBuilder builder, IClassificationType classificationType) =>
             builder
@@ -165,7 +157,7 @@ namespace CoCo.Test.Common
                 .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine();
 
         private static StringBuilder AppendSpan(this StringBuilder builder, Span span) =>
-            builder.Append(tabs).AppendLine("Span: ").Append(span).AppendLine();
+            builder.Append(tabs).Append("Span: ").Append(span).AppendLine();
 
         private static Compilation CreateCompilation(ProjectInfo project)
         {

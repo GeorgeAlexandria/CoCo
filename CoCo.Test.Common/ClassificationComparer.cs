@@ -25,7 +25,7 @@ namespace CoCo.Test.Common
         public int GetHashCode(SimplifiedClassificationSpan obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
-            return obj.ClassificationType.GetHashCode() ^ obj.Span.GetHashCode();
+            return obj.ClassificationType.Classification.GetHashCode() ^ obj.Span.GetHashCode();
         }
 
         private static bool AreClassificationTypeEquals(IClassificationType expected, IClassificationType actual)

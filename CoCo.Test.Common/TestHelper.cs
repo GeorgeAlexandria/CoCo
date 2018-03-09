@@ -13,6 +13,12 @@ namespace CoCo.Test.Common
             if (!isEquivalent) Assert.Fail(errorMessage);
         }
 
+        public static void AssertContains(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
+        {
+            var (isEquivalent, errorMessage) = ClassificationHelper.Contains(actualSpans, expectedSpans);
+            if (!isEquivalent) Assert.Fail(errorMessage);
+        }
+
         internal static string GetPathRelativeToTest(string projectPath) => GetPathRelativeToThis(projectPath);
 
         private static string GetPathRelativeToThis(string path, [CallerFilePath] string sourceCallerPath = null)
