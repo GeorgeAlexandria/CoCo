@@ -39,8 +39,9 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="AccessFromNamespaceIdentifier.cs" />
-    <Compile Include="Declarations\Namespace\NamespaceAlias.cs" />
-    <Compile Include="Declarations\Namespace\NamespaceDeclarations.cs" />
+    <Compile Include="Declarations\Namespace\InsideNamespace.cs" />
+    <Compile Include="Declarations\Namespace\Alias.cs" />
+    <Compile Include="Declarations\Namespace\SimpleDeclaration.cs" />
     <Compile Include="SimpleExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Declarations\Namespace\TypeAlias.cs" />
