@@ -183,6 +183,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="CollectionExtensions.cs" />
+    <Compile Include="ClassificationComparer.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="SimplifiedClassificationSpan.cs" />
     <Compile Include="TestHelper.cs" />

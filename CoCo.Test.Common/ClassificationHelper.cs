@@ -54,6 +54,58 @@ namespace CoCo.Test.Common
             return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
         }
 
+        public static (bool, string message) Contains(
+            this IEnumerable<SimplifiedClassificationSpan> actualSpans,
+            IEnumerable<SimplifiedClassificationSpan> expectedSpans)
+        {
+            var actualSet = new HashSet<SimplifiedClassificationSpan>(actualSpans);
+            var expectedList = new List<SimplifiedClassificationSpan>(expectedSpans);
+
+            int i = 0;
+            while (i < expectedList.Count && actualSet.Count > 0)
+            {
+                if (actualSet.Remove(expectedList[i]))
+                {
+                    expectedList.RemoveAt(i);
+                    continue;
+                }
+                ++i;
+            }
+
+            if (expectedList.Count == 0) return (true, String.Empty);
+
+            var builder = new StringBuilder(1 << 12);
+            var actualSetBySpan = actualSet.ToDictionary(x => x.Span);
+            i = 0;
+            while (i < expectedList.Count && actualSetBySpan.Count > 0)
+            {
+                var expectedClassification = expectedList[i];
+                if (actualSetBySpan.TryRemoveValue(expectedClassification.Span, out var value))
+                {
+                    /// NOTE: expected <see cref="SimplifiedClassificationSpan"/> has incorrect <see cref="IClassificationType"/>
+                    builder
+                        .AppendSpan(expectedClassification.Span)
+                        .AppendLine("Expected type:").AppenClassificationType(expectedClassification.ClassificationType)
+                        .AppendLine("But was:").AppenClassificationType(value.ClassificationType);
+                }
+                else
+                {
+                    builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(expectedClassification);
+                }
+                expectedList.RemoveAt(i++);
+            }
+
+            if (expectedList.Count > 0)
+            {
+                foreach (var item in expectedList)
+                {
+                    builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(item);
+                }
+            }
+
+            return (false, builder.ToString());
+        }
+
         public static (bool, string) AreEquivalent(
             IEnumerable<SimplifiedClassificationSpan> expectedSpans,
             IEnumerable<SimplifiedClassificationSpan> actualSpans)
@@ -62,12 +114,12 @@ namespace CoCo.Test.Common
             var expectedList = expectedSpans.ToList();
 
             int i = 0;
-            while (i < actualList.Count)
+            while (i < actualList.Count && expectedList.Count > 0)
             {
                 var hasEquals = false;
                 for (int j = 0; j < expectedList.Count; ++j)
                 {
-                    if (AreClassificationSpanEquals(expectedList[j], actualList[i]))
+                    if (ClassificationComparer.Instance.Equals(expectedList[j], actualList[i]))
                     {
                         expectedList.RemoveAt(j);
                         actualList.RemoveAt(i);
@@ -81,17 +133,6 @@ namespace CoCo.Test.Common
             if ((actualList.Count | expectedList.Count) == 0)
             {
                 return (true, String.Empty);
-            }
-
-            void AppendClassificationSpan(StringBuilder appendBuilder, SimplifiedClassificationSpan span)
-            {
-                const string tabs = "    ";
-                var classificationType = span.ClassificationType;
-                appendBuilder.AppendLine("Item:")
-                    .Append(tabs).AppendLine("Type:")
-                    .Append(tabs).Append(tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
-                    .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine()
-                    .Append(tabs).AppendLine("Span: ").Append(span.Span).AppendLine();
             }
 
             var builder = new StringBuilder(1 << 12);
@@ -109,35 +150,22 @@ namespace CoCo.Test.Common
             return (false, builder.ToString());
         }
 
-        private static bool AreClassificationSpanEquals(SimplifiedClassificationSpan expected, SimplifiedClassificationSpan actual)
-        {
-            if (expected == null ^ actual == null) return false;
-            if (expected == null) return true;
-            return expected.Span == actual.Span && AreClassificationTypeEquals(expected.ClassificationType, actual.ClassificationType);
-        }
+        private const string tabs = "    ";
 
-        private static bool AreClassificationTypeEquals(IClassificationType expected, IClassificationType actual)
-        {
-            if (expected == null ^ actual == null) return false;
-            if (expected == null) return true;
-            if (!expected.Classification.Equals(actual.Classification, StringComparison.OrdinalIgnoreCase)) return false;
-            if (expected.BaseTypes.Count() != actual.BaseTypes.Count()) return false;
+        private static void AppendClassificationSpan(this StringBuilder builder, SimplifiedClassificationSpan span) =>
+            builder
+            .AppendLine("Item:")
+            .AppenClassificationType(span.ClassificationType)
+            .AppendSpan(span.Span);
 
-            foreach (var expectedBaseType in expected.BaseTypes)
-            {
-                var hasEqualsItem = false;
-                foreach (var actualBaseType in actual.BaseTypes)
-                {
-                    if (AreClassificationTypeEquals(expectedBaseType, actualBaseType))
-                    {
-                        hasEqualsItem = true;
-                        break;
-                    }
-                }
-                if (!hasEqualsItem) return false;
-            }
-            return true;
-        }
+        private static StringBuilder AppenClassificationType(this StringBuilder builder, IClassificationType classificationType) =>
+            builder
+                .Append(tabs).AppendLine("Type:")
+                .Append(tabs).Append(tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
+                .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine();
+
+        private static StringBuilder AppendSpan(this StringBuilder builder, Span span) =>
+            builder.Append(tabs).AppendLine("Span: ").Append(span).AppendLine();
 
         private static Compilation CreateCompilation(ProjectInfo project)
         {
