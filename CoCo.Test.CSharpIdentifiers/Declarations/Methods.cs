@@ -36,5 +36,20 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                 .AssertContains(
                     Names.ExtensionMethodName.ClassifyAt(131, 12));
         }
+
+        [Test, Ignore("Add a new classification for local methods")]
+        public void MethodTest_LocalMethod()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\LocalMethod.cs".GetClassifications(ProjectInfo)
+                .AssertContains(/*...*/);
+        }
+
+        [Test]
+        public void MethodTest_StaticConstructor()
+        {
+            // NOTE: .cctor doesn't have a special classification, so it will be recognized as static method
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\StaticConstructor.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.StaticMethodName.ClassifyAt(113, 17));
+        }
     }
 }

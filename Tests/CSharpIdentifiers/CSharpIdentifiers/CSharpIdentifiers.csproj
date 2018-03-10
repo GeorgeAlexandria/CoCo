@@ -41,7 +41,9 @@
     <Compile Include="AccessFromNamespaceIdentifier.cs" />
     <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
     <Compile Include="Declarations\Methods\Constructor.cs" />
+    <Compile Include="Declarations\Methods\LocalMethod.cs" />
     <Compile Include="Declarations\Methods\Method.cs" />
+    <Compile Include="Declarations\Methods\StaticConstructor.cs" />
     <Compile Include="Declarations\Methods\StaticMethod.cs" />
     <Compile Include="Declarations\Namespace\StaticType.cs" />
     <Compile Include="Declarations\Namespace\InsideNamespace.cs" />
