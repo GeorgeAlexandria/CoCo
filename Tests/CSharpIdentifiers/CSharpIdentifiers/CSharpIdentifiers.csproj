@@ -39,6 +39,16 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Declarations\Locals\CatchVariable.cs" />
+    <Compile Include="Declarations\Locals\OutVariable.cs" />
+    <Compile Include="Declarations\Locals\PatternVariable.cs" />
+    <Compile Include="Declarations\Locals\ForControlVariable.cs" />
+    <Compile Include="Declarations\Locals\ForeachControlVariable.cs" />
+    <Compile Include="Declarations\Locals\SimpleVariable.cs" />
+    <Compile Include="Declarations\Locals\UsingVariable.cs" />
+    <Compile Include="Declarations\Members\InstanceEvent.cs" />
+    <Compile Include="Declarations\Members\InstanceField.cs" />
+    <Compile Include="Declarations\Members\InstanceProperty.cs" />
     <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
     <Compile Include="Declarations\Methods\Constructor.cs" />
     <Compile Include="Declarations\Methods\LocalMethod.cs" />

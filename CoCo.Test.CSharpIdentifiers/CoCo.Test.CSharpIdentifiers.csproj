@@ -42,6 +42,8 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="CSharpIdentifierTests.cs" />
+    <Compile Include="Declarations\Locals.cs" />
+    <Compile Include="Declarations\Members.cs" />
     <Compile Include="Declarations\Methods.cs" />
     <Compile Include="Declarations\Namespaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
