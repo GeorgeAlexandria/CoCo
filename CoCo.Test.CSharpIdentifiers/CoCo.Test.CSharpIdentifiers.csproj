@@ -46,6 +46,7 @@
     <Compile Include="Declarations\Members.cs" />
     <Compile Include="Declarations\Methods.cs" />
     <Compile Include="Declarations\Namespaces.cs" />
+    <Compile Include="Declarations\Parameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleTest.cs" />
   </ItemGroup>
