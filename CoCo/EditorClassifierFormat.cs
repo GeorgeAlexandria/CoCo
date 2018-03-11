@@ -124,8 +124,8 @@ namespace CoCo.FormatDefinition
     }
 
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = Names.EnumFiedName)]
-    [Name(Names.EnumFiedName)]
+    [ClassificationType(ClassificationTypeNames = Names.EnumFieldName)]
+    [Name(Names.EnumFieldName)]
     [UserVisible(true)]
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
     internal sealed class EnumFieldFormat : ClassificationFormatDefinition

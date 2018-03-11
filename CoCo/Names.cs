@@ -13,7 +13,7 @@ namespace CoCo
         public const string PropertyName = "Property name";
         public const string FieldName = "Field name";
         public const string StaticMethodName = "Static method name";
-        public const string EnumFiedName = "Enum field name";
+        public const string EnumFieldName = "Enum field name";
         public const string AliasNamespaceName = "Alias namespace name";
         public const string ConstructorMethodName = "Constructor method name";
 
@@ -35,7 +35,7 @@ namespace CoCo
                 builder.Add(PropertyName);
                 builder.Add(FieldName);
                 builder.Add(StaticMethodName);
-                builder.Add(EnumFiedName);
+                builder.Add(EnumFieldName);
                 builder.Add(AliasNamespaceName);
                 builder.Add(ConstructorMethodName);
                 return _all = builder.ToImmutable();

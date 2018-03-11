@@ -49,7 +49,7 @@ namespace CoCo
         private static ClassificationTypeDefinition staticMethodDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
-        [Name(Names.EnumFiedName)]
+        [Name(Names.EnumFieldName)]
         private static ClassificationTypeDefinition enumFieldDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]

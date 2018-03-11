@@ -56,7 +56,7 @@ namespace CoCo
             _propertyType = classifications[Names.PropertyName];
             _fieldType = classifications[Names.FieldName];
             _staticMethodType = classifications[Names.StaticMethodName];
-            _enumFieldType = classifications[Names.EnumFiedName];
+            _enumFieldType = classifications[Names.EnumFieldName];
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
             _constructorMethodType = classifications[Names.ConstructorMethodName];
         }

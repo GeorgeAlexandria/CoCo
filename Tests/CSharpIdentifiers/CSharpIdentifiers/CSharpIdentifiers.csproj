@@ -39,6 +39,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Declarations\EnumDeclaration.cs" />
     <Compile Include="Declarations\Locals\CatchVariable.cs" />
     <Compile Include="Declarations\Locals\OutVariable.cs" />
     <Compile Include="Declarations\Locals\PatternVariable.cs" />
