@@ -4,7 +4,9 @@
     {
         public void Create()
         {
-            var field = 5;
+            var field1 = 5;
+            // NOTE: check multi declaration
+            int variable1, variable2 = 26;
         }
     }
 }

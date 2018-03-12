@@ -9,7 +9,10 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void LocalTest()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\SimpleVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(151, 5));
+                .AssertContains(
+                    Names.LocalFieldName.ClassifyAt(151, 6),
+                    Names.LocalFieldName.ClassifyAt(226, 9),
+                    Names.LocalFieldName.ClassifyAt(237, 9));
         }
 
         [Test]
@@ -17,9 +20,9 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ForControlVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                Names.LocalFieldName.ClassifyAt(160, 5),
-                Names.LocalFieldName.ClassifyAt(171, 5),
-                Names.LocalFieldName.ClassifyAt(183, 5));
+                    Names.LocalFieldName.ClassifyAt(160, 5),
+                    Names.LocalFieldName.ClassifyAt(171, 5),
+                    Names.LocalFieldName.ClassifyAt(183, 5));
         }
 
         [Test]
@@ -55,6 +58,15 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\UsingVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(Names.LocalFieldName.ClassifyAt(157, 6));
+        }
+
+        [Test]
+        public void LocalTest_ValueTupleVariable()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
+                .AssertContains(
+                    Names.LocalFieldName.ClassifyAt(156, 4),
+                    Names.LocalFieldName.ClassifyAt(162, 4));
         }
     }
 }
