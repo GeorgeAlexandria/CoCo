@@ -14,7 +14,7 @@ namespace CoCo.Test.Common
 {
     public static class ClassificationHelper
     {
-        private static List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
+        private static readonly List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
 
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {

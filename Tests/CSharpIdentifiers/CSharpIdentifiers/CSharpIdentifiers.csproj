@@ -51,6 +51,9 @@
     <Compile Include="Declarations\Members\InstanceEvent.cs" />
     <Compile Include="Declarations\Members\InstanceField.cs" />
     <Compile Include="Declarations\Members\InstanceProperty.cs" />
+    <Compile Include="Declarations\Members\TypeEvent.cs" />
+    <Compile Include="Declarations\Members\TypeField.cs" />
+    <Compile Include="Declarations\Members\TypeProperty.cs" />
     <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
     <Compile Include="Declarations\Methods\Constructor.cs" />
     <Compile Include="Declarations\Methods\LocalMethod.cs" />
