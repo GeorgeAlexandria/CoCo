@@ -64,6 +64,8 @@
     <Compile Include="Declarations\Namespace\InsideNamespace.cs" />
     <Compile Include="Declarations\Namespace\Alias.cs" />
     <Compile Include="Declarations\Namespace\SimpleDeclaration.cs" />
+    <Compile Include="Declarations\Parameters\DelegateParameter.cs" />
+    <Compile Include="Declarations\Parameters\LambdaParameter.cs" />
     <Compile Include="Declarations\Parameters\RefOut.cs" />
     <Compile Include="Declarations\Parameters\Variable.cs" />
     <Compile Include="Declarations\Parameters\Optional.cs" />

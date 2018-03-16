@@ -34,5 +34,20 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                     Names.ParameterName.ClassifyAt(128, 4),
                     Names.ParameterName.ClassifyAt(145, 4));
         }
+
+        // TODO: add a scpecial type for lambda|delegate parameter?
+        [Test]
+        public void ParameterTest_LambdaParameter()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Parameters\LambdaParameter.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.ParameterName.ClassifyAt(160, 5));
+        }
+
+        [Test]
+        public void ParameterTest_DelegateParameter()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Parameters\DelegateParameter.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.ParameterName.ClassifyAt(175, 5));
+        }
     }
 }
