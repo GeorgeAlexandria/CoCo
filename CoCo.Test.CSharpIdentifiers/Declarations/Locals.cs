@@ -68,5 +68,12 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                     Names.LocalFieldName.ClassifyAt(156, 4),
                     Names.LocalFieldName.ClassifyAt(162, 4));
         }
+
+        [Test, Ignore("Classify range variables")]
+        public void LocalTest_RangeVariable()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\RangeVariable.cs".GetClassifications(ProjectInfo)
+                .AssertContains();
+        }
     }
 }
