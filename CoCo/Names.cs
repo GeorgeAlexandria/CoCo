@@ -5,6 +5,7 @@ namespace CoCo
     public static class Names
     {
         public const string LocalFieldName = "Local field name";
+        public const string RangeFieldName = "Range field name";
         public const string ParameterName = "Parameter name";
         public const string NamespaceName = "Namespace name";
         public const string ExtensionMethodName = "Extension method name";
@@ -31,6 +32,7 @@ namespace CoCo
                 builder.Add(NamespaceName);
                 builder.Add(ExtensionMethodName);
                 builder.Add(MethodName);
+                builder.Add(RangeFieldName);
                 builder.Add(EventName);
                 builder.Add(PropertyName);
                 builder.Add(FieldName);

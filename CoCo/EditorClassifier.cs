@@ -16,6 +16,7 @@ namespace CoCo
     internal class EditorClassifier : IClassifier
     {
         private readonly IClassificationType _localFieldType;
+        private readonly IClassificationType _rangeFieldType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
         private readonly IClassificationType _extensionMethodType;
@@ -48,6 +49,7 @@ namespace CoCo
         internal EditorClassifier(Dictionary<string, IClassificationType> classifications)
         {
             _localFieldType = classifications[Names.LocalFieldName];
+            _rangeFieldType = classifications[Names.RangeFieldName];
             _namespaceType = classifications[Names.NamespaceName];
             _parameterType = classifications[Names.ParameterName];
             _extensionMethodType = classifications[Names.ExtensionMethodName];
@@ -105,8 +107,7 @@ namespace CoCo
                     continue;
                 }
 
-                /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a
-                /// specific way
+                /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a specific way
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
 
                 var info = semanticModel.GetSymbolInfo(node);
@@ -127,6 +128,7 @@ namespace CoCo
                     Log.Debug("Node is {0} {1}", node.Kind(), node.RawKind);
                     continue;
                 }
+
                 switch (symbol.Kind)
                 {
                     case SymbolKind.Alias:
@@ -138,8 +140,11 @@ namespace CoCo
                     case SymbolKind.NetModule:
                     case SymbolKind.NamedType:
                     case SymbolKind.PointerType:
-                    case SymbolKind.RangeVariable:
                     case SymbolKind.TypeParameter:
+                    case SymbolKind.RangeVariable:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeFieldType));
+                        break;
+
                     case SymbolKind.Preprocessing:
                         //case SymbolKind.Discard:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);

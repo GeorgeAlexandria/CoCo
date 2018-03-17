@@ -20,6 +20,19 @@ namespace CoCo.FormatDefinition
     }
 
     [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.RangeFieldName)]
+    [Name(Names.RangeFieldName)]
+    [UserVisible(true)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
+    internal sealed class RangeFieldFormat : ClassificationFormatDefinition
+    {
+        public RangeFieldFormat()
+        {
+            DisplayName = "CoCo format: range fields";
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = Names.ParameterName)]
     [Name(Names.ParameterName)]
     [UserVisible(true)]
@@ -93,7 +106,7 @@ namespace CoCo.FormatDefinition
     {
         public PropertyFormat()
         {
-            DisplayName = "CoCo format: properies";
+            DisplayName = "CoCo format: properties";
         }
     }
 
@@ -106,7 +119,7 @@ namespace CoCo.FormatDefinition
     {
         public FieldFormat()
         {
-            DisplayName = "CoCo format: fileds";
+            DisplayName = "CoCo format: fields";
         }
     }
 

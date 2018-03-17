@@ -21,6 +21,10 @@ namespace CoCo
         private static ClassificationTypeDefinition localFieldDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.RangeFieldName)]
+        private static ClassificationTypeDefinition rangeFieldDefinition;
+
+        [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.ParameterName)]
         private static ClassificationTypeDefinition parameterDefinition;
 
