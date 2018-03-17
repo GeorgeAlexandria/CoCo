@@ -3,18 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
+using CoCo.Logging;
 
 namespace CoCo.Test.Common
 {
     public sealed class MsBuildEngine : IBuildEngine5
     {
-        private readonly CoCoLog.Logger _logger;
+        private readonly Logger _logger;
 
         private readonly Dictionary<object, object> _objectCacheLivingUntilBuild = new Dictionary<object, object>();
 
         private readonly Dictionary<object, object> _objectCacheLivingInAppDomain = new Dictionary<object, object>();
 
-        public MsBuildEngine(CoCoLog.Logger logger)
+        public MsBuildEngine(Logger logger)
         {
             _logger = logger;
         }

@@ -222,9 +222,9 @@
     <None Include="source.extension.vsixmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoCoLog\CoCoLog.csproj" Condition=" '$(Configuration)' != 'Release' ">
+    <ProjectReference Include="..\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' ">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
-      <Name>CoCoLog</Name>
+      <Name>CoCo.Logging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

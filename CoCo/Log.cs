@@ -9,7 +9,7 @@ namespace CoCo
     internal static class Log
     {
 #if DEBUG
-        private static CoCoLog.Logger _logger;
+        private static CoCo.Logging.Logger _logger;
 #endif
 
         private const string _debug = "DEBUG";
@@ -17,7 +17,7 @@ namespace CoCo
         static Log()
         {
 #if DEBUG
-            _logger = CoCoLog.LogManager.GetLogger("Classifier");
+            _logger = CoCo.Logging.LogManager.GetLogger("Classifier");
 #endif
         }
 

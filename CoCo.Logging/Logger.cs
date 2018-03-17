@@ -1,7 +1,7 @@
 ﻿using System;
 using NLog;
 
-namespace CoCoLog
+namespace CoCo.Logging
 {
     public sealed class Logger : IDisposable
     {

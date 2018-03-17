@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using CoCoLog;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
@@ -27,7 +26,7 @@ namespace CoCo.Test.Common
 
         public static List<SimplifiedClassificationSpan> GetClassifications(this string path, ProjectInfo project)
         {
-            using (var logger = LogManager.GetLogger("Test execution"))
+            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
             {
                 path = TestHelper.GetPathRelativeToTest(path);
                 if (!File.Exists(path))

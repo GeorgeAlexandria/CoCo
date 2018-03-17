@@ -5,7 +5,7 @@ using NLog.Config;
 using NLog.Targets;
 using NLog.Targets.Wrappers;
 
-namespace CoCoLog
+namespace CoCo.Logging
 {
     // TODO: use pool of objects
     public static class LogManager

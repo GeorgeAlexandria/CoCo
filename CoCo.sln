@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCoVs15", "CoCoVs15\CoCoVs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.Common", "CoCo.Test.Common\CoCo.Test.Common.csproj", "{0B57BF2D-6001-4317-9527-96C7CF4B20D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCoLog", "CoCoLog\CoCoLog.csproj", "{A64F3639-B51D-4C8E-A680-75310FFDA8F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Logging", "CoCo.Logging\CoCo.Logging.csproj", "{A64F3639-B51D-4C8E-A680-75310FFDA8F9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.CSharpIdentifiers", "CoCo.Test.CSharpIdentifiers\CoCo.Test.CSharpIdentifiers.csproj", "{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86}"
 EndProject
