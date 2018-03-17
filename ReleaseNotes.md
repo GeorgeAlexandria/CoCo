@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.1.0
+
+**2018-03-17**
+
+- [x] Added supporting for range variables in LINQ
+- [x] Fixed a small spelling mistakes 
+
 ## 1.0.2
 
 **2017-08-11**

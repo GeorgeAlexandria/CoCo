@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-1.0.2-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-1.0.2-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio 2015 and 2017 extension that uses Roslyn API's for analyzing C# source code
@@ -37,6 +37,7 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: namespaces                 |(default) 220 220 220 |
 |CoCo format: parameters                 |128 128 128|
 |CoCo format: properties                 |255   0 255|
+|CoCo format: range fields               |128 128   0|
 |CoCo format: static methods             |154  82   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
@@ -57,6 +58,7 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: namespace                  |  0 213   0|
 |CoCo format: parameters                 |108 108 108|
 |CoCo format: properties                 |255   0 255|
+|CoCo format: range fields               |128 128   0|
 |CoCo format: static methods             |163  86   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
