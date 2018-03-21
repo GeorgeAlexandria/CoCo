@@ -27,12 +27,13 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         }
 
         [Test]
-        public void ParameterTest_RefOut()
+        public void ParameterTest_RefOutIn()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Parameters\RefOut.cs".GetClassifications(ProjectInfo)
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Parameters\RefOutIn.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.ParameterName.ClassifyAt(128, 4),
-                    Names.ParameterName.ClassifyAt(145, 4));
+                    Names.ParameterName.ClassifyAt(130, 4),
+                    Names.ParameterName.ClassifyAt(147, 4),
+                    Names.ParameterName.ClassifyAt(160, 4));
         }
 
         // TODO: add a scpecial type for lambda|delegate parameter?
