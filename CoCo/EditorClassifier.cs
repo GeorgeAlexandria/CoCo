@@ -28,6 +28,7 @@ namespace CoCo
         private readonly IClassificationType _enumFieldType;
         private readonly IClassificationType _aliasNamespaceType;
         private readonly IClassificationType _constructorMethodType;
+        private readonly IClassificationType _labelType;
 
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -61,6 +62,7 @@ namespace CoCo
             _enumFieldType = classifications[Names.EnumFieldName];
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
             _constructorMethodType = classifications[Names.ConstructorMethodName];
+            _labelType = classifications[Names.LabelName];
         }
 
         /// <remarks>
@@ -136,19 +138,22 @@ namespace CoCo
                     case SymbolKind.Assembly:
                     case SymbolKind.DynamicType:
                     case SymbolKind.ErrorType:
-                    case SymbolKind.Label:
                     case SymbolKind.NetModule:
                     case SymbolKind.NamedType:
                     case SymbolKind.PointerType:
                     case SymbolKind.TypeParameter:
-                    case SymbolKind.RangeVariable:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeFieldType));
-                        break;
-
                     case SymbolKind.Preprocessing:
                         //case SymbolKind.Discard:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         Log.Debug("Text was: {0}", node.GetText().ToString());
+                        break;
+
+                    case SymbolKind.Label:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _labelType));
+                        break;
+
+                    case SymbolKind.RangeVariable:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeFieldType));
                         break;
 
                     case SymbolKind.Field:

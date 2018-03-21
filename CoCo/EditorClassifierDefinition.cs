@@ -64,6 +64,10 @@ namespace CoCo
         [Name(Names.ConstructorMethodName)]
         private static ClassificationTypeDefinition constructorMethodDefinition;
 
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.LabelName)]
+        private static ClassificationTypeDefinition labelDefinition;
+
 #pragma warning restore 169
     }
 }

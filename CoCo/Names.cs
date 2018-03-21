@@ -17,6 +17,7 @@ namespace CoCo
         public const string EnumFieldName = "Enum field name";
         public const string AliasNamespaceName = "Alias namespace name";
         public const string ConstructorMethodName = "Constructor method name";
+        public const string LabelName = "Label name";
 
         private static ImmutableArray<string> _all;
 
@@ -40,6 +41,7 @@ namespace CoCo
                 builder.Add(EnumFieldName);
                 builder.Add(AliasNamespaceName);
                 builder.Add(ConstructorMethodName);
+                builder.Add(LabelName);
                 return _all = builder.ToImmutable();
             }
         }

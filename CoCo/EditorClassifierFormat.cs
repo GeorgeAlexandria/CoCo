@@ -174,4 +174,17 @@ namespace CoCo.FormatDefinition
             DisplayName = "CoCo format: constructor method";
         }
     }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.LabelName)]
+    [Name(Names.LabelName)]
+    [UserVisible(true)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
+    internal sealed class LabelFormat : ClassificationFormatDefinition
+    {
+        public LabelFormat()
+        {
+            DisplayName = "CoCo format: label";
+        }
+    }
 }

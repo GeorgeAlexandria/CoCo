@@ -43,6 +43,7 @@
     </Compile>
     <Compile Include="CSharpIdentifierTests.cs" />
     <Compile Include="Declarations\Enum.cs" />
+    <Compile Include="Declarations\Label.cs" />
     <Compile Include="Declarations\Locals.cs" />
     <Compile Include="Declarations\Members.cs" />
     <Compile Include="Declarations\Methods.cs" />
