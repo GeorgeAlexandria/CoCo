@@ -39,7 +39,21 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Access\Members\Event.cs" />
+    <Compile Include="Access\Members\Field.cs" />
+    <Compile Include="Access\Members\Property.cs" />
+    <Compile Include="Access\Members\TypeEvent.cs" />
+    <Compile Include="Access\Members\TypeField.cs" />
+    <Compile Include="Access\Members\TypeProperty.cs" />
+    <Compile Include="Access\Namespaces\ByNamespace.cs" />
+    <Compile Include="Access\Namespaces\ByNamespaceAlias.cs" />
+    <Compile Include="Access\EnumField.cs" />
+    <Compile Include="Access\Label.cs" />
+    <Compile Include="Access\Parameters\Delegate.cs" />
+    <Compile Include="Access\Parameters\Lambda.cs" />
+    <Compile Include="Access\Parameters\Optional.cs" />
+    <Compile Include="Access\Parameters\RefInOut.cs" />
+    <Compile Include="Access\Parameters\Variable.cs" />
     <Compile Include="Declarations\Label.cs" />
     <Compile Include="Declarations\EnumDeclaration.cs" />
     <Compile Include="Declarations\Locals\CatchVariable.cs" />

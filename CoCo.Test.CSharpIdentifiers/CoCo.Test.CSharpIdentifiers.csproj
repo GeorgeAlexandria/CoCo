@@ -41,6 +41,11 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="Access\Enums.cs" />
+    <Compile Include="Access\Labels.cs" />
+    <Compile Include="Access\Members.cs" />
+    <Compile Include="Access\Namespaces.cs" />
+    <Compile Include="Access\Parameters.cs" />
     <Compile Include="CSharpIdentifierTests.cs" />
     <Compile Include="Declarations\Enum.cs" />
     <Compile Include="Declarations\Label.cs" />

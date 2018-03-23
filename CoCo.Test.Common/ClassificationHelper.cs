@@ -177,17 +177,27 @@ namespace CoCo.Test.Common
 
         private static Compilation CreateCompilation(ProjectInfo project)
         {
-            var trees = new List<SyntaxTree>(project.CompileItems.Length);
-            foreach (var item in project.CompileItems)
+            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
             {
-                var code = File.ReadAllText(item);
-                trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                var trees = new List<SyntaxTree>(project.CompileItems.Length);
+                foreach (var item in project.CompileItems)
+                {
+                    if (File.Exists(item))
+                    {
+                        var code = File.ReadAllText(item);
+                        trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                    }
+                    else
+                    {
+                        logger.Error($"File {item} doesn't exist");
+                    }
+                }
+                // TODO: improve
+                return CSharpCompilation.Create(project.ProjectName)
+                    .AddSyntaxTrees(trees)
+                    .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
+                    .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
             }
-            // TODO: improve
-            return CSharpCompilation.Create(project.ProjectName)
-                .AddSyntaxTrees(trees)
-                .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
-                .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
         }
     }
 }
