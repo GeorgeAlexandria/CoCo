@@ -182,15 +182,13 @@ namespace CoCo.Test.Common
                 var trees = new List<SyntaxTree>(project.CompileItems.Length);
                 foreach (var item in project.CompileItems)
                 {
-                    if (File.Exists(item))
-                    {
-                        var code = File.ReadAllText(item);
-                        trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
-                    }
-                    else
+                    if (!File.Exists(item))
                     {
                         logger.Error($"File {item} doesn't exist");
+                        continue;
                     }
+                    var code = File.ReadAllText(item);
+                    trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
                 }
                 // TODO: improve
                 return CSharpCompilation.Create(project.ProjectName)

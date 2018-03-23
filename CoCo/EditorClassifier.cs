@@ -175,7 +175,7 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Namespace:
-                        var namesapceType = IsAliasNamespace(symbol, node) ? _namespaceType : _aliasNamespaceType;
+                        var namesapceType = IsAliasNamespace(symbol, node) ? _aliasNamespaceType : _namespaceType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 
@@ -204,16 +204,32 @@ namespace CoCo
 
         private static bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
         {
-            var strSymbol = symbol.ToString();
-            if (strSymbol == (node as IdentifierNameSyntax).Identifier.Text) return true;
-
-            var fullNamespaceNode = node;
-            while (strSymbol != fullNamespaceNode.ToString() && fullNamespaceNode.Parent is QualifiedNameSyntax)
+            if (!(node is IdentifierNameSyntax identifierName))
             {
-                fullNamespaceNode = fullNamespaceNode.Parent;
+                Log.Error($"Node {node} for namespace isn't IdentifierNameSyntax");
+                return false;
+            }
+            switch (identifierName.Parent)
+            {
+                case QualifiedNameSyntax qualifiedName when qualifiedName.Left != identifierName: return false;
+                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
             }
 
-            return strSymbol == fullNamespaceNode.ToString();
+            var namespaceText = symbol.ToString();
+            var identifierText = identifierName.Identifier.ValueText;
+
+            // NOTE: identifier is longer than a namespace => alias
+            if (identifierText.Length > namespaceText.Length) return true;
+
+            var i = 0;
+            for (; i < identifierText.Length; ++i)
+            {
+                if (!namespaceText[i].Equals(identifierText[i])) return true;
+            }
+
+            // NOTE: identifier equals the first level namespace => namespace
+            if (i == namespaceText.Length || i < namespaceText.Length && namespaceText[i] == '.') return false;
+            return true;
         }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
