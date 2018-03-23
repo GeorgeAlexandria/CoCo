@@ -43,7 +43,9 @@
     </Compile>
     <Compile Include="Access\Enums.cs" />
     <Compile Include="Access\Labels.cs" />
+    <Compile Include="Access\LocalVariables.cs" />
     <Compile Include="Access\Members.cs" />
+    <Compile Include="Access\Methods.cs" />
     <Compile Include="Access\Namespaces.cs" />
     <Compile Include="Access\Parameters.cs" />
     <Compile Include="CSharpIdentifierTests.cs" />

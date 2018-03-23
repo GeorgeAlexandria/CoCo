@@ -4,6 +4,7 @@ namespace CoCo
 {
     public static class Names
     {
+        // TODO: change name from field to variable
         public const string LocalFieldName = "Local field name";
         public const string RangeFieldName = "Range field name";
         public const string ParameterName = "Parameter name";

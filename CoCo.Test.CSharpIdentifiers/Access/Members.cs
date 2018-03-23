@@ -54,5 +54,16 @@ namespace CoCo.Test.CSharpIdentifiers.Access
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\TypeProperty.cs".GetClassifications(ProjectInfo)
                 .AssertContains(Names.PropertyName.ClassifyAt(182, 15));
         }
+
+        [Test]
+        public void MemberTest_ValueTupleField()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\ValueTupleFields.cs".GetClassifications(ProjectInfo)
+                .AssertContains(
+                    Names.FieldName.ClassifyAt(157, 4),
+                    Names.FieldName.ClassifyAt(166, 4),
+                    Names.FieldName.ClassifyAt(209, 4),
+                    Names.FieldName.ClassifyAt(222, 4));
+        }
     }
 }

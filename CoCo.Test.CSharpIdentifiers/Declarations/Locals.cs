@@ -66,7 +66,8 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     Names.LocalFieldName.ClassifyAt(156, 4),
-                    Names.LocalFieldName.ClassifyAt(162, 4));
+                    Names.LocalFieldName.ClassifyAt(162, 4),
+                    Names.LocalFieldName.ClassifyAt(201, 5));
         }
 
         [Test]
