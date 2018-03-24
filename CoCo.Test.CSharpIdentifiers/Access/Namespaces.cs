@@ -20,9 +20,9 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Namespaces\ByNamespaceAlias.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.AliasNamespaceName.ClassifyAt(375, 8),
-                    Names.AliasNamespaceName.ClassifyAt(426, 11),
-                    Names.AliasNamespaceName.ClassifyAt(488, 3));
+                    Names.AliasNamespaceName.ClassifyAt(381, 8),
+                    Names.AliasNamespaceName.ClassifyAt(432, 11),
+                    Names.AliasNamespaceName.ClassifyAt(494, 3));
         }
     }
 }

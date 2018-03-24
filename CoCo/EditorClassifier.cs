@@ -215,6 +215,7 @@ namespace CoCo
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
             }
 
+            // TODO: can it replace to getting the first level namespace (first level can be global namespace)?
             var namespaceText = symbol.ToString();
             var identifierText = identifierName.Identifier.ValueText;
 

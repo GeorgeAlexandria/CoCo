@@ -20,5 +20,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                     Names.LocalFieldName.ClassifyAt(194, 6),
                     Names.LocalFieldName.ClassifyAt(209, 6));
         }
+
+        [Test]
+        public void LocalVariableTest_Pattern()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
+                .AssertContains(
+                    Names.LocalFieldName.ClassifyAt(188, 4),
+                    Names.LocalFieldName.ClassifyAt(196, 4));
+        }
     }
 }

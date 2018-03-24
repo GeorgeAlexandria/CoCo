@@ -39,12 +39,18 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="Access\Locals\PatternVariable.cs" />
     <Compile Include="Access\Members\ValueTupleFields.cs" />
     <Compile Include="Access\Methods\ExtensionMethod.cs" />
     <Compile Include="Access\Methods\LocalMethod.cs" />
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
+    <Compile Include="Constructions\CatchVariable.cs" />
+    <Compile Include="Constructions\ForForeachControlVariable.cs" />
     <Compile Include="Access\Locals\OutVariable.cs" />
+    <Compile Include="Constructions\IfPatternVariable.cs" />
+    <Compile Include="Constructions\SwitchPatternVariable.cs" />
+    <Compile Include="Constructions\UsingVariable.cs" />
     <Compile Include="Access\Locals\ValueTupleVariable.cs" />
     <Compile Include="Access\Members\Event.cs" />
     <Compile Include="Access\Members\Field.cs" />
