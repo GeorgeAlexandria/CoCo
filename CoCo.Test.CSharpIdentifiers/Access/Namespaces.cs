@@ -12,7 +12,16 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                 .AssertContains(
                     Names.NamespaceName.ClassifyAt(142, 6),
                     Names.NamespaceName.ClassifyAt(149, 11),
-                    Names.NamespaceName.ClassifyAt(161, 7));
+                    Names.NamespaceName.ClassifyAt(161, 7),
+                    Names.NamespaceName.ClassifyAt(253, 6),
+                    Names.NamespaceName.ClassifyAt(260, 11));
+        }
+
+        [Test]
+        public void NamespaceTest_GlobalNotExists()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Namespaces\ByNamespace.cs".GetClassifications(ProjectInfo)
+                .AssertNotContains(Names.NamespaceName.ClassifyAt(245, 6));
         }
 
         [Test]
