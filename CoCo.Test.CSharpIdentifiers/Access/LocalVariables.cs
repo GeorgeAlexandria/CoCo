@@ -29,5 +29,12 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                     Names.LocalFieldName.ClassifyAt(188, 4),
                     Names.LocalFieldName.ClassifyAt(196, 4));
         }
+
+        [Test]
+        public void LocalVariableTest_Dynamic()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.LocalFieldName.ClassifyAt(195, 4));
+        }
     }
 }

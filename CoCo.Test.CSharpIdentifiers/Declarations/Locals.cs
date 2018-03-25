@@ -80,5 +80,12 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                     Names.RangeFieldName.ClassifyAt(250, 4),
                     Names.RangeFieldName.ClassifyAt(292, 4));
         }
+
+        [Test]
+        public void LocalTest_DynamicVariable()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.LocalFieldName.ClassifyAt(156, 5));
+        }
     }
 }

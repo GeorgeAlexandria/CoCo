@@ -39,6 +39,7 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="Access\Locals\DynamicVariable.cs" />
     <Compile Include="Access\Locals\PatternVariable.cs" />
     <Compile Include="Access\Members\ValueTupleFields.cs" />
     <Compile Include="Access\Methods\ExtensionMethod.cs" />
@@ -46,6 +47,9 @@
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
     <Compile Include="Constructions\CatchVariable.cs" />
+    <Compile Include="Constructions\Return.cs" />
+    <Compile Include="Constructions\Throw.cs" />
+    <Compile Include="Constructions\Nameof.cs" />
     <Compile Include="Constructions\ForForeachControlVariable.cs" />
     <Compile Include="Access\Locals\OutVariable.cs" />
     <Compile Include="Constructions\IfPatternVariable.cs" />
@@ -67,9 +71,11 @@
     <Compile Include="Access\Parameters\Optional.cs" />
     <Compile Include="Access\Parameters\RefInOut.cs" />
     <Compile Include="Access\Parameters\Variable.cs" />
+    <Compile Include="Constructions\YieldReturn.cs" />
     <Compile Include="Declarations\Label.cs" />
     <Compile Include="Declarations\EnumDeclaration.cs" />
     <Compile Include="Declarations\Locals\CatchVariable.cs" />
+    <Compile Include="Declarations\Locals\DynamicVariable.cs" />
     <Compile Include="Declarations\Locals\RangeVariable.cs" />
     <Compile Include="Declarations\Locals\ValueTupleVariable.cs" />
     <Compile Include="Declarations\Locals\OutVariable.cs" />

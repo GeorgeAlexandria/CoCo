@@ -47,5 +47,39 @@ namespace CoCo.Test.CSharpIdentifiers
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\UsingVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(Names.LocalFieldName.ClassifyAt(228, 6));
         }
+
+        [Test]
+        public void ConstructionTest_Nameof()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Nameof.cs".GetClassifications(ProjectInfo)
+                .AssertContains(
+                    Names.LocalFieldName.ClassifyAt(229, 8),
+                    Names.EnumFieldName.ClassifyAt(287, 9),
+                    Names.PropertyName.ClassifyAt(342, 12),
+                    Names.FieldName.ClassifyAt(389, 5));
+        }
+
+        [Test]
+        public void ConstructionTest_Return()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Return.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.LocalFieldName.ClassifyAt(172, 6));
+        }
+
+        [Test]
+        public void ConstructionTest_Throw()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Throw.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.LocalFieldName.ClassifyAt(204, 9));
+        }
+
+        [Test]
+        public void ConstructionTest_YieldReturn()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\YieldReturn.cs".GetClassifications(ProjectInfo)
+                .AssertContains(
+                    Names.LocalFieldName.ClassifyAt(235, 5),
+                    Names.LocalFieldName.ClassifyAt(337, 4));
+        }
     }
 }
