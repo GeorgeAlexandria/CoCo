@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace CoCo.Test.Common
 {
-    internal class TextSnapshot : ITextSnapshot
+    internal class TextSnapshot : ITextSnapshot2
     {
         private readonly ITextVersion2 _version;
 
