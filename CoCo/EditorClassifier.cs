@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Text.Classification;
 namespace CoCo
 {
     /// <summary>
-    /// Classifier that classifies all text as an instance of the "EditorClassifier" classification type.
+    /// Classifier that classifies all text as an instance of the <see cref="EditorClassifier"/>" classification type.
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
@@ -29,6 +29,7 @@ namespace CoCo
         private readonly IClassificationType _aliasNamespaceType;
         private readonly IClassificationType _constructorMethodType;
         private readonly IClassificationType _labelType;
+        private readonly IClassificationType _localMethodType;
 
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -63,6 +64,7 @@ namespace CoCo
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
             _constructorMethodType = classifications[Names.ConstructorMethodName];
             _labelType = classifications[Names.LabelName];
+            _localMethodType = classifications[Names.LocalMethodName];
         }
 
         /// <remarks>
@@ -181,6 +183,7 @@ namespace CoCo
 
                     case SymbolKind.Parameter:
                         // NOTE: Skip argument in summaries
+                        // TODO: add tests for it!
                         if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
                         {
                             spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
@@ -189,11 +192,12 @@ namespace CoCo
 
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
-                        var methodType = methodSymbol.MethodKind == MethodKind.Constructor
-                            ? _constructorMethodType
-                            : methodSymbol.IsExtensionMethod
-                                ? _extensionMethodType
-                                : methodSymbol.IsStatic ? _staticMethodType : _methodType;
+                        var methodType =
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
+                            methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsStatic ? _staticMethodType :
+                            _methodType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
                 }

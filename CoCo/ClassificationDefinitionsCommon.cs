@@ -5,9 +5,9 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo
 {
     /// <summary>
-    /// Classification type definition export for EditorClassifier
+    /// Classification type definition export for <see cref="EditorClassifier"/>
     /// </summary>
-    internal static class EditorClassifierDefinition
+    internal static partial class ClassificationDefinitions
     {
         // Disable "The field is never used" compiler's warning. The fields are used by MEF.
 #pragma warning disable 169

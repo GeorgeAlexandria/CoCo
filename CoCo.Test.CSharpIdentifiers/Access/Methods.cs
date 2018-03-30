@@ -14,14 +14,13 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                     Names.ExtensionMethodName.ClassifyAt(315, 6));
         }
 
-        // TODO: Add a new classification for local methods
-        [Test, Ignore("Add a new classification for local methods")]
+        [Test]
         public void MethodTest_Local()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\LocalMethod.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.MethodName.ClassifyAt(226, 10),
-                    Names.MethodName.ClassifyAt(274, 10));
+                    Names.LocalMethodName.ClassifyAt(226, 10),
+                    Names.LocalMethodName.ClassifyAt(274, 10));
         }
 
         [Test]

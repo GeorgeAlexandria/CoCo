@@ -13,7 +13,7 @@ namespace CoCo
     [ContentType("CSharp")]
     // TODO: uncomment when will try to add analyzing of an annotates, texts and etx
     //[ContentType("text")]
-    internal class EditorClassifierProvider : IClassifierProvider
+    internal class ClassifierProvider : IClassifierProvider
     {
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
@@ -33,13 +33,6 @@ namespace CoCo
 
 #pragma warning restore 649
 
-        /// <summary>
-        /// Gets a classifier for the given text buffer.
-        /// </summary>
-        /// <param name="textBuffer">The <see cref="ITextBuffer"/> to classify.</param>
-        /// <returns>
-        /// A classifier for the text buffer, or null if the provider cannot do so in its current state.
-        /// </returns>
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(32);
