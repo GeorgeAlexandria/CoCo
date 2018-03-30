@@ -54,9 +54,6 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="..\CoCo\EditorClassifier.cs">
-      <Link>EditorClassifier.cs</Link>
-    </Compile>
     <Compile Include="..\CoCo\EditorClassifierDefinition.cs">
       <Link>EditorClassifierDefinition.cs</Link>
     </Compile>
@@ -78,6 +75,7 @@
     <Compile Include="..\CoCo\WorkspaceExtensions.cs">
       <Link>WorkspaceExtensions.cs</Link>
     </Compile>
+    <Compile Include="EditorClassifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
