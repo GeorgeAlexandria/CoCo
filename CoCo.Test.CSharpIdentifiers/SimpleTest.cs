@@ -14,7 +14,7 @@ namespace CoCo.Test.CSharpIdentifiers
                     Names.NamespaceName.ClassifyAt(10, 17),
                     Names.MethodName.ClassifyAt(94, 6),
                     Names.ParameterName.ClassifyAt(108, 6),
-                    Names.LocalFieldName.ClassifyAt(144, 5));
+                    Names.LocalVariableName.ClassifyAt(144, 5));
         }
     }
 }

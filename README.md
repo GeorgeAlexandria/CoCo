@@ -7,10 +7,11 @@ and colorize appropriate syntax nodes to different colors. It makes easily recog
 Extension supports following elements:
 * Namespaces
 * Alias for namespaces
-* Fields in the local scope
+* Local and range variables
 * Parameters
 * Intstance methods and constructor
 * Static and extension methods
+* Local functions (supports only for VS17)
 * Events
 * Properties
 * Instance fields
@@ -27,17 +28,18 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |Item name|Value|
 |----------------------------------------|---------------------:|
 |CoCo format: alias namespace            |(default) 220 220 220 |
-|CoCo format: constructor method         |(default) 220 220 220 |
+|CoCo format: constructors               |(default) 220 220 220 |
 |CoCo format: enum field                 |  0 193 193 |
 |CoCo format: events                     |(default) 220 220 220 |
 |CoCo format: extenson methods           |233 122   1|
 |CoCo format: fields                     |255 157 255|
-|CoCo format: local fields               |128 128   0|
+|CoCo format: local methods              |187  20   0|
+|CoCo format: local variables            |128 128   0|
 |CoCo format: methods                    |187  54   4|
 |CoCo format: namespaces                 |(default) 220 220 220 |
 |CoCo format: parameters                 |128 128 128|
 |CoCo format: properties                 |255   0 255|
-|CoCo format: range fields               |128 128   0|
+|CoCo format: range variables            |128 128   0|
 |CoCo format: static methods             |154  82   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
@@ -48,17 +50,18 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |Item name|Value|
 |----------------------------------------|---------------------:|
 |CoCo format: Alias namespace            |128   0 255|
-|CoCo format: constructor method         |255   0   0|
+|CoCo format: constructors               |255   0   0|
 |CoCo format: enum field                 |  0 193 193|
 |CoCo format: events                     |200   0 128|
 |CoCo format: extenson methods           |224 118   1|
 |CoCo format: fields                     |174   0 174|
-|CoCo format: local fields               |128 128   0|
+|CoCo format: local methods              |150  10  10|
+|CoCo format: local variables            |128 128   0|
 |CoCo format: methods                    |187   0   0|
 |CoCo format: namespace                  |  0 213   0|
 |CoCo format: parameters                 |108 108 108|
 |CoCo format: properties                 |255   0 255|
-|CoCo format: range fields               |128 128   0|
+|CoCo format: range variables            |128 128   0|
 |CoCo format: static methods             |163  86   1|
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)

@@ -15,8 +15,8 @@ namespace CoCo
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
-        private readonly IClassificationType _localFieldType;
-        private readonly IClassificationType _rangeFieldType;
+        private readonly IClassificationType _localVariableType;
+        private readonly IClassificationType _rangeVariableType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
         private readonly IClassificationType _extensionMethodType;
@@ -27,7 +27,7 @@ namespace CoCo
         private readonly IClassificationType _staticMethodType;
         private readonly IClassificationType _enumFieldType;
         private readonly IClassificationType _aliasNamespaceType;
-        private readonly IClassificationType _constructorMethodType;
+        private readonly IClassificationType _constructorType;
         private readonly IClassificationType _labelType;
         private readonly IClassificationType _localMethodType;
 
@@ -50,8 +50,8 @@ namespace CoCo
 
         internal EditorClassifier(Dictionary<string, IClassificationType> classifications)
         {
-            _localFieldType = classifications[Names.LocalFieldName];
-            _rangeFieldType = classifications[Names.RangeFieldName];
+            _localVariableType = classifications[Names.LocalVariableName];
+            _rangeVariableType = classifications[Names.RangeVariableName];
             _namespaceType = classifications[Names.NamespaceName];
             _parameterType = classifications[Names.ParameterName];
             _extensionMethodType = classifications[Names.ExtensionMethodName];
@@ -62,7 +62,7 @@ namespace CoCo
             _staticMethodType = classifications[Names.StaticMethodName];
             _enumFieldType = classifications[Names.EnumFieldName];
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
-            _constructorMethodType = classifications[Names.ConstructorMethodName];
+            _constructorType = classifications[Names.ConstructorName];
             _labelType = classifications[Names.LabelName];
             _localMethodType = classifications[Names.LocalMethodName];
         }
@@ -155,7 +155,7 @@ namespace CoCo
                         break;
 
                     case SymbolKind.RangeVariable:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeFieldType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeVariableType));
                         break;
 
                     case SymbolKind.Field:
@@ -173,7 +173,7 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Local:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localFieldType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localVariableType));
                         break;
 
                     case SymbolKind.Namespace:
@@ -193,7 +193,7 @@ namespace CoCo
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
                             methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :

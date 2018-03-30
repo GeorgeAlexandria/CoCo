@@ -10,9 +10,9 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\SimpleVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(151, 6),
-                    Names.LocalFieldName.ClassifyAt(226, 9),
-                    Names.LocalFieldName.ClassifyAt(237, 9));
+                    Names.LocalVariableName.ClassifyAt(151, 6),
+                    Names.LocalVariableName.ClassifyAt(226, 9),
+                    Names.LocalVariableName.ClassifyAt(237, 9));
         }
 
         [Test]
@@ -20,44 +20,44 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ForControlVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(160, 5),
-                    Names.LocalFieldName.ClassifyAt(171, 5),
-                    Names.LocalFieldName.ClassifyAt(183, 5));
+                    Names.LocalVariableName.ClassifyAt(160, 5),
+                    Names.LocalVariableName.ClassifyAt(171, 5),
+                    Names.LocalVariableName.ClassifyAt(183, 5));
         }
 
         [Test]
         public void LocalTest_ForeachControlVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ForeachControlVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(168, 4));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(168, 4));
         }
 
         [Test]
         public void LocalTest_CatchVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\CatchVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(256, 9));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(256, 9));
         }
 
         [Test]
         public void LocalTest_OutVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\OutVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(253, 8));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(253, 8));
         }
 
         [Test]
         public void LocalTest_PatternVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(204, 5));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(204, 5));
         }
 
         [Test]
         public void LocalTest_UsingVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\UsingVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(157, 6));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(157, 6));
         }
 
         [Test]
@@ -65,9 +65,9 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(156, 4),
-                    Names.LocalFieldName.ClassifyAt(162, 4),
-                    Names.LocalFieldName.ClassifyAt(201, 5));
+                    Names.LocalVariableName.ClassifyAt(156, 4),
+                    Names.LocalVariableName.ClassifyAt(162, 4),
+                    Names.LocalVariableName.ClassifyAt(201, 5));
         }
 
         [Test]
@@ -75,17 +75,17 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\RangeVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.RangeFieldName.ClassifyAt(186, 4),
-                    Names.RangeFieldName.ClassifyAt(242, 5),
-                    Names.RangeFieldName.ClassifyAt(250, 4),
-                    Names.RangeFieldName.ClassifyAt(292, 4));
+                    Names.RangeVariableName.ClassifyAt(186, 4),
+                    Names.RangeVariableName.ClassifyAt(242, 5),
+                    Names.RangeVariableName.ClassifyAt(250, 4),
+                    Names.RangeVariableName.ClassifyAt(292, 4));
         }
 
         [Test]
         public void LocalTest_DynamicVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(156, 5));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(156, 5));
         }
     }
 }

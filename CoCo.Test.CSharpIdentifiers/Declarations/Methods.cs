@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void MethodTest_Constructor()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Constructor.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.ConstructorMethodName.ClassifyAt(107, 11));
+                .AssertContains(Names.ConstructorName.ClassifyAt(107, 11));
         }
 
         [Test]

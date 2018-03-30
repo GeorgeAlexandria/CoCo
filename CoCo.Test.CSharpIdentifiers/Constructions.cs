@@ -10,7 +10,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\CatchVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(311, 9),
+                    Names.LocalVariableName.ClassifyAt(311, 9),
                     Names.PropertyName.ClassifyAt(321, 7));
         }
 
@@ -19,17 +19,17 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\ForForeachControlVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(242, 5),
-                    Names.LocalFieldName.ClassifyAt(251, 5),
-                    Names.LocalFieldName.ClassifyAt(387, 4),
-                    Names.LocalFieldName.ClassifyAt(399, 4));
+                    Names.LocalVariableName.ClassifyAt(242, 5),
+                    Names.LocalVariableName.ClassifyAt(251, 5),
+                    Names.LocalVariableName.ClassifyAt(387, 4),
+                    Names.LocalVariableName.ClassifyAt(399, 4));
         }
 
         [Test]
         public void ConstructionTest_If_PatternVariable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\IfPatternVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(254, 5));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(254, 5));
         }
 
         [Test]
@@ -37,15 +37,15 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\SwitchPatternVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(279, 5),
-                    Names.LocalFieldName.ClassifyAt(391, 4));
+                    Names.LocalVariableName.ClassifyAt(279, 5),
+                    Names.LocalVariableName.ClassifyAt(391, 4));
         }
 
         [Test]
         public void ConstructionTest_Using_Variable()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\UsingVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(228, 6));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(228, 6));
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Nameof.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(229, 8),
+                    Names.LocalVariableName.ClassifyAt(229, 8),
                     Names.EnumFieldName.ClassifyAt(287, 9),
                     Names.PropertyName.ClassifyAt(342, 12),
                     Names.FieldName.ClassifyAt(389, 5));
@@ -63,14 +63,14 @@ namespace CoCo.Test.CSharpIdentifiers
         public void ConstructionTest_Return()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Return.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(172, 6));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(172, 6));
         }
 
         [Test]
         public void ConstructionTest_Throw()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Throw.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalFieldName.ClassifyAt(204, 9));
+                .AssertContains(Names.LocalVariableName.ClassifyAt(204, 9));
         }
 
         [Test]
@@ -78,8 +78,8 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\YieldReturn.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.LocalFieldName.ClassifyAt(235, 5),
-                    Names.LocalFieldName.ClassifyAt(337, 4));
+                    Names.LocalVariableName.ClassifyAt(235, 5),
+                    Names.LocalVariableName.ClassifyAt(337, 4));
         }
     }
 }
