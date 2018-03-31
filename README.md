@@ -1,21 +1,19 @@
-[![License](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-v1.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio 2015 and 2017 extension that uses Roslyn API's for analyzing C# source code
 and colorize appropriate syntax nodes to different colors. It makes easily recognizabling the supported elements. 
 
 Extension supports following elements:
-* Namespaces
-* Alias for namespaces
+* Namespaces and aliases for them
 * Local and range variables
 * Parameters
-* Intstance methods and constructor
+* Instance methods and constructors
 * Static and extension methods
 * Local functions (supports only for VS17)
 * Events
 * Properties
-* Instance fields
-* Enum fields
+* Instance and enum fields
 
 Use Visual Studio ***Fonts and Colors*** options to change colors for items. Look for items in ***Display Items*** that starts with `CoCo format:`
 
@@ -41,11 +39,16 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: properties                 |255   0 255|
 |CoCo format: range variables            |128 128   0|
 |CoCo format: static methods             |154  82   1|
+<br/>
+<details>
+<summary>Screenshot the dark theme (expand me) </summary>
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
 
+</details>
+<br/>
 
-List of the values (that's represented in RGB) for the various CoCo colour settings in the Light/Blue theme:
+List of the values (that's represented in RGB) for the various CoCo colour settings in the Light|Blue theme:
 
 |Item name|Value|
 |----------------------------------------|---------------------:|
@@ -63,8 +66,13 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: properties                 |255   0 255|
 |CoCo format: range variables            |128 128   0|
 |CoCo format: static methods             |163  86   1|
+<br/>
+<details>
+<summary>Screenshot the light|blue theme (expand me)</summary>
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
+
+</details>
 
 ## Contributing
 Requests for new features and bug reports will help the project, so please write an issue for they.
