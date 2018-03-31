@@ -128,8 +128,8 @@ namespace CoCo
                     // TODO: Log information about a node and semantic model, because semantic model
                     // didn't retrive information from node in this case
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
-                    Log.Debug("Candidate Reason {0}", info.CandidateReason);
-                    Log.Debug("Node is {0} {1}", node.Kind(), node.RawKind);
+                    Log.Debug("Candidate Reason {0}. Candidates count {1}", info.CandidateReason, info.CandidateSymbols.Length);
+                    Log.Debug("Node is {0}", node);
                     continue;
                 }
 
@@ -177,7 +177,7 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Namespace:
-                        var namesapceType = IsAliasNamespace(symbol, node) ? _aliasNamespaceType : _namespaceType;
+                        var namesapceType = node.IsAliasNamespace(symbol) ? _aliasNamespaceType : _namespaceType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 
@@ -204,37 +204,6 @@ namespace CoCo
             }
 
             return spans;
-        }
-
-        private static bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
-        {
-            if (!(node is IdentifierNameSyntax identifierName))
-            {
-                Log.Error($"Node {node} for namespace isn't IdentifierNameSyntax");
-                return false;
-            }
-            switch (identifierName.Parent)
-            {
-                case QualifiedNameSyntax qualifiedName when qualifiedName.Left != identifierName: return false;
-                case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
-            }
-
-            // TODO: can it replace to getting the first level namespace (first level can be global namespace)?
-            var namespaceText = symbol.ToString();
-            var identifierText = identifierName.Identifier.ValueText;
-
-            // NOTE: identifier is longer than a namespace => alias
-            if (identifierText.Length > namespaceText.Length) return true;
-
-            var i = 0;
-            for (; i < identifierText.Length; ++i)
-            {
-                if (!namespaceText[i].Equals(identifierText[i])) return true;
-            }
-
-            // NOTE: identifier equals the first level namespace => namespace
-            if (i == namespaceText.Length || i < namespaceText.Length && namespaceText[i] == '.') return false;
-            return true;
         }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
