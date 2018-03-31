@@ -75,6 +75,4 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 </details>
 
 ## Contributing
-Requests for new features and bug reports will help the project, so please write an issue for they.
-
-If you think that this project is useful and makes you work more comfortaibly and easily, please give it a star.
+For more information on contributing to the project, please see [CONTRIBUTING.md](https://github.com/GeorgeAlexandria/CoCo/blob/dev/CONTRIBUTING.md)
