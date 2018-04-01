@@ -1,5 +1,14 @@
 # Release notes
 
+## 1.2.0
+
+**2018-04-01**
+
+- [x] Added supporting for labels (`goto mark:`)
+- [x] Added supporting for local functions (only for VS17)
+- [x] Fixed classification for namespaces and them aliases 
+- [x] Improved a few names of ***Display Items*** 
+
 ## 1.1.0
 
 **2018-03-17**
