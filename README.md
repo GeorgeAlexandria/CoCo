@@ -14,6 +14,7 @@ Extension supports following elements:
 * Events
 * Properties
 * Instance and enum fields
+* Labels
 
 Use Visual Studio ***Fonts and Colors*** options to change colors for items. Look for items in ***Display Items*** that starts with `CoCo format:`
 
@@ -31,6 +32,7 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: events                     |(default) 220 220 220 |
 |CoCo format: extenson methods           |233 122   1|
 |CoCo format: fields                     |255 157 255|
+|CoCo format: labels                     |120  20   0|
 |CoCo format: local methods              |187  20   0|
 |CoCo format: local variables            |128 128   0|
 |CoCo format: methods                    |187  54   4|
@@ -58,6 +60,7 @@ List of the values (that's represented in RGB) for the various CoCo colour setti
 |CoCo format: events                     |200   0 128|
 |CoCo format: extenson methods           |224 118   1|
 |CoCo format: fields                     |174   0 174|
+|CoCo format: labels                     | 90  10  10|
 |CoCo format: local methods              |150  10  10|
 |CoCo format: local variables            |128 128   0|
 |CoCo format: methods                    |187   0   0|
