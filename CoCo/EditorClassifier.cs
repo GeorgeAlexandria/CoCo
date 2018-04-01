@@ -11,12 +11,12 @@ using Microsoft.VisualStudio.Text.Classification;
 namespace CoCo
 {
     /// <summary>
-    /// Classifier that classifies all text as an instance of the "EditorClassifier" classification type.
+    /// Classifier that classifies all text as an instance of the <see cref="EditorClassifier"/>" classification type.
     /// </summary>
     internal class EditorClassifier : IClassifier
     {
-        private readonly IClassificationType _localFieldType;
-        private readonly IClassificationType _rangeFieldType;
+        private readonly IClassificationType _localVariableType;
+        private readonly IClassificationType _rangeVariableType;
         private readonly IClassificationType _namespaceType;
         private readonly IClassificationType _parameterType;
         private readonly IClassificationType _extensionMethodType;
@@ -27,7 +27,9 @@ namespace CoCo
         private readonly IClassificationType _staticMethodType;
         private readonly IClassificationType _enumFieldType;
         private readonly IClassificationType _aliasNamespaceType;
-        private readonly IClassificationType _constructorMethodType;
+        private readonly IClassificationType _constructorType;
+        private readonly IClassificationType _labelType;
+        private readonly IClassificationType _localMethodType;
 
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -48,8 +50,8 @@ namespace CoCo
 
         internal EditorClassifier(Dictionary<string, IClassificationType> classifications)
         {
-            _localFieldType = classifications[Names.LocalFieldName];
-            _rangeFieldType = classifications[Names.RangeFieldName];
+            _localVariableType = classifications[Names.LocalVariableName];
+            _rangeVariableType = classifications[Names.RangeVariableName];
             _namespaceType = classifications[Names.NamespaceName];
             _parameterType = classifications[Names.ParameterName];
             _extensionMethodType = classifications[Names.ExtensionMethodName];
@@ -60,7 +62,9 @@ namespace CoCo
             _staticMethodType = classifications[Names.StaticMethodName];
             _enumFieldType = classifications[Names.EnumFieldName];
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
-            _constructorMethodType = classifications[Names.ConstructorMethodName];
+            _constructorType = classifications[Names.ConstructorName];
+            _labelType = classifications[Names.LabelName];
+            _localMethodType = classifications[Names.LocalMethodName];
         }
 
         /// <remarks>
@@ -125,7 +129,7 @@ namespace CoCo
                     // didn't retrive information from node in this case
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
                     Log.Debug("Candidate Reason {0}", info.CandidateReason);
-                    Log.Debug("Node is {0} {1}", node.Kind(), node.RawKind);
+                    Log.Debug("Node is {0}", node);
                     continue;
                 }
 
@@ -136,19 +140,22 @@ namespace CoCo
                     case SymbolKind.Assembly:
                     case SymbolKind.DynamicType:
                     case SymbolKind.ErrorType:
-                    case SymbolKind.Label:
                     case SymbolKind.NetModule:
                     case SymbolKind.NamedType:
                     case SymbolKind.PointerType:
                     case SymbolKind.TypeParameter:
-                    case SymbolKind.RangeVariable:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeFieldType));
-                        break;
-
                     case SymbolKind.Preprocessing:
                         //case SymbolKind.Discard:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         Log.Debug("Text was: {0}", node.GetText().ToString());
+                        break;
+
+                    case SymbolKind.Label:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _labelType));
+                        break;
+
+                    case SymbolKind.RangeVariable:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeVariableType));
                         break;
 
                     case SymbolKind.Field:
@@ -166,16 +173,17 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Local:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localFieldType));
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localVariableType));
                         break;
 
                     case SymbolKind.Namespace:
-                        var namesapceType = IsAliasNamespace(symbol, node) ? _namespaceType : _aliasNamespaceType;
+                        var namesapceType = node.IsAliasNamespace(symbol) ? _aliasNamespaceType : _namespaceType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 
                     case SymbolKind.Parameter:
                         // NOTE: Skip argument in summaries
+                        // TODO: add tests for it!
                         if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
                         {
                             spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
@@ -184,31 +192,18 @@ namespace CoCo
 
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
-                        var methodType = methodSymbol.MethodKind == MethodKind.Constructor
-                            ? _constructorMethodType
-                            : methodSymbol.IsExtensionMethod
-                                ? _extensionMethodType
-                                : methodSymbol.IsStatic ? _staticMethodType : _methodType;
+                        var methodType =
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
+                            methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsStatic ? _staticMethodType :
+                            _methodType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
                         break;
                 }
             }
 
             return spans;
-        }
-
-        private static bool IsAliasNamespace(ISymbol symbol, SyntaxNode node)
-        {
-            var strSymbol = symbol.ToString();
-            if (strSymbol == (node as IdentifierNameSyntax).Identifier.Text) return true;
-
-            var fullNamespaceNode = node;
-            while (strSymbol != fullNamespaceNode.ToString() && fullNamespaceNode.Parent is QualifiedNameSyntax)
-            {
-                fullNamespaceNode = fullNamespaceNode.Parent;
-            }
-
-            return strSymbol == fullNamespaceNode.ToString();
         }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;

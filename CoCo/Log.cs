@@ -23,6 +23,14 @@ namespace CoCo
 
         // NOTE: it's tiny optimization for string building
         [Conditional(_debug)]
+        internal static void Debug(string message)
+        {
+#if DEBUG
+            _logger.Debug(message);
+#endif
+        }
+
+        [Conditional(_debug)]
         internal static void Debug<TArg>(string message, TArg arg)
         {
 #if DEBUG
@@ -47,6 +55,14 @@ namespace CoCo
         }
 
         [Conditional(_debug)]
+        internal static void Info(string message)
+        {
+#if DEBUG
+            _logger.Info(message);
+#endif
+        }
+
+        [Conditional(_debug)]
         internal static void Info<TArg>(string message, TArg arg)
         {
 #if DEBUG
@@ -67,6 +83,38 @@ namespace CoCo
         {
 #if DEBUG
             _logger.Info(message, arg1, arg2, arg3);
+#endif
+        }
+
+        [Conditional(_debug)]
+        internal static void Error(string message)
+        {
+#if DEBUG
+            _logger.Error(message);
+#endif
+        }
+
+        [Conditional(_debug)]
+        internal static void Error<TArg>(string message, TArg arg)
+        {
+#if DEBUG
+            _logger.Error(message, arg);
+#endif
+        }
+
+        [Conditional(_debug)]
+        internal static void Error<TArg1, TArg2>(string message, TArg1 arg1, TArg2 arg2)
+        {
+#if DEBUG
+            _logger.Error(message, arg1, arg2);
+#endif
+        }
+
+        [Conditional(_debug)]
+        internal static void Error<TArg1, TArg2, TArg3>(string message, TArg1 arg1, TArg2 arg2, TArg3 arg3)
+        {
+#if DEBUG
+            _logger.Error(message, arg1, arg2, arg3);
 #endif
         }
     }

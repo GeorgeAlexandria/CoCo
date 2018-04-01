@@ -7,28 +7,28 @@ namespace CoCo.FormatDefinition
 {
     // TODO: Need generate a custom options. It gets possibilite to set other available options
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = Names.LocalFieldName)]
-    [Name(Names.LocalFieldName)]
+    [ClassificationType(ClassificationTypeNames = Names.LocalVariableName)]
+    [Name(Names.LocalVariableName)]
     [UserVisible(true)]
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
-    internal sealed class LocalFieldFormat : ClassificationFormatDefinition
+    internal sealed class LocalVariableFormat : ClassificationFormatDefinition
     {
-        public LocalFieldFormat()
+        public LocalVariableFormat()
         {
-            DisplayName = "CoCo format: local fields";
+            DisplayName = "CoCo format: local variables";
         }
     }
 
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = Names.RangeFieldName)]
-    [Name(Names.RangeFieldName)]
+    [ClassificationType(ClassificationTypeNames = Names.RangeVariableName)]
+    [Name(Names.RangeVariableName)]
     [UserVisible(true)]
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
-    internal sealed class RangeFieldFormat : ClassificationFormatDefinition
+    internal sealed class RangeVariableFormat : ClassificationFormatDefinition
     {
-        public RangeFieldFormat()
+        public RangeVariableFormat()
         {
-            DisplayName = "CoCo format: range fields";
+            DisplayName = "CoCo format: range variables";
         }
     }
 
@@ -163,15 +163,28 @@ namespace CoCo.FormatDefinition
     }
 
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = Names.ConstructorMethodName)]
-    [Name(Names.ConstructorMethodName)]
+    [ClassificationType(ClassificationTypeNames = Names.ConstructorName)]
+    [Name(Names.ConstructorName)]
     [UserVisible(true)]
     [Order(After = PredefinedClassificationTypeNames.Identifier)]
-    internal sealed class ConstructorMethodFormat : ClassificationFormatDefinition
+    internal sealed class ConstructorFormat : ClassificationFormatDefinition
     {
-        public ConstructorMethodFormat()
+        public ConstructorFormat()
         {
-            DisplayName = "CoCo format: constructor method";
+            DisplayName = "CoCo format: constructors";
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = Names.LabelName)]
+    [Name(Names.LabelName)]
+    [UserVisible(true)]
+    [Order(After = PredefinedClassificationTypeNames.Identifier)]
+    internal sealed class LabelFormat : ClassificationFormatDefinition
+    {
+        public LabelFormat()
+        {
+            DisplayName = "CoCo format: label";
         }
     }
 }

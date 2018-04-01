@@ -7,6 +7,7 @@ namespace CoCo.Test.Common
 {
     public static class TestHelper
     {
+        // TODO: think how to convert it to a some of fluent api (test.Contains(...).NotContains(...))
         public static void AssertIsEquivalent(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
         {
             var (isEquivalent, errorMessage) = ClassificationHelper.AreEquivalent(expectedSpans, actualSpans);
@@ -16,6 +17,12 @@ namespace CoCo.Test.Common
         public static void AssertContains(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
         {
             var (isEquivalent, errorMessage) = ClassificationHelper.Contains(actualSpans, expectedSpans);
+            if (!isEquivalent) Assert.Fail(errorMessage);
+        }
+
+        public static void AssertNotContains(this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
+        {
+            var (isEquivalent, errorMessage) = ClassificationHelper.NotContains(actualSpans, expectedSpans);
             if (!isEquivalent) Assert.Fail(errorMessage);
         }
 

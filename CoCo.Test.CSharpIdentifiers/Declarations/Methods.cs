@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void MethodTest_Constructor()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Constructor.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.ConstructorMethodName.ClassifyAt(107, 11));
+                .AssertContains(Names.ConstructorName.ClassifyAt(107, 11));
         }
 
         [Test]
@@ -33,11 +33,11 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                 .AssertContains(Names.ExtensionMethodName.ClassifyAt(131, 12));
         }
 
-        [Test, Ignore("Add a new classification for local methods")]
+        [Test]
         public void MethodTest_LocalMethod()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\LocalMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(/*...*/);
+                .AssertContains(Names.LocalMethodName.ClassifyAt(150, 3));
         }
 
         [Test]

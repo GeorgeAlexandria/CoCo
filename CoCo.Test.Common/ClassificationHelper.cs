@@ -70,6 +70,45 @@ namespace CoCo.Test.Common
             }
         }
 
+        public static (bool, string message) NotContains(
+            IEnumerable<SimplifiedClassificationSpan> currentCollection,
+            IEnumerable<SimplifiedClassificationSpan> otherCollection)
+        {
+            var currentSet = new HashSet<Span>();
+            using (var logger = Logging.LogManager.GetLogger("TestExecution"))
+            {
+                foreach (var item in currentCollection)
+                {
+                    if (!currentSet.Add(item.Span))
+                    {
+                        logger.Warn($"Input collection has the same item {item.Span}");
+                    }
+                }
+            }
+            var otherList = new List<SimplifiedClassificationSpan>(otherCollection);
+
+            int i = 0;
+            while (i < otherList.Count && currentSet.Count > 0)
+            {
+                if (!currentSet.Remove(otherList[i].Span))
+                {
+                    otherList.RemoveAt(i);
+                    continue;
+                }
+                ++i;
+            }
+
+            if (otherList.Count == 0) return (true, String.Empty);
+
+            var builder = new StringBuilder(1 << 12);
+            builder.AppendLine("This items were exist:");
+            foreach (var item in otherList)
+            {
+                builder.AppendClassificationSpan(item);
+            }
+            return (false, builder.ToString());
+        }
+
         public static (bool, string message) Contains(
             IEnumerable<SimplifiedClassificationSpan> currentCollection,
             IEnumerable<SimplifiedClassificationSpan> otherCollection)
@@ -138,10 +177,7 @@ namespace CoCo.Test.Common
                 ++i;
             }
 
-            if ((leftSet.Count | rightList.Count) == 0)
-            {
-                return (true, String.Empty);
-            }
+            if ((leftSet.Count | rightList.Count) == 0) return (true, String.Empty);
 
             var builder = new StringBuilder(1 << 12);
             if (rightList.Count > 0) builder.AppendLine().AppendLine("This items were not found:");
@@ -177,17 +213,25 @@ namespace CoCo.Test.Common
 
         private static Compilation CreateCompilation(ProjectInfo project)
         {
-            var trees = new List<SyntaxTree>(project.CompileItems.Length);
-            foreach (var item in project.CompileItems)
+            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
             {
-                var code = File.ReadAllText(item);
-                trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                var trees = new List<SyntaxTree>(project.CompileItems.Length);
+                foreach (var item in project.CompileItems)
+                {
+                    if (!File.Exists(item))
+                    {
+                        logger.Error($"File {item} doesn't exist");
+                        continue;
+                    }
+                    var code = File.ReadAllText(item);
+                    trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                }
+                // TODO: improve
+                return CSharpCompilation.Create(project.ProjectName)
+                    .AddSyntaxTrees(trees)
+                    .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
+                    .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
             }
-            // TODO: improve
-            return CSharpCompilation.Create(project.ProjectName)
-                .AddSyntaxTrees(trees)
-                .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
-                .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
         }
     }
 }

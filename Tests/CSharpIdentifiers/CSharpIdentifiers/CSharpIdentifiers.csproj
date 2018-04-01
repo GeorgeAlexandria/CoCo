@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,9 +39,43 @@
     <Compile Include="..\..\..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="AccessFromNamespaceIdentifier.cs" />
+    <Compile Include="Access\Locals\DynamicVariable.cs" />
+    <Compile Include="Access\Locals\PatternVariable.cs" />
+    <Compile Include="Access\Members\ValueTupleFields.cs" />
+    <Compile Include="Access\Methods\ExtensionMethod.cs" />
+    <Compile Include="Access\Methods\LocalMethod.cs" />
+    <Compile Include="Access\Methods\Method.cs" />
+    <Compile Include="Access\Methods\StaticMethod.cs" />
+    <Compile Include="Constructions\CatchVariable.cs" />
+    <Compile Include="Constructions\Return.cs" />
+    <Compile Include="Constructions\Throw.cs" />
+    <Compile Include="Constructions\Nameof.cs" />
+    <Compile Include="Constructions\ForForeachControlVariable.cs" />
+    <Compile Include="Access\Locals\OutVariable.cs" />
+    <Compile Include="Constructions\IfPatternVariable.cs" />
+    <Compile Include="Constructions\SwitchPatternVariable.cs" />
+    <Compile Include="Constructions\UsingVariable.cs" />
+    <Compile Include="Access\Locals\ValueTupleVariable.cs" />
+    <Compile Include="Access\Members\Event.cs" />
+    <Compile Include="Access\Members\Field.cs" />
+    <Compile Include="Access\Members\Property.cs" />
+    <Compile Include="Access\Members\TypeEvent.cs" />
+    <Compile Include="Access\Members\TypeField.cs" />
+    <Compile Include="Access\Members\TypeProperty.cs" />
+    <Compile Include="Access\Namespaces\ByNamespace.cs" />
+    <Compile Include="Access\Namespaces\ByNamespaceAlias.cs" />
+    <Compile Include="Access\EnumField.cs" />
+    <Compile Include="Access\Label.cs" />
+    <Compile Include="Access\Parameters\Delegate.cs" />
+    <Compile Include="Access\Parameters\Lambda.cs" />
+    <Compile Include="Access\Parameters\Optional.cs" />
+    <Compile Include="Access\Parameters\RefInOut.cs" />
+    <Compile Include="Access\Parameters\Variable.cs" />
+    <Compile Include="Constructions\YieldReturn.cs" />
+    <Compile Include="Declarations\Label.cs" />
     <Compile Include="Declarations\EnumDeclaration.cs" />
     <Compile Include="Declarations\Locals\CatchVariable.cs" />
+    <Compile Include="Declarations\Locals\DynamicVariable.cs" />
     <Compile Include="Declarations\Locals\RangeVariable.cs" />
     <Compile Include="Declarations\Locals\ValueTupleVariable.cs" />
     <Compile Include="Declarations\Locals\OutVariable.cs" />
@@ -67,7 +102,7 @@
     <Compile Include="Declarations\Namespace\SimpleDeclaration.cs" />
     <Compile Include="Declarations\Parameters\DelegateParameter.cs" />
     <Compile Include="Declarations\Parameters\LambdaParameter.cs" />
-    <Compile Include="Declarations\Parameters\RefOut.cs" />
+    <Compile Include="Declarations\Parameters\RefOutIn.cs" />
     <Compile Include="Declarations\Parameters\Variable.cs" />
     <Compile Include="Declarations\Parameters\Optional.cs" />
     <Compile Include="Declarations\Parameters\SimpleParameter.cs" />

@@ -5,9 +5,9 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo
 {
     /// <summary>
-    /// Classification type definition export for EditorClassifier
+    /// Classification type definition export for <see cref="EditorClassifier"/>
     /// </summary>
-    internal static class EditorClassifierDefinition
+    internal static partial class ClassificationDefinitions
     {
         // Disable "The field is never used" compiler's warning. The fields are used by MEF.
 #pragma warning disable 169
@@ -17,12 +17,12 @@ namespace CoCo
         private static ClassificationTypeDefinition namespaceDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
-        [Name(Names.LocalFieldName)]
-        private static ClassificationTypeDefinition localFieldDefinition;
+        [Name(Names.LocalVariableName)]
+        private static ClassificationTypeDefinition localVariableDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
-        [Name(Names.RangeFieldName)]
-        private static ClassificationTypeDefinition rangeFieldDefinition;
+        [Name(Names.RangeVariableName)]
+        private static ClassificationTypeDefinition rangeVariableDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Names.ParameterName)]
@@ -61,8 +61,12 @@ namespace CoCo
         private static ClassificationTypeDefinition aliasNamespaceDefinition;
 
         [Export(typeof(ClassificationTypeDefinition))]
-        [Name(Names.ConstructorMethodName)]
-        private static ClassificationTypeDefinition constructorMethodDefinition;
+        [Name(Names.ConstructorName)]
+        private static ClassificationTypeDefinition constructorDefinition;
+
+        [Export(typeof(ClassificationTypeDefinition))]
+        [Name(Names.LabelName)]
+        private static ClassificationTypeDefinition labelDefinition;
 
 #pragma warning restore 169
     }

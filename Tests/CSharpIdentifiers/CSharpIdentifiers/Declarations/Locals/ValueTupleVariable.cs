@@ -5,6 +5,8 @@
         public void Create()
         {
             var (arg1, arg2) = (5, "asd");
+
+            var tuple = (5, "asd");
         }
     }
 }
