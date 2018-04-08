@@ -1,4 +1,5 @@
-﻿using CoCo.Test.Common;
+﻿using CoCo.MsBuild;
+using CoCo.Test.Common;
 
 namespace CoCo.Test.CSharpIdentifiers
 {

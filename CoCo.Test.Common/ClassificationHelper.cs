@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using Project = CoCo.MsBuild.ProjectInfo;
 
 namespace CoCo.Test.Common
 {
@@ -25,7 +26,7 @@ namespace CoCo.Test.Common
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
-        public static List<SimplifiedClassificationSpan> GetClassifications(this string path, ProjectInfo project)
+        public static List<SimplifiedClassificationSpan> GetClassifications(this string path, Project project)
         {
             using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
             {
@@ -212,7 +213,7 @@ namespace CoCo.Test.Common
         private static StringBuilder AppendSpan(this StringBuilder builder, Span span) =>
             builder.Append(tabs).Append("Span: ").Append(span).AppendLine();
 
-        private static Compilation CreateCompilation(ProjectInfo project)
+        private static Compilation CreateCompilation(Project project)
         {
             using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
             {

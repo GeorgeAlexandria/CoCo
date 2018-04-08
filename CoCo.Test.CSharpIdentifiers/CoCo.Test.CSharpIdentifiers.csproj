@@ -68,6 +68,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoCo.MsBuild\CoCo.MsBuild.csproj">
+      <Project>{edba3202-304b-4ee4-971f-5c3478f97abd}</Project>
+      <Name>CoCo.MsBuild</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoCo.Test.Common\CoCo.Test.Common.csproj">
       <Project>{0b57bf2d-6001-4317-9527-96c7cf4b20d1}</Project>
       <Name>CoCo.Test.Common</Name>

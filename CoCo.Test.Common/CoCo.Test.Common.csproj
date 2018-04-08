@@ -30,26 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Esent.Interop, Version=1.9.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\ManagedEsent.1.9.4\lib\net40\Esent.Interop.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Build, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Build.15.5.180\lib\net46\Microsoft.Build.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Build.Engine" />
-    <Reference Include="Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Build.Framework.15.5.180\lib\net46\Microsoft.Build.Framework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Build.Tasks.Core.15.5.180\lib\net46\Microsoft.Build.Tasks.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Build.Utilities.Core.15.5.180\lib\net46\Microsoft.Build.Utilities.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.7.0\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
@@ -61,9 +42,6 @@
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.EditorFeatures.Text, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.EditorFeatures.Text.2.7.0\lib\net46\Microsoft.CodeAnalysis.EditorFeatures.Text.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Elfie, Version=0.10.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Elfie.0.10.6\lib\net46\Microsoft.CodeAnalysis.Elfie.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.7.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
@@ -183,16 +161,13 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="ClassificationComparer.cs" />
-    <Compile Include="ProjectInfo.cs" />
     <Compile Include="SimplifiedClassificationSpan.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="CommonTests.cs" />
-    <Compile Include="MsBuild.cs" />
-    <Compile Include="MsBuildEngine.cs" />
     <Compile Include="Stubs\ClassificationType.cs" />
     <Compile Include="Stubs\ContentType.cs" />
-    <Compile Include="LineSeparators.cs" />
-    <Compile Include="StringOperand.cs" />
+    <Compile Include="Stubs\LineSeparators.cs" />
+    <Compile Include="Stubs\StringOperand.cs" />
     <Compile Include="Stubs\TextImage.cs" />
     <Compile Include="Stubs\TextSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -214,6 +189,10 @@
     <ProjectReference Include="..\CoCo.Logging\CoCo.Logging.csproj">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
       <Name>CoCo.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoCo.MsBuild\CoCo.MsBuild.csproj">
+      <Project>{edba3202-304b-4ee4-971f-5c3478f97abd}</Project>
+      <Name>CoCo.MsBuild</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
       <Project>{601a2a25-2348-4f00-9858-70ff10b39dab}</Project>
