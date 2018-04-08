@@ -1,8 +1,8 @@
 ﻿using System.IO;
 
-namespace CoCo.Test.Common
+namespace CoCo.Utils
 {
-    internal static class PathExtensions
+    public static class PathExtensions
     {
         /// <summary>
         /// Returns the absolute path for the <paramref name="path"/> using <paramref name="rootPath"/>

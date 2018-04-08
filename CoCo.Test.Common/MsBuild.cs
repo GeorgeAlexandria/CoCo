@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using CoCo.Logging;
+using CoCo.Utils;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;

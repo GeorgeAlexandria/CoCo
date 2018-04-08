@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CoCo.Test.Common
+namespace CoCo.Utils
 {
     public static class CollectionExtensions
     {

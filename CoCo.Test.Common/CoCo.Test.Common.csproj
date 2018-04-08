@@ -182,16 +182,13 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="CollectionExtensions.cs" />
     <Compile Include="ClassificationComparer.cs" />
     <Compile Include="ProjectInfo.cs" />
     <Compile Include="SimplifiedClassificationSpan.cs" />
-    <Compile Include="StringExtensions.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="CommonTests.cs" />
     <Compile Include="MsBuild.cs" />
     <Compile Include="MsBuildEngine.cs" />
-    <Compile Include="PathExtensions.cs" />
     <Compile Include="Stubs\ClassificationType.cs" />
     <Compile Include="Stubs\ContentType.cs" />
     <Compile Include="LineSeparators.cs" />
@@ -217,6 +214,10 @@
     <ProjectReference Include="..\CoCo.Logging\CoCo.Logging.csproj">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
       <Name>CoCo.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
+      <Project>{601a2a25-2348-4f00-9858-70ff10b39dab}</Project>
+      <Name>CoCo.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\CoCo\CoCo.csproj">
       <Project>{a6b65155-538e-4558-b18e-e9534fcc1f4a}</Project>
