@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Test.Common
@@ -33,6 +32,7 @@ namespace CoCo.Test.Common
             if (expected == null ^ actual == null) return false;
             if (expected == null) return true;
             if (!expected.Classification.Equals(actual.Classification, StringComparison.OrdinalIgnoreCase)) return false;
+            // TODO: improve
             if (expected.BaseTypes.Count() != actual.BaseTypes.Count()) return false;
 
             foreach (var expectedBaseType in expected.BaseTypes)

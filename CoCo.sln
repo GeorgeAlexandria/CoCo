@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Utils", "CoCo.Utils\Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.MsBuild", "CoCo.MsBuild\CoCo.MsBuild.csproj", "{EDBA3202-304B-4EE4-971F-5C3478F97ABD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.CSharpIdentifiers_vs14", "CoCo.Test.CSharpIdentifiers_vs14\CoCo.Test.CSharpIdentifiers_vs14.csproj", "{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.Common_vs14", "CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj", "{DE073BD6-DEB9-4103-B081-4B43016F890F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{EDBA3202-304B-4EE4-971F-5C3478F97ABD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDBA3202-304B-4EE4-971F-5C3478F97ABD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDBA3202-304B-4EE4-971F-5C3478F97ABD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE073BD6-DEB9-4103-B081-4B43016F890F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE073BD6-DEB9-4103-B081-4B43016F890F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE073BD6-DEB9-4103-B081-4B43016F890F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE073BD6-DEB9-4103-B081-4B43016F890F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
