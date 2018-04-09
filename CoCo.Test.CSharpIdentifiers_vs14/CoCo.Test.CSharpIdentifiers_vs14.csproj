@@ -38,7 +38,17 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="CSharpIdentifierTests.cs" />
+    <Compile Include="Declarations\Enum.cs" />
+    <Compile Include="Declarations\Label.cs" />
+    <Compile Include="Declarations\Locals.cs" />
+    <Compile Include="Declarations\Members.cs" />
+    <Compile Include="Declarations\Methods.cs" />
+    <Compile Include="Declarations\Namespaces.cs" />
+    <Compile Include="Declarations\Parameters.cs" />
     <Compile Include="SimpleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
