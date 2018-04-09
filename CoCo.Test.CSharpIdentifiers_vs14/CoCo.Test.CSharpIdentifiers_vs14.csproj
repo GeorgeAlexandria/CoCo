@@ -48,6 +48,7 @@
     <Compile Include="Access\Methods.cs" />
     <Compile Include="Access\Namespaces.cs" />
     <Compile Include="Access\Parameters.cs" />
+    <Compile Include="Constructions.cs" />
     <Compile Include="CSharpIdentifierTests.cs" />
     <Compile Include="Declarations\Enum.cs" />
     <Compile Include="Declarations\Label.cs" />
