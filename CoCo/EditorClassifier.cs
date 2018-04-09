@@ -125,8 +125,6 @@ namespace CoCo
                         continue;
                     }
 
-                    // TODO: Log information about a node and semantic model, because semantic model
-                    // didn't retrive information from node in this case
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
                     Log.Debug("Candidate Reason {0}", info.CandidateReason);
                     Log.Debug("Node is {0}", node);

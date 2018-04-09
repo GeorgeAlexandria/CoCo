@@ -32,23 +32,28 @@ namespace CoCo.Test.Common
             if (expected == null ^ actual == null) return false;
             if (expected == null) return true;
             if (!expected.Classification.Equals(actual.Classification, StringComparison.OrdinalIgnoreCase)) return false;
-            // TODO: improve
-            if (expected.BaseTypes.Count() != actual.BaseTypes.Count()) return false;
 
-            foreach (var expectedBaseType in expected.BaseTypes)
+            var expectedBaseTypes = new List<IClassificationType>(expected.BaseTypes);
+            var actualBaseTypes = new List<IClassificationType>(actual.BaseTypes);
+
+            int i = 0;
+            while (i < expectedBaseTypes.Count && actualBaseTypes.Count > 0)
             {
-                var hasEqualsItem = false;
-                foreach (var actualBaseType in actual.BaseTypes)
+                var hasEqualItem = false;
+                for (int j = 0; j < actualBaseTypes.Count; ++j)
                 {
-                    if (AreClassificationTypeEquals(expectedBaseType, actualBaseType))
+                    if (AreClassificationTypeEquals(expectedBaseTypes[i], actualBaseTypes[j]))
                     {
-                        hasEqualsItem = true;
+                        actualBaseTypes.RemoveAt(j);
+                        expectedBaseTypes.RemoveAt(i);
+                        hasEqualItem = true;
                         break;
                     }
                 }
-                if (!hasEqualsItem) return false;
+                if (!hasEqualItem) return false;
             }
-            return true;
+
+            return (expectedBaseTypes.Count | actualBaseTypes.Count) == 0;
         }
     }
 }
