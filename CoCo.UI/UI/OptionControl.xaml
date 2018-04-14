@@ -79,7 +79,7 @@
          HorizontalAlignment="Stretch"
          VerticalAlignment="Stretch"
          Columns="2">
-         <ListView ItemsSource="{Binding Classifications}">
+         <ListView Name="listView" ItemsSource="{Binding Classifications}">
             <!--<ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -127,18 +127,111 @@
                </GridView>
             </ListView.View>
          </ListView>
-         <StackPanel>
-            <ComboBox Width="50" Text="55555" />
-            <CheckBox
-               VerticalContentAlignment="Center"
-               Content="Bold"
-               TextBlock.FontSize="14"
-               TextBlock.TextAlignment="Center" />
-            <CheckBox
-               VerticalContentAlignment="Center"
-               Content="Italic"
-               TextBlock.FontSize="14"
-               TextBlock.TextAlignment="Center" />
+         <StackPanel DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="40"
+                  Content="Size:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <TextBox
+                  Width="50"
+                  HorizontalAlignment="Left"
+                  VerticalContentAlignment="Center"
+                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderThickness="1,1,1,1"
+                  TextAlignment="Left" />
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="80"
+                  Content="Foreground:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <Border
+                  Width="100"
+                  HorizontalAlignment="Left"
+                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderThickness="1,1,1,1">
+                  <StackPanel Background="White" Orientation="Horizontal">
+                     <Rectangle
+                        Width="20"
+                        Height="12"
+                        Margin="5,0,0,0">
+                        <Rectangle.Fill>
+                           <SolidColorBrush Color="{Binding Foreground}" />
+                        </Rectangle.Fill>
+                     </Rectangle>
+                     <TextBox
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        IsReadOnly="True"
+                        Text="{Binding Foreground}" />
+                  </StackPanel>
+               </Border>
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="80"
+                  Content="Background:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <Border
+                  Width="100"
+                  HorizontalAlignment="Left"
+                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderThickness="1,1,1,1">
+                  <StackPanel Background="White" Orientation="Horizontal">
+                     <Rectangle
+                        Width="20"
+                        Height="12"
+                        Margin="5,0,0,0">
+                        <Rectangle.Fill>
+                           <SolidColorBrush Color="{Binding Foreground}" />
+                        </Rectangle.Fill>
+                     </Rectangle>
+                     <TextBox
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        IsReadOnly="True"
+                        Text="{Binding Foreground}" />
+                  </StackPanel>
+               </Border>
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <CheckBox
+                  VerticalContentAlignment="Center"
+                  Content="Bold"
+                  TextBlock.FontSize="14"
+                  TextBlock.TextAlignment="Center" />
+               <CheckBox
+                  Margin="10,0,0,0"
+                  VerticalContentAlignment="Center"
+                  Content="Italic"
+                  TextBlock.FontSize="14"
+                  TextBlock.TextAlignment="Center" />
+            </StackPanel>
          </StackPanel>
       </UniformGrid>
    </Grid>

@@ -9,6 +9,14 @@
    <SolidColorBrush x:Key="SoftBlueBorderBrush" Color="#e1ebf4" />
    <SolidColorBrush x:Key="SoftYellow" Color="#fcf9a9" />
 
+   <Style x:Key="labelStyle" TargetType="Label">
+      <Setter Property="FontSize" Value="14" />
+      <Setter Property="FontWeight" Value="DemiBold" />
+      <Setter Property="TextBlock.TextAlignment" Value="Center" />
+      <Setter Property="HorizontalAlignment" Value="Right" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+      <Setter Property="Margin" Value="0,0,5,0" />
+   </Style>
    <ControlTemplate x:Key="cbToggleButtonTemplate" TargetType="ToggleButton">
       <Grid>
          <Grid.ColumnDefinitions>

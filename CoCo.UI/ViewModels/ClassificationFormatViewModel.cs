@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace CoCo.UI.ViewModels
 {
@@ -15,5 +16,17 @@ namespace CoCo.UI.ViewModels
         public bool IsCheked { get; set; } = true;
 
         public string Name { get; set; } = "Sample";
+
+        private Color _foreground = Color.FromRgb(128, 128, 128);
+
+        public Color Foreground
+        {
+            get => _foreground;
+            set
+            {
+                _foreground = value;
+                RaisePropertyChanged();
+            }
+        }
     }
 }
