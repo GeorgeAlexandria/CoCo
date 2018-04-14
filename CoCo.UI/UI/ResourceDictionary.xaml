@@ -8,6 +8,7 @@
 
    <SolidColorBrush x:Key="SoftBlueBorderBrush" Color="#e1ebf4" />
    <SolidColorBrush x:Key="SoftYellow" Color="#fcf9a9" />
+   <SolidColorBrush x:Key="SoftGrey" Color="#bbbac4" />
 
    <Style x:Key="labelStyle" TargetType="Label">
       <Setter Property="FontSize" Value="14" />

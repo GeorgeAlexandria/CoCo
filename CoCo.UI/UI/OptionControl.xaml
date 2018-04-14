@@ -22,64 +22,54 @@
          <RowDefinition Height="Auto" />
          <RowDefinition Height="5*" />
       </Grid.RowDefinitions>
-      <Grid
-         Grid.Row="0"
+      <StackPanel
          Width="Auto"
-         HorizontalAlignment="Left">
-         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-         </Grid.ColumnDefinitions>
-         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-         </Grid.RowDefinitions>
-         <Label
-            Grid.Row="0"
-            Grid.Column="0"
+         HorizontalAlignment="Left"
+         Orientation="Vertical">
+         <StackPanel
             Margin="0,0,0,5"
             HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Content="Language:"
-            TextBlock.FontSize="14"
-            TextBlock.FontWeight="DemiBold"
-            TextBlock.TextAlignment="Center" />
-         <ComboBox
-            Grid.Row="0"
-            Grid.Column="1"
-            Width="100"
-            Margin="0,0,0,5"
-            Background="White"
-            ItemsSource="{Binding Languages}"
-            SelectedItem="{Binding SelectedLanguage}"
-            Style="{StaticResource cbFlatStyle}"
-            TextBlock.TextAlignment="Left" />
-         <Label
-            Grid.Row="1"
-            Grid.Column="0"
+            Orientation="Horizontal">
+            <Label
+               Content="Language:"
+               Style="{StaticResource labelStyle}"
+               TextBlock.FontSize="14" />
+            <ComboBox
+               Width="100"
+               Background="White"
+               ItemsSource="{Binding Languages}"
+               SelectedItem="{Binding SelectedLanguage}"
+               Style="{StaticResource cbFlatStyle}"
+               TextBlock.TextAlignment="Left" />
+         </StackPanel>
+         <StackPanel
             Margin="0,0,0,5"
             HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Content="Preset:"
-            TextBlock.FontSize="14"
-            TextBlock.FontWeight="DemiBold"
-            TextBlock.TextAlignment="Center" />
-         <ComboBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Width="100"
-            Margin="0,0,0,5"
-            Background="White"
-            ItemsSource="{Binding Languages}"
-            SelectedItem="{Binding SelectedLanguage}"
-            Style="{StaticResource cbFlatStyle}" />
-      </Grid>
-      <UniformGrid
+            Orientation="Horizontal">
+            <Label
+               Content="Preset:"
+               Style="{StaticResource labelStyle}"
+               TextBlock.FontSize="14" />
+            <ComboBox
+               Width="100"
+               Background="White"
+               ItemsSource="{Binding Languages}"
+               SelectedItem="{Binding SelectedLanguage}"
+               Style="{StaticResource cbFlatStyle}" />
+         </StackPanel>
+      </StackPanel>
+      <Grid
          Grid.Row="1"
          HorizontalAlignment="Stretch"
-         VerticalAlignment="Stretch"
-         Columns="2">
-         <ListView Name="listView" ItemsSource="{Binding Classifications}">
+         VerticalAlignment="Stretch">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="150" />
+            <ColumnDefinition Width="Auto" />
+         </Grid.ColumnDefinitions>
+         <ListView
+            Name="listView"
+            Grid.Column="0"
+            ItemsSource="{Binding Classifications}">
             <!--<ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -127,7 +117,10 @@
                </GridView>
             </ListView.View>
          </ListView>
-         <StackPanel DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+         <StackPanel
+            Grid.Column="1"
+            MinWidth="260"
+            DataContext="{Binding ElementName=listView, Path=SelectedItem}">
             <StackPanel
                Width="Auto"
                Margin="0,0,0,4"
@@ -152,7 +145,7 @@
                HorizontalAlignment="Left"
                Orientation="Horizontal">
                <Label
-                  Width="80"
+                  Width="78"
                   Content="Foreground:"
                   FontSize="12"
                   Style="{StaticResource labelStyle}" />
@@ -180,6 +173,13 @@
                         Text="{Binding Foreground}" />
                   </StackPanel>
                </Border>
+               <Button
+                  Width="63"
+                  Margin="8,0,0,0"
+                  Background="{StaticResource SoftGrey}"
+                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderThickness="1.5"
+                  Content="Customize" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -187,7 +187,7 @@
                HorizontalAlignment="Left"
                Orientation="Horizontal">
                <Label
-                  Width="80"
+                  Width="78"
                   Content="Background:"
                   FontSize="12"
                   Style="{StaticResource labelStyle}" />
@@ -215,6 +215,13 @@
                         Text="{Binding Foreground}" />
                   </StackPanel>
                </Border>
+               <Button
+                  Width="63"
+                  Margin="8,0,0,0"
+                  Background="{StaticResource SoftGrey}"
+                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderThickness="1.5"
+                  Content="Customize" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -233,6 +240,6 @@
                   TextBlock.TextAlignment="Center" />
             </StackPanel>
          </StackPanel>
-      </UniformGrid>
+      </Grid>
    </Grid>
 </UserControl>
