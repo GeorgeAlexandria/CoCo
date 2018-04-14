@@ -48,6 +48,9 @@
     <Compile Include="UI\OptionControl.xaml.cs">
       <DependentUpon>OptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\ClassificationFormatViewModel.cs" />
+    <Compile Include="ViewModels\OptionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UI\OptionControl.xaml">
@@ -58,6 +61,12 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
+      <Project>{601A2A25-2348-4F00-9858-70FF10B39DAB}</Project>
+      <Name>CoCo.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,6 +5,8 @@
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
+   d:DataContext="{d:DesignInstance viewModels:OptionViewModel}"
    d:DesignHeight="450"
    d:DesignWidth="800"
    mc:Ignorable="d">
@@ -48,6 +50,8 @@
             Width="100"
             Margin="0,0,0,5"
             Background="White"
+            ItemsSource="{Binding Languages}"
+            SelectedItem="{Binding SelectedLanguage}"
             Style="{StaticResource cbFlatStyle}"
             TextBlock.TextAlignment="Left" />
          <Label
@@ -66,6 +70,8 @@
             Width="100"
             Margin="0,0,0,5"
             Background="White"
+            ItemsSource="{Binding Languages}"
+            SelectedItem="{Binding SelectedLanguage}"
             Style="{StaticResource cbFlatStyle}" />
       </Grid>
       <UniformGrid
@@ -73,7 +79,7 @@
          HorizontalAlignment="Stretch"
          VerticalAlignment="Stretch"
          Columns="2">
-         <ListView >
+         <ListView ItemsSource="{Binding Classifications}">
             <!--<ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -81,8 +87,8 @@
                                 <ColumnDefinition Width="1*" />
                                 <ColumnDefinition Width="2*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" />
-                            <CheckBox Margin="0,2,0,0" VerticalAlignment="Center" Grid.Column="1" />
+                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                            <CheckBox Margin="0,2,0,0" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding IsCheked}" />
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>-->
@@ -104,7 +110,7 @@
                      </GridViewColumn.Header>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                           <TextBlock TextAlignment="Left" />
+                           <TextBlock Text="{Binding Name}" TextAlignment="Left" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
@@ -114,7 +120,7 @@
                      </GridViewColumn.Header>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                           <CheckBox HorizontalAlignment="Center" />
+                           <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsCheked}" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
