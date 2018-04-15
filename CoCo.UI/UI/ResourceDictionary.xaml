@@ -9,6 +9,8 @@
    <SolidColorBrush x:Key="SoftBlueBorderBrush" Color="#e1ebf4" />
    <SolidColorBrush x:Key="SoftYellow" Color="#fcf9a9" />
    <SolidColorBrush x:Key="SoftGrey" Color="#bbbac4" />
+   <SolidColorBrush x:Key="SoftGrey2" Color="#FF636363" />
+   <SolidColorBrush x:Key="WhiteColor" Color="#FFFFFFFF" />
 
    <Style x:Key="labelStyle" TargetType="Label">
       <Setter Property="FontSize" Value="14" />
@@ -18,6 +20,7 @@
       <Setter Property="VerticalAlignment" Value="Center" />
       <Setter Property="Margin" Value="0,0,5,0" />
    </Style>
+
    <ControlTemplate x:Key="cbToggleButtonTemplate" TargetType="ToggleButton">
       <Grid>
          <Grid.ColumnDefinitions>
@@ -67,7 +70,8 @@
          </Setter.Value>
       </Setter>
    </Style>
-   <Style x:Key="cbFlatStyle" TargetType="{x:Type ComboBox}">
+   <Style x:Key="comboBoxFlatStyle" TargetType="{x:Type ComboBox}">
+      <Setter Property="Background" Value="{StaticResource WhiteColor}" />
       <Setter Property="SnapsToDevicePixels" Value="True" />
       <Setter Property="OverridesDefaultStyle" Value="True" />
       <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
@@ -137,6 +141,68 @@
                      <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
                      <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible" />
                      <Setter TargetName="cbContent" Property="UIElement.Visibility" Value="Hidden" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
+
+   <Style x:Key="CheckBoxFlatStyle" TargetType="{x:Type CheckBox}">
+      <Setter Property="BorderBrush" Value="{StaticResource SoftBlueBorderBrush}" />
+      <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="Background" Value="{StaticResource WhiteColor}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="{x:Type CheckBox}">
+               <Grid Background="Transparent" SnapsToDevicePixels="True">
+                  <Grid.ColumnDefinitions>
+                     <ColumnDefinition Width="Auto" />
+                     <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+                  <Border
+                     x:Name="cbBorder"
+                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}">
+                     <Grid>
+                        <Path
+                           x:Name="checkedMark"
+                           Margin="1"
+                           Data="F1 M 10,1L 4.5,9L 0,4.5L 1,3L 4.5,6L 8,1 Z "
+                           Fill="{StaticResource SoftGrey2}"
+                           Opacity="0"
+                           Stretch="None" />
+                        <Rectangle
+                           x:Name="intermediateMark"
+                           Margin="2"
+                           Fill="{StaticResource SoftGrey2}"
+                           Opacity="0" />
+                     </Grid>
+                  </Border>
+                  <ContentPresenter
+                     Grid.Column="1"
+                     Margin="{TemplateBinding Padding}"
+                     HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                     VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                     Focusable="False"
+                     RecognizesAccessKey="True"
+                     SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+               </Grid>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="true">
+                     <Setter TargetName="cbBorder" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </Trigger>
+                  <Trigger Property="IsChecked" Value="true">
+                     <Setter TargetName="checkedMark" Property="Opacity" Value="1" />
+                     <Setter TargetName="intermediateMark" Property="Opacity" Value="0" />
+                  </Trigger>
+                  <Trigger Property="IsChecked" Value="{x:Null}">
+                     <Setter TargetName="checkedMark" Property="Opacity" Value="0" />
+                     <Setter TargetName="intermediateMark" Property="Opacity" Value="1" />
                   </Trigger>
                </ControlTemplate.Triggers>
             </ControlTemplate>

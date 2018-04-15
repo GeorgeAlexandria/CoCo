@@ -36,10 +36,9 @@
                TextBlock.FontSize="14" />
             <ComboBox
                Width="100"
-               Background="White"
                ItemsSource="{Binding Languages}"
                SelectedItem="{Binding SelectedLanguage}"
-               Style="{StaticResource cbFlatStyle}"
+               Style="{StaticResource comboBoxFlatStyle}"
                TextBlock.TextAlignment="Left" />
          </StackPanel>
          <StackPanel
@@ -52,10 +51,9 @@
                TextBlock.FontSize="14" />
             <ComboBox
                Width="100"
-               Background="White"
                ItemsSource="{Binding Languages}"
                SelectedItem="{Binding SelectedLanguage}"
-               Style="{StaticResource cbFlatStyle}" />
+               Style="{StaticResource comboBoxFlatStyle}" />
          </StackPanel>
       </StackPanel>
       <Grid
@@ -232,14 +230,14 @@
                <CheckBox
                   VerticalContentAlignment="Center"
                   Content="Bold"
-                  TextBlock.FontSize="14"
-                  TextBlock.TextAlignment="Center" />
+                  Style="{StaticResource CheckBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
                <CheckBox
                   Margin="10,0,0,0"
                   VerticalContentAlignment="Center"
                   Content="Italic"
-                  TextBlock.FontSize="14"
-                  TextBlock.TextAlignment="Center" />
+                  Style="{StaticResource CheckBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
             </StackPanel>
          </StackPanel>
       </Grid>
