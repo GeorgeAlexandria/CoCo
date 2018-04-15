@@ -133,8 +133,7 @@
                   Width="50"
                   HorizontalAlignment="Left"
                   VerticalContentAlignment="Center"
-                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
-                  BorderThickness="1,1,1,1"
+                  Style="{StaticResource TextBoxFlatStyle}"
                   TextAlignment="Left" />
             </StackPanel>
             <StackPanel

@@ -209,4 +209,46 @@
          </Setter.Value>
       </Setter>
    </Style>
+
+   <Style x:Key="TextBoxFlatStyle" TargetType="{x:Type TextBox}">
+      <Setter Property="Background" Value="{StaticResource WhiteColor}" />
+      <Setter Property="BorderBrush" Value="{StaticResource SoftBlueBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
+      <Setter Property="HorizontalContentAlignment" Value="Left" />
+      <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="AllowDrop" Value="true" />
+      <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst" />
+      <Setter Property="Stylus.IsFlicksEnabled" Value="False" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="{x:Type TextBox}">
+               <Border
+                  x:Name="border"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  SnapsToDevicePixels="True">
+                  <ScrollViewer
+                     x:Name="PART_ContentHost"
+                     Focusable="false"
+                     HorizontalScrollBarVisibility="Hidden"
+                     VerticalScrollBarVisibility="Hidden" />
+               </Border>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsEnabled" Value="false">
+                     <Setter TargetName="border" Property="Opacity" Value="0.56" />
+                  </Trigger>
+                  <MultiTrigger>
+                     <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True" />
+                        <Condition Property="IsFocused" Value="False" />
+                     </MultiTrigger.Conditions>
+                     <Setter TargetName="border" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </MultiTrigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
 </ResourceDictionary>
