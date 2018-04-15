@@ -25,7 +25,7 @@
       <StackPanel
          Width="Auto"
          HorizontalAlignment="Left"
-         Orientation="Vertical">
+         Orientation="Horizontal">
          <StackPanel
             Margin="0,0,0,5"
             HorizontalAlignment="Right"
@@ -42,7 +42,7 @@
                TextBlock.TextAlignment="Left" />
          </StackPanel>
          <StackPanel
-            Margin="0,0,0,5"
+            Margin="5,0,0,5"
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Label
@@ -51,8 +51,8 @@
                TextBlock.FontSize="14" />
             <ComboBox
                Width="100"
-               ItemsSource="{Binding Languages}"
-               SelectedItem="{Binding SelectedLanguage}"
+               ItemsSource="{Binding Presets}"
+               SelectedItem="{Binding SelectedPreset}"
                Style="{StaticResource comboBoxFlatStyle}" />
          </StackPanel>
       </StackPanel>

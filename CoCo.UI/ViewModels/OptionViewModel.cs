@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using CoCo.Utils;
 
 namespace CoCo.UI.ViewModels
 {
@@ -19,14 +18,46 @@ namespace CoCo.UI.ViewModels
             "CSharp10",
         };
 
+        public ObservableCollection<string> Presets { get; } = new ObservableCollection<string>
+        {
+            "Preset1",
+            "Preset2",
+            "Preset3",
+            "Preset4",
+            "Preset5",
+        };
+
+        // TODO: temporary string
+        private string _selectedPreset;
+
+        public string SelectedPreset
+        {
+            get => _selectedPreset;
+            set
+            {
+                if (_selectedPreset != value)
+                {
+                    _selectedPreset = value;
+                    RaisePropertyChanged();
+                    InitializeClassificationsFromPreset();
+                }
+            }
+        }
+
         private string _selectedLanguage;
 
         public string SelectedLanguage
         {
-            get => _selectedLanguage;
+            get
+            {
+                if (_selectedLanguage == null && Languages.Count > 0)
+                {
+                    SelectedLanguage = Languages[0];
+                }
+                return _selectedLanguage;
+            }
             set
             {
-                // TODO: improve compare
                 if (!_selectedLanguage.EqualsNoCase(value))
                 {
                     _selectedLanguage = value;
@@ -59,6 +90,11 @@ namespace CoCo.UI.ViewModels
                     RaisePropertyChanged();
                 }
             }
+        }
+
+        private void InitializeClassificationsFromPreset()
+        {
+            // TODO: implement
         }
     }
 }
