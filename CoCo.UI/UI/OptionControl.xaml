@@ -179,6 +179,7 @@
                   Background="{StaticResource SoftGrey}"
                   BorderBrush="{StaticResource SoftBlueBorderBrush}"
                   BorderThickness="1.5"
+                  Command="{Binding CustomizeForeground}"
                   Content="Customize" />
             </StackPanel>
             <StackPanel
@@ -202,7 +203,7 @@
                         Height="12"
                         Margin="5,0,0,0">
                         <Rectangle.Fill>
-                           <SolidColorBrush Color="{Binding Foreground}" />
+                           <SolidColorBrush Color="{Binding Background}" />
                         </Rectangle.Fill>
                      </Rectangle>
                      <TextBox
@@ -212,7 +213,7 @@
                         VerticalContentAlignment="Center"
                         BorderThickness="0"
                         IsReadOnly="True"
-                        Text="{Binding Foreground}" />
+                        Text="{Binding Background}" />
                   </StackPanel>
                </Border>
                <Button
@@ -221,6 +222,7 @@
                   Background="{StaticResource SoftGrey}"
                   BorderBrush="{StaticResource SoftBlueBorderBrush}"
                   BorderThickness="1.5"
+                  Command="{Binding CustomizeBackground}"
                   Content="Customize" />
             </StackPanel>
             <StackPanel
