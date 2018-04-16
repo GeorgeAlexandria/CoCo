@@ -10,6 +10,7 @@
    <SolidColorBrush x:Key="SoftYellow" Color="#fcf9a9" />
    <SolidColorBrush x:Key="SoftGrey" Color="#bbbac4" />
    <SolidColorBrush x:Key="SoftGrey2" Color="#FF636363" />
+   <SolidColorBrush x:Key="SoftGrey3" Color="#FFdbd4d4" />
    <SolidColorBrush x:Key="WhiteColor" Color="#FFFFFFFF" />
 
    <Style x:Key="labelStyle" TargetType="Label">
@@ -250,5 +251,86 @@
             </ControlTemplate>
          </Setter.Value>
       </Setter>
+   </Style>
+
+   <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
+      <Setter Property="Width" Value="18" />
+      <Setter Property="Background" Value="{StaticResource SoftBlueBorderBrush}" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="{x:Type Thumb}">
+               <Border Padding="{TemplateBinding Padding}" Background="Transparent">
+                  <Rectangle
+                     Width="1"
+                     HorizontalAlignment="Center"
+                     Fill="{TemplateBinding Background}" />
+               </Border>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
+
+   <Style x:Key="GridViewColumnHeader" TargetType="GridViewColumnHeader">
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="GridViewColumnHeader">
+               <Grid>
+                  <Border
+                     x:Name="headerBorder"
+                     Padding="2,0,2,0"
+                     Background="{StaticResource SoftGrey3}"
+                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                     BorderThickness="0,1,1,1">
+                     <ContentPresenter
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        RecognizesAccessKey="True"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                  </Border>
+                  <Thumb
+                     x:Name="PART_HeaderGripper"
+                     Margin="0,0,-9,0"
+                     HorizontalAlignment="Right"
+                     Style="{StaticResource GridViewColumnHeaderGripper}" />
+               </Grid>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                     <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+      <Style.Triggers>
+         <!--<Trigger Property="Role" Value="Floating">
+            <Setter Property="Opacity" Value="0.7" />
+            <Setter Property="Template">
+               <Setter.Value>
+                  <ControlTemplate TargetType="GridViewColumnHeader">
+                     <Canvas Name="PART_FloatingHeaderCanvas">
+                        <Rectangle
+                           Width="{TemplateBinding ActualWidth}"
+                           Height="{TemplateBinding ActualHeight}"
+                           Fill="#60000000" />
+                     </Canvas>
+                  </ControlTemplate>
+               </Setter.Value>
+            </Setter>
+         </Trigger>-->
+         <Trigger Property="Role" Value="Padding">
+            <Setter Property="Template">
+               <Setter.Value>
+                  <ControlTemplate TargetType="GridViewColumnHeader">
+                     <Border
+                        Name="HeaderBorder"
+                        Background="{StaticResource SoftGrey3}"
+                        BorderBrush="Red" />
+                  </ControlTemplate>
+               </Setter.Value>
+            </Setter>
+         </Trigger>
+      </Style.Triggers>
    </Style>
 </ResourceDictionary>
