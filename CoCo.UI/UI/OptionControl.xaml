@@ -68,7 +68,8 @@
             Name="listView"
             Grid.Column="0"
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
-            ItemsSource="{Binding Classifications}">
+            ItemsSource="{Binding Classifications}"
+            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}">
             <!--<ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
@@ -81,11 +82,6 @@
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>-->
-            <ListView.ItemContainerStyle>
-               <Style TargetType="ListViewItem">
-                  <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-               </Style>
-            </ListView.ItemContainerStyle>
             <ListView.View>
                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeader}">
                   <GridViewColumn>

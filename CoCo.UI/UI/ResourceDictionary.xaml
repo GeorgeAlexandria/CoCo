@@ -333,4 +333,37 @@
          </Trigger>
       </Style.Triggers>
    </Style>
+
+   <Style x:Key="listViewItemFlatStyle" TargetType="ListViewItem">
+      <Setter Property="SnapsToDevicePixels" Value="true" />
+      <Setter Property="OverridesDefaultStyle" Value="true" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="ListBoxItem">
+               <Border
+                  x:Name="itemBorder"
+                  Padding="2"
+                  Background="Transparent"
+                  SnapsToDevicePixels="true">
+                  <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+               </Border>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                     <Setter TargetName="itemBorder" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </Trigger>
+                  <Trigger Property="IsSelected" Value="True">
+                     <Setter TargetName="itemBorder" Property="Background" Value="{StaticResource SoftGrey3}" />
+                  </Trigger>
+                  <MultiTrigger>
+                     <MultiTrigger.Conditions>
+                        <Condition Property="IsMouseOver" Value="True" />
+                        <Condition Property="IsSelected" Value="True" />
+                     </MultiTrigger.Conditions>
+                     <Setter TargetName="itemBorder" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </MultiTrigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
 </ResourceDictionary>
