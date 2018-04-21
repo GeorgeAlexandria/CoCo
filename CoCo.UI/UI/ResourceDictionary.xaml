@@ -254,17 +254,12 @@
    </Style>
 
    <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
-      <Setter Property="Width" Value="18" />
+      <Setter Property="Width" Value="3" />
       <Setter Property="Background" Value="{StaticResource SoftBlueBorderBrush}" />
       <Setter Property="Template">
          <Setter.Value>
             <ControlTemplate TargetType="{x:Type Thumb}">
-               <Border Padding="{TemplateBinding Padding}" Background="Transparent">
-                  <Rectangle
-                     Width="1"
-                     HorizontalAlignment="Center"
-                     Fill="{TemplateBinding Background}" />
-               </Border>
+               <Border Padding="{TemplateBinding Padding}" Background="Transparent" />
             </ControlTemplate>
          </Setter.Value>
       </Setter>
@@ -290,7 +285,7 @@
                   </Border>
                   <Thumb
                      x:Name="PART_HeaderGripper"
-                     Margin="0,0,-9,0"
+                     Margin="0,0,-1,0"
                      HorizontalAlignment="Right"
                      Style="{StaticResource GridViewColumnHeaderGripper}" />
                </Grid>
@@ -331,6 +326,35 @@
             </Setter>
          </Trigger>
       </Style.Triggers>
+   </Style>
+
+   <Style x:Key="GridViewColumnHeaderWithoutGripper" TargetType="{x:Type GridViewColumnHeader}">
+      <Setter Property="HorizontalContentAlignment" Value="Center" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+               <Grid>
+                  <Border
+                     x:Name="headerBorder"
+                     Background="{StaticResource SoftGrey3}"
+                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                     BorderThickness="0,1,1,1">
+                     <ContentPresenter
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        RecognizesAccessKey="True"
+                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                  </Border>
+               </Grid>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                     <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource SoftYellow}" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
    </Style>
 
    <Style x:Key="listViewItemFlatStyle" TargetType="ListViewItem">

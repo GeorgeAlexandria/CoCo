@@ -87,7 +87,7 @@
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
                   <GridViewColumn>
-                     <GridViewColumnHeader>
+                     <GridViewColumnHeader Width="35" Style="{StaticResource GridViewColumnHeaderWithoutGripper}">
                         <CheckBox HorizontalAlignment="Center" Style="{StaticResource CheckBoxFlatStyle}" />
                      </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
