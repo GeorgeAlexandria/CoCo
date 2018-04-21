@@ -69,25 +69,17 @@
             Grid.Column="0"
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             ItemsSource="{Binding Classifications}"
-            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}">
-            <!--<ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1*" />
-                                <ColumnDefinition Width="2*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                            <CheckBox Margin="0,2,0,0" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding IsCheked}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>-->
+            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
+            Style="{StaticResource listViewStyle}">
             <ListView.View>
                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeader}">
                   <GridViewColumn>
-                     <GridViewColumn.Header>
-                        <TextBlock Text="Name" TextAlignment="Left" />
-                     </GridViewColumn.Header>
+                     <GridViewColumnHeader HorizontalContentAlignment="Left">
+                        <TextBlock
+                           Margin="6,0,0,0"
+                           Text="Name"
+                           TextAlignment="Center" />
+                     </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
                            <TextBlock Text="{Binding Name}" TextAlignment="Left" />
@@ -95,12 +87,15 @@
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
                   <GridViewColumn>
-                     <GridViewColumn.Header>
-                        <CheckBox HorizontalAlignment="Center" />
-                     </GridViewColumn.Header>
+                     <GridViewColumnHeader>
+                        <CheckBox HorizontalAlignment="Center" Style="{StaticResource CheckBoxFlatStyle}" />
+                     </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                           <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsCheked}" />
+                           <CheckBox
+                              HorizontalAlignment="Center"
+                              IsChecked="{Binding IsCheked}"
+                              Style="{StaticResource CheckBoxFlatStyle}" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
