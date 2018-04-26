@@ -32,7 +32,20 @@ namespace CoCo.UI.ViewModels
             });
         }
 
-        public bool IsCheked { get; set; } = true;
+        private bool _isChecked;
+
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                if (_isChecked != value)
+                {
+                    _isChecked = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
         public string Name { get; set; } = "Sample";
 

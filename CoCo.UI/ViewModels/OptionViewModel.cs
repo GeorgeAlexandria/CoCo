@@ -1,9 +1,50 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
+        public OptionViewModel()
+        {
+            Classifications.CollectionChanged += OnClassificationsChanged;
+        }
+
+        private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // TODO: ObservableCollection doesn't get the old items on the Reset, so we, again, need to use a custom implementation
+            if (e.OldItems?.Count > 0)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    if (item is ClassificationFormatViewModel classification)
+                    {
+                        classification.PropertyChanged -= OnClassificationPropertyChanged;
+                    }
+                }
+            }
+
+            if (e.NewItems?.Count > 0)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is ClassificationFormatViewModel classification)
+                    {
+                        classification.PropertyChanged += OnClassificationPropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void OnClassificationPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ClassificationFormatViewModel.IsChecked))
+            {
+                RaisePropertyChanged(nameof(AllAreChecked));
+            }
+        }
+
         public ObservableCollection<string> Languages { get; } = new ObservableCollection<string>
         {
             "CSharp1",
@@ -70,6 +111,39 @@ namespace CoCo.UI.ViewModels
                     {
                         Classifications.Add(item);
                     }
+                }
+            }
+        }
+
+        private bool? _allAreCheked;
+
+        public bool? AllAreChecked
+        {
+            get
+            {
+                // NOTE: 01 – all uncheked, 10 – all cheked, 11 – has different states
+                var flag = 0;
+                foreach (var item in Classifications)
+                {
+                    flag |= item.IsChecked ? 0b10 : 0b01;
+                }
+
+                return _allAreCheked =
+                    flag == 0b10 ? true :
+                    flag == 0b01 ? (bool?)false : null;
+            }
+            set
+            {
+                var isCheked = false;
+                if (value.HasValue && _allAreCheked != value)
+                {
+                    isCheked = value.Value;
+                }
+
+                // TODO: add some mechanism to suspend notification at a few time
+                foreach (var item in Classifications)
+                {
+                    item.IsChecked = isCheked;
                 }
             }
         }
