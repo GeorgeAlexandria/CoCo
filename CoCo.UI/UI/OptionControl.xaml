@@ -26,35 +26,29 @@
          Width="Auto"
          HorizontalAlignment="Left"
          Orientation="Horizontal">
-         <StackPanel
-            Margin="0,0,0,5"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
-            <Label
-               Content="Language:"
-               Style="{StaticResource labelStyle}"
-               TextBlock.FontSize="14" />
-            <ComboBox
-               Width="100"
-               ItemsSource="{Binding Languages}"
-               SelectedItem="{Binding SelectedLanguage}"
-               Style="{StaticResource comboBoxFlatStyle}"
-               TextBlock.TextAlignment="Left" />
-         </StackPanel>
-         <StackPanel
+         <Label
             Margin="5,0,0,5"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
-            <Label
-               Content="Preset:"
-               Style="{StaticResource labelStyle}"
-               TextBlock.FontSize="14" />
-            <ComboBox
-               Width="100"
-               ItemsSource="{Binding Presets}"
-               SelectedItem="{Binding SelectedPreset}"
-               Style="{StaticResource comboBoxFlatStyle}" />
-         </StackPanel>
+            Content="Language:"
+            Style="{StaticResource labelStyle}"
+            TextBlock.FontSize="14" />
+         <ComboBox
+            Width="100"
+            Margin="5,0,0,5"
+            ItemsSource="{Binding Languages}"
+            SelectedItem="{Binding SelectedLanguage}"
+            Style="{StaticResource comboBoxFlatStyle}"
+            TextBlock.TextAlignment="Left" />
+         <Label
+            Margin="5,0,0,5"
+            Content="Preset:"
+            Style="{StaticResource labelStyle}"
+            TextBlock.FontSize="14" />
+         <ComboBox
+            Width="100"
+            Margin="5,0,0,5"
+            ItemsSource="{Binding Presets}"
+            SelectedItem="{Binding SelectedPreset}"
+            Style="{StaticResource comboBoxFlatStyle}" />
       </StackPanel>
       <Grid
          Grid.Row="1"
@@ -211,6 +205,7 @@
             </StackPanel>
             <StackPanel
                Width="Auto"
+               Margin="5,0,0,0"
                HorizontalAlignment="Left"
                Orientation="Horizontal">
                <CheckBox
