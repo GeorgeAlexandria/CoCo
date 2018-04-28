@@ -47,6 +47,36 @@ namespace CoCo.UI.ViewModels
             }
         }
 
+        private bool _isBold;
+
+        public bool IsBold
+        {
+            get => _isBold;
+            set
+            {
+                if (_isBold != value)
+                {
+                    _isBold = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
+        private bool _isItalic;
+
+        public bool IsItalic
+        {
+            get => _isItalic;
+            set
+            {
+                if (_isItalic != value)
+                {
+                    _isItalic = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
+
         private string _size;
 
         public string Size

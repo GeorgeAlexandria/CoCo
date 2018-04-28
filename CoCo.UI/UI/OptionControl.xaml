@@ -64,6 +64,7 @@
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             ItemsSource="{Binding Classifications}"
             ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
+            SelectedItem="{Binding SelectedClassification}"
             Style="{StaticResource listViewStyle}">
             <ListView.View>
                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeader}">
@@ -217,12 +218,14 @@
                <CheckBox
                   VerticalContentAlignment="Center"
                   Content="Bold"
+                  IsChecked="{Binding IsBold}"
                   Style="{StaticResource CheckBoxFlatStyle}"
                   TextBlock.FontSize="14" />
                <CheckBox
                   Margin="10,0,0,0"
                   VerticalContentAlignment="Center"
                   Content="Italic"
+                  IsChecked="{Binding IsItalic}"
                   Style="{StaticResource CheckBoxFlatStyle}"
                   TextBlock.FontSize="14" />
             </StackPanel>

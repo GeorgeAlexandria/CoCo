@@ -111,6 +111,7 @@ namespace CoCo.UI.ViewModels
                     {
                         Classifications.Add(item);
                     }
+                    RaisePropertyChanged(nameof(SelectedClassification));
                 }
             }
         }
@@ -155,7 +156,14 @@ namespace CoCo.UI.ViewModels
 
         public ClassificationFormatViewModel SelectedClassification
         {
-            get => _selectedClassification;
+            get
+            {
+                if (_selectedClassification == null && Classifications.Count > 0)
+                {
+                    SelectedClassification = Classifications[0];
+                }
+                return _selectedClassification;
+            }
             set
             {
                 if (_selectedClassification != value)
