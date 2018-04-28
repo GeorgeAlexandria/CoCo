@@ -47,6 +47,21 @@ namespace CoCo.UI.ViewModels
             }
         }
 
+        private string _size;
+
+        public string Size
+        {
+            get => _size;
+            set
+            {
+                if (int.TryParse(value, out var size) && size > 0)
+                {
+                    _size = value;
+                }
+                RaisePropertyChanged();
+            }
+        }
+
         public string Name { get; set; } = "Sample";
 
         private Color _foreground = Color.FromRgb(128, 128, 128);

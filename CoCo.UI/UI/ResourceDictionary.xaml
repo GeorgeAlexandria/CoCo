@@ -468,7 +468,7 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="1">
                   <ScrollViewer Style="{StaticResource gridViewScrollViewerStyle}">
-                     <ItemsPresenter />
+                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
                   </ScrollViewer>
                </Border>
             </ControlTemplate>

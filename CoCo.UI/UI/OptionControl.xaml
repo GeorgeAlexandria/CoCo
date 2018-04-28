@@ -118,7 +118,9 @@
                   Width="50"
                   HorizontalAlignment="Left"
                   VerticalContentAlignment="Center"
+                  MaxLength="3"
                   Style="{StaticResource TextBoxFlatStyle}"
+                  Text="{Binding Size}"
                   TextAlignment="Left" />
             </StackPanel>
             <StackPanel
