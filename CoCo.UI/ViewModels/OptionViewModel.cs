@@ -164,14 +164,7 @@ namespace CoCo.UI.ViewModels
                 }
                 return _selectedClassification;
             }
-            set
-            {
-                if (_selectedClassification != value)
-                {
-                    _selectedClassification = value;
-                    RaisePropertyChanged();
-                }
-            }
+            set => SetProperty(ref _selectedClassification, value);
         }
 
         private void InitializeClassificationsFromPreset()

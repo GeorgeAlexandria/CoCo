@@ -37,14 +37,7 @@ namespace CoCo.UI.ViewModels
         public bool IsChecked
         {
             get => _isChecked;
-            set
-            {
-                if (_isChecked != value)
-                {
-                    _isChecked = value;
-                    RaisePropertyChanged();
-                }
-            }
+            set => SetProperty(ref _isChecked, value);
         }
 
         private bool _isBold;
@@ -52,14 +45,7 @@ namespace CoCo.UI.ViewModels
         public bool IsBold
         {
             get => _isBold;
-            set
-            {
-                if (_isBold != value)
-                {
-                    _isBold = value;
-                    RaisePropertyChanged();
-                }
-            }
+            set => SetProperty(ref _isBold, value);
         }
 
         private bool _isItalic;
@@ -67,14 +53,7 @@ namespace CoCo.UI.ViewModels
         public bool IsItalic
         {
             get => _isItalic;
-            set
-            {
-                if (_isItalic != value)
-                {
-                    _isItalic = value;
-                    RaisePropertyChanged();
-                }
-            }
+            set => SetProperty(ref _isItalic, value);
         }
 
         private string _size;
@@ -99,11 +78,7 @@ namespace CoCo.UI.ViewModels
         public Color Foreground
         {
             get => _foreground;
-            set
-            {
-                _foreground = value;
-                RaisePropertyChanged();
-            }
+            set => SetProperty(ref _foreground, value);
         }
 
         private Color _background = Color.FromRgb(128, 128, 128);
@@ -111,11 +86,7 @@ namespace CoCo.UI.ViewModels
         public Color Background
         {
             get => _background;
-            set
-            {
-                _background = value;
-                RaisePropertyChanged();
-            }
+            set => SetProperty(ref _background, value);
         }
 
         public DelegateCommand CustomizeForeground { get; }
