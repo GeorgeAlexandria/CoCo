@@ -99,7 +99,7 @@ namespace CoCo.UI.ViewModels
             }
             set
             {
-                if (!_selectedLanguage.EqualsNoCase(value))
+                if (_selectedLanguage != value)
                 {
                     _selectedLanguage = value;
                     RaisePropertyChanged();
@@ -112,6 +112,7 @@ namespace CoCo.UI.ViewModels
                         Classifications.Add(item);
                     }
                     RaisePropertyChanged(nameof(SelectedClassification));
+                    RaisePropertyChanged(nameof(AllAreChecked));
                 }
             }
         }
