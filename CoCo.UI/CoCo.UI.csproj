@@ -53,6 +53,8 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ClassificationFormatViewModel.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
+    <Compile Include="Models\IClassificationModel.cs" />
+    <Compile Include="Models\IClassificationModelProvider.cs" />
     <Compile Include="ViewModels\OptionViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

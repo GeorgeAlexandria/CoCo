@@ -1,21 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Windows.Media;
+using CoCo.UI.Models;
 
 namespace CoCo.UI.ViewModels
 {
-    public static class ClassificationFormatProvider
-    {
-        public static IEnumerable<ClassificationFormatViewModel> Get(string language)
-        {
-            return new[] { new ClassificationFormatViewModel(), new ClassificationFormatViewModel() };
-        }
-    }
-
     public class ClassificationFormatViewModel : BaseViewModel
     {
-        public ClassificationFormatViewModel()
+        private readonly IClassificationModel _model;
+
+        public ClassificationFormatViewModel(IClassificationModel model)
         {
+            _model = model;
+
             CustomizeForeground = new DelegateCommand(() =>
             {
                 if (TryGetColor(out var color))
@@ -32,28 +28,43 @@ namespace CoCo.UI.ViewModels
             });
         }
 
-        private bool _isChecked;
-
         public bool IsChecked
         {
-            get => _isChecked;
-            set => SetProperty(ref _isChecked, value);
+            get => _model.IsEnabled;
+            set
+            {
+                if (_model.IsEnabled != value)
+                {
+                    _model.IsEnabled = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
-
-        private bool _isBold;
 
         public bool IsBold
         {
-            get => _isBold;
-            set => SetProperty(ref _isBold, value);
+            get => _model.IsBold;
+            set
+            {
+                if (_model.IsBold != value)
+                {
+                    _model.IsBold = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
-
-        private bool _isItalic;
 
         public bool IsItalic
         {
-            get => _isItalic;
-            set => SetProperty(ref _isItalic, value);
+            get => _model.IsItalic;
+            set
+            {
+                if (_model.IsItalic != value)
+                {
+                    _model.IsItalic = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         private string _size;
@@ -71,22 +82,32 @@ namespace CoCo.UI.ViewModels
             }
         }
 
-        public string Name { get; set; } = "Sample";
-
-        private Color _foreground = Color.FromRgb(128, 128, 128);
+        public string Name => _model.DisplayName;
 
         public Color Foreground
         {
-            get => _foreground;
-            set => SetProperty(ref _foreground, value);
+            get => _model.Foreground;
+            set
+            {
+                if (_model.Foreground.Equals(value))
+                {
+                    _model.Foreground = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
-
-        private Color _background = Color.FromRgb(128, 128, 128);
 
         public Color Background
         {
-            get => _background;
-            set => SetProperty(ref _background, value);
+            get => _model.Background;
+            set
+            {
+                if (_model.Background.Equals(value))
+                {
+                    _model.Background = value;
+                    RaisePropertyChanged();
+                }
+            }
         }
 
         public DelegateCommand CustomizeForeground { get; }

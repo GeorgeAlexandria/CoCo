@@ -1,14 +1,18 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using CoCo.UI.Models;
 
 namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
-        public OptionViewModel()
+        private readonly IClassificationModelProvider _modelProvider;
+
+        public OptionViewModel(IClassificationModelProvider modelProvider)
         {
             Classifications.CollectionChanged += OnClassificationsChanged;
+            _modelProvider = modelProvider;
         }
 
         private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -107,9 +111,9 @@ namespace CoCo.UI.ViewModels
                     // TODO: it will invoke one event at invocation of clear and by one event per added item
                     // Write custom BulkObservableCollection to avoid so many events
                     Classifications.Clear();
-                    foreach (var item in ClassificationFormatProvider.Get(_selectedLanguage))
+                    foreach (var item in _modelProvider.Get(_selectedLanguage))
                     {
-                        Classifications.Add(item);
+                        Classifications.Add(new ClassificationFormatViewModel(item));
                     }
                     RaisePropertyChanged(nameof(SelectedClassification));
                     RaisePropertyChanged(nameof(AllAreChecked));
