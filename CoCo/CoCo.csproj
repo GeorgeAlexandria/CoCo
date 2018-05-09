@@ -58,7 +58,6 @@
     <Compile Include="ClassificationDefinitionsCommon.cs" />
     <Compile Include="EditorFormatsCommon.cs" />
     <Compile Include="ClassifierProvider.cs" />
-    <Compile Include="NamesCommon.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Names.cs" />
