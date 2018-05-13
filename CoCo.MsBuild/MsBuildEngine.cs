@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using CoCo.Logging;
+using CoCo.Utils;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
-using CoCo.Logging;
 
-namespace CoCo.Test.Common
+namespace CoCo.MsBuild
 {
-    public sealed class MsBuildEngine : IBuildEngine5
+    internal sealed class MsBuildEngine : IBuildEngine5
     {
         private readonly Logger _logger;
 

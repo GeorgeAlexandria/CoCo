@@ -2,7 +2,7 @@
 
 namespace CoCo
 {
-    public static partial class Names
+    public static class Names
     {
         public const string LocalVariableName = "Local variable name";
         public const string RangeVariableName = "Range variable name";
@@ -42,7 +42,6 @@ namespace CoCo
                 builder.Add(AliasNamespaceName);
                 builder.Add(ConstructorName);
                 builder.Add(LabelName);
-                builder.AddNames();
                 return _all = builder.ToImmutable();
             }
         }

@@ -5,6 +5,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
 {
     internal class Members : CSharpIdentifierTests
     {
+        // TODO: type members
         [Test]
         public void MemberTest_InstanceField()
         {

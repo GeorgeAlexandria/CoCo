@@ -3,12 +3,12 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 
-namespace CoCo.Test.Common
+namespace CoCo.MsBuild
 {
     [DebuggerDisplay("{ProjectName}")]
     public class ProjectInfo
     {
-        public ProjectInfo(
+        internal ProjectInfo(
             string projectPath,
             ICollection<string> references,
             ICollection<ProjectInfo> projectReferences,

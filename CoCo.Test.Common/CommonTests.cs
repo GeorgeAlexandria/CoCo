@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using CoCo.MsBuild;
+using NUnit.Framework;
 
 namespace CoCo.Test.Common
 {
@@ -12,7 +13,7 @@ namespace CoCo.Test.Common
         public static ProjectInfo SetUp(ref string projectPath)
         {
             projectPath = TestHelper.GetPathRelativeToTest(projectPath);
-            return MsBuild.CreateProject(projectPath);
+            return MsBuild.MsBuild.CreateProject(projectPath);
         }
     }
 }

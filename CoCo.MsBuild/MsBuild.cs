@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using CoCo.Logging;
+using CoCo.Utils;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
-namespace CoCo.Test.Common
+namespace CoCo.MsBuild
 {
     // NOTE: to know more about input arguments in a common tasks just look at
     // https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.Common.CurrentVersion.targets
-    internal static class MsBuild
+    public static class MsBuild
     {
         /// TODO: use <see cref="WeakReference{T}"/> when <see cref="ProjectInfo"/> would be take a lot of space
         private static readonly Dictionary<string, ProjectInfo> _cache = new Dictionary<string, ProjectInfo>(16);

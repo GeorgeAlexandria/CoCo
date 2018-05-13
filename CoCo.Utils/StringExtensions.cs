@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CoCo.Test.Common
+namespace CoCo.Utils
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         /// <summary>
         /// Check that <paramref name="name"/> equals string literal "true"

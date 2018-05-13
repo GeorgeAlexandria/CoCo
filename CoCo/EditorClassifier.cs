@@ -101,12 +101,17 @@ namespace CoCo
 
         internal List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
         {
+            bool IsSupportedClassification(string classification) =>
+                classification == "identifier" || classification == "extension method name" || classification == "field name" ||
+                classification == "property name" || classification == "method name" || classification == "local name" ||
+                classification == "parameter name" || classification == "event name" || classification == "enum member name";
+
             var spans = new List<ClassificationSpan>();
 
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (item.ClassificationType != "identifier")
+                if (!IsSupportedClassification(item.ClassificationType))
                 {
                     continue;
                 }
@@ -125,8 +130,6 @@ namespace CoCo
                         continue;
                     }
 
-                    // TODO: Log information about a node and semantic model, because semantic model
-                    // didn't retrive information from node in this case
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
                     Log.Debug("Candidate Reason {0}", info.CandidateReason);
                     Log.Debug("Node is {0}", node);
