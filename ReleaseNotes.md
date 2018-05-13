@@ -1,11 +1,18 @@
 # Release notes
 
+## 1.2.1 (only for VS15)
+
+**2018-05-13**
+
+- [x] Fixed [#16](https://github.com/GeorgeAlexandria/CoCo/issues/16) - Supported the changed classifications types 
+- [x] Breaking changes: all saved colors would be reset back to default values
+
 ## 1.2.0
 
 **2018-04-01**
 
 - [x] Added supporting for labels (`goto mark:`)
-- [x] Added supporting for local functions (only for VS17)
+- [x] Added supporting for local functions (only for VS15)
 - [x] Fixed classification for namespaces and them aliases 
 - [x] Improved a few names of ***Display Items*** 
 
