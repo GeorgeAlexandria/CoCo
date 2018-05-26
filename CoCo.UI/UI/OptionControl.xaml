@@ -77,7 +77,7 @@
                      </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                           <TextBlock Text="{Binding Name}" TextAlignment="Left" />
+                           <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>

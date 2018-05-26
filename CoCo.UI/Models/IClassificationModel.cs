@@ -4,6 +4,8 @@ namespace CoCo.UI.Models
 {
     public interface IClassificationModel
     {
+        string Name { get; }
+
         bool IsBold { get; set; }
 
         bool IsItalic { get; set; }
@@ -15,5 +17,7 @@ namespace CoCo.UI.Models
         bool IsEnabled { get; set; }
 
         string DisplayName { get; }
+
+        int FontRenderingSize { get; set; }
     }
 }

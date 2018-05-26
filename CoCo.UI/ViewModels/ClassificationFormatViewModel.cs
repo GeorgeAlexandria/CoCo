@@ -67,29 +67,27 @@ namespace CoCo.UI.ViewModels
             }
         }
 
-        private string _size;
-
         public string Size
         {
-            get => _size;
+            get => $"{_model.FontRenderingSize}";
             set
             {
                 if (int.TryParse(value, out var size) && size > 0)
                 {
-                    _size = value;
+                    _model.FontRenderingSize = size;
                 }
                 RaisePropertyChanged();
             }
         }
 
-        public string Name => _model.DisplayName;
+        public string DisplayName => _model.DisplayName;
 
         public Color Foreground
         {
             get => _model.Foreground;
             set
             {
-                if (_model.Foreground.Equals(value))
+                if (!_model.Foreground.Equals(value))
                 {
                     _model.Foreground = value;
                     RaisePropertyChanged();
@@ -102,7 +100,7 @@ namespace CoCo.UI.ViewModels
             get => _model.Background;
             set
             {
-                if (_model.Background.Equals(value))
+                if (!_model.Background.Equals(value))
                 {
                     _model.Background = value;
                     RaisePropertyChanged();
