@@ -2,53 +2,23 @@
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CoCo.UI.Models;
+using CoCo.Utils;
 
 namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
-        private readonly IClassificationModelProvider _modelProvider;
+        private readonly IModelProvider _provider;
+        private readonly IOptionModel _model;
 
-        public OptionViewModel(IClassificationModelProvider modelProvider)
+        public OptionViewModel(IModelProvider provider)
         {
             Classifications.CollectionChanged += OnClassificationsChanged;
-            _modelProvider = modelProvider;
+            _provider = provider;
+            _model = provider.GetOption();
         }
 
-        private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // TODO: ObservableCollection doesn't get the old items on the Reset, so we, again, need to use a custom implementation
-            if (e.OldItems?.Count > 0)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    if (item is ClassificationFormatViewModel classification)
-                    {
-                        classification.PropertyChanged -= OnClassificationPropertyChanged;
-                    }
-                }
-            }
-
-            if (e.NewItems?.Count > 0)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    if (item is ClassificationFormatViewModel classification)
-                    {
-                        classification.PropertyChanged += OnClassificationPropertyChanged;
-                    }
-                }
-            }
-        }
-
-        private void OnClassificationPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(ClassificationFormatViewModel.IsChecked))
-            {
-                RaisePropertyChanged(nameof(AllAreChecked));
-            }
-        }
-
+        // TODO: initialize from the input model
         public ObservableCollection<string> Languages { get; } = new ObservableCollection<string>
         {
             "CSharp1",
@@ -63,6 +33,7 @@ namespace CoCo.UI.ViewModels
             "CSharp10",
         };
 
+        // TODO: initialize from the input model
         public ObservableCollection<string> Presets { get; } = new ObservableCollection<string>
         {
             "Preset1",
@@ -111,12 +82,19 @@ namespace CoCo.UI.ViewModels
                     // TODO: it will invoke one event at invocation of clear and by one event per added item
                     // Write custom BulkObservableCollection to avoid so many events
                     Classifications.Clear();
-                    foreach (var item in _modelProvider.Get(_selectedLanguage))
+
+                    foreach (var language in _model.Languages)
                     {
-                        Classifications.Add(new ClassificationFormatViewModel(item));
+                        if (!language.Name.EqualsNoCase(_selectedLanguage)) continue;
+
+                        foreach (var item in language.Classifications)
+                        {
+                            Classifications.Add(new ClassificationFormatViewModel(item));
+                        }
+                        RaisePropertyChanged(nameof(SelectedClassification));
+                        RaisePropertyChanged(nameof(AllAreChecked));
+                        break;
                     }
-                    RaisePropertyChanged(nameof(SelectedClassification));
-                    RaisePropertyChanged(nameof(AllAreChecked));
                 }
             }
         }
@@ -136,7 +114,8 @@ namespace CoCo.UI.ViewModels
 
                 return _allAreCheked =
                     flag == 0b10 ? true :
-                    flag == 0b01 ? (bool?)false : null;
+                    flag == 0b01 ? (bool?)false :
+                    null;
             }
             set
             {
@@ -172,9 +151,48 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedClassification, value);
         }
 
+        public void SaveOption()
+        {
+            // TODO: implement
+        }
+
         private void InitializeClassificationsFromPreset()
         {
             // TODO: implement
+        }
+
+        private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // TODO: ObservableCollection doesn't get the old items on the Reset, so we, again, need to use a custom implementation
+            if (e.OldItems?.Count > 0)
+            {
+                foreach (var item in e.OldItems)
+                {
+                    if (item is ClassificationFormatViewModel classification)
+                    {
+                        classification.PropertyChanged -= OnClassificationPropertyChanged;
+                    }
+                }
+            }
+
+            if (e.NewItems?.Count > 0)
+            {
+                foreach (var item in e.NewItems)
+                {
+                    if (item is ClassificationFormatViewModel classification)
+                    {
+                        classification.PropertyChanged += OnClassificationPropertyChanged;
+                    }
+                }
+            }
+        }
+
+        private void OnClassificationPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ClassificationFormatViewModel.IsChecked))
+            {
+                RaisePropertyChanged(nameof(AllAreChecked));
+            }
         }
     }
 }
