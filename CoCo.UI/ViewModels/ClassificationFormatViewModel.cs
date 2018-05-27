@@ -6,9 +6,9 @@ namespace CoCo.UI.ViewModels
 {
     public class ClassificationFormatViewModel : BaseViewModel
     {
-        private readonly IClassificationModel _model;
+        private readonly ClassificationModel _model;
 
-        public ClassificationFormatViewModel(IClassificationModel model)
+        public ClassificationFormatViewModel(ClassificationModel model)
         {
             _model = model;
 

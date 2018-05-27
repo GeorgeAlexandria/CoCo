@@ -9,7 +9,7 @@ namespace CoCo.UI.ViewModels
     public class OptionViewModel : BaseViewModel
     {
         private readonly IModelProvider _provider;
-        private readonly IOptionModel _model;
+        private readonly OptionModel _model;
 
         public OptionViewModel(IModelProvider provider)
         {

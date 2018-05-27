@@ -2,14 +2,16 @@
 
 namespace CoCo.UI.Models
 {
-    public class PresetModel
+    public class LanguageModel
     {
-        public PresetModel(string name)
+        public LanguageModel(string name)
         {
             Name = name;
         }
 
         public string Name { get; }
+
+        public ICollection<PresetModel> Presets { get; } = new List<PresetModel>();
 
         public ICollection<ClassificationModel> Classifications { get; } = new List<ClassificationModel>();
     }

@@ -2,8 +2,8 @@
 {
     public interface IModelProvider
     {
-        IOptionModel GetOption();
+        OptionModel GetOption();
 
-        void SaveOption(IOptionModel option);
+        void SaveOption(OptionModel option);
     }
 }
