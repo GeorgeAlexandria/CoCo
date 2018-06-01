@@ -124,9 +124,9 @@ namespace CoCo.Settings
                 classification.IsItalic = isItalic;
             }
             if (jClassification[nameof(ClassificationSettings.FontRenderingSize)] is JValue jRenderingSize &&
-                jRenderingSize.Value is int renderingSize)
+                jRenderingSize.Value is long renderingSize && renderingSize < 512)
             {
-                classification.FontRenderingSize = renderingSize;
+                classification.FontRenderingSize = (int)renderingSize;
             }
             return classification;
         }
