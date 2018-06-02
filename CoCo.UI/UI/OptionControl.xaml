@@ -34,6 +34,7 @@
          <ComboBox
             Width="100"
             Margin="5,0,0,5"
+            DisplayMemberPath="Name"
             ItemsSource="{Binding Languages}"
             SelectedItem="{Binding SelectedLanguage}"
             Style="{StaticResource comboBoxFlatStyle}"
@@ -46,6 +47,7 @@
          <ComboBox
             Width="100"
             Margin="5,0,0,5"
+            DataContext="{Binding SelectedLanguage}"
             ItemsSource="{Binding Presets}"
             SelectedItem="{Binding SelectedPreset}"
             Style="{StaticResource comboBoxFlatStyle}" />
@@ -62,6 +64,7 @@
             Name="listView"
             Grid.Column="0"
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
+            DataContext="{Binding SelectedLanguage}"
             ItemsSource="{Binding Classifications}"
             ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
             SelectedItem="{Binding SelectedClassification}"
