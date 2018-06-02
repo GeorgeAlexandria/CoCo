@@ -1,23 +1,23 @@
 ﻿using System.Windows.Forms;
 using System.Windows.Media;
-using CoCo.UI.Models;
+using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
     public class ClassificationFormatViewModel : BaseViewModel
     {
-        private readonly string _modelName;
+        private readonly string _classificationName;
 
-        public ClassificationFormatViewModel(ClassificationModel model)
+        public ClassificationFormatViewModel(Classification classification)
         {
-            _modelName = model.Name;
-            _isEnabled = model.IsEnabled;
-            _isBold = model.IsBold;
-            _isItalic = model.IsItalic;
-            _foreground = model.Foreground;
-            _background = model.Background;
-            _fontRenderingSize = model.FontRenderingSize;
-            DisplayName = model.DisplayName;
+            _classificationName = classification.Name;
+            _isEnabled = classification.IsEnabled;
+            _isBold = classification.IsBold;
+            _isItalic = classification.IsItalic;
+            _foreground = classification.Foreground;
+            _background = classification.Background;
+            _fontRenderingSize = classification.FontRenderingSize;
+            DisplayName = classification.DisplayName;
 
             CustomizeForeground = new DelegateCommand(() =>
             {
@@ -98,7 +98,7 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _background, value);
         }
 
-        public ClassificationModel SaveToModel() => new ClassificationModel(_modelName, DisplayName)
+        public Classification ExtractData() => new Classification(_classificationName, DisplayName)
         {
             Background = Background,
             Foreground = Foreground,
@@ -110,7 +110,7 @@ namespace CoCo.UI.ViewModels
 
         // TODO: would be a better solution to implement a custom color picker in wpf...
         // or move all logic of setter color from button to control code behind.
-        private bool TryGetColor(out Color color)
+        private static bool TryGetColor(out Color color)
         {
             using (var dialog = new ColorDialog())
             {

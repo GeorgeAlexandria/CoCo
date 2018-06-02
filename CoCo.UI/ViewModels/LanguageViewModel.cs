@@ -1,19 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using CoCo.UI.Models;
+using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
     public class LanguageViewModel : BaseViewModel
     {
-        //private readonly LanguageModel _model;
-
-        public LanguageViewModel(LanguageModel model)
+        public LanguageViewModel(Language language)
         {
-            Name = model.Name;
-            //Classifications.CollectionChanged += OnClassificationsChanged;
-            foreach (var classification in model.Classifications)
+            Name = language.Name;
+            foreach (var classification in language.Classifications)
             {
                 var classificationViewModel = new ClassificationFormatViewModel(classification);
                 classificationViewModel.PropertyChanged += OnClassificationPropertyChanged;
@@ -102,16 +99,16 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedClassification, value);
         }
 
-        public LanguageModel SaveToModel()
+        public Language ExtractData()
         {
-            var languageModel = new LanguageModel(Name);
+            var language = new Language(Name);
             foreach (var classificationViewModel in Classifications)
             {
-                languageModel.Classifications.Add(classificationViewModel.SaveToModel());
+                language.Classifications.Add(classificationViewModel.ExtractData());
             }
 
             // TODO: PRESETS!
-            return languageModel;
+            return language;
         }
 
         private void InitializeClassificationsFromPreset()

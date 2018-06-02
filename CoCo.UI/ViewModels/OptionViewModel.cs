@@ -1,24 +1,23 @@
 ﻿using System.Collections.ObjectModel;
-using CoCo.UI.Models;
+using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
-        private readonly IModelProvider _provider;
-        private readonly OptionModel _model;
+        private readonly IOptionProvider _provider;
 
-        public OptionViewModel(IModelProvider provider)
+        public OptionViewModel(IOptionProvider provider)
         {
             _provider = provider;
-            _model = provider.GetOption();
+            var option = provider.ReceiveOption();
 
             // TODO: it will invoke one event at invocation of clear and by one event per added item
             // Write custom BulkObservableCollection to avoid so many events
             Languages.Clear();
-            foreach (var languageModel in _model.Languages)
+            foreach (var language in option.Languages)
             {
-                Languages.Add(new LanguageViewModel(languageModel));
+                Languages.Add(new LanguageViewModel(language));
             }
         }
 
@@ -41,12 +40,12 @@ namespace CoCo.UI.ViewModels
 
         public void SaveOption()
         {
-            var optionModel = new OptionModel();
+            var option = new Option();
             foreach (var languageViewModel in Languages)
             {
-                optionModel.Languages.Add(languageViewModel.SaveToModel());
+                option.Languages.Add(languageViewModel.ExtractData());
             }
-            _provider.SaveOption(optionModel);
+            _provider.ReleaseOption(option);
         }
     }
 }

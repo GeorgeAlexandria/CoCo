@@ -1,10 +1,10 @@
 ﻿using System.Windows.Media;
 
-namespace CoCo.UI.Models
+namespace CoCo.UI.Data
 {
-    public class ClassificationModel
+    public class Classification
     {
-        public ClassificationModel(string name, string displayName)
+        public Classification(string name, string displayName)
         {
             Name = name;
             DisplayName = displayName;
