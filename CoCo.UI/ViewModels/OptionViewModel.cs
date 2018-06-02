@@ -36,19 +36,17 @@ namespace CoCo.UI.ViewModels
                 }
                 return _selectedLanguage;
             }
-            set
-            {
-                if (_selectedLanguage != value)
-                {
-                    _selectedLanguage = value;
-                    RaisePropertyChanged();
-                }
-            }
+            set => SetProperty(ref _selectedLanguage, value);
         }
 
         public void SaveOption()
         {
-            // TODO: implement
+            var optionModel = new OptionModel();
+            foreach (var languageViewModel in Languages)
+            {
+                optionModel.Languages.Add(languageViewModel.SaveToModel());
+            }
+            _provider.SaveOption(optionModel);
         }
     }
 }

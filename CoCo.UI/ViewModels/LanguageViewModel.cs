@@ -7,19 +7,21 @@ namespace CoCo.UI.ViewModels
 {
     public class LanguageViewModel : BaseViewModel
     {
-        private readonly LanguageModel _model;
+        //private readonly LanguageModel _model;
 
         public LanguageViewModel(LanguageModel model)
         {
-            _model = model;
-            Classifications.CollectionChanged += OnClassificationsChanged;
-            foreach (var item in model.Classifications)
+            Name = model.Name;
+            //Classifications.CollectionChanged += OnClassificationsChanged;
+            foreach (var classification in model.Classifications)
             {
-                Classifications.Add(new ClassificationFormatViewModel(item));
+                var classificationViewModel = new ClassificationFormatViewModel(classification);
+                classificationViewModel.PropertyChanged += OnClassificationPropertyChanged;
+                Classifications.Add(classificationViewModel);
             }
         }
 
-        public string Name => _model.Name;
+        public string Name { get; }
 
         // TODO: initialize from the input model
         public ObservableCollection<string> Presets { get; } = new ObservableCollection<string>
@@ -46,11 +48,6 @@ namespace CoCo.UI.ViewModels
                     InitializeClassificationsFromPreset();
                 }
             }
-        }
-
-        private void InitializeClassificationsFromPreset()
-        {
-            // TODO: implement
         }
 
         private bool? _allAreCheked;
@@ -103,6 +100,23 @@ namespace CoCo.UI.ViewModels
                 return _selectedClassification;
             }
             set => SetProperty(ref _selectedClassification, value);
+        }
+
+        public LanguageModel SaveToModel()
+        {
+            var languageModel = new LanguageModel(Name);
+            foreach (var classificationViewModel in Classifications)
+            {
+                languageModel.Classifications.Add(classificationViewModel.SaveToModel());
+            }
+
+            // TODO: PRESETS!
+            return languageModel;
+        }
+
+        private void InitializeClassificationsFromPreset()
+        {
+            // TODO: implement
         }
 
         private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
