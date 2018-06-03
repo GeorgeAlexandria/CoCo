@@ -6,7 +6,9 @@ using Newtonsoft.Json.Linq;
 
 namespace CoCo.Settings
 {
-    //TODO: summary
+    /// <summary>
+    /// Is responsible at loading and saving settings
+    /// </summary>
     public static class SettingsManager
     {
         public static void SaveSettings(Settings settings, string path)
@@ -35,6 +37,7 @@ namespace CoCo.Settings
                 jSettings.Add(languageSettings.LanguageName, jLanguageSettings);
             }
 
+            // TODO: handle a couple of exception
             using (var writer = new StreamWriter(path))
             using (var jsonWriter = new JsonTextWriter(writer))
             {
@@ -45,6 +48,7 @@ namespace CoCo.Settings
 
         public static Settings LoadSettings(string path)
         {
+            // TODO: handle a couple of exception
             JObject jSettings;
             using (var reader = File.OpenText(path))
             using (var jsonReader = new JsonTextReader(reader))
@@ -90,7 +94,7 @@ namespace CoCo.Settings
 
         private static ClassificationSettings ParseClassification(JObject jClassification)
         {
-            // TODO: if something would not be presented – set default value
+            // TODO: if something would not be presented – set the default value
             Color color;
             var classification = new ClassificationSettings();
             if (jClassification[nameof(ClassificationSettings.Name)] is JValue jName &&
@@ -128,6 +132,11 @@ namespace CoCo.Settings
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
+            if(jClassification[nameof(ClassificationSettings.IsEnabled)] is JValue jEnabled &&
+                jEnabled.Value is bool isEnabled)
+            {
+                classification.IsEnabled = isEnabled;
+            }
             return classification;
         }
 
@@ -142,7 +151,7 @@ namespace CoCo.Settings
             {
                 if (item is JValue jvalue)
                 {
-                    // HACK: all numerics data store as long in the json.net
+                    // HACK: all numerics data store as long in the newtonsoft json
                     if (!(jvalue.Value is long value) || value > byte.MaxValue) return false;
                     rgb.Add((byte)value);
                 }
