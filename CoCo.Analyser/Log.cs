@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     /// <summary>
     /// <see cref="Log"/> is used only in the debug configuration, <see cref="ConditionalAttribute"/>

@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     /// <summary>
     /// Classifier that classifies all text as an instance of the <see cref="EditorClassifier"/>" classification type.

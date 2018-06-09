@@ -1,23 +1,23 @@
 ﻿using System.Collections.Immutable;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     public static partial class Names
     {
-        public const string LocalVariableName = "Local variable name";
-        public const string RangeVariableName = "Range variable name";
-        public const string ParameterName = "Parameter name";
-        public const string NamespaceName = "Namespace name";
-        public const string ExtensionMethodName = "Extension method name";
-        public const string MethodName = "Method name";
-        public const string EventName = "Event name";
-        public const string PropertyName = "Property name";
-        public const string FieldName = "Field name";
-        public const string StaticMethodName = "Static method name";
-        public const string EnumFieldName = "Enum field name";
-        public const string AliasNamespaceName = "Alias namespace name";
-        public const string ConstructorName = "Constructor method name";
-        public const string LabelName = "Label name";
+        public const string LocalVariableName = "CoCo_Local variable name";
+        public const string RangeVariableName = "CoCo_Range variable name";
+        public const string ParameterName = "CoCo_Parameter name";
+        public const string NamespaceName = "CoCo_Namespace name";
+        public const string ExtensionMethodName = "CoCo_Extension method name";
+        public const string MethodName = "CoCo_Method name";
+        public const string EventName = "CoCo_Event name";
+        public const string PropertyName = "CoCo_Property name";
+        public const string FieldName = "CoCo_Field name";
+        public const string StaticMethodName = "CoCo_Static method name";
+        public const string EnumFieldName = "CoCo_Enum field name";
+        public const string AliasNamespaceName = "CoCo_Alias namespace name";
+        public const string ConstructorName = "CoCo_Constructor method name";
+        public const string LabelName = "CoCo_Label name";
 
         private static ImmutableArray<string> _all;
 

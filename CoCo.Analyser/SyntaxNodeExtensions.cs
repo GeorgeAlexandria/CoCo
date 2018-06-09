@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     public static class SyntaxNodeExtensions
     {

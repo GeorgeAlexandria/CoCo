@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     public static class WorkspaceExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     public static partial class Names
     {
