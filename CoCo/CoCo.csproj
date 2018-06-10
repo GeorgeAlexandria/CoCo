@@ -52,10 +52,6 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
-    <Compile Include="EditorFormats.cs" />
-    <Compile Include="ClassificationDefinitions.cs" />
-    <Compile Include="ClassificationDefinitionsCommon.cs" />
-    <Compile Include="EditorFormatsCommon.cs" />
     <Compile Include="ClassificationManager.cs" />
     <Compile Include="Convertor.cs" />
     <Compile Include="ClassifierProvider.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoCo.Analyser;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.CSharp;
