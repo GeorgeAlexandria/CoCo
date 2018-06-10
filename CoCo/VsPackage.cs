@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace CoCo
 {
-    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading =true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideOptionPage(typeof(DialogOption), "CoCo", "CoCo", 0, 0, true)]
     [Guid("b933474d-306e-434f-952d-a820c849ed07")]
     public sealed class VsPackage : Package
@@ -35,10 +35,13 @@ namespace CoCo
             }
         }
 
-        protected override void OnClosed(EventArgs e)
+        protected override void OnApply(PageApplyEventArgs e)
         {
-            _view.SaveOption();
-            base.OnClosed(e);
+            if (e.ApplyBehavior == ApplyKind.Apply)
+            {
+                _view.SaveOption();
+            }
+            base.OnApply(e);
         }
     }
 }
