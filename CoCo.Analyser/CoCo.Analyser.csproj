@@ -144,7 +144,6 @@
     <Compile Include="EditorClassifier.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Names.cs" />
-    <Compile Include="NamesCommon.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntaxNodeExtensions.cs" />
     <Compile Include="WorkspaceExtensions.cs" />

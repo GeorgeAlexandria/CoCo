@@ -1,7 +1,7 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v1.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS17](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS17-v1.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v1.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v1.2.1-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
-A Visual Studio 2015 and 2017 extension that uses Roslyn API's for analyzing C# source code
+A Visual Studio 2015 (VS14) and 2017 (VS15) extension that uses Roslyn API's for analyzing C# source code
 and colorize appropriate syntax nodes to different colors. It makes easily recognizabling the supported elements. 
 
 Extension supports following elements:
@@ -10,7 +10,7 @@ Extension supports following elements:
 * Parameters
 * Instance methods and constructors
 * Static and extension methods
-* Local functions (supports only for VS17)
+* Local functions (supports only for VS15)
 * Events
 * Properties
 * Instance and enum fields
