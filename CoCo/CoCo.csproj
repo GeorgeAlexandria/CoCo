@@ -56,7 +56,9 @@
     <Compile Include="ClassificationDefinitions.cs" />
     <Compile Include="ClassificationDefinitionsCommon.cs" />
     <Compile Include="EditorFormatsCommon.cs" />
+    <Compile Include="Convertor.cs" />
     <Compile Include="ClassifierProvider.cs" />
+    <Compile Include="OptionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsPackage.cs" />
   </ItemGroup>
@@ -318,6 +320,14 @@
     <ProjectReference Include="..\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' ">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
       <Name>CoCo.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoCo.Settings\CoCo.Settings.csproj">
+      <Project>{425b6593-2587-4ab2-a844-eda72c0bb060}</Project>
+      <Name>CoCo.Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoCo.UI\CoCo.UI.csproj">
+      <Project>{136c09a9-8354-4600-8226-b24fa712df9b}</Project>
+      <Name>CoCo.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
