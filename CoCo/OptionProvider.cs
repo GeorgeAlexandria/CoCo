@@ -14,6 +14,8 @@ namespace CoCo
 
             var settings = SettingsManager.LoadSettings(@"C:\temp\555.config");
 
+            FormattingService.SetFormatting(settings);
+
             _model = new Option();
             foreach (var language in settings.Languages)
             {
@@ -30,6 +32,8 @@ namespace CoCo
 
         public void ReleaseOption(Option option)
         {
+            FormattingService.SetFormatting(option);
+
             var languages = new List<LanguageSettings>();
             foreach (var language in option.Languages)
             {

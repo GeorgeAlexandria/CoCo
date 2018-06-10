@@ -56,8 +56,10 @@
     <Compile Include="ClassificationDefinitions.cs" />
     <Compile Include="ClassificationDefinitionsCommon.cs" />
     <Compile Include="EditorFormatsCommon.cs" />
+    <Compile Include="ClassificationManager.cs" />
     <Compile Include="Convertor.cs" />
     <Compile Include="ClassifierProvider.cs" />
+    <Compile Include="FormattingService.cs" />
     <Compile Include="OptionProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsPackage.cs" />
