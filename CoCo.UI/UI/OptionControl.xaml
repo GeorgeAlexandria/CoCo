@@ -68,7 +68,7 @@
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             DataContext="{Binding SelectedLanguage}"
             ItemsSource="{Binding Classifications}"
-            ListView.ItemContainerStyle="{StaticResource listBoxItemFlatStyle}"
+            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
             SelectedItem="{Binding SelectedClassification}"
             Style="{StaticResource listViewStyle}">
             <ListView.View>

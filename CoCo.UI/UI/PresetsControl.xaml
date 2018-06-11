@@ -46,12 +46,15 @@
          Grid.Row="1"
          VerticalAlignment="Stretch"
          BorderBrush="{StaticResource SoftBlueBorderBrush}"
+         BorderThickness="1"
          DataContext="{Binding SelectedLanguage}"
          ItemsSource="{Binding Presets}"
          SelectionMode="Extended"
          Style="{StaticResource ListBoxFlatStyle}">
          <ListBox.ItemTemplate>
-            <DataTemplate />
+            <DataTemplate>
+               <TextBlock Margin="6,0,0,0" Text="{Binding Name, Mode=OneWay}" />
+            </DataTemplate>
          </ListBox.ItemTemplate>
          <ListBox.ItemContainerStyle>
             <Style BasedOn="{StaticResource listBoxItemFlatStyle}" TargetType="ListBoxItem">
@@ -59,21 +62,20 @@
             </Style>
          </ListBox.ItemContainerStyle>
       </ListBox>
-      <Grid Grid.Row="2" VerticalAlignment="Stretch">
+      <Grid Grid.Row="2">
          <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*" />
             <ColumnDefinition Width="0.5*" />
          </Grid.ColumnDefinitions>
          <TextBox
             Grid.Column="0"
-            HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Center"
             BorderThickness="0"
             IsReadOnly="False" />
          <Button
             Grid.Column="1"
-            Margin="8,0,0,0"
+            Margin="8,0,8,0"
             Background="{StaticResource SoftGrey}"
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             BorderThickness="1.5"
