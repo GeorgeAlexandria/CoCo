@@ -23,6 +23,7 @@
          <RowDefinition Height="5*" />
       </Grid.RowDefinitions>
       <StackPanel
+         Grid.Row="0"
          Width="Auto"
          HorizontalAlignment="Left"
          Orientation="Horizontal">
@@ -66,7 +67,7 @@
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             DataContext="{Binding SelectedLanguage}"
             ItemsSource="{Binding Classifications}"
-            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
+            ListView.ItemContainerStyle="{StaticResource listBoxItemFlatStyle}"
             SelectedItem="{Binding SelectedClassification}"
             Style="{StaticResource listViewStyle}">
             <ListView.View>

@@ -357,7 +357,7 @@
       </Setter>
    </Style>
 
-   <Style x:Key="listViewItemFlatStyle" TargetType="ListViewItem">
+   <Style x:Key="listBoxItemFlatStyle" TargetType="ListBoxItem">
       <Setter Property="SnapsToDevicePixels" Value="true" />
       <Setter Property="HorizontalContentAlignment" Value="Stretch" />
       <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -468,6 +468,29 @@
                   BorderBrush="{TemplateBinding BorderBrush}"
                   BorderThickness="1">
                   <ScrollViewer Style="{StaticResource gridViewScrollViewerStyle}">
+                     <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
+                  </ScrollViewer>
+               </Border>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
+   <Style x:Key="ListBoxFlatStyle" TargetType="ListBox">
+      <Setter Property="SnapsToDevicePixels" Value="true" />
+      <Setter Property="OverridesDefaultStyle" Value="true" />
+      <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+      <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+      <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate TargetType="ListBox">
+               <Border
+                  x:Name="Border"
+                  Background="{TemplateBinding Background}"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  BorderThickness="{TemplateBinding BorderThickness}">
+                  <ScrollViewer>
                      <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Cycle" />
                   </ScrollViewer>
                </Border>

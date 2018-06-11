@@ -53,6 +53,9 @@
     <Compile Include="UI\OptionControl.xaml.cs">
       <DependentUpon>OptionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\PresetsControl.xaml.cs">
+      <DependentUpon>PresetsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ClassificationFormatViewModel.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
@@ -65,6 +68,10 @@
     <Page Include="UI\OptionControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\PresetsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\ResourceDictionary.xaml">
       <SubType>Designer</SubType>
