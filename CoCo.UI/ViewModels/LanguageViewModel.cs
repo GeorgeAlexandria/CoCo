@@ -17,10 +17,49 @@ namespace CoCo.UI.ViewModels
                 Classifications.Add(classificationViewModel);
             }
 
-            // TODO: initialize from the input model 
-            foreach (var item in new string[]{ "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
+            // TODO: initialize from the input model
+            foreach (var item in new string[] { "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
             {
-                Presets.Add(new PresetViewModel(new Preset(item)));
+                Presets.Add(new PresetViewModel(new Preset(item), Apply, CanApply, Delete));
+            }
+        }
+
+        private void Apply()
+        {
+            // TODO: check that will works binding on the SelectedItem when selection mode is extended
+            PresetViewModel selectedViewModel = null;
+            foreach (var item in Presets)
+            {
+                if (item.IsSelected)
+                {
+                    selectedViewModel = item;
+                    break;
+                }
+            }
+            if (selectedViewModel == null) return;
+
+            // TODO: implement
+        }
+
+        private bool CanApply()
+        {
+            var selectedCount = 0;
+            foreach (var preset in Presets)
+            {
+                if (preset.IsSelected && selectedCount++ > 1) return false;
+            }
+            return selectedCount == 1;
+        }
+
+        private void Delete()
+        {
+            var i = 0;
+            while (i < Presets.Count)
+            {
+                if (Presets[i++].IsSelected)
+                {
+                    Presets.RemoveAt(--i);
+                }
             }
         }
 
@@ -39,7 +78,6 @@ namespace CoCo.UI.ViewModels
                 {
                     _selectedPreset = value;
                     RaisePropertyChanged();
-                    InitializeClassificationsFromPreset();
                 }
             }
         }
@@ -106,11 +144,6 @@ namespace CoCo.UI.ViewModels
 
             // TODO: PRESETS!
             return language;
-        }
-
-        private void InitializeClassificationsFromPreset()
-        {
-            // TODO: implement
         }
 
         private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using CoCo.UI.Data;
+﻿using System;
+using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
@@ -6,12 +7,18 @@ namespace CoCo.UI.ViewModels
     {
         private readonly Preset _preset;
 
-        public PresetViewModel(Preset preset)
+        public PresetViewModel(Preset preset, Action apply, Func<bool> canApply, Action delete)
         {
             _preset = preset;
+            ApplyPreset = new DelegateCommand(apply, canApply);
+            DeletePreset = new DelegateCommand(delete);
         }
 
         public string Name => _preset.Name;
+
+        public DelegateCommand ApplyPreset { get; }
+
+        public DelegateCommand DeletePreset { get; }
 
         public Preset ExtractData() => _preset;
 
