@@ -16,24 +16,21 @@ namespace CoCo.UI.ViewModels
                 classificationViewModel.PropertyChanged += OnClassificationPropertyChanged;
                 Classifications.Add(classificationViewModel);
             }
+
+            // TODO: initialize from the input model 
+            foreach (var item in new string[]{ "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
+            {
+                Presets.Add(new PresetViewModel(new Preset(item)));
+            }
         }
 
         public string Name { get; }
 
-        // TODO: initialize from the input model
-        public ObservableCollection<string> Presets { get; } = new ObservableCollection<string>
-            {
-                "Preset1",
-                "Preset2",
-                "Preset3",
-                "Preset4",
-                "Preset5",
-            };
+        public ObservableCollection<PresetViewModel> Presets { get; } = new ObservableCollection<PresetViewModel>();
 
-        // TODO: temporary string
-        private string _selectedPreset;
+        private PresetViewModel _selectedPreset;
 
-        public string SelectedPreset
+        public PresetViewModel SelectedPreset
         {
             get => _selectedPreset;
             set

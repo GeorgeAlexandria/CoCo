@@ -49,6 +49,7 @@
             Width="100"
             Margin="5,0,0,5"
             DataContext="{Binding SelectedLanguage}"
+            DisplayMemberPath="Name"
             ItemsSource="{Binding Presets}"
             SelectedItem="{Binding SelectedPreset}"
             Style="{StaticResource comboBoxFlatStyle}" />

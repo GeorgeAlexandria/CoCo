@@ -48,12 +48,16 @@
          BorderBrush="{StaticResource SoftBlueBorderBrush}"
          DataContext="{Binding SelectedLanguage}"
          ItemsSource="{Binding Presets}"
-         ListBox.ItemContainerStyle="{StaticResource listBoxItemFlatStyle}"
          SelectionMode="Extended"
          Style="{StaticResource ListBoxFlatStyle}">
          <ListBox.ItemTemplate>
             <DataTemplate />
          </ListBox.ItemTemplate>
+         <ListBox.ItemContainerStyle>
+            <Style BasedOn="{StaticResource listBoxItemFlatStyle}" TargetType="ListBoxItem">
+               <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=OneWayToSource}" />
+            </Style>
+         </ListBox.ItemContainerStyle>
       </ListBox>
       <Grid Grid.Row="2" VerticalAlignment="Stretch">
          <Grid.ColumnDefinitions>

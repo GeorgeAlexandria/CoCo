@@ -63,6 +63,7 @@
     <Compile Include="Data\IOptionProvider.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\OptionViewModel.cs" />
+    <Compile Include="ViewModels\PresetViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="UI\OptionControl.xaml">
