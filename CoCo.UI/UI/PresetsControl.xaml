@@ -53,7 +53,25 @@
          Style="{StaticResource ListBoxFlatStyle}">
          <ListBox.ItemTemplate>
             <DataTemplate>
-               <TextBlock Margin="6,0,0,0" Text="{Binding Name, Mode=OneWay}" />
+               <WrapPanel>
+                  <TextBlock Margin="6,0,0,0" Text="{Binding Name, Mode=OneWay}" />
+                  <Button
+                     Margin="8,0,8,0"
+                     Background="{StaticResource SoftGrey}"
+                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                     BorderThickness="1.5"
+                     Command="{Binding ApplyPreset}"
+                     CommandParameter="{Binding}"
+                     Content="Apply" />
+                  <Button
+                     Margin="8,0,8,0"
+                     Background="{StaticResource SoftGrey}"
+                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                     BorderThickness="1.5"
+                     Command="{Binding DeletePreset}"
+                     CommandParameter="{Binding}"
+                     Content="Delete" />
+               </WrapPanel>
             </DataTemplate>
          </ListBox.ItemTemplate>
          <ListBox.ItemContainerStyle>
@@ -73,7 +91,7 @@
             VerticalContentAlignment="Center"
             BorderThickness="0"
             IsReadOnly="False"
-            Text="{Binding CreatedName}" />
+            Text="{Binding CreatedName, UpdateSourceTrigger=PropertyChanged}" />
          <Button
             Grid.Column="1"
             Margin="8,0,8,0"

@@ -7,18 +7,18 @@ namespace CoCo.UI.ViewModels
     {
         private readonly Preset _preset;
 
-        public PresetViewModel(Preset preset, Action apply, Func<bool> canApply, Action delete)
+        public PresetViewModel(Preset preset, Action<PresetViewModel> apply, Action<PresetViewModel> delete)
         {
             _preset = preset;
-            ApplyPreset = new DelegateCommand(apply, canApply);
-            DeletePreset = new DelegateCommand(delete);
+            ApplyPreset = new DelegateCommand<PresetViewModel>(apply);
+            DeletePreset = new DelegateCommand<PresetViewModel>(delete);
         }
 
         public string Name => _preset.Name;
 
-        public DelegateCommand ApplyPreset { get; }
+        public DelegateCommand<PresetViewModel> ApplyPreset { get; }
 
-        public DelegateCommand DeletePreset { get; }
+        public DelegateCommand<PresetViewModel> DeletePreset { get; }
 
         public Preset ExtractData() => _preset;
 

@@ -156,6 +156,8 @@ namespace CoCo.UI.ViewModels
                 item.PropertyChanged += OnClassificationPropertyChanged;
                 Classifications.Add(item);
             }
+            // NOTE: Reset selected classification from old items
+            SelectedClassification = null;
         }
     }
 }

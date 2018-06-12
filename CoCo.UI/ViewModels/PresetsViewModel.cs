@@ -13,7 +13,7 @@ namespace CoCo.UI.ViewModels
             // TODO: initialize from the input model
             foreach (var item in new string[] { "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
             {
-                Presets.Add(new PresetViewModel(new Preset(item), Apply, CanApply, Delete));
+                Presets.Add(new PresetViewModel(new Preset(item), Apply, Delete));
             }
 
             CreatePreset = new DelegateCommand(Create, CanCreate);
@@ -29,42 +29,31 @@ namespace CoCo.UI.ViewModels
         public string CreatedName
         {
             get => _createdName;
-            set => SetProperty(ref _createdName, value);
-        }
-
-        private void Apply()
-        {
-            // TODO: check that will works binding on the SelectedItem when selection mode is extended
-            PresetViewModel selectedViewModel = null;
-            foreach (var item in Presets)
+            set
             {
-                if (item.IsSelected)
-                {
-                    selectedViewModel = item;
-                    break;
-                }
+                SetProperty(ref _createdName, value);
+                CreatePreset.RaiseCanExecuteChanged();
             }
-            if (selectedViewModel == null) return;
-
-            // TODO: implement
         }
 
-        private bool CanApply()
+        private void Apply(PresetViewModel preset)
         {
-            var selectedCount = 0;
-            foreach (var preset in Presets)
+            var data = preset.ExtractData();
+            var list = new List<ClassificationFormatViewModel>(data.Classifications.Count);
+            foreach (var item in data.Classifications)
             {
-                if (preset.IsSelected && selectedCount++ > 1) return false;
+                list.Add(new ClassificationFormatViewModel(item));
             }
-            return selectedCount == 1;
+            _provider.SetCurrentClassificaions(list);
         }
 
-        private void Delete()
+        private void Delete(PresetViewModel arg)
         {
             var i = 0;
             while (i < Presets.Count)
             {
-                if (Presets[i++].IsSelected)
+                var preset = Presets[i++];
+                if (preset.IsSelected || ReferenceEquals(preset, arg))
                 {
                     Presets.RemoveAt(--i);
                 }
@@ -79,7 +68,7 @@ namespace CoCo.UI.ViewModels
             {
                 preset.Classifications.Add(item.ExtractData());
             }
-            Presets.Add(new PresetViewModel(preset, Apply, CanApply, Delete));
+            Presets.Add(new PresetViewModel(preset, Apply, Delete));
             CreatedName = string.Empty;
         }
 
