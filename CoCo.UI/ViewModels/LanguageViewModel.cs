@@ -1,11 +1,12 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
-    public class LanguageViewModel : BaseViewModel
+    public class LanguageViewModel : BaseViewModel, IClassificationProvider
     {
         public LanguageViewModel(Language language)
         {
@@ -17,51 +18,10 @@ namespace CoCo.UI.ViewModels
                 Classifications.Add(classificationViewModel);
             }
 
-            // TODO: initialize from the input model
-            foreach (var item in new string[] { "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
-            {
-                Presets.Add(new PresetViewModel(new Preset(item), Apply, CanApply, Delete));
-            }
+            PresetsContainer = new PresetsViewModel(language.Presets, this);
         }
 
-        private void Apply()
-        {
-            // TODO: check that will works binding on the SelectedItem when selection mode is extended
-            PresetViewModel selectedViewModel = null;
-            foreach (var item in Presets)
-            {
-                if (item.IsSelected)
-                {
-                    selectedViewModel = item;
-                    break;
-                }
-            }
-            if (selectedViewModel == null) return;
-
-            // TODO: implement
-        }
-
-        private bool CanApply()
-        {
-            var selectedCount = 0;
-            foreach (var preset in Presets)
-            {
-                if (preset.IsSelected && selectedCount++ > 1) return false;
-            }
-            return selectedCount == 1;
-        }
-
-        private void Delete()
-        {
-            var i = 0;
-            while (i < Presets.Count)
-            {
-                if (Presets[i++].IsSelected)
-                {
-                    Presets.RemoveAt(--i);
-                }
-            }
-        }
+        public PresetsViewModel PresetsContainer { get; }
 
         public string Name { get; }
 
@@ -177,6 +137,24 @@ namespace CoCo.UI.ViewModels
             if (e.PropertyName == nameof(ClassificationFormatViewModel.IsChecked))
             {
                 RaisePropertyChanged(nameof(AllAreChecked));
+            }
+        }
+
+        ICollection<ClassificationFormatViewModel> IClassificationProvider.GetCurrentClassificaions() => Classifications;
+
+        void IClassificationProvider.SetCurrentClassificaions(ICollection<ClassificationFormatViewModel> classifications)
+        {
+            /// TODO: again bulk operation under a <see cref="ObservableCollection{T}"/>
+            while (Classifications.Count > 0)
+            {
+                Classifications[0].PropertyChanged -= OnClassificationPropertyChanged;
+                Classifications.RemoveAt(0);
+            }
+
+            foreach (var item in classifications)
+            {
+                item.PropertyChanged += OnClassificationPropertyChanged;
+                Classifications.Add(item);
             }
         }
     }

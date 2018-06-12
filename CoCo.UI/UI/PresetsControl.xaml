@@ -47,7 +47,7 @@
          VerticalAlignment="Stretch"
          BorderBrush="{StaticResource SoftBlueBorderBrush}"
          BorderThickness="1"
-         DataContext="{Binding SelectedLanguage}"
+         DataContext="{Binding SelectedLanguage.PresetsContainer}"
          ItemsSource="{Binding Presets}"
          SelectionMode="Extended"
          Style="{StaticResource ListBoxFlatStyle}">
@@ -62,7 +62,7 @@
             </Style>
          </ListBox.ItemContainerStyle>
       </ListBox>
-      <Grid Grid.Row="2">
+      <Grid Grid.Row="2" DataContext="{Binding SelectedLanguage.PresetsContainer}">
          <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*" />
             <ColumnDefinition Width="0.5*" />
@@ -72,14 +72,15 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Center"
             BorderThickness="0"
-            IsReadOnly="False" />
+            IsReadOnly="False"
+            Text="{Binding CreatedName}" />
          <Button
             Grid.Column="1"
             Margin="8,0,8,0"
             Background="{StaticResource SoftGrey}"
             BorderBrush="{StaticResource SoftBlueBorderBrush}"
             BorderThickness="1.5"
-            Command="{Binding CustomizeForeground}"
+            Command="{Binding CreatePreset}"
             Content="Create" />
       </Grid>
    </Grid>
