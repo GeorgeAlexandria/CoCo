@@ -53,25 +53,33 @@
          Style="{StaticResource ListBoxFlatStyle}">
          <ListBox.ItemTemplate>
             <DataTemplate>
-               <WrapPanel>
-                  <TextBlock Margin="6,0,0,0" Text="{Binding Name, Mode=OneWay}" />
+               <Grid>
+                  <Grid.ColumnDefinitions>
+                     <ColumnDefinition />
+                     <ColumnDefinition Width="Auto" />
+                     <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                     Grid.Column="0"
+                     Width="Auto"
+                     Margin="6,0,0,0"
+                     Text="{Binding Name, Mode=OneWay}" />
                   <Button
+                     Grid.Column="1"
                      Margin="8,0,8,0"
-                     Background="{StaticResource SoftGrey}"
-                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
-                     BorderThickness="1.5"
                      Command="{Binding ApplyPreset}"
                      CommandParameter="{Binding}"
-                     Content="Apply" />
+                     Foreground="#5e5e5a"
+                     Style="{StaticResource ApplyPresetButton}" />
                   <Button
+                     Grid.Column="2"
                      Margin="8,0,8,0"
-                     Background="{StaticResource SoftGrey}"
-                     BorderBrush="{StaticResource SoftBlueBorderBrush}"
-                     BorderThickness="1.5"
                      Command="{Binding DeletePreset}"
                      CommandParameter="{Binding}"
-                     Content="Delete" />
-               </WrapPanel>
+                     DockPanel.Dock="Right"
+                     Foreground="#5e5e5a"
+                     Style="{StaticResource DeleteButton}" />
+               </Grid>
             </DataTemplate>
          </ListBox.ItemTemplate>
          <ListBox.ItemContainerStyle>
