@@ -1,0 +1,14 @@
+﻿<ResourceDictionary
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:local="clr-namespace:CoCo.UI"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   mc:Ignorable="d">
+   <SolidColorBrush x:Key="SoftBlue" Color="#e1ebf4" />
+   <SolidColorBrush x:Key="SoftYellow" Color="#fcf9a9" />
+   <SolidColorBrush x:Key="SoftGrey" Color="#bbbac4" />
+   <SolidColorBrush x:Key="SoftGrey2" Color="#FF636363" />
+   <SolidColorBrush x:Key="SoftGrey3" Color="#FFdbd4d4" />
+   <SolidColorBrush x:Key="WhiteColor" Color="#FFFFFFFF" />
+</ResourceDictionary>

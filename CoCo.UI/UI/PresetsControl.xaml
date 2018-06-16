@@ -13,7 +13,7 @@
    <UserControl.Resources>
       <ResourceDictionary>
          <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="ResourceDictionary.xaml" />
+            <ResourceDictionary Source="Resources/ResourceDictionary.xaml" />
          </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>
    </UserControl.Resources>
@@ -45,12 +45,12 @@
       <ListBox
          Grid.Row="1"
          VerticalAlignment="Stretch"
-         BorderBrush="{StaticResource SoftBlueBorderBrush}"
+         BorderBrush="{StaticResource SoftBlue}"
          BorderThickness="1"
          DataContext="{Binding SelectedLanguage.PresetsContainer}"
          ItemsSource="{Binding Presets}"
          SelectionMode="Extended"
-         Style="{StaticResource ListBoxFlatStyle}">
+         Style="{StaticResource listBoxFlatStyle}">
          <ListBox.ItemTemplate>
             <DataTemplate>
                <Grid>
@@ -104,7 +104,7 @@
             Grid.Column="1"
             Margin="8,0,8,0"
             Background="{StaticResource SoftGrey}"
-            BorderBrush="{StaticResource SoftBlueBorderBrush}"
+            BorderBrush="{StaticResource SoftBlue}"
             BorderThickness="1.5"
             Command="{Binding CreatePreset}"
             Content="Create" />

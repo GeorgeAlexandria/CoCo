@@ -13,7 +13,7 @@
    <UserControl.Resources>
       <ResourceDictionary>
          <ResourceDictionary.MergedDictionaries>
-            <ResourceDictionary Source="ResourceDictionary.xaml" />
+            <ResourceDictionary Source="Resources/ResourceDictionary.xaml" />
          </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>
    </UserControl.Resources>
@@ -65,14 +65,14 @@
          <ListView
             Name="listView"
             Grid.Column="0"
-            BorderBrush="{StaticResource SoftBlueBorderBrush}"
+            BorderBrush="{StaticResource SoftBlue}"
             DataContext="{Binding SelectedLanguage}"
             ItemsSource="{Binding Classifications}"
             ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
             SelectedItem="{Binding SelectedClassification}"
-            Style="{StaticResource listViewStyle}">
+            Style="{StaticResource classificationListViewStyle}">
             <ListView.View>
-               <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeader}">
+               <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeader}">
                   <GridViewColumn>
                      <GridViewColumnHeader HorizontalContentAlignment="Left">
                         <TextBlock
@@ -87,19 +87,19 @@
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
                   <GridViewColumn>
-                     <GridViewColumnHeader Width="35" Style="{StaticResource GridViewColumnHeaderWithoutGripper}">
+                     <GridViewColumnHeader Width="35" Style="{StaticResource gridViewColumnHeaderWithoutGripper}">
                         <CheckBox
                            HorizontalAlignment="Center"
                            IsChecked="{Binding AllAreChecked}"
                            IsThreeState="True"
-                           Style="{StaticResource CheckBoxFlatStyle}" />
+                           Style="{StaticResource checkBoxFlatStyle}" />
                      </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
                            <CheckBox
                               HorizontalAlignment="Center"
                               IsChecked="{Binding IsChecked}"
-                              Style="{StaticResource CheckBoxFlatStyle}" />
+                              Style="{StaticResource checkBoxFlatStyle}" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
@@ -125,7 +125,7 @@
                   HorizontalAlignment="Left"
                   VerticalContentAlignment="Center"
                   MaxLength="3"
-                  Style="{StaticResource TextBoxFlatStyle}"
+                  Style="{StaticResource textBoxFlatStyle}"
                   Text="{Binding Size}"
                   TextAlignment="Left" />
             </StackPanel>
@@ -142,7 +142,7 @@
                <Border
                   Width="100"
                   HorizontalAlignment="Left"
-                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1,1,1,1">
                   <StackPanel Background="White" Orientation="Horizontal">
                      <Rectangle
@@ -167,7 +167,7 @@
                   Width="63"
                   Margin="8,0,0,0"
                   Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1.5"
                   Command="{Binding CustomizeForeground}"
                   Content="Customize" />
@@ -185,7 +185,7 @@
                <Border
                   Width="100"
                   HorizontalAlignment="Left"
-                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1,1,1,1">
                   <StackPanel Background="White" Orientation="Horizontal">
                      <Rectangle
@@ -210,7 +210,7 @@
                   Width="63"
                   Margin="8,0,0,0"
                   Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlueBorderBrush}"
+                  BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1.5"
                   Command="{Binding CustomizeBackground}"
                   Content="Customize" />
@@ -224,14 +224,14 @@
                   VerticalContentAlignment="Center"
                   Content="Bold"
                   IsChecked="{Binding IsBold}"
-                  Style="{StaticResource CheckBoxFlatStyle}"
+                  Style="{StaticResource checkBoxFlatStyle}"
                   TextBlock.FontSize="14" />
                <CheckBox
                   Margin="10,0,0,0"
                   VerticalContentAlignment="Center"
                   Content="Italic"
                   IsChecked="{Binding IsItalic}"
-                  Style="{StaticResource CheckBoxFlatStyle}"
+                  Style="{StaticResource checkBoxFlatStyle}"
                   TextBlock.FontSize="14" />
             </StackPanel>
          </StackPanel>
