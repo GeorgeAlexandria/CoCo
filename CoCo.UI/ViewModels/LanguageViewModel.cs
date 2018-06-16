@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using CoCo.UI.Data;
 
@@ -102,34 +101,12 @@ namespace CoCo.UI.ViewModels
                 language.Classifications.Add(classificationViewModel.ExtractData());
             }
 
-            // TODO: PRESETS!
+            foreach (var item in PresetsContainer.Presets)
+            {
+                language.Presets.Add(item.ExtractData());
+            }
+
             return language;
-        }
-
-        private void OnClassificationsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // TODO: ObservableCollection doesn't get the old items on the Reset, so we, again, need to use a custom implementation
-            if (e.OldItems?.Count > 0)
-            {
-                foreach (var item in e.OldItems)
-                {
-                    if (item is ClassificationFormatViewModel classification)
-                    {
-                        classification.PropertyChanged -= OnClassificationPropertyChanged;
-                    }
-                }
-            }
-
-            if (e.NewItems?.Count > 0)
-            {
-                foreach (var item in e.NewItems)
-                {
-                    if (item is ClassificationFormatViewModel classification)
-                    {
-                        classification.PropertyChanged += OnClassificationPropertyChanged;
-                    }
-                }
-            }
         }
 
         private void OnClassificationPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -10,10 +10,9 @@ namespace CoCo.UI.ViewModels
 
         public PresetsViewModel(ICollection<Preset> presets, IClassificationProvider provider)
         {
-            // TODO: initialize from the input model
-            foreach (var item in new string[] { "Preset1", "Preset2", "Preset3", "Preset4", "Preset5" })
+            foreach (var item in presets)
             {
-                Presets.Add(new PresetViewModel(new Preset(item), Apply, Delete));
+                Presets.Add(new PresetViewModel(item, Apply, Delete));
             }
 
             CreatePreset = new DelegateCommand(Create, CanCreate);
