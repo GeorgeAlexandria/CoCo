@@ -62,22 +62,33 @@ namespace CoCo.Settings
                 var languageName = jSetting.Key;
                 var jLanguageSettings = jSetting.Value as JObject;
                 var currentClassifications = new List<ClassificationSettings>();
+                var presets = new List<PresetSettings>();
 
                 foreach (var languagePair in jLanguageSettings)
                 {
-                    if (languagePair.Key == "current" && languagePair.Value is JArray classifications)
+                    var classifications = new List<ClassificationSettings>();
+                    if (languagePair.Value is JArray jClassifications)
                     {
-                        foreach (var item in classifications)
+                        foreach (var item in jClassifications)
                         {
                             if (item is JObject jClassification)
                             {
-                                currentClassifications.Add(ParseClassification(jClassification));
+                                classifications.Add(ParseClassification(jClassification));
                             }
                         }
                     }
+
+                    if (languagePair.Key == "current")
+                    {
+                        currentClassifications = classifications;
+                    }
                     else
                     {
-                        // TODO: PRESETS.
+                        presets.Add(new PresetSettings
+                        {
+                            Name = languagePair.Key,
+                            Classifications = classifications
+                        });
                     }
                 }
 
@@ -85,7 +96,7 @@ namespace CoCo.Settings
                 {
                     LanguageName = languageName,
                     CurrentSettings = currentClassifications,
-                    Presettings = new List<PresetSettings>()
+                    Presettings = presets
                 };
                 languages.Add(languageSettings);
             }
@@ -132,7 +143,7 @@ namespace CoCo.Settings
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
-            if(jClassification[nameof(ClassificationSettings.IsEnabled)] is JValue jEnabled &&
+            if (jClassification[nameof(ClassificationSettings.IsEnabled)] is JValue jEnabled &&
                 jEnabled.Value is bool isEnabled)
             {
                 classification.IsEnabled = isEnabled;

@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace CoCo.Settings
 {
     [DebuggerDisplay("{Name}")]
-    public class ClassificationSettings
+    public struct ClassificationSettings
     {
         public string Name { get; set; }
 
