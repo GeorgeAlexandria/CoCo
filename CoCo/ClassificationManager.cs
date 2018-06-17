@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-//using CoCo.Analyser;
+using CoCo.Analyser;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Shell;
@@ -56,7 +56,7 @@ namespace CoCo
             var formatMap = _formatMapService.GetClassificationFormatMap(category: "text");
             var identifierPosition = GetIdentifierPosition(_registryService, formatMap);
 
-            foreach (var name in CoCo.Analyser.Names.All)
+            foreach (var name in Names.All)
             {
                 var classificationType = _registryService.GetClassificationType(name);
                 if (classificationType != null)

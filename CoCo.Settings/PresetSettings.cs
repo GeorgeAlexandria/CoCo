@@ -8,6 +8,6 @@ namespace CoCo.Settings
     {
         public string Name { get; set; }
 
-        public IEnumerable<ClassificationSettings> Classifications { get; set; }
+        public ICollection<ClassificationSettings> Classifications { get; set; }
     }
 }

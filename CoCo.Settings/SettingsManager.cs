@@ -11,30 +11,30 @@ namespace CoCo.Settings
     /// </summary>
     public static class SettingsManager
     {
+        private const string CurrentClassificationsName = "current";
+
         public static void SaveSettings(Settings settings, string path)
         {
-            var jSettings = new JObject();
-
-            foreach (var languageSettings in settings.Languages)
+            JArray ToJArray(ICollection<ClassificationSettings> classificationSettings)
             {
-                var jLanguageSettings = new JObject();
                 var jClassifications = new JArray();
-                foreach (var classification in languageSettings.CurrentSettings)
+                foreach (var classification in classificationSettings)
                 {
                     jClassifications.Add(ToJObject(classification));
                 }
-                jLanguageSettings.Add("current", jClassifications);
+                return jClassifications;
+            }
 
-                foreach (var preset in languageSettings.Presettings)
+            var jSettings = new JObject();
+            foreach (var language in settings.Languages)
+            {
+                var jLanguage = new JObject();
+                jLanguage.Add(CurrentClassificationsName, ToJArray(language.CurrentClassifications));
+                foreach (var preset in language.Presets)
                 {
-                    jClassifications = new JArray();
-                    foreach (var classification in preset.Classifications)
-                    {
-                        jClassifications.Add(ToJObject(classification));
-                    }
-                    jLanguageSettings.Add(preset.Name, jClassifications);
+                    jLanguage.Add(preset.Name, ToJArray(preset.Classifications));
                 }
-                jSettings.Add(languageSettings.LanguageName, jLanguageSettings);
+                jSettings.Add(language.LanguageName, jLanguage);
             }
 
             // TODO: handle a couple of exception
@@ -59,11 +59,14 @@ namespace CoCo.Settings
             var languages = new List<LanguageSettings>();
             foreach (var jSetting in jSettings)
             {
-                var languageName = jSetting.Key;
-                var jLanguageSettings = jSetting.Value as JObject;
-                var currentClassifications = new List<ClassificationSettings>();
-                var presets = new List<PresetSettings>();
+                var language = new LanguageSettings
+                {
+                    LanguageName = jSetting.Key,
+                    CurrentClassifications = new List<ClassificationSettings>(),
+                    Presets = new List<PresetSettings>()
+                };
 
+                var jLanguageSettings = jSetting.Value as JObject;
                 foreach (var languagePair in jLanguageSettings)
                 {
                     var classifications = new List<ClassificationSettings>();
@@ -78,13 +81,13 @@ namespace CoCo.Settings
                         }
                     }
 
-                    if (languagePair.Key == "current")
+                    if (languagePair.Key == CurrentClassificationsName)
                     {
-                        currentClassifications = classifications;
+                        language.CurrentClassifications = classifications;
                     }
                     else
                     {
-                        presets.Add(new PresetSettings
+                        language.Presets.Add(new PresetSettings
                         {
                             Name = languagePair.Key,
                             Classifications = classifications
@@ -92,13 +95,7 @@ namespace CoCo.Settings
                     }
                 }
 
-                var languageSettings = new LanguageSettings
-                {
-                    LanguageName = languageName,
-                    CurrentSettings = currentClassifications,
-                    Presettings = presets
-                };
-                languages.Add(languageSettings);
+                languages.Add(language);
             }
             return new Settings { Languages = languages };
         }

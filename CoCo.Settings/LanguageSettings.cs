@@ -8,8 +8,8 @@ namespace CoCo.Settings
     {
         public string LanguageName { get; set; }
 
-        public IEnumerable<ClassificationSettings> CurrentSettings { get; set; }
+        public ICollection<ClassificationSettings> CurrentClassifications { get; set; }
 
-        public IEnumerable<PresetSettings> Presettings { get; set; }
+        public ICollection<PresetSettings> Presets { get; set; }
     }
 }

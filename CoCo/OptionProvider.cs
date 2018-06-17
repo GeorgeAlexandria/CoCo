@@ -6,49 +6,51 @@ namespace CoCo
 {
     public class OptionProvider : IOptionProvider
     {
-        private Option _model;
+        private Option _option;
+
+        // TODO: It must be a path to CoCo folder at %AppLocal%
+        private const string settingsPath = @"C:\temp\555.config";
 
         public Option ReceiveOption()
         {
-            if (_model != null) return _model;
+            if (_option != null) return _option;
 
-            var settings = SettingsManager.LoadSettings(@"C:\temp\555.config");
-
+            var settings = SettingsManager.LoadSettings(settingsPath);
             FormattingService.SetFormatting(settings);
 
-            void Append(IEnumerable<ClassificationSettings> classifications, ICollection<Classification> appendedItems)
+            void Append(ICollection<ClassificationSettings> classificationsSettings, ICollection<Classification> classifications)
             {
-                foreach (var classification in classifications)
+                foreach (var classificationSettings in classificationsSettings)
                 {
-                    appendedItems.Add(classification.ToData());
+                    classifications.Add(classificationSettings.ToData());
                 }
             }
 
-            _model = new Option();
-            foreach (var language in settings.Languages)
+            _option = new Option();
+            foreach (var languageSettings in settings.Languages)
             {
-                var languageModel = new Language(language.LanguageName);
-                Append(language.CurrentSettings, languageModel.Classifications);
+                var language = new Language(languageSettings.LanguageName);
+                Append(languageSettings.CurrentClassifications, language.Classifications);
 
-                foreach (var preset in language.Presettings)
+                foreach (var presetSettings in languageSettings.Presets)
                 {
-                    var presetData = new Preset(preset.Name);
-                    Append(preset.Classifications, presetData.Classifications);
-                    languageModel.Presets.Add(presetData);
+                    var preset = new Preset(presetSettings.Name);
+                    Append(presetSettings.Classifications, preset.Classifications);
+                    language.Presets.Add(preset);
                 }
 
-                _model.Languages.Add(languageModel);
+                _option.Languages.Add(language);
             }
 
-            return _model;
+            return _option;
         }
 
         public void ReleaseOption(Option option)
         {
-            List<ClassificationSettings> ConvertClassifications(ICollection<Classification> classi)
+            List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {
-                var classificationSetings = new List<ClassificationSettings>();
-                foreach (var classification in classi)
+                var classificationSetings = new List<ClassificationSettings>(classifications.Count);
+                foreach (var classification in classifications)
                 {
                     classificationSetings.Add(classification.ToSettings());
                 }
@@ -57,34 +59,34 @@ namespace CoCo
 
             FormattingService.SetFormatting(option);
 
-            var languages = new List<LanguageSettings>();
+            var languagesSettings = new List<LanguageSettings>(option.Languages.Count);
             foreach (var language in option.Languages)
             {
-                var classifications = ConvertClassifications(language.Classifications);
+                var classificationsSettings = ToSettings(language.Classifications);
 
-                var presets = new List<PresetSettings>();
+                var presetsSettings = new List<PresetSettings>(language.Presets.Count);
                 foreach (var preset in language.Presets)
                 {
-                    presets.Add(new PresetSettings
+                    presetsSettings.Add(new PresetSettings
                     {
                         Name = preset.Name,
-                        Classifications = ConvertClassifications(preset.Classifications)
+                        Classifications = ToSettings(preset.Classifications)
                     });
                 }
 
-                languages.Add(new LanguageSettings
+                languagesSettings.Add(new LanguageSettings
                 {
                     LanguageName = language.Name,
-                    CurrentSettings = classifications,
-                    Presettings = presets
+                    CurrentClassifications = classificationsSettings,
+                    Presets = presetsSettings
                 });
             }
             var settings = new Settings.Settings
             {
-                Languages = languages
+                Languages = languagesSettings
             };
 
-            SettingsManager.SaveSettings(settings, @"C:\temp\555.config");
+            SettingsManager.SaveSettings(settings, settingsPath);
         }
     }
 }

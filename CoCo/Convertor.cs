@@ -16,17 +16,17 @@ namespace CoCo
                 IsEnabled = settings.IsEnabled,
             };
 
-        public static ClassificationSettings ToSettings(this Classification data) =>
+        public static ClassificationSettings ToSettings(this Classification classification) =>
             new ClassificationSettings
             {
-                Name = data.Name,
-                Background = data.Background,
-                DisplayName = data.DisplayName,
-                FontRenderingSize = data.FontRenderingSize,
-                Foreground = data.Foreground,
-                IsBold = data.IsBold,
-                IsEnabled = data.IsEnabled,
-                IsItalic = data.IsItalic
+                Name = classification.Name,
+                DisplayName = classification.DisplayName,
+                Background = classification.Background,
+                Foreground = classification.Foreground,
+                IsBold = classification.IsBold,
+                IsItalic = classification.IsItalic,
+                FontRenderingSize = classification.FontRenderingSize,
+                IsEnabled = classification.IsEnabled,
             };
     }
 }

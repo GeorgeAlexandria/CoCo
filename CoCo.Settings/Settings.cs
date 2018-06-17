@@ -4,6 +4,6 @@ namespace CoCo.Settings
 {
     public struct Settings
     {
-        public IEnumerable<LanguageSettings> Languages { get; set; }
+        public ICollection<LanguageSettings> Languages { get; set; }
     }
 }

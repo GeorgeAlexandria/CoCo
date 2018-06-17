@@ -14,19 +14,18 @@ namespace CoCo
             var classifications = ClassificationManager.Instance.GetClassifications();
             var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
 
-            var dictionary = new Dictionary<string, ClassificationSettings>();
-
+            var classificationsSettings = new Dictionary<string, ClassificationSettings>(23);
             foreach (var language in settings.Languages)
             {
-                foreach (var classification in language.CurrentSettings)
+                foreach (var classification in language.CurrentClassifications)
                 {
-                    dictionary.Add(classification.Name, classification);
+                    classificationsSettings.Add(classification.Name, classification);
                 }
             }
 
             foreach (var classificationType in classifications)
             {
-                if (dictionary.TryGetValue(classificationType.Classification, out var classificationSettings))
+                if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
                 {
                     var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
                     formatting = Apply(formatting, classificationSettings);
@@ -44,19 +43,18 @@ namespace CoCo
             var classifications = ClassificationManager.Instance.GetClassifications();
             var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
 
-            var dictionary = new Dictionary<string, Classification>();
-
+            var classificationsSettings = new Dictionary<string, Classification>(23);
             foreach (var language in option.Languages)
             {
                 foreach (var classification in language.Classifications)
                 {
-                    dictionary.Add(classification.Name, classification);
+                    classificationsSettings.Add(classification.Name, classification);
                 }
             }
 
             foreach (var classificationType in classifications)
             {
-                if (dictionary.TryGetValue(classificationType.Classification, out var classificationSettings))
+                if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
                 {
                     var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
                     formatting = Apply(formatting, classificationSettings);
@@ -84,39 +82,43 @@ namespace CoCo
             {
                 formatting = formatting.SetFontRenderingEmSize(settings.FontRenderingSize);
             }
-            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) || !backgroundBrush.Color.Equals(settings.Background))
+            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
+                !backgroundBrush.Color.Equals(settings.Background))
             {
                 formatting = formatting.SetBackgroundBrush(new SolidColorBrush(settings.Background));
             }
-            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) || !foregroundBrush.Color.Equals(settings.Foreground))
+            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
+                !foregroundBrush.Color.Equals(settings.Foreground))
             {
                 formatting = formatting.SetForegroundBrush(new SolidColorBrush(settings.Foreground));
             }
             return formatting;
         }
 
-        private static TextFormattingRunProperties Apply(TextFormattingRunProperties formatting, Classification model)
+        private static TextFormattingRunProperties Apply(TextFormattingRunProperties formatting, Classification classification)
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
-            if (formatting.Italic != model.IsItalic)
+            if (formatting.Italic != classification.IsItalic)
             {
-                formatting = formatting.SetItalic(model.IsItalic);
+                formatting = formatting.SetItalic(classification.IsItalic);
             }
-            if (formatting.Bold != model.IsBold)
+            if (formatting.Bold != classification.IsBold)
             {
-                formatting = formatting.SetBold(model.IsBold);
+                formatting = formatting.SetBold(classification.IsBold);
             }
-            if (formatting.FontRenderingEmSize != model.FontRenderingSize)
+            if (Math.Abs(formatting.FontRenderingEmSize - classification.FontRenderingSize) > 0.001)
             {
-                formatting = formatting.SetFontRenderingEmSize(model.FontRenderingSize);
+                formatting = formatting.SetFontRenderingEmSize(classification.FontRenderingSize);
             }
-            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) || !backgroundBrush.Color.Equals(model.Background))
+            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
+                !backgroundBrush.Color.Equals(classification.Background))
             {
-                formatting = formatting.SetBackgroundBrush(new SolidColorBrush(model.Background));
+                formatting = formatting.SetBackgroundBrush(new SolidColorBrush(classification.Background));
             }
-            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) || !foregroundBrush.Color.Equals(model.Background))
+            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
+                !foregroundBrush.Color.Equals(classification.Background))
             {
-                formatting = formatting.SetForegroundBrush(new SolidColorBrush(model.Foreground));
+                formatting = formatting.SetForegroundBrush(new SolidColorBrush(classification.Foreground));
             }
             return formatting;
         }
