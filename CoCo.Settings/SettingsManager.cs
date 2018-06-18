@@ -37,7 +37,17 @@ namespace CoCo.Settings
                 jSettings.Add(language.LanguageName, jLanguage);
             }
 
-            // TODO: handle a couple of exception
+            // TODO: this should be checked
+            var info = new FileInfo(path);
+            if (!info.Directory.Exists)
+            {
+                info.Directory.Create();
+            }
+            if (!info.Exists)
+            {
+                info.Create();
+            }
+
             using (var writer = new StreamWriter(path))
             using (var jsonWriter = new JsonTextWriter(writer))
             {
@@ -48,25 +58,38 @@ namespace CoCo.Settings
 
         public static Settings LoadSettings(string path)
         {
-            // TODO: handle a couple of exception
+            if (!File.Exists(path))
+            {
+                return new Settings { Languages = new List<LanguageSettings>() };
+            }
+
             JObject jSettings;
             using (var reader = File.OpenText(path))
             using (var jsonReader = new JsonTextReader(reader))
             {
-                jSettings = (JObject)JToken.ReadFrom(jsonReader);
+                try
+                {
+                    jSettings = (JObject)JToken.ReadFrom(jsonReader);
+                }
+                catch (JsonReaderException)
+                {
+                    return new Settings { Languages = new List<LanguageSettings>() };
+                }
             }
 
             var languages = new List<LanguageSettings>();
             foreach (var jSetting in jSettings)
             {
+                if (!(jSetting.Value is JObject jLanguageSettings)) continue;
+
                 var language = new LanguageSettings
                 {
+                    // TODO: must key exist?
                     LanguageName = jSetting.Key,
                     CurrentClassifications = new List<ClassificationSettings>(),
                     Presets = new List<PresetSettings>()
                 };
 
-                var jLanguageSettings = jSetting.Value as JObject;
                 foreach (var languagePair in jLanguageSettings)
                 {
                     var classifications = new List<ClassificationSettings>();
@@ -74,9 +97,9 @@ namespace CoCo.Settings
                     {
                         foreach (var item in jClassifications)
                         {
-                            if (item is JObject jClassification)
+                            if (item is JObject jClassification && TryParseClassification(jClassification, out var classification))
                             {
-                                classifications.Add(ParseClassification(jClassification));
+                                classifications.Add(classification);
                             }
                         }
                     }
@@ -100,21 +123,23 @@ namespace CoCo.Settings
             return new Settings { Languages = languages };
         }
 
-        private static ClassificationSettings ParseClassification(JObject jClassification)
+        private static bool TryParseClassification(JObject jClassification, out ClassificationSettings classification)
         {
-            // TODO: if something would not be presented – set the default value
-            Color color;
-            var classification = new ClassificationSettings();
-            if (jClassification[nameof(ClassificationSettings.Name)] is JValue jName &&
-                jName.Value is string name)
+            if (!(jClassification[nameof(ClassificationSettings.Name)] is JValue jValue) ||
+                !(jValue.Value is string name))
             {
-                classification.Name = name;
+                classification = default(ClassificationSettings);
+                return false;
             }
-            if (jClassification[nameof(ClassificationSettings.Name)] is JValue jDisplayName &&
+
+            classification = new ClassificationSettings { Name = name };
+            if (jClassification[nameof(ClassificationSettings.DisplayName)] is JValue jDisplayName &&
                 jDisplayName.Value is string displayName)
             {
                 classification.DisplayName = displayName;
             }
+
+            Color color;
             if (jClassification[nameof(ClassificationSettings.Background)] is JArray background &&
                 TryParseColor(background, out color))
             {
@@ -145,7 +170,7 @@ namespace CoCo.Settings
             {
                 classification.IsEnabled = isEnabled;
             }
-            return classification;
+            return true;
         }
 
         private static bool TryParseColor(JArray jArray, out Color color)
@@ -176,12 +201,12 @@ namespace CoCo.Settings
             {
                 { nameof(classification.Name), new JValue(classification.Name) },
                 { nameof(classification.DisplayName), new JValue(classification.DisplayName) },
-                { nameof(classification.Background), ToJObject(classification.Background) },
-                { nameof(classification.Foreground), ToJObject(classification.Foreground) },
-                { nameof(classification.IsBold), new JValue(classification.IsBold) },
-                { nameof(classification.IsItalic), new JValue(classification.IsItalic) },
-                { nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize) },
-                { nameof(classification.IsEnabled), new JValue(classification.IsEnabled) }
+                { nameof(classification.Background), ToJObject(classification.Background.Value) },
+                { nameof(classification.Foreground), ToJObject(classification.Foreground.Value) },
+                { nameof(classification.IsBold), new JValue(classification.IsBold.Value) },
+                { nameof(classification.IsItalic), new JValue(classification.IsItalic.Value) },
+                { nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value) },
+                { nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value) }
             };
         }
     }
