@@ -19,21 +19,26 @@ namespace CoCo
             {
                 foreach (var classification in language.CurrentClassifications)
                 {
-                    classificationsSettings.Add(classification.Name, classification);
+                    if (!classificationsSettings.TryGetValue(classification.Name, out var t))
+                    {
+                        classificationsSettings.Add(classification.Name, classification);
+                    }
                 }
             }
 
+            var defaultFormatting =
+                classificationFormatMap.GetExplicitTextProperties(ClassificationManager.Instance.DefaultClassification);
             foreach (var classificationType in classifications)
             {
                 if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
                 {
                     var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                    formatting = Apply(formatting, classificationSettings);
+                    formatting = Apply(formatting, defaultFormatting, classificationSettings);
                     classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
                 }
                 else
                 {
-                    // use default values
+                    classificationFormatMap.SetExplicitTextProperties(classificationType, defaultFormatting);
                 }
             }
         }
@@ -67,31 +72,54 @@ namespace CoCo
             }
         }
 
-        private static TextFormattingRunProperties Apply(TextFormattingRunProperties formatting, ClassificationSettings settings)
+        private static TextFormattingRunProperties Apply(
+            TextFormattingRunProperties formatting, TextFormattingRunProperties defaultFormatting, ClassificationSettings settings)
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
-            if (formatting.Italic != settings.IsItalic)
+            var isItalic = settings.IsItalic ?? defaultFormatting.Italic;
+            if (formatting.Italic != isItalic)
             {
-                formatting = formatting.SetItalic(settings.IsItalic);
+                formatting = formatting.SetItalic(isItalic);
             }
-            if (formatting.Bold != settings.IsBold)
+
+            var isBold = settings.IsBold ?? defaultFormatting.Bold;
+            if (formatting.Bold != isBold)
             {
-                formatting = formatting.SetBold(settings.IsBold);
+                formatting = formatting.SetBold(isBold);
             }
-            if (Math.Abs(formatting.FontRenderingEmSize - settings.FontRenderingSize) > 0.001)
+
+            var fontRenderingSize = settings.FontRenderingSize ?? defaultFormatting.FontRenderingEmSize;
+            if (Math.Abs(formatting.FontRenderingEmSize - fontRenderingSize) > 0.001)
             {
-                formatting = formatting.SetFontRenderingEmSize(settings.FontRenderingSize);
+                formatting = formatting.SetFontRenderingEmSize(fontRenderingSize);
             }
-            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
-                !backgroundBrush.Color.Equals(settings.Background))
+
+            if (settings.Background.HasValue)
             {
-                formatting = formatting.SetBackgroundBrush(new SolidColorBrush(settings.Background));
+                if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
+                    !backgroundBrush.Color.Equals(settings.Background.Value))
+                {
+                    formatting = formatting.SetBackgroundBrush(new SolidColorBrush(settings.Background.Value));
+                }
             }
-            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
-                !foregroundBrush.Color.Equals(settings.Foreground))
+            else
             {
-                formatting = formatting.SetForegroundBrush(new SolidColorBrush(settings.Foreground));
+                formatting = formatting.SetBackgroundBrush(defaultFormatting.BackgroundBrush);
             }
+
+            if (settings.Foreground.HasValue)
+            {
+                if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
+                    !foregroundBrush.Color.Equals(settings.Foreground.Value))
+                {
+                    formatting = formatting.SetForegroundBrush(new SolidColorBrush(settings.Foreground.Value));
+                }
+            }
+            else
+            {
+                formatting = formatting.SetForegroundBrush(defaultFormatting.ForegroundBrush);
+            }
+
             return formatting;
         }
 

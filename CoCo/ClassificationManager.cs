@@ -47,6 +47,9 @@ namespace CoCo
 
         public IClassificationTypeRegistryService RegistryService => _registryService;
 
+        public IClassificationType DefaultClassification =>
+            RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
+
         public List<IClassificationType> GetClassifications()
         {
             if (_classifications != null) return _classifications;
