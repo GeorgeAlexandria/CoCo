@@ -11,7 +11,7 @@ namespace CoCo
 {
     public sealed class ClassificationManager
     {
-        private static List<IClassificationType> _classifications;
+        private static Dictionary<string, List<IClassificationType>> _classifications;
 
         [Import]
         private IClassificationTypeRegistryService _registryService;
@@ -50,15 +50,19 @@ namespace CoCo
         public IClassificationType DefaultClassification =>
             RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
 
-        public List<IClassificationType> GetClassifications()
+        /// <returns>
+        /// Classifications are grouped by language
+        /// </returns>
+        public Dictionary<string, List<IClassificationType>> GetClassifications()
         {
             if (_classifications != null) return _classifications;
 
-            _classifications = new List<IClassificationType>();
+            _classifications = new Dictionary<string, List<IClassificationType>>();
 
             var formatMap = _formatMapService.GetClassificationFormatMap(category: "text");
             var identifierPosition = GetIdentifierPosition(_registryService, formatMap);
 
+            var languageClassifications = new List<IClassificationType>();
             foreach (var name in Names.All)
             {
                 var classificationType = _registryService.GetClassificationType(name);
@@ -84,9 +88,10 @@ namespace CoCo
                     }
                 }
 
-                _classifications.Add(classificationType);
+                languageClassifications.Add(classificationType);
             }
 
+            _classifications.Add("CSharp", languageClassifications);
             return _classifications;
         }
 

@@ -14,31 +14,65 @@ namespace CoCo
             var classifications = ClassificationManager.Instance.GetClassifications();
             var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
 
-            var classificationsSettings = new Dictionary<string, ClassificationSettings>(23);
+            var classificationsSettings = new Dictionary<string, Dictionary<string, ClassificationSettings>>();
             foreach (var language in settings.Languages)
             {
-                foreach (var classification in language.CurrentClassifications)
+                if (!classifications.ContainsKey(language.LanguageName)) continue;
+
+                Dictionary<string, ClassificationSettings> languageClassifications;
+                if (classificationsSettings.TryGetValue(language.LanguageName, out languageClassifications))
                 {
-                    if (!classificationsSettings.TryGetValue(classification.Name, out var t))
+                    foreach (var classification in language.CurrentClassifications)
                     {
-                        classificationsSettings.Add(classification.Name, classification);
+                        if (!languageClassifications.ContainsKey(classification.Name))
+                        {
+                            languageClassifications.Add(classification.Name, classification);
+                        }
                     }
+                }
+                else
+                {
+                    languageClassifications = new Dictionary<string, ClassificationSettings>(23);
+                    foreach (var classification in language.CurrentClassifications)
+                    {
+                        if (!languageClassifications.ContainsKey(classification.Name))
+                        {
+                            languageClassifications.Add(classification.Name, classification);
+                        }
+                    }
+                    classificationsSettings.Add(language.LanguageName, languageClassifications);
                 }
             }
 
             var defaultFormatting =
                 classificationFormatMap.GetExplicitTextProperties(ClassificationManager.Instance.DefaultClassification);
-            foreach (var classificationType in classifications)
+            foreach (var item in classifications)
             {
-                if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
+                var languageName = item.Key;
+                var languageClassifications = item.Value;
+
+                if (classificationsSettings.TryGetValue(languageName, out var languageClassificationSettings))
                 {
-                    var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                    formatting = Apply(formatting, defaultFormatting, classificationSettings);
-                    classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
+                    foreach (var languageClassification in languageClassifications)
+                    {
+                        if (languageClassificationSettings.TryGetValue(languageClassification.Classification, out var classificationSettings))
+                        {
+                            var formatting = classificationFormatMap.GetExplicitTextProperties(languageClassification);
+                            formatting = Apply(formatting, defaultFormatting, classificationSettings);
+                            classificationFormatMap.SetExplicitTextProperties(languageClassification, formatting);
+                        }
+                        else
+                        {
+                            classificationFormatMap.SetExplicitTextProperties(languageClassification, defaultFormatting);
+                        }
+                    }
                 }
                 else
                 {
-                    classificationFormatMap.SetExplicitTextProperties(classificationType, defaultFormatting);
+                    foreach (var languageClassification in languageClassifications)
+                    {
+                        classificationFormatMap.SetExplicitTextProperties(languageClassification, defaultFormatting);
+                    }
                 }
             }
         }
@@ -57,17 +91,20 @@ namespace CoCo
                 }
             }
 
-            foreach (var classificationType in classifications)
+            foreach (var languageClassifications in classifications)
             {
-                if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
+                foreach (var classificationType in languageClassifications.Value)
                 {
-                    var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                    formatting = Apply(formatting, classificationSettings);
-                    classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
-                }
-                else
-                {
-                    // use default values
+                    if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
+                    {
+                        var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
+                        formatting = Apply(formatting, classificationSettings);
+                        classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
+                    }
+                    else
+                    {
+                        // use default values
+                    }
                 }
             }
         }
