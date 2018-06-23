@@ -18,17 +18,14 @@ namespace CoCo
         /// <returns></returns>
         public static Settings.Settings SetFormatting(Settings.Settings settings)
         {
-            var classifications = ClassificationManager.Instance.GetClassifications();
-            var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            var classificationManager = ClassificationManager.Instance;
 
-            // TODO: add default CoCo resets by languages
-            var presets = new List<PresetSettings>();
+            var classifications = classificationManager.GetClassifications();
+            var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
+            var defaultFormatting = classificationFormatMap.GetExplicitTextProperties(classificationManager.DefaultClassification);
+            var presets = PresetService.GetDefaultPresets(defaultFormatting);
 
             var classificationsMap = new Dictionary<string, IClassificationType>(23);
-
-            var defaultFormatting =
-                classificationFormatMap.GetExplicitTextProperties(ClassificationManager.Instance.DefaultClassification);
-
             var settingsCopy = new Settings.Settings { Languages = new List<LanguageSettings>() };
             foreach (var pair in classifications)
             {
@@ -38,7 +35,12 @@ namespace CoCo
                 {
                     classificationsMap.Add(item.Classification, item);
                 }
-                var presetNames = presets.ToDictionary(x => x.Name);
+
+                if (!presets.TryGetValue(language.LanguageName, out var languagePresets))
+                {
+                    languagePresets = new List<PresetSettings>();
+                }
+                var presetNames = languagePresets.ToDictionary(x => x.Name);
 
                 var isLanguageExists = false;
                 foreach (var languageSettings in settings.Languages)
@@ -64,7 +66,7 @@ namespace CoCo
                         break;
                     }
                 }
-                foreach (var preset in presets)
+                foreach (var preset in languagePresets)
                 {
                     language.Presets.Add(new PresetSettings
                     {
@@ -121,7 +123,7 @@ namespace CoCo
                 }
                 if (isClassificationExists) continue;
 
-                classifications.Add(CreateClassification(name, defaultFormatting));
+                classifications.Add(defaultFormatting.ToSettings(name));
             }
             return classifications;
         }
@@ -158,24 +160,6 @@ namespace CoCo
             }
             return classificationSettings;
         }
-
-        /// <summary>
-        /// Creates classification from default values
-        /// </summary>
-        private static ClassificationSettings CreateClassification(
-            string classificationName, TextFormattingRunProperties defaultFormatting) => new ClassificationSettings
-            {
-                Name = classificationName,
-                DisplayName = classificationName,
-                Background = defaultFormatting.BackgroundBrush.GetColor(),
-                Foreground = defaultFormatting.ForegroundBrush.GetColor(),
-                FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize,
-                IsBold = defaultFormatting.Bold,
-                IsItalic = defaultFormatting.Italic,
-                IsEnabled = true,
-            };
-
-        private static Color GetColor(this Brush brush) => brush is SolidColorBrush colorBrush ? colorBrush.Color : Colors.Black;
 
         public static void SetFormatting(Option option)
         {
