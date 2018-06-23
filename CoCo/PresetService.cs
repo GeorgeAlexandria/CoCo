@@ -8,6 +8,9 @@ namespace CoCo
 {
     public static class PresetService
     {
+        /// <summary>
+        /// Returns the default CoCo settings that are grouped by languages
+        /// </summary>
         public static Dictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
         {
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)

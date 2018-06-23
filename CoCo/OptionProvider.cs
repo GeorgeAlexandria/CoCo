@@ -16,13 +16,13 @@ namespace CoCo
             if (_option != null) return _option;
 
             var settings = SettingsManager.LoadSettings(settingsPath);
-            FormattingService.SetFormatting(settings);
+            settings = FormattingService.SetFormatting(settings);
 
             void Append(ICollection<ClassificationSettings> classificationsSettings, ICollection<Classification> classifications)
             {
                 foreach (var classificationSettings in classificationsSettings)
                 {
-                    classifications.Add(classificationSettings.ToData());
+                    classifications.Add(ToClassification(classificationSettings));
                 }
             }
 
@@ -52,7 +52,7 @@ namespace CoCo
                 var classificationSetings = new List<ClassificationSettings>(classifications.Count);
                 foreach (var classification in classifications)
                 {
-                    classificationSetings.Add(classification.ToSettings());
+                    classificationSetings.Add(OptionProvider.ToSettings(classification));
                 }
                 return classificationSetings;
             }
@@ -88,5 +88,29 @@ namespace CoCo
 
             SettingsManager.SaveSettings(settings, settingsPath);
         }
+
+        private static ClassificationSettings ToSettings(Classification classification) =>
+            new ClassificationSettings
+            {
+                Name = classification.Name,
+                DisplayName = classification.DisplayName,
+                Background = classification.Background,
+                Foreground = classification.Foreground,
+                IsBold = classification.IsBold,
+                IsItalic = classification.IsItalic,
+                FontRenderingSize = classification.FontRenderingSize,
+                IsEnabled = classification.IsEnabled,
+            };
+
+        public static Classification ToClassification(ClassificationSettings settings) =>
+            new Classification(settings.Name, settings.DisplayName)
+            {
+                Background = settings.Background,
+                Foreground = settings.Foreground,
+                IsBold = settings.IsBold,
+                IsItalic = settings.IsItalic,
+                FontRenderingSize = settings.FontRenderingSize,
+                IsEnabled = settings.IsEnabled,
+            };
     }
 }

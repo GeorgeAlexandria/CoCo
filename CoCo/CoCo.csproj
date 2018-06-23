@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClassificationManager.cs" />
-    <Compile Include="Convertor.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
     <Compile Include="OptionProvider.cs" />
