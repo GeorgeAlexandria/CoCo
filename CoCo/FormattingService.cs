@@ -1,81 +1,181 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 using CoCo.Settings;
 using CoCo.UI.Data;
+using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
 namespace CoCo
 {
     public static class FormattingService
     {
-        public static void SetFormatting(Settings.Settings settings)
+        /// <summary>
+        /// Returns normalized settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        public static Settings.Settings SetFormatting(Settings.Settings settings)
         {
             var classifications = ClassificationManager.Instance.GetClassifications();
             var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
 
-            var classificationsSettings = new Dictionary<string, Dictionary<string, ClassificationSettings>>();
-            foreach (var language in settings.Languages)
-            {
-                if (!classifications.ContainsKey(language.LanguageName)) continue;
+            // TODO: add default CoCo resets by languages
+            var presets = new List<PresetSettings>();
 
-                Dictionary<string, ClassificationSettings> languageClassifications;
-                if (classificationsSettings.TryGetValue(language.LanguageName, out languageClassifications))
-                {
-                    foreach (var classification in language.CurrentClassifications)
-                    {
-                        if (!languageClassifications.ContainsKey(classification.Name))
-                        {
-                            languageClassifications.Add(classification.Name, classification);
-                        }
-                    }
-                }
-                else
-                {
-                    languageClassifications = new Dictionary<string, ClassificationSettings>(23);
-                    foreach (var classification in language.CurrentClassifications)
-                    {
-                        if (!languageClassifications.ContainsKey(classification.Name))
-                        {
-                            languageClassifications.Add(classification.Name, classification);
-                        }
-                    }
-                    classificationsSettings.Add(language.LanguageName, languageClassifications);
-                }
-            }
+            var classificationsMap = new Dictionary<string, IClassificationType>(23);
 
             var defaultFormatting =
                 classificationFormatMap.GetExplicitTextProperties(ClassificationManager.Instance.DefaultClassification);
-            foreach (var item in classifications)
-            {
-                var languageName = item.Key;
-                var languageClassifications = item.Value;
 
-                if (classificationsSettings.TryGetValue(languageName, out var languageClassificationSettings))
+            var settingsCopy = new Settings.Settings { Languages = new List<LanguageSettings>() };
+            foreach (var pair in classifications)
+            {
+                var language = new LanguageSettings { LanguageName = pair.Key, };
+
+                foreach (var item in pair.Value)
                 {
-                    foreach (var languageClassification in languageClassifications)
+                    classificationsMap.Add(item.Classification, item);
+                }
+                var presetNames = presets.ToDictionary(x => x.Name);
+
+                var isLanguageExists = false;
+                foreach (var languageSettings in settings.Languages)
+                {
+                    if (languageSettings.LanguageName.Equals(language.LanguageName))
                     {
-                        if (languageClassificationSettings.TryGetValue(languageClassification.Classification, out var classificationSettings))
+                        isLanguageExists = true;
+                        language.CurrentClassifications =
+                            PrepareClassifications(classificationsMap.Keys, languageSettings.CurrentClassifications, defaultFormatting);
+                        language.Presets = new List<PresetSettings>();
+
+                        foreach (var presetSettings in languageSettings.Presets)
                         {
-                            var formatting = classificationFormatMap.GetExplicitTextProperties(languageClassification);
-                            formatting = Apply(formatting, defaultFormatting, classificationSettings);
-                            classificationFormatMap.SetExplicitTextProperties(languageClassification, formatting);
+                            if (presetNames.ContainsKey(presetSettings.Name)) continue;
+
+                            var presetCopy = new PresetSettings
+                            {
+                                Name = presetSettings.Name,
+                                Classifications = PrepareClassifications(classificationsMap.Keys, presetSettings.Classifications, defaultFormatting)
+                            };
+                            language.Presets.Add(presetCopy);
                         }
-                        else
-                        {
-                            classificationFormatMap.SetExplicitTextProperties(languageClassification, defaultFormatting);
-                        }
+                        break;
                     }
                 }
-                else
+                foreach (var preset in presets)
                 {
-                    foreach (var languageClassification in languageClassifications)
+                    language.Presets.Add(new PresetSettings
                     {
-                        classificationFormatMap.SetExplicitTextProperties(languageClassification, defaultFormatting);
+                        Name = preset.Name,
+                        Classifications = PrepareClassifications(classificationsMap.Keys, preset.Classifications, defaultFormatting)
+                    });
+                }
+                if (!isLanguageExists)
+                {
+                    language.CurrentClassifications = PrepareClassifications(classificationsMap.Keys, Array.Empty<ClassificationSettings>(), defaultFormatting);
+                }
+                settingsCopy.Languages.Add(language);
+            }
+
+            foreach (var language in settingsCopy.Languages)
+            {
+                // TODO: do need to write in a log if the classification after preparing still not exists?
+                if (!classifications.TryGetValue(language.LanguageName, out var t)) continue;
+                foreach (var classification in language.CurrentClassifications)
+                {
+                    if (classificationsMap.TryGetValue(classification.Name, out var classificationType))
+                    {
+                        var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
+                        formatting = Apply(formatting, defaultFormatting, classification);
+                        classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
                     }
                 }
             }
+
+            return settingsCopy;
         }
+
+        /// <summary>
+        /// Apply the default values for <paramref name="defaultFormatting"/> to classifications fields
+        /// if classification doesn't exist in <paramref name="classificationsSettings"/>  or if it values don't exist
+        /// </summary>
+        private static List<ClassificationSettings> PrepareClassifications(
+            IEnumerable<string> classificationNames,
+            ICollection<ClassificationSettings> classificationsSettings,
+            TextFormattingRunProperties defaultFormatting)
+        {
+            var classifications = new List<ClassificationSettings>();
+            foreach (var name in classificationNames)
+            {
+                var isClassificationExists = false;
+                foreach (var classificationSettings in classificationsSettings)
+                {
+                    if (classificationSettings.Name.Equals(name))
+                    {
+                        isClassificationExists = true;
+                        classifications.Add(PrepareClassification(classificationSettings, defaultFormatting));
+                        break;
+                    }
+                }
+                if (isClassificationExists) continue;
+
+                classifications.Add(CreateClassification(name, defaultFormatting));
+            }
+            return classifications;
+        }
+
+        /// <summary>
+        /// Apply default values from <paramref name="defaultFormatting"/> to classification fields that don't exist.
+        /// </summary>
+        private static ClassificationSettings PrepareClassification(
+            ClassificationSettings classificationSettings, TextFormattingRunProperties defaultFormatting)
+        {
+            if (!classificationSettings.Background.HasValue)
+            {
+                classificationSettings.Background = defaultFormatting.BackgroundBrush.GetColor();
+            }
+            if (!classificationSettings.Foreground.HasValue)
+            {
+                classificationSettings.Foreground = defaultFormatting.ForegroundBrush.GetColor();
+            }
+            if (!classificationSettings.IsBold.HasValue)
+            {
+                classificationSettings.IsBold = defaultFormatting.Bold;
+            }
+            if (!classificationSettings.IsItalic.HasValue)
+            {
+                classificationSettings.IsItalic = defaultFormatting.Italic;
+            }
+            if (!classificationSettings.FontRenderingSize.HasValue)
+            {
+                classificationSettings.FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize;
+            }
+            if (!classificationSettings.IsEnabled.HasValue)
+            {
+                classificationSettings.IsEnabled = true;
+            }
+            return classificationSettings;
+        }
+
+        /// <summary>
+        /// Creates classification from default values
+        /// </summary>
+        private static ClassificationSettings CreateClassification(
+            string classificationName, TextFormattingRunProperties defaultFormatting) => new ClassificationSettings
+            {
+                Name = classificationName,
+                DisplayName = classificationName,
+                Background = defaultFormatting.BackgroundBrush.GetColor(),
+                Foreground = defaultFormatting.ForegroundBrush.GetColor(),
+                FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize,
+                IsBold = defaultFormatting.Bold,
+                IsItalic = defaultFormatting.Italic,
+                IsEnabled = true,
+            };
+
+        private static Color GetColor(this Brush brush) => brush is SolidColorBrush colorBrush ? colorBrush.Color : Colors.Black;
 
         public static void SetFormatting(Option option)
         {
