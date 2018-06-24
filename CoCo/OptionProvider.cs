@@ -105,12 +105,12 @@ namespace CoCo
         public static Classification ToClassification(ClassificationSettings settings) =>
             new Classification(settings.Name, settings.DisplayName)
             {
-                Background = settings.Background,
-                Foreground = settings.Foreground,
-                IsBold = settings.IsBold,
-                IsItalic = settings.IsItalic,
-                FontRenderingSize = settings.FontRenderingSize,
-                IsEnabled = settings.IsEnabled,
+                Background = settings.Background.Value,
+                Foreground = settings.Foreground.Value,
+                IsBold = settings.IsBold.Value,
+                IsItalic = settings.IsItalic.Value,
+                FontRenderingSize = settings.FontRenderingSize.Value,
+                IsEnabled = settings.IsEnabled.Value,
             };
     }
 }

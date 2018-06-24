@@ -43,12 +43,8 @@ namespace CoCo.Settings
             {
                 info.Directory.Create();
             }
-            if (!info.Exists)
-            {
-                info.Create();
-            }
 
-            using (var writer = new StreamWriter(path))
+            using (var writer =  !info.Exists ? info.CreateText() : new StreamWriter(path))
             using (var jsonWriter = new JsonTextWriter(writer))
             {
                 jsonWriter.Formatting = Formatting.Indented;

@@ -29,6 +29,7 @@ namespace CoCo
             foreach (var pair in classifications)
             {
                 var language = new LanguageSettings { LanguageName = pair.Key, };
+                language.Presets = new List<PresetSettings>();
 
                 foreach (var item in pair.Value)
                 {
@@ -50,7 +51,6 @@ namespace CoCo
                         isLanguageExists = true;
                         language.CurrentClassifications =
                             PatchClassifications(classificationsMap.Keys, languageSettings.CurrentClassifications, defaultFormatting);
-                        language.Presets = new List<PresetSettings>();
 
                         foreach (var presetSettings in languageSettings.Presets)
                         {
