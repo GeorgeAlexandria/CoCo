@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using CoCo.Settings;
 using CoCo.UI.Data;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -21,7 +22,8 @@ namespace CoCo
 
             var classifications = classificationManager.GetClassifications();
             var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
-            var defaultFormatting = classificationFormatMap.GetExplicitTextProperties(classificationManager.DefaultClassification);
+            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, classificationManager.DefaultClassification);
+
             var presets = PresetService.GetDefaultPresets(defaultFormatting);
 
             var classificationsMap = new Dictionary<string, IClassificationType>(23);
@@ -275,6 +277,34 @@ namespace CoCo
                 formatting = formatting.SetForegroundBrush(new SolidColorBrush(classification.Foreground));
             }
             return formatting;
+        }
+
+        private static TextFormattingRunProperties GetDefaultFormatting(IClassificationFormatMap classificationFormatMap, IClassificationType defaultClassification)
+        {
+            var defaultFormatting = classificationFormatMap.GetExplicitTextProperties(defaultClassification);
+
+            // NOTE: Should use the default colors of all formattings if default formatting doesn't have explicitly set values
+            if (defaultFormatting.BackgroundBrushEmpty)
+            {
+                if (!classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty)
+                {
+                    defaultFormatting = defaultFormatting.SetBackgroundBrush(classificationFormatMap.DefaultTextProperties.BackgroundBrush);
+                }
+                else
+                {
+                    // NOTE: Background is not set => use background from theme
+                    var collor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
+                    var convertedCollor = Color.FromArgb(collor.A, collor.R, collor.G, collor.B);
+                    defaultFormatting = defaultFormatting.SetBackground(convertedCollor);
+                }
+            }
+            if (defaultFormatting.ForegroundBrushEmpty)
+            {
+                // NOTE: Foreground always is set, just look at
+                // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
+                defaultFormatting = defaultFormatting.SetForegroundBrush(classificationFormatMap.DefaultTextProperties.ForegroundBrush);
+            }
+            return defaultFormatting;
         }
     }
 }
