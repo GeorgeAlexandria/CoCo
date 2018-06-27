@@ -74,7 +74,7 @@
             <ListView.View>
                <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeader}">
                   <GridViewColumn>
-                     <GridViewColumnHeader HorizontalContentAlignment="Left">
+                     <GridViewColumnHeader MinWidth="200" HorizontalContentAlignment="Left">
                         <TextBlock
                            Margin="6,0,0,0"
                            Text="Name"
@@ -108,7 +108,7 @@
          </ListView>
          <StackPanel
             Grid.Column="1"
-            MinWidth="260"
+            MinWidth="270"
             DataContext="{Binding ElementName=listView, Path=SelectedItem}">
             <StackPanel
                Width="Auto"
@@ -126,7 +126,7 @@
                   VerticalContentAlignment="Center"
                   MaxLength="3"
                   Style="{StaticResource textBoxFlatStyle}"
-                  Text="{Binding Size}"
+                  Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
                   TextAlignment="Left" />
             </StackPanel>
             <StackPanel
@@ -140,19 +140,23 @@
                   FontSize="12"
                   Style="{StaticResource labelStyle}" />
                <Border
-                  Width="100"
+                  Width="110"
                   HorizontalAlignment="Left"
                   BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1,1,1,1">
                   <StackPanel Background="White" Orientation="Horizontal">
-                     <Rectangle
+                     <Border
                         Width="20"
                         Height="12"
-                        Margin="5,0,0,0">
-                        <Rectangle.Fill>
-                           <SolidColorBrush Color="{Binding Foreground}" />
-                        </Rectangle.Fill>
-                     </Rectangle>
+                        Margin="5,0,0,0"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1.2">
+                        <Rectangle>
+                           <Rectangle.Fill>
+                              <SolidColorBrush Color="{Binding Foreground}" />
+                           </Rectangle.Fill>
+                        </Rectangle>
+                     </Border>
                      <TextBox
                         Margin="5,0,0,0"
                         HorizontalAlignment="Stretch"
@@ -183,19 +187,23 @@
                   FontSize="12"
                   Style="{StaticResource labelStyle}" />
                <Border
-                  Width="100"
+                  Width="110"
                   HorizontalAlignment="Left"
                   BorderBrush="{StaticResource SoftBlue}"
                   BorderThickness="1,1,1,1">
                   <StackPanel Background="White" Orientation="Horizontal">
-                     <Rectangle
+                     <Border
                         Width="20"
                         Height="12"
-                        Margin="5,0,0,0">
-                        <Rectangle.Fill>
-                           <SolidColorBrush Color="{Binding Background}" />
-                        </Rectangle.Fill>
-                     </Rectangle>
+                        Margin="5,0,0,0"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1.2">
+                        <Rectangle>
+                           <Rectangle.Fill>
+                              <SolidColorBrush Color="{Binding Background}" />
+                           </Rectangle.Fill>
+                        </Rectangle>
+                     </Border>
                      <TextBox
                         Margin="5,0,0,0"
                         HorizontalAlignment="Stretch"
