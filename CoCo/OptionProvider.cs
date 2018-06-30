@@ -6,15 +6,11 @@ namespace CoCo
 {
     public class OptionProvider
     {
-        private static Option _option;
-
         // TODO: It must be a path to CoCo folder at %AppLocal%
         private const string settingsPath = @"C:\temp\555.config";
 
         public static Option ReceiveOption()
         {
-            if (_option != null) return _option;
-
             var settings = SettingsManager.LoadSettings(settingsPath);
             settings = FormattingService.SetFormatting(settings);
 
@@ -26,7 +22,7 @@ namespace CoCo
                 }
             }
 
-            _option = new Option();
+            var option = new Option();
             foreach (var languageSettings in settings.Languages)
             {
                 var language = new Language(languageSettings.LanguageName);
@@ -39,10 +35,10 @@ namespace CoCo
                     language.Presets.Add(preset);
                 }
 
-                _option.Languages.Add(language);
+                option.Languages.Add(language);
             }
 
-            return _option;
+            return option;
         }
 
         public static void ReleaseOption(Option option)
