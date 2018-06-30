@@ -5,13 +5,8 @@ namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
-        private readonly IOptionProvider _provider;
-
-        public OptionViewModel(IOptionProvider provider)
+        public OptionViewModel(Option option)
         {
-            _provider = provider;
-            var option = provider.ReceiveOption();
-
             // TODO: it will invoke one event at invocation of clear and by one event per added item
             // Write custom BulkObservableCollection to avoid so many events
             Languages.Clear();
@@ -38,14 +33,14 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedLanguage, value);
         }
 
-        public void SaveOption()
+        public Option ExtractData()
         {
             var option = new Option();
             foreach (var languageViewModel in Languages)
             {
                 option.Languages.Add(languageViewModel.ExtractData());
             }
-            _provider.ReleaseOption(option);
+            return option;
         }
     }
 }

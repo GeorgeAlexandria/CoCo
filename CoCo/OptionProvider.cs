@@ -4,14 +4,14 @@ using CoCo.UI.Data;
 
 namespace CoCo
 {
-    public class OptionProvider : IOptionProvider
+    public class OptionProvider
     {
-        private Option _option;
+        private static Option _option;
 
         // TODO: It must be a path to CoCo folder at %AppLocal%
         private const string settingsPath = @"C:\temp\555.config";
 
-        public Option ReceiveOption()
+        public static Option ReceiveOption()
         {
             if (_option != null) return _option;
 
@@ -45,7 +45,7 @@ namespace CoCo
             return _option;
         }
 
-        public void ReleaseOption(Option option)
+        public static void ReleaseOption(Option option)
         {
             List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {

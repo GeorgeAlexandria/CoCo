@@ -60,7 +60,6 @@
     <Compile Include="ViewModels\ClassificationFormatViewModel.cs" />
     <Compile Include="ViewModels\DelegateCommand.cs" />
     <Compile Include="Data\Classification.cs" />
-    <Compile Include="Data\IOptionProvider.cs" />
     <Compile Include="ViewModels\IClassificationProvider.cs" />
     <Compile Include="ViewModels\LanguageViewModel.cs" />
     <Compile Include="ViewModels\OptionViewModel.cs" />
