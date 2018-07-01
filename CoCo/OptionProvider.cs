@@ -4,7 +4,7 @@ using CoCo.UI.Data;
 
 namespace CoCo
 {
-    public class OptionProvider
+    public static class OptionProvider
     {
         // TODO: It must be a path to CoCo folder at %AppLocal%
         private const string settingsPath = @"C:\temp\555.config";

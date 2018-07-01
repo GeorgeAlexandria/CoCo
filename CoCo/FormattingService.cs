@@ -91,7 +91,7 @@ namespace CoCo
             foreach (var language in settingsCopy.Languages)
             {
                 // TODO: do need to write in a log if the classification after preparing still not exists?
-                if (!classifications.TryGetValue(language.LanguageName, out var t)) continue;
+                if (!classifications.ContainsKey(language.LanguageName)) continue;
                 foreach (var classification in language.CurrentClassifications)
                 {
                     if (classificationsMap.TryGetValue(classification.Name, out var classificationType))
@@ -156,7 +156,7 @@ namespace CoCo
                     if (classificationSettings.Name.Equals(name))
                     {
                         isClassificationExists = true;
-                        classifications.Add(PrepareClassification(classificationSettings, defaultFormatting));
+                        classifications.Add(PatchClassification(classificationSettings, defaultFormatting));
                         break;
                     }
                 }
@@ -170,7 +170,7 @@ namespace CoCo
         /// <summary>
         /// Set the default values of non exist classifications fields using <paramref name="defaultFormatting"/>
         /// </summary>
-        private static ClassificationSettings PrepareClassification(
+        private static ClassificationSettings PatchClassification(
             ClassificationSettings classificationSettings, TextFormattingRunProperties defaultFormatting)
         {
             if (!classificationSettings.Background.HasValue)

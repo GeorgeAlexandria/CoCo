@@ -46,16 +46,19 @@ namespace CoCo
         }
     }
 
-    public class PresetsOption : UIElementDialogPage
+    public abstract class DialogPage : UIElementDialogPage
     {
         private OptionViewModel _view;
 
-        private PresetsControl _child;
+        private FrameworkElement _child;
 
-        protected override UIElement Child => _child ?? (_child = new PresetsControl());
+        protected override UIElement Child => _child ?? (_child = GetChild());
+
+        protected abstract FrameworkElement GetChild();
 
         protected override void OnActivate(CancelEventArgs e)
         {
+            /// NOTE: imitate page's initialization using <see cref="OnActivate"/>
             if (_view is null)
             {
                 _view = VsPackage.ReceiveOption();
@@ -75,6 +78,7 @@ namespace CoCo
 
         protected override void OnApply(PageApplyEventArgs e)
         {
+            // NOTE: save options only when was clicked Ok button at the options page
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
                 VsPackage.SaveOption(_view);
@@ -83,40 +87,13 @@ namespace CoCo
         }
     }
 
-    public class ClassificationsOption : UIElementDialogPage
+    public class ClassificationsOption : DialogPage
     {
-        private OptionViewModel _view;
+        protected override FrameworkElement GetChild() => new ClassificationsControl();
+    }
 
-        private ClassificationsControl _child;
-
-        protected override UIElement Child => _child ?? (_child = new ClassificationsControl());
-
-        protected override void OnActivate(CancelEventArgs e)
-        {
-            if (_view is null)
-            {
-                _view = VsPackage.ReceiveOption();
-                _child.DataContext = _view;
-            }
-
-            base.OnActivate(e);
-        }
-
-        protected override void OnClosed(EventArgs e)
-        {
-            VsPackage.ReleaseOption(_view);
-            _view = null;
-
-            base.OnClosed(e);
-        }
-
-        protected override void OnApply(PageApplyEventArgs e)
-        {
-            if (e.ApplyBehavior == ApplyKind.Apply)
-            {
-                VsPackage.SaveOption(_view);
-            }
-            base.OnApply(e);
-        }
+    public class PresetsOption : DialogPage
+    {
+        protected override FrameworkElement GetChild() => new PresetsControl();
     }
 }
