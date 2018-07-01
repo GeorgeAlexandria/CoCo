@@ -129,11 +129,6 @@ namespace CoCo.Settings
             }
 
             classification = new ClassificationSettings { Name = name };
-            if (jClassification[nameof(ClassificationSettings.DisplayName)] is JValue jDisplayName &&
-                jDisplayName.Value is string displayName)
-            {
-                classification.DisplayName = displayName;
-            }
 
             Color color;
             if (jClassification[nameof(ClassificationSettings.Background)] is JArray background &&
@@ -196,7 +191,6 @@ namespace CoCo.Settings
             return new JObject
             {
                 { nameof(classification.Name), new JValue(classification.Name) },
-                { nameof(classification.DisplayName), new JValue(classification.DisplayName) },
                 { nameof(classification.Background), ToJObject(classification.Background.Value) },
                 { nameof(classification.Foreground), ToJObject(classification.Foreground.Value) },
                 { nameof(classification.IsBold), new JValue(classification.IsBold.Value) },

@@ -12,6 +12,8 @@ namespace CoCo.UI.Data
 
         public string Name { get; }
 
+        public string DisplayName { get; }
+
         public bool IsBold { get; set; }
 
         public bool IsItalic { get; set; }
@@ -20,10 +22,8 @@ namespace CoCo.UI.Data
 
         public Color Background { get; set; }
 
-        public bool IsEnabled { get; set; }
-
-        public string DisplayName { get; }
-
         public int FontRenderingSize { get; set; }
+
+        public bool IsEnabled { get; set; }
     }
 }

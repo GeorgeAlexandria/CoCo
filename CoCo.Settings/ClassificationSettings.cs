@@ -9,8 +9,6 @@ namespace CoCo.Settings
     {
         public string Name { get; set; }
 
-        public string DisplayName { get; set; }
-
         public bool? IsBold { get; set; }
 
         public bool? IsItalic { get; set; }

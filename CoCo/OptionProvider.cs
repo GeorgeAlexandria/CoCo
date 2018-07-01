@@ -12,33 +12,7 @@ namespace CoCo
         public static Option ReceiveOption()
         {
             var settings = SettingsManager.LoadSettings(settingsPath);
-            settings = FormattingService.SetFormatting(settings);
-
-            void Append(ICollection<ClassificationSettings> classificationsSettings, ICollection<Classification> classifications)
-            {
-                foreach (var classificationSettings in classificationsSettings)
-                {
-                    classifications.Add(ToClassification(classificationSettings));
-                }
-            }
-
-            var option = new Option();
-            foreach (var languageSettings in settings.Languages)
-            {
-                var language = new Language(languageSettings.LanguageName);
-                Append(languageSettings.CurrentClassifications, language.Classifications);
-
-                foreach (var presetSettings in languageSettings.Presets)
-                {
-                    var preset = new Preset(presetSettings.Name);
-                    Append(presetSettings.Classifications, preset.Classifications);
-                    language.Presets.Add(preset);
-                }
-
-                option.Languages.Add(language);
-            }
-
-            return option;
+            return FormattingService.SetFormatting(settings);
         }
 
         public static void ReleaseOption(Option option)
@@ -89,24 +63,12 @@ namespace CoCo
             new ClassificationSettings
             {
                 Name = classification.Name,
-                DisplayName = classification.DisplayName,
                 Background = classification.Background,
                 Foreground = classification.Foreground,
                 IsBold = classification.IsBold,
                 IsItalic = classification.IsItalic,
                 FontRenderingSize = classification.FontRenderingSize,
                 IsEnabled = classification.IsEnabled,
-            };
-
-        public static Classification ToClassification(ClassificationSettings settings) =>
-            new Classification(settings.Name, settings.DisplayName)
-            {
-                Background = settings.Background.Value,
-                Foreground = settings.Foreground.Value,
-                IsBold = settings.IsBold.Value,
-                IsItalic = settings.IsItalic.Value,
-                FontRenderingSize = settings.FontRenderingSize.Value,
-                IsEnabled = settings.IsEnabled.Value,
             };
     }
 }

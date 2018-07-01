@@ -13,128 +13,138 @@ namespace CoCo
     public static class FormattingService
     {
         /// <summary>
-        /// Patches the <paramref name="settings"/> using a default values and applies them to formattings
+        /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values and applies them to formattings
         /// </summary>
-        /// <returns>Patched settings</returns>
-        public static Settings.Settings SetFormatting(Settings.Settings settings)
+        /// <returns>Converted option</returns>
+        public static Option SetFormatting(Settings.Settings settings)
         {
             var classificationManager = ClassificationManager.Instance;
 
-            var classifications = classificationManager.GetClassifications();
+            var classificationTypes = classificationManager.GetClassifications();
             var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
             var defaultFormatting = GetDefaultFormatting(classificationFormatMap, classificationManager.DefaultClassification);
 
-            var presets = PresetService.GetDefaultPresets(defaultFormatting);
+            var defaultPresets = PresetService.GetDefaultPresets(defaultFormatting);
 
             var classificationsMap = new Dictionary<string, IClassificationType>(23);
-            var settingsCopy = new Settings.Settings { Languages = new List<LanguageSettings>() };
-            foreach (var pair in classifications)
+            var option = new Option();
+            foreach (var pair in classificationTypes)
             {
-                var language = new LanguageSettings { LanguageName = pair.Key, };
-                language.Presets = new List<PresetSettings>();
-
+                var language = new Language(pair.Key);
                 foreach (var item in pair.Value)
                 {
                     classificationsMap.Add(item.Classification, item);
                 }
 
-                if (!presets.TryGetValue(language.LanguageName, out var defaultPresets))
+                if (!defaultPresets.TryGetValue(language.Name, out var defaultLanguagePresets))
                 {
-                    defaultPresets = new List<PresetSettings>();
+                    defaultLanguagePresets = new List<PresetSettings>();
                 }
-                var presetNames = defaultPresets.ToDictionary(x => x.Name);
+                var presetNames = defaultLanguagePresets.ToDictionary(x => x.Name);
 
+                List<ClassificationSettings> patchedClassifications;
                 var isLanguageExists = false;
                 foreach (var languageSettings in settings.Languages)
                 {
-                    // NOTE: pacth existings languages presets and classifications
-                    if (languageSettings.LanguageName.Equals(language.LanguageName))
+                    // NOTE: pacth existings languages presets and classifications using default values
+                    if (languageSettings.LanguageName.Equals(language.Name))
                     {
                         isLanguageExists = true;
-                        language.CurrentClassifications =
+                        patchedClassifications =
                             PatchClassifications(classificationsMap.Keys, languageSettings.CurrentClassifications, defaultFormatting);
+                        AppendToClassifications(patchedClassifications, language.Classifications);
 
                         foreach (var presetSettings in languageSettings.Presets)
                         {
                             // NOTE: skip CoCo default presets, they will be added below
                             if (presetNames.ContainsKey(presetSettings.Name)) continue;
 
-                            var presetCopy = new PresetSettings
-                            {
-                                Name = presetSettings.Name,
-                                Classifications = PatchClassifications(classificationsMap.Keys, presetSettings.Classifications, defaultFormatting)
-                            };
-                            language.Presets.Add(presetCopy);
+                            var preset = new Preset(presetSettings.Name);
+                            patchedClassifications = PatchClassifications(classificationsMap.Keys, presetSettings.Classifications, defaultFormatting);
+                            AppendToClassifications(patchedClassifications, preset.Classifications);
+
+                            language.Presets.Add(preset);
                         }
                         break;
                     }
                 }
 
                 // NOTE: add CoCo default presets
-                foreach (var preset in defaultPresets)
+                foreach (var defaultPreset in defaultLanguagePresets)
                 {
-                    language.Presets.Add(new PresetSettings
-                    {
-                        Name = preset.Name,
-                        Classifications = PatchClassifications(classificationsMap.Keys, preset.Classifications, defaultFormatting)
-                    });
+                    var preset = new Preset(defaultPreset.Name);
+                    patchedClassifications = PatchClassifications(classificationsMap.Keys, defaultPreset.Classifications, defaultFormatting);
+                    AppendToClassifications(patchedClassifications, preset.Classifications);
+
+                    language.Presets.Add(preset);
                 }
+                // NOTE: add default classifications
                 if (!isLanguageExists)
                 {
-                    language.CurrentClassifications =
+                    patchedClassifications =
                         PatchClassifications(classificationsMap.Keys, Array.Empty<ClassificationSettings>(), defaultFormatting);
+                    AppendToClassifications(patchedClassifications, language.Classifications);
                 }
-                settingsCopy.Languages.Add(language);
+                option.Languages.Add(language);
             }
 
-            // NOTE: apply the patched settings to formattings
-            foreach (var language in settingsCopy.Languages)
+            SetFormatting(option, classificationsMap);
+            return option;
+        }
+
+        /// NOTE: assume that <param name="option"/> is correct input data from options pages
+        public static void SetFormatting(Option option) => SetFormatting(option, null);
+
+        private static void SetFormatting(Option option, Dictionary<string, IClassificationType> classificationsMap = null)
+        {
+            var classificationManager = ClassificationManager.Instance;
+            var classificationTypes = classificationManager.GetClassifications();
+            var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
+
+            if (classificationsMap is null)
+            {
+                classificationsMap = new Dictionary<string, IClassificationType>(23);
+                foreach (var pair in classificationTypes)
+                {
+                    foreach (var item in pair.Value)
+                    {
+                        classificationsMap.Add(item.Classification, item);
+                    }
+                }
+            }
+
+            foreach (var language in option.Languages)
             {
                 // TODO: do need to write in a log if the classification after preparing still not exists?
-                if (!classifications.ContainsKey(language.LanguageName)) continue;
-                foreach (var classification in language.CurrentClassifications)
+                if (!classificationTypes.ContainsKey(language.Name)) continue;
+                foreach (var classification in language.Classifications)
                 {
                     if (classificationsMap.TryGetValue(classification.Name, out var classificationType))
                     {
                         var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                        formatting = Apply(formatting, defaultFormatting, classification);
+                        formatting = Apply(formatting, classification);
                         classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
                     }
                 }
             }
-
-            return settingsCopy;
         }
 
-        public static void SetFormatting(Option option)
+        private static void AppendToClassifications(
+            List<ClassificationSettings> classificationSettings,
+            ICollection<Classification> classifications)
         {
-            var classifications = ClassificationManager.Instance.GetClassifications();
-            var classificationFormatMap = ClassificationManager.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
-
-            var classificationsSettings = new Dictionary<string, Classification>(23);
-            foreach (var language in option.Languages)
+            foreach (var settings in classificationSettings)
             {
-                foreach (var classification in language.Classifications)
+                // TODO: temporary the display name will equals it name
+                classifications.Add(new Classification(settings.Name, settings.Name)
                 {
-                    classificationsSettings.Add(classification.Name, classification);
-                }
-            }
-
-            foreach (var languageClassifications in classifications)
-            {
-                foreach (var classificationType in languageClassifications.Value)
-                {
-                    if (classificationsSettings.TryGetValue(classificationType.Classification, out var classificationSettings))
-                    {
-                        var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                        formatting = Apply(formatting, classificationSettings);
-                        classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
-                    }
-                    else
-                    {
-                        // use default values
-                    }
-                }
+                    Background = settings.Background.Value,
+                    Foreground = settings.Foreground.Value,
+                    IsBold = settings.IsBold.Value,
+                    IsItalic = settings.IsItalic.Value,
+                    FontRenderingSize = settings.FontRenderingSize.Value,
+                    IsEnabled = settings.IsEnabled.Value,
+                });
             }
         }
 
@@ -200,57 +210,6 @@ namespace CoCo
             return classificationSettings;
         }
 
-        private static TextFormattingRunProperties Apply(
-            TextFormattingRunProperties formatting, TextFormattingRunProperties defaultFormatting, ClassificationSettings settings)
-        {
-            // NOTE: avoid creating a new instance for fields that weren't changed
-            var isItalic = settings.IsItalic ?? defaultFormatting.Italic;
-            if (formatting.Italic != isItalic)
-            {
-                formatting = formatting.SetItalic(isItalic);
-            }
-
-            var isBold = settings.IsBold ?? defaultFormatting.Bold;
-            if (formatting.Bold != isBold)
-            {
-                formatting = formatting.SetBold(isBold);
-            }
-
-            var fontRenderingSize = settings.FontRenderingSize ?? defaultFormatting.FontRenderingEmSize;
-            if (Math.Abs(formatting.FontRenderingEmSize - fontRenderingSize) > 0.001)
-            {
-                formatting = formatting.SetFontRenderingEmSize(fontRenderingSize);
-            }
-
-            if (settings.Background.HasValue)
-            {
-                if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
-                    !backgroundBrush.Color.Equals(settings.Background.Value))
-                {
-                    formatting = formatting.SetBackgroundBrush(new SolidColorBrush(settings.Background.Value));
-                }
-            }
-            else
-            {
-                formatting = formatting.SetBackgroundBrush(defaultFormatting.BackgroundBrush);
-            }
-
-            if (settings.Foreground.HasValue)
-            {
-                if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
-                    !foregroundBrush.Color.Equals(settings.Foreground.Value))
-                {
-                    formatting = formatting.SetForegroundBrush(new SolidColorBrush(settings.Foreground.Value));
-                }
-            }
-            else
-            {
-                formatting = formatting.SetForegroundBrush(defaultFormatting.ForegroundBrush);
-            }
-
-            return formatting;
-        }
-
         private static TextFormattingRunProperties Apply(TextFormattingRunProperties formatting, Classification classification)
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
@@ -279,7 +238,9 @@ namespace CoCo
             return formatting;
         }
 
-        private static TextFormattingRunProperties GetDefaultFormatting(IClassificationFormatMap classificationFormatMap, IClassificationType defaultClassification)
+        private static TextFormattingRunProperties GetDefaultFormatting(
+            IClassificationFormatMap classificationFormatMap,
+            IClassificationType defaultClassification)
         {
             var defaultFormatting = classificationFormatMap.GetExplicitTextProperties(defaultClassification);
 

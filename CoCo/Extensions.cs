@@ -11,11 +11,9 @@ namespace CoCo
         /// </summary>
         public static ClassificationSettings ToSettings(
            this TextFormattingRunProperties defaultFormatting,
-           string classificationName,
-           string displayName = null) => new ClassificationSettings
+           string classificationName) => new ClassificationSettings
            {
                Name = classificationName,
-               DisplayName = displayName ?? classificationName,
                Background = defaultFormatting.BackgroundBrush.GetColor(),
                Foreground = defaultFormatting.ForegroundBrush.GetColor(),
                FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize,
