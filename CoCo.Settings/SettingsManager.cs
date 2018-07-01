@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Windows.Media;
 using Newtonsoft.Json;
@@ -44,7 +45,7 @@ namespace CoCo.Settings
                 info.Directory.Create();
             }
 
-            using (var writer =  !info.Exists ? info.CreateText() : new StreamWriter(path))
+            using (var writer = !info.Exists ? info.CreateText() : new StreamWriter(path))
             using (var jsonWriter = new JsonTextWriter(writer))
             {
                 jsonWriter.Formatting = Formatting.Indented;
@@ -131,13 +132,13 @@ namespace CoCo.Settings
             classification = new ClassificationSettings { Name = name };
 
             Color color;
-            if (jClassification[nameof(ClassificationSettings.Background)] is JArray background &&
-                TryParseColor(background, out color))
+            if (jClassification[nameof(ClassificationSettings.Background)] is JValue jBackground &&
+                jBackground.Value is string background && TryParseColor(background, out color))
             {
                 classification.Background = color;
             }
-            if (jClassification[nameof(ClassificationSettings.Foreground)] is JArray foreground &&
-                TryParseColor(foreground, out color))
+            if (jClassification[nameof(ClassificationSettings.Foreground)] is JValue jForeground &&
+                jForeground.Value is string foreground && TryParseColor(foreground, out color))
             {
                 classification.Foreground = color;
             }
@@ -164,40 +165,33 @@ namespace CoCo.Settings
             return true;
         }
 
-        private static bool TryParseColor(JArray jArray, out Color color)
+        private static bool TryParseColor(string value, out Color color)
         {
-            color = new Color();
-            // TODO: count is less 3
-            if (jArray.Count > 3) return false;
+            byte ToByte(int integer, int offset) => (byte)(integer >> offset & 0xFF);
 
-            var rgb = new List<byte>(3);
-            foreach (var item in jArray)
+            // NOTE: #ARGB – 9 chars
+            if (value.Length == 9)
             {
-                if (item is JValue jvalue)
+                value = value.Substring(1);
+                if (int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var res))
                 {
-                    // HACK: all numerics data store as long in the newtonsoft json
-                    if (!(jvalue.Value is long value) || value > byte.MaxValue) return false;
-                    rgb.Add((byte)value);
+                    color = Color.FromArgb(ToByte(res, 24), ToByte(res, 16), ToByte(res, 8), ToByte(res, 0));
+                    return true;
                 }
             }
-            color = Color.FromRgb(rgb[0], rgb[1], rgb[2]);
-            return true;
+            color = new Color();
+            return false;
         }
 
-        private static JObject ToJObject(ClassificationSettings classification)
+        private static JObject ToJObject(ClassificationSettings classification) => new JObject
         {
-            JToken ToJObject(Color color) => new JArray(color.R, color.G, color.B);
-
-            return new JObject
-            {
-                { nameof(classification.Name), new JValue(classification.Name) },
-                { nameof(classification.Background), ToJObject(classification.Background.Value) },
-                { nameof(classification.Foreground), ToJObject(classification.Foreground.Value) },
-                { nameof(classification.IsBold), new JValue(classification.IsBold.Value) },
-                { nameof(classification.IsItalic), new JValue(classification.IsItalic.Value) },
-                { nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value) },
-                { nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value) }
-            };
-        }
+            { nameof(classification.Name), new JValue(classification.Name) },
+            { nameof(classification.Background), new JValue(classification.Background.Value.ToString()) },
+            { nameof(classification.Foreground), new JValue(classification.Foreground.Value.ToString()) },
+            { nameof(classification.IsBold), new JValue(classification.IsBold.Value) },
+            { nameof(classification.IsItalic), new JValue(classification.IsItalic.Value) },
+            { nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value) },
+            { nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value) }
+        };
     }
 }
