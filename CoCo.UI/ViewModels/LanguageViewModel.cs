@@ -24,23 +24,6 @@ namespace CoCo.UI.ViewModels
 
         public string Name { get; }
 
-        public ObservableCollection<PresetViewModel> Presets { get; } = new ObservableCollection<PresetViewModel>();
-
-        private PresetViewModel _selectedPreset;
-
-        public PresetViewModel SelectedPreset
-        {
-            get => _selectedPreset;
-            set
-            {
-                if (_selectedPreset != value)
-                {
-                    _selectedPreset = value;
-                    RaisePropertyChanged();
-                }
-            }
-        }
-
         private bool? _allAreCheked;
 
         public bool? AllAreChecked

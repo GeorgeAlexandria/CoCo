@@ -50,8 +50,8 @@
     <Compile Include="Data\Option.cs" />
     <Compile Include="Data\Preset.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\OptionControl.xaml.cs">
-      <DependentUpon>OptionControl.xaml</DependentUpon>
+    <Compile Include="UI\ClassificationsControl.xaml.cs">
+      <DependentUpon>ClassificationsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\PresetsControl.xaml.cs">
       <DependentUpon>PresetsControl.xaml</DependentUpon>
@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\OptionControl.xaml">
+    <Page Include="UI\ClassificationsControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -9,8 +9,8 @@ using Microsoft.VisualStudio.Shell;
 namespace CoCo
 {
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [ProvideOptionPage(typeof(DialogOption), "CoCo", "CoCo", 0, 0, true)]
-    [ProvideOptionPage(typeof(PresetOption), "CoCo", "Preset", 0, 0, true)]
+    [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
+    [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
     [Guid("b933474d-306e-434f-952d-a820c849ed07")]
     public sealed class VsPackage : Package
     {
@@ -46,7 +46,7 @@ namespace CoCo
         }
     }
 
-    public class PresetOption : UIElementDialogPage
+    public class PresetsOption : UIElementDialogPage
     {
         private OptionViewModel _view;
 
@@ -83,13 +83,13 @@ namespace CoCo
         }
     }
 
-    public class DialogOption : UIElementDialogPage
+    public class ClassificationsOption : UIElementDialogPage
     {
         private OptionViewModel _view;
 
-        private OptionControl _child;
+        private ClassificationsControl _child;
 
-        protected override UIElement Child => _child ?? (_child = new OptionControl());
+        protected override UIElement Child => _child ?? (_child = new ClassificationsControl());
 
         protected override void OnActivate(CancelEventArgs e)
         {
