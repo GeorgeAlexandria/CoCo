@@ -68,6 +68,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoCo.Analyser\CoCo.Analyser.csproj">
+      <Project>{98e40cfe-9133-4a71-9160-76fc16a723c9}</Project>
+      <Name>CoCo.Analyser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoCo.MsBuild\CoCo.MsBuild.csproj">
       <Project>{edba3202-304b-4ee4-971f-5c3478f97abd}</Project>
       <Name>CoCo.MsBuild</Name>
@@ -75,10 +79,6 @@
     <ProjectReference Include="..\CoCo.Test.Common\CoCo.Test.Common.csproj">
       <Project>{0b57bf2d-6001-4317-9527-96c7cf4b20d1}</Project>
       <Name>CoCo.Test.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CoCo\CoCo.csproj">
-      <Project>{a6b65155-538e-4558-b18e-e9534fcc1f4a}</Project>
-      <Name>CoCo</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -186,6 +186,10 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoCo.Analyser\CoCo.Analyser.csproj">
+      <Project>{98e40cfe-9133-4a71-9160-76fc16a723c9}</Project>
+      <Name>CoCo.Analyser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoCo.Logging\CoCo.Logging.csproj">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
       <Name>CoCo.Logging</Name>
@@ -197,10 +201,6 @@
     <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
       <Project>{601a2a25-2348-4f00-9858-70ff10b39dab}</Project>
       <Name>CoCo.Utils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CoCo\CoCo.csproj">
-      <Project>{a6b65155-538e-4558-b18e-e9534fcc1f4a}</Project>
-      <Name>CoCo</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

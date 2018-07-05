@@ -1,4 +1,5 @@
-﻿using CoCo.Test.Common;
+﻿using CoCo.Analyser;
+using CoCo.Test.Common;
 using NUnit.Framework;
 
 namespace CoCo.Test.CSharpIdentifiers
