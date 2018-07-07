@@ -6,12 +6,10 @@ namespace CoCo
 {
     public static class OptionProvider
     {
-        // TODO: It must be a path to CoCo folder at %AppLocal%
-        private const string settingsPath = @"C:\temp\555.config";
-
         public static Option ReceiveOption()
         {
-            var settings = SettingsManager.LoadSettings(settingsPath);
+            PathsManager.Initialize();
+            var settings = SettingsManager.LoadSettings(PathsManager.CoCoSettingsFile);
             return FormattingService.SetFormatting(settings);
         }
 
@@ -56,7 +54,7 @@ namespace CoCo
                 Languages = languagesSettings
             };
 
-            SettingsManager.SaveSettings(settings, settingsPath);
+            SettingsManager.SaveSettings(settings, PathsManager.CoCoSettingsFile);
         }
 
         private static ClassificationSettings ToSettings(Classification classification) =>

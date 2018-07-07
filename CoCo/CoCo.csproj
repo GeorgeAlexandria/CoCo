@@ -54,6 +54,7 @@
     <Compile Include="ClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
     <Compile Include="OptionProvider.cs" />
+    <Compile Include="PathsManager.cs" />
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsPackage.cs" />

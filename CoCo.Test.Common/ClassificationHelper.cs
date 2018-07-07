@@ -78,7 +78,7 @@ namespace CoCo.Test.Common
             IEnumerable<SimplifiedClassificationSpan> otherCollection)
         {
             var currentSet = new HashSet<Span>();
-            using (var logger = Logging.LogManager.GetLogger("TestExecution"))
+            using (var logger = Logging.LogManager.GetLogger("Test execution"))
             {
                 foreach (var item in currentCollection)
                 {

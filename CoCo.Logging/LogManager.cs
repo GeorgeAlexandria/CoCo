@@ -10,23 +10,31 @@ namespace CoCo.Logging
     // TODO: use pool of objects
     public static class LogManager
     {
+        // TODO: duplicated path %LocalApplicationData%/CoCo
+        private static string _logsFolder =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CoCo/Logs");
+
         public static Logger GetLogger(string name)
         {
-            var appDataLocalCoco = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CoCo");
-            if (!Directory.Exists(appDataLocalCoco))
+            var directory = new DirectoryInfo(_logsFolder);
+            if (!directory.Parent.Exists)
             {
-                Directory.CreateDirectory(appDataLocalCoco);
+                directory.Parent.Create();
+            }
+            if (!directory.Exists)
+            {
+                directory.Create();
             }
 
             const string format = "${date} [${level}] |>${message}";
 
-            FileTarget fileTarget = new FileTarget("File")
+            var fileTarget = new FileTarget("File")
             {
                 Layout = format,
-                FileName = Path.Combine(appDataLocalCoco, $"{name} {DateTime.UtcNow.ToString("MM.dd hh:mm:ss.fff")}.log")
+                FileName = Path.Combine(_logsFolder, $"{name} {DateTime.UtcNow.ToString("MM.dd hh:mm:ss.fff")}.log")
             };
 
-            BufferingTargetWrapper bufferWrapper = new BufferingTargetWrapper
+            var bufferWrapper = new BufferingTargetWrapper
             {
                 WrappedTarget = fileTarget,
                 BufferSize = 300,
@@ -35,11 +43,11 @@ namespace CoCo.Logging
                 OptimizeBufferReuse = true
             };
 
-            LoggingConfiguration config = new LoggingConfiguration();
+            var config = new LoggingConfiguration();
             config.AddTarget(bufferWrapper);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, bufferWrapper);
 
-            var factory = new NLog.LogFactory(config);
+            var factory = new LogFactory(config);
             //factory.ThrowConfigExceptions = true;
             //factory.ThrowExceptions = true;
 

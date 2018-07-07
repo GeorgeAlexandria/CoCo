@@ -4,10 +4,9 @@ using System.Linq;
 using System.Windows.Media;
 using CoCo.Settings;
 using CoCo.UI.Data;
-using Microsoft.VisualStudio.PlatformUI;
+using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
-using CoCo.Utils;
 
 namespace CoCo
 {
