@@ -53,5 +53,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
+      <Project>{601a2a25-2348-4f00-9858-70ff10b39dab}</Project>
+      <Name>CoCo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

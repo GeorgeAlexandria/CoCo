@@ -7,6 +7,7 @@ using CoCo.UI.Data;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
+using CoCo.Utils;
 
 namespace CoCo
 {
@@ -28,10 +29,10 @@ namespace CoCo
 
             var classificationsMap = new Dictionary<string, IClassificationType>(23);
             var option = new Option();
-            foreach (var pair in classificationTypes)
+            foreach (var (languageName, classifications) in classificationTypes)
             {
-                var language = new Language(pair.Key);
-                foreach (var item in pair.Value)
+                var language = new Language(languageName);
+                foreach (var item in classifications)
                 {
                     classificationsMap.Add(item.Classification, item);
                 }
@@ -47,7 +48,7 @@ namespace CoCo
                 foreach (var languageSettings in settings.Languages)
                 {
                     // NOTE: pacth existings languages presets and classifications using default values
-                    if (languageSettings.LanguageName.Equals(language.Name))
+                    if (languageSettings.Name.Equals(language.Name))
                     {
                         isLanguageExists = true;
                         patchedClassifications =

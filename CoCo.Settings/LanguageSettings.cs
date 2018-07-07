@@ -3,10 +3,10 @@ using System.Diagnostics;
 
 namespace CoCo.Settings
 {
-    [DebuggerDisplay("{LanguageName}")]
+    [DebuggerDisplay("{Name}")]
     public struct LanguageSettings
     {
-        public string LanguageName { get; set; }
+        public string Name { get; set; }
 
         public ICollection<ClassificationSettings> CurrentClassifications { get; set; }
 

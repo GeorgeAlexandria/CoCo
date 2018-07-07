@@ -7,7 +7,7 @@ namespace CoCo.Utils
         /// <summary>
         /// Check that <paramref name="name"/> equals string literal "true"
         /// </summary>
-        public static bool IsTrue(this string name) => "true".Equals(name, StringComparison.OrdinalIgnoreCase);
+        public static bool IsTrue(this string name) => "true".EqualsNoCase(name);
 
         /// <summary>
         /// Compare two strings by <see cref="StringComparison.OrdinalIgnoreCase"/>

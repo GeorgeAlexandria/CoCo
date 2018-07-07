@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.IO;
 using System.Windows.Media;
+using CoCo.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -35,7 +36,7 @@ namespace CoCo.Settings
                 {
                     jLanguage.Add(preset.Name, ToJArray(preset.Classifications));
                 }
-                jSettings.Add(language.LanguageName, jLanguage);
+                jSettings.Add(language.Name, jLanguage);
             }
 
             // TODO: this should be checked
@@ -82,15 +83,15 @@ namespace CoCo.Settings
                 var language = new LanguageSettings
                 {
                     // TODO: must key exist?
-                    LanguageName = jSetting.Key,
+                    Name = jSetting.Key,
                     CurrentClassifications = new List<ClassificationSettings>(),
                     Presets = new List<PresetSettings>()
                 };
 
-                foreach (var languagePair in jLanguageSettings)
+                foreach (var (presetName, value) in jLanguageSettings)
                 {
                     var classifications = new List<ClassificationSettings>();
-                    if (languagePair.Value is JArray jClassifications)
+                    if (value is JArray jClassifications)
                     {
                         foreach (var item in jClassifications)
                         {
@@ -101,7 +102,7 @@ namespace CoCo.Settings
                         }
                     }
 
-                    if (languagePair.Key == CurrentClassificationsName)
+                    if (presetName == CurrentClassificationsName)
                     {
                         language.CurrentClassifications = classifications;
                     }
@@ -109,7 +110,7 @@ namespace CoCo.Settings
                     {
                         language.Presets.Add(new PresetSettings
                         {
-                            Name = languagePair.Key,
+                            Name = presetName,
                             Classifications = classifications
                         });
                     }

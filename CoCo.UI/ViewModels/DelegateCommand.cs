@@ -3,6 +3,9 @@ using System.Windows.Input;
 
 namespace CoCo.UI.ViewModels
 {
+    /// <summary>
+    /// Custom non generic implementation of <see cref="ICommand"/>
+    /// </summary>
     public class DelegateCommand : ICommand
     {
         private readonly Func<bool> _canExecute;
@@ -43,6 +46,9 @@ namespace CoCo.UI.ViewModels
         }
     }
 
+    /// <summary>
+    /// Custom generic implementation of <see cref="ICommand"/>
+    /// </summary>
     public class DelegateCommand<T> : ICommand
     {
         private readonly Func<T, bool> _canExecute;
@@ -57,8 +63,8 @@ namespace CoCo.UI.ViewModels
 
         public event EventHandler CanExecuteChanged;
 
-        public bool CanExecute(object argument) =>
-            !_isExecute && (_canExecute == null || argument is T castedArgument && _canExecute(castedArgument));
+        public bool CanExecute(object parameter) =>
+            !_isExecute && (_canExecute == null || parameter is T castedArgument && _canExecute(castedArgument));
 
         public void Execute(object parameter)
         {

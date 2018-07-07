@@ -39,9 +39,9 @@ namespace CoCo.MsBuild
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
         }
 
-        public ImmutableArray<string> References { get; set; }
+        public ImmutableArray<string> References { get; }
 
-        public ImmutableArray<ProjectInfo> ProjectReferences { get; set; }
+        public ImmutableArray<ProjectInfo> ProjectReferences { get; }
 
         public ImmutableArray<string> CompileItems { get; }
 

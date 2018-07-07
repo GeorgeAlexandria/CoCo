@@ -325,6 +325,10 @@
       <Project>{136c09a9-8354-4600-8226-b24fa712df9b}</Project>
       <Name>CoCo.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj">
+      <Project>{601a2a25-2348-4f00-9858-70ff10b39dab}</Project>
+      <Name>CoCo.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.2.6.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

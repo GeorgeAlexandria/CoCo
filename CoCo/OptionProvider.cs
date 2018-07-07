@@ -46,7 +46,7 @@ namespace CoCo
 
                 languagesSettings.Add(new LanguageSettings
                 {
-                    LanguageName = language.Name,
+                    Name = language.Name,
                     CurrentClassifications = classificationsSettings,
                     Presets = presetsSettings
                 });

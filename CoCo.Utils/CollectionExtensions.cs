@@ -21,5 +21,14 @@ namespace CoCo.Utils
             value = default(V);
             return false;
         }
+
+        /// <summary>
+        /// Deconstructs input <paramref name="pair"/> to (<paramref name="key"/>, <paramref name="value"/>)
+        /// </summary>
+        public static void Deconstruct<K, V>(this KeyValuePair<K, V> pair, out K key, out V value)
+        {
+            key = pair.Key;
+            value = pair.Value;
+        }
     }
 }

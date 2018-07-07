@@ -45,10 +45,8 @@ namespace CoCo
 
         public IClassificationFormatMapService FormatMapService => _formatMapService;
 
-        public IClassificationTypeRegistryService RegistryService => _registryService;
-
         public IClassificationType DefaultClassification =>
-            RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
+            _registryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
 
         /// <returns>
         /// Classifications are grouped by language
@@ -68,8 +66,10 @@ namespace CoCo
                 var classificationType = _registryService.GetClassificationType(name);
                 if (classificationType != null)
                 {
+                    // TODO: need to carefully test this case
                     if (identifierPosition > 0)
                     {
+                        // NOTE: Set priority of classification next to identifier
                         SetPriority(formatMap, classificationType, identifierPosition);
                     }
                 }
@@ -79,11 +79,13 @@ namespace CoCo
                     var formatting = TextFormattingRunProperties.CreateTextFormattingRunProperties();
                     if (identifierPosition > 0)
                     {
+                        // NOTE: Set priority of classification next to identifier
                         var afterIdentifierClassification = formatMap.CurrentPriorityOrder[identifierPosition + 1];
                         formatMap.AddExplicitTextProperties(classificationType, formatting, afterIdentifierClassification);
                     }
                     else
                     {
+                        // NOTE: Set the last priority
                         formatMap.AddExplicitTextProperties(classificationType, formatting);
                     }
                 }

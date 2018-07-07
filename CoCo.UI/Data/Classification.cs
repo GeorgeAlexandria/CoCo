@@ -1,7 +1,9 @@
-﻿using System.Windows.Media;
+﻿using System.Diagnostics;
+using System.Windows.Media;
 
 namespace CoCo.UI.Data
 {
+    [DebuggerDisplay("{Name")]
     public class Classification
     {
         public Classification(string name, string displayName)
