@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace CoCo.UI.Data
 {
-    [DebuggerDisplay("{Name")]
+    [DebuggerDisplay("{Name}")]
     public class Classification
     {
         public Classification(string name, string displayName)

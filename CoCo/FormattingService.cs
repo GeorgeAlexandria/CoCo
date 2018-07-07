@@ -232,7 +232,7 @@ namespace CoCo
                 formatting = formatting.SetBackgroundBrush(new SolidColorBrush(classification.Background));
             }
             if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
-                !foregroundBrush.Color.Equals(classification.Background))
+                !foregroundBrush.Color.Equals(classification.Foreground))
             {
                 formatting = formatting.SetForegroundBrush(new SolidColorBrush(classification.Foreground));
             }
@@ -248,16 +248,11 @@ namespace CoCo
             // NOTE: Should use the default colors of all formattings if default formatting doesn't have explicitly set values
             if (defaultFormatting.BackgroundBrushEmpty)
             {
+                // NOTE: if default background is not set we just leave the empty background => vs will use the transparent background
+                // for this classification
                 if (!classificationFormatMap.DefaultTextProperties.BackgroundBrushEmpty)
                 {
                     defaultFormatting = defaultFormatting.SetBackgroundBrush(classificationFormatMap.DefaultTextProperties.BackgroundBrush);
-                }
-                else
-                {
-                    // NOTE: Background is not set => use background from theme
-                    var collor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowBackgroundColorKey);
-                    var convertedCollor = Color.FromArgb(collor.A, collor.R, collor.G, collor.B);
-                    defaultFormatting = defaultFormatting.SetBackground(convertedCollor);
                 }
             }
             if (defaultFormatting.ForegroundBrushEmpty)
