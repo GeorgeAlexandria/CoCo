@@ -61,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj">
+      <Project>{1bdaac0f-3448-4cf5-a740-b5367acc8fe6}</Project>
+      <Name>CoCo.Analyser_vs14</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CoCo.MsBuild\CoCo.MsBuild.csproj">
       <Project>{edba3202-304b-4ee4-971f-5c3478f97abd}</Project>
       <Name>CoCo.MsBuild</Name>
@@ -68,10 +72,6 @@
     <ProjectReference Include="..\CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj">
       <Project>{de073bd6-deb9-4103-b081-4b43016f890f}</Project>
       <Name>CoCo.Test.Common_vs14</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CoCo_vs14\CoCo_vs14.csproj">
-      <Project>{a8fa0172-2477-434f-b60a-1de5ad28b8ee}</Project>
-      <Name>CoCo_vs14</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

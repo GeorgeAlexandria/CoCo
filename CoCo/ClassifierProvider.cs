@@ -36,6 +36,10 @@ namespace CoCo
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
+            PathsManager.Initialize();
+            var settings = Settings.SettingsManager.LoadSettings(PathsManager.CoCoSettingsFile);
+            FormattingService.SetFormatting(settings);
+
             var classificationTypes = new Dictionary<string, IClassificationType>(32);
             foreach (var name in Names.All)
             {
