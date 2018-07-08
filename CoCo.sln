@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Settings", "CoCo.Setti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Analyser", "CoCo.Analyser\CoCo.Analyser.csproj", "{98E40CFE-9133-4A71-9160-76FC16A723C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Analyser_vs14", "CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj", "{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{98E40CFE-9133-4A71-9160-76FC16A723C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98E40CFE-9133-4A71-9160-76FC16A723C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98E40CFE-9133-4A71-9160-76FC16A723C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
