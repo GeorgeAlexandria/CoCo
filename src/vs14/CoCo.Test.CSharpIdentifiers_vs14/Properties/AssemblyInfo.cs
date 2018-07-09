@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CoCo.Test.CSharpIdentifiers_vs14")]
-[assembly: AssemblyDescription("Contains collection of tests")]
+[assembly: AssemblyDescription("Contains collection of CSharp tests")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

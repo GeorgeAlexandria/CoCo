@@ -31,8 +31,8 @@ namespace CoCo.Test.Common
 
         private static string GetPathRelativeToThis(string path, [CallerFilePath] string sourceCallerPath = null)
         {
-            // NOTE: ../CoCo.Test.Common/TestHelper.cs
-            var sourceDirectory = sourceCallerPath.GetDirectoryName().GetDirectoryName();
+            // NOTE: ../../../CoCo.Test.Common/TestHelper.cs
+            var sourceDirectory = sourceCallerPath.GetDirectoryName().GetDirectoryName().GetDirectoryName().GetDirectoryName();
             return Path.Combine(sourceDirectory, path);
         }
     }

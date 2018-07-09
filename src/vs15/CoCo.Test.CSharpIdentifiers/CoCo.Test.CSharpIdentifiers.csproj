@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Bin\CoCo.Test\Debug\</OutputPath>
+    <OutputPath>..\..\bin\CoCo.Test\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,14 +24,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Bin\CoCo.Test\Release\</OutputPath>
+    <OutputPath>..\..\bin\CoCo.Test\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,7 +72,7 @@
       <Project>{98e40cfe-9133-4a71-9160-76fc16a723c9}</Project>
       <Name>CoCo.Analyser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\CoCo.MsBuild\CoCo.MsBuild.csproj">
+    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj">
       <Project>{edba3202-304b-4ee4-971f-5c3478f97abd}</Project>
       <Name>CoCo.MsBuild</Name>
     </ProjectReference>
