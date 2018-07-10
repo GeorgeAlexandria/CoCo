@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
+using EnvDTE;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Shell;
@@ -35,6 +36,7 @@ namespace CoCo
                 {
                     _instance = new ClassificationManager();
                     componentModel.DefaultCompositionService.SatisfyImportsOnce(_instance);
+                    _instance.DTE = ServiceProvider.GlobalProvider.GetService(typeof(EnvDTE.DTE)) as _DTE;
                     return _instance;
                 }
 
@@ -42,6 +44,8 @@ namespace CoCo
                 return null;
             }
         }
+
+        public _DTE DTE { get; private set; }
 
         public IClassificationFormatMapService FormatMapService => _formatMapService;
 
