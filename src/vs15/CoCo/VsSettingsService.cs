@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.XPath;
@@ -49,9 +50,11 @@ namespace CoCo
             var result = new Dictionary<string, ClassificationSettings>();
 
             /// NOTE: <see cref="Microsoft.VisualStudio.Shell.Interop.IVsCommandWindow.ExecuteCommand"/> just posts message
-            /// of execution command to shell's queue, that doesn't match the current synchronous model =>
-            /// use <see cref="EnvDTE._DTE.ExecuteCommand"/> to immediatly invoke a command
+            /// of execution command to shell's queue, that doesn't match the current synchronous model,
+            /// <see cref="EnvDTE._DTE.ExecuteCommand"/> aslo is asynchronous, but more usefull, if use it together with a busy-looping
+            /// (<see cref="EnvDTE._dispCommandEvents_Event.AfterExecute"/> doesn't solve the issue)
             ClassificationManager.Instance.DTE.ExecuteCommand("Tools.ImportandExportSettings", $"/export:\"{_tempCurrenSettings}\"");
+            if (!IsExportDone(30)) return result;
 
             XmlNodeList existingSettings;
             try
@@ -107,6 +110,34 @@ namespace CoCo
 
             File.Delete(_tempCurrenSettings);
             return result;
+        }
+
+        /// <summary>
+        /// Busy-looping that just check if the <see cref="_tempCurrenSettings"/> is locked or free.
+        /// <para>It will check not more than <paramref name="repeatCount"/> times</para>
+        /// </summary>
+        private static bool IsExportDone(int repeatCount)
+        {
+            while (repeatCount < 30)
+            {
+                try
+                {
+                    using (var stream = File.OpenText(_tempCurrenSettings))
+                    {
+                    }
+                    break;
+                }
+                catch (IOException)
+                {
+                    using (var waitHandle = new ManualResetEventSlim(false))
+                    {
+                        waitHandle.Wait(100);
+                    }
+                    ++repeatCount;
+                }
+            }
+
+            return repeatCount < 30;
         }
     }
 }
