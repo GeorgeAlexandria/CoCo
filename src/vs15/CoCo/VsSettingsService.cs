@@ -35,11 +35,11 @@ namespace CoCo
                 // NOTE: 0xABGR – 10 chars
                 if (!(value is null) && value.Length == 10)
                 {
-                    value = value.Substring(2);
+                    value = value.Substring(4);
                     if (int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var res))
                     {
-                        // NOTE: colors are stored in the vssettings as ABGR
-                        color = Color.FromArgb(ToByte(res, 24), ToByte(res, 0), ToByte(res, 8), ToByte(res, 16));
+                        // NOTE: colors are stored in the vssettings as ABGR, and A is 0, avoid usages of it
+                        color = Color.FromRgb(ToByte(res, 0), ToByte(res, 8), ToByte(res, 16));
                         return true;
                     }
                 }
