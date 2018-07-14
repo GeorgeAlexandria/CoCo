@@ -184,15 +184,35 @@ namespace CoCo.Settings
             return false;
         }
 
-        private static JObject ToJObject(ClassificationSettings classification) => new JObject
+        private static JObject ToJObject(ClassificationSettings classification)
         {
-            { nameof(classification.Name), new JValue(classification.Name) },
-            { nameof(classification.Background), new JValue(classification.Background.Value.ToString()) },
-            { nameof(classification.Foreground), new JValue(classification.Foreground.Value.ToString()) },
-            { nameof(classification.IsBold), new JValue(classification.IsBold.Value) },
-            { nameof(classification.IsItalic), new JValue(classification.IsItalic.Value) },
-            { nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value) },
-            { nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value) }
-        };
+            var jClassification = new JObject();
+            jClassification.Add(nameof(classification.Name), new JValue(classification.Name));
+            if (classification.Background.HasValue)
+            {
+                jClassification.Add(nameof(classification.Background), new JValue(classification.Background.Value.ToString()));
+            }
+            if (classification.Foreground.HasValue)
+            {
+                jClassification.Add(nameof(classification.Foreground), new JValue(classification.Foreground.Value.ToString()));
+            }
+            if (classification.IsBold.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsBold), new JValue(classification.IsBold.Value));
+            }
+            if (classification.IsItalic.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsItalic), new JValue(classification.IsItalic.Value));
+            }
+            if (classification.FontRenderingSize.HasValue)
+            {
+                jClassification.Add(nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value));
+            }
+            if (classification.IsEnabled.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value));
+            }
+            return jClassification;
+        }
     }
 }
