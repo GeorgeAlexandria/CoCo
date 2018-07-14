@@ -9,6 +9,7 @@ namespace CoCo
         public static Option ReceiveOption()
         {
             PathsManager.Initialize();
+            MigrationService.MigrateSettings();
             var settings = SettingsManager.LoadSettings(PathsManager.CoCoSettingsFile);
             return FormattingService.SetFormatting(settings);
         }

@@ -61,7 +61,7 @@
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VsPackage.cs" />
-    <Compile Include="VsSettingsService.cs" />
+    <Compile Include="MigrationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

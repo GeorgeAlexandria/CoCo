@@ -37,6 +37,7 @@ namespace CoCo
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             PathsManager.Initialize();
+            MigrationService.MigrateSettings();
             var settings = Settings.SettingsManager.LoadSettings(PathsManager.CoCoSettingsFile);
             FormattingService.SetFormatting(settings);
 
