@@ -13,6 +13,22 @@ namespace CoCo
 {
     public static class MigrationService
     {
+        /// <summary>
+        /// VS seaves the default background as #FF010000 for light and dark theme.
+        /// </summary>
+        /// <remarks>
+        /// Unfortunatly, if background was set manually at #FF010000 this change will be lost
+        /// </remarks>
+        private static readonly Color _defaultBackground = Color.FromRgb(1, 0, 0);
+
+        /// <summary>
+        /// VS seaves the default foreground as #FF000000 for light and dark theme.
+        /// </summary>
+        /// <remarks>
+        /// Unfortunatly, if background was set manually at #FF000000 this change will be lost
+        /// </remarks>
+        private static readonly Color _defaultForeground = Colors.Black;
+
         /// <remarks>
         /// The location of current vssettings is unknown, as workaround, invoke export command to the temp file,
         /// parse an all needed info and remove the temp file.
@@ -100,13 +116,15 @@ namespace CoCo
                 }
 
                 value = item.Attributes["Foreground"]?.Value;
-                if (TryParseColor(value, out var foreground))
+                // NOTE: doesn't save the color that equals a default value, because it will be correctly set from the default formatting
+                if (TryParseColor(value, out var foreground) && !foreground.Equals(_defaultForeground))
                 {
                     classificationSettings.Foreground = foreground;
                 }
 
                 value = item.Attributes["Background"]?.Value;
-                if (TryParseColor(value, out var background))
+                // NOTE: doesn't save the color that equals a default value, because it will be correctly set from the default formatting
+                if (TryParseColor(value, out var background) && !background.Equals(_defaultBackground))
                 {
                     classificationSettings.Background = background;
                 }
