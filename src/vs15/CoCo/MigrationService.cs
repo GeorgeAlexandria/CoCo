@@ -29,8 +29,16 @@ namespace CoCo
         /// </remarks>
         public static void MigrateSettings()
         {
+            var cocoSettings = new FileInfo(Paths.CoCoSettingsFile);
+
+            // NOTE: create CoCo folder if it doesn't exist
+            if (!cocoSettings.Directory.Exists)
+            {
+                cocoSettings.Directory.Create();
+            }
+
             // NOTE: assumes that if the configuration file exists, the migration is complete
-            if (File.Exists(PathsManager.CoCoSettingsFile)) return;
+            if (cocoSettings.Exists) return;
 
             /// NOTE: <see cref="Microsoft.VisualStudio.Shell.Interop.IVsCommandWindow.ExecuteCommand"/> just posts message
             /// of execution command to shell's queue, that doesn't match the current synchronous model,
@@ -39,7 +47,7 @@ namespace CoCo
             ClassificationManager.Instance.DTE.ExecuteCommand("Tools.ImportandExportSettings", $"/export:\"{_tempCurrenSettings}\"");
             if (!IsExportDone(30)) return;
 
-            var result = new Dictionary<string, ClassificationSettings>();
+            var tryToDelete = true;
             XmlNodeList existingSettings;
             try
             {
@@ -50,14 +58,32 @@ namespace CoCo
             }
             catch (XPathException)
             {
-                File.Delete(_tempCurrenSettings);
                 return;
             }
             catch (FileNotFoundException)
             {
+                tryToDelete = false;
                 return;
             }
+            catch (IOException)
+            {
+                tryToDelete = false;
+                return;
+            }
+            finally
+            {
+                if (tryToDelete)
+                {
+                    File.Delete(_tempCurrenSettings);
+                }
+            }
 
+            MigateSettings(existingSettings);
+        }
+
+        private static void MigateSettings(XmlNodeList existingSettings)
+        {
+            var result = new Dictionary<string, ClassificationSettings>();
             for (int i = 0; i < existingSettings.Count; ++i)
             {
                 var item = existingSettings[i];
@@ -107,7 +133,7 @@ namespace CoCo
                 }
             };
 
-            SettingsManager.SaveSettings(settings, PathsManager.CoCoSettingsFile);
+            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
         }
 
         /// <summary>
@@ -124,7 +150,7 @@ namespace CoCo
                     using (var stream = File.OpenText(_tempCurrenSettings))
                     {
                     }
-                    break;
+                    return true;
                 }
                 catch (IOException)
                 {
@@ -135,8 +161,7 @@ namespace CoCo
                     ++currentCount;
                 }
             }
-
-            return currentCount < repeatCount;
+            return false;
         }
 
         private static bool TryParseColor(string value, out Color color)

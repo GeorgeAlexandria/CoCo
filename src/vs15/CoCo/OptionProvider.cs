@@ -8,9 +8,8 @@ namespace CoCo
     {
         public static Option ReceiveOption()
         {
-            PathsManager.Initialize();
             MigrationService.MigrateSettings();
-            var settings = SettingsManager.LoadSettings(PathsManager.CoCoSettingsFile);
+            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
             return FormattingService.SetFormatting(settings);
         }
 
@@ -55,7 +54,7 @@ namespace CoCo
                 Languages = languagesSettings
             };
 
-            SettingsManager.SaveSettings(settings, PathsManager.CoCoSettingsFile);
+            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
         }
 
         private static ClassificationSettings ToSettings(Classification classification) =>
