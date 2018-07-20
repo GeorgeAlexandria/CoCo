@@ -79,14 +79,16 @@
                            HorizontalAlignment="Center"
                            IsChecked="{Binding AllAreChecked}"
                            IsThreeState="True"
-                           Style="{StaticResource checkBoxFlatStyle}" />
+                           Style="{StaticResource checkBoxFlatStyle}"
+                           Visibility="Hidden" />
                      </GridViewColumnHeader>
                      <GridViewColumn.CellTemplate>
                         <DataTemplate>
                            <CheckBox
                               HorizontalAlignment="Center"
                               IsChecked="{Binding IsChecked}"
-                              Style="{StaticResource checkBoxFlatStyle}" />
+                              Style="{StaticResource checkBoxFlatStyle}"
+                              Visibility="Hidden" />
                         </DataTemplate>
                      </GridViewColumn.CellTemplate>
                   </GridViewColumn>
