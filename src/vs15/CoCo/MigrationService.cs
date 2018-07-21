@@ -61,7 +61,7 @@ namespace CoCo
             /// <see cref="EnvDTE._DTE.ExecuteCommand"/> aslo is asynchronous, but more usefull, if use it together with a busy-looping
             /// (<see cref="EnvDTE._dispCommandEvents_Event.AfterExecute"/> doesn't solve the issue)
             ClassificationManager.Instance.DTE.ExecuteCommand("Tools.ImportandExportSettings", $"/export:\"{_tempCurrenSettings}\"");
-            if (!IsExportDone(30)) return;
+            if (!IsExportDone(60)) return;
 
             var tryToDelete = true;
             XmlNodeList existingSettings;
