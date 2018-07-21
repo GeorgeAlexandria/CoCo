@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using EnvDTE;
@@ -14,6 +15,8 @@ namespace CoCo
     {
         private static Dictionary<string, List<IClassificationType>> _classifications;
 
+#pragma warning disable 649
+
         [Import]
         private IClassificationTypeRegistryService _registryService;
 
@@ -23,6 +26,8 @@ namespace CoCo
         private ClassificationManager()
         {
         }
+
+#pragma warning restore 649
 
         private static ClassificationManager _instance;
 
@@ -40,8 +45,8 @@ namespace CoCo
                     return _instance;
                 }
 
-                // TODO: throw some kind of exception
-                return null;
+                // TODO: change to custom exception type?
+                throw new InvalidOperationException("Couldn't retrieve IComponentModel service");
             }
         }
 

@@ -55,7 +55,7 @@ namespace CoCo
             }
 
             // NOTE: assumes that if the configuration file exists, the migration is complete
-            if (cocoSettings.Exists) return;
+            if (cocoSettings.Exists || ClassificationManager.Instance.DTE is null) return;
 
             /// NOTE: <see cref="Microsoft.VisualStudio.Shell.Interop.IVsCommandWindow.ExecuteCommand"/> just posts message
             /// of execution command to shell's queue, that doesn't match the current synchronous model,

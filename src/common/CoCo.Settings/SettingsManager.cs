@@ -39,7 +39,6 @@ namespace CoCo.Settings
                 jSettings.Add(language.Name, jLanguage);
             }
 
-            // TODO: this should be checked
             var info = new FileInfo(path);
             if (!info.Directory.Exists)
             {
@@ -82,7 +81,6 @@ namespace CoCo.Settings
 
                 var language = new LanguageSettings
                 {
-                    // TODO: must key exist?
                     Name = jSetting.Key,
                     CurrentClassifications = new List<ClassificationSettings>(),
                     Presets = new List<PresetSettings>()
