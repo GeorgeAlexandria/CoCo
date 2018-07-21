@@ -146,7 +146,7 @@ namespace CoCo
                 {
                     new LanguageSettings
                     {
-                        Name="CShap",
+                        Name="CSharp",
                         CurrentClassifications = result.Values.ToList(),
                         Presets = new List<PresetSettings>(),
                     }
