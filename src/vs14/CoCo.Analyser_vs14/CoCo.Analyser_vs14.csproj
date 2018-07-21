@@ -154,7 +154,7 @@
     <Analyzer Include="..\..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj">
+    <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' ">
       <Project>{a64f3639-b51d-4c8e-a680-75310ffda8f9}</Project>
       <Name>CoCo.Logging</Name>
     </ProjectReference>
