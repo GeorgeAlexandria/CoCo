@@ -1,0 +1,237 @@
+﻿<UserControl
+   x:Class="CoCo.UI.ClassificationsControl"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:local="clr-namespace:CoCo.UI"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
+   d:DataContext="{d:DesignInstance viewModels:OptionViewModel}"
+   d:DesignHeight="450"
+   d:DesignWidth="800"
+   mc:Ignorable="d">
+   <UserControl.Resources>
+      <ResourceDictionary>
+         <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Resources/ResourceDictionary.xaml" />
+         </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+   </UserControl.Resources>
+   <Grid>
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition Height="5*" />
+      </Grid.RowDefinitions>
+      <StackPanel
+         Grid.Row="0"
+         Width="Auto"
+         HorizontalAlignment="Left"
+         Orientation="Horizontal">
+         <Label
+            Margin="5,0,0,5"
+            Content="Language:"
+            Style="{StaticResource labelStyle}"
+            TextBlock.FontSize="14" />
+         <ComboBox
+            Width="100"
+            Margin="5,0,0,5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding Languages}"
+            SelectedItem="{Binding SelectedLanguage}"
+            Style="{StaticResource comboBoxFlatStyle}"
+            TextBlock.TextAlignment="Left" />
+      </StackPanel>
+      <Grid
+         Grid.Row="1"
+         HorizontalAlignment="Stretch"
+         VerticalAlignment="Stretch">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="150" />
+            <ColumnDefinition Width="Auto" />
+         </Grid.ColumnDefinitions>
+         <ListView
+            Name="listView"
+            Grid.Column="0"
+            BorderBrush="{StaticResource SoftBlue}"
+            DataContext="{Binding SelectedLanguage}"
+            ItemsSource="{Binding Classifications}"
+            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
+            SelectedItem="{Binding SelectedClassification}"
+            Style="{StaticResource classificationListViewStyle}">
+            <ListView.View>
+               <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeader}">
+                  <GridViewColumn>
+                     <GridViewColumnHeader MinWidth="200" HorizontalContentAlignment="Left">
+                        <TextBlock
+                           Margin="6,0,0,0"
+                           Text="Name"
+                           TextAlignment="Center" />
+                     </GridViewColumnHeader>
+                     <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                           <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" />
+                        </DataTemplate>
+                     </GridViewColumn.CellTemplate>
+                  </GridViewColumn>
+                  <GridViewColumn>
+                     <GridViewColumnHeader Width="35" Style="{StaticResource gridViewColumnHeaderWithoutGripper}">
+                        <CheckBox
+                           HorizontalAlignment="Center"
+                           IsChecked="{Binding AllAreChecked}"
+                           IsThreeState="True"
+                           Style="{StaticResource checkBoxFlatStyle}"
+                           Visibility="Hidden" />
+                     </GridViewColumnHeader>
+                     <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                           <CheckBox
+                              HorizontalAlignment="Center"
+                              IsChecked="{Binding IsChecked}"
+                              Style="{StaticResource checkBoxFlatStyle}"
+                              Visibility="Hidden" />
+                        </DataTemplate>
+                     </GridViewColumn.CellTemplate>
+                  </GridViewColumn>
+               </GridView>
+            </ListView.View>
+         </ListView>
+         <StackPanel
+            Grid.Column="1"
+            MinWidth="270"
+            DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="98"
+                  Content="Rendering Size:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <TextBox
+                  Width="50"
+                  HorizontalAlignment="Left"
+                  VerticalContentAlignment="Center"
+                  MaxLength="3"
+                  Style="{StaticResource textBoxFlatStyle}"
+                  Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
+                  TextAlignment="Left" />
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="78"
+                  Content="Foreground:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <Border
+                  Width="110"
+                  HorizontalAlignment="Left"
+                  BorderBrush="{StaticResource SoftBlue}"
+                  BorderThickness="1,1,1,1">
+                  <StackPanel Background="White" Orientation="Horizontal">
+                     <Border
+                        Width="20"
+                        Height="12"
+                        Margin="5,0,0,0"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1.2">
+                        <Rectangle>
+                           <Rectangle.Fill>
+                              <SolidColorBrush Color="{Binding Foreground}" />
+                           </Rectangle.Fill>
+                        </Rectangle>
+                     </Border>
+                     <TextBox
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        IsReadOnly="True"
+                        Text="{Binding Foreground}" />
+                  </StackPanel>
+               </Border>
+               <Button
+                  Width="63"
+                  Margin="8,0,0,0"
+                  Background="{StaticResource SoftGrey}"
+                  BorderBrush="{StaticResource SoftBlue}"
+                  BorderThickness="1.5"
+                  Command="{Binding CustomizeForeground}"
+                  Content="Customize" />
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               Margin="0,0,0,4"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <Label
+                  Width="78"
+                  Content="Background:"
+                  FontSize="12"
+                  Style="{StaticResource labelStyle}" />
+               <Border
+                  Width="110"
+                  HorizontalAlignment="Left"
+                  BorderBrush="{StaticResource SoftBlue}"
+                  BorderThickness="1,1,1,1">
+                  <StackPanel Background="White" Orientation="Horizontal">
+                     <Border
+                        Width="20"
+                        Height="12"
+                        Margin="5,0,0,0"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1.2">
+                        <Rectangle>
+                           <Rectangle.Fill>
+                              <SolidColorBrush Color="{Binding Background}" />
+                           </Rectangle.Fill>
+                        </Rectangle>
+                     </Border>
+                     <TextBox
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        VerticalContentAlignment="Center"
+                        BorderThickness="0"
+                        IsReadOnly="True"
+                        Text="{Binding Background}" />
+                  </StackPanel>
+               </Border>
+               <Button
+                  Width="63"
+                  Margin="8,0,0,0"
+                  Background="{StaticResource SoftGrey}"
+                  BorderBrush="{StaticResource SoftBlue}"
+                  BorderThickness="1.5"
+                  Command="{Binding CustomizeBackground}"
+                  Content="Customize" />
+            </StackPanel>
+            <StackPanel
+               Width="Auto"
+               Margin="5,0,0,0"
+               HorizontalAlignment="Left"
+               Orientation="Horizontal">
+               <CheckBox
+                  VerticalContentAlignment="Center"
+                  Content="Bold"
+                  IsChecked="{Binding IsBold}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+               <CheckBox
+                  Margin="10,0,0,0"
+                  VerticalContentAlignment="Center"
+                  Content="Italic"
+                  IsChecked="{Binding IsItalic}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+            </StackPanel>
+         </StackPanel>
+      </Grid>
+   </Grid>
+</UserControl>

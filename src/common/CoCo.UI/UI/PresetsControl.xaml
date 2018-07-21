@@ -1,0 +1,113 @@
+﻿<UserControl
+   x:Class="CoCo.UI.PresetsControl"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:local="clr-namespace:CoCo.UI"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+   xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
+   d:DataContext="{d:DesignInstance viewModels:OptionViewModel}"
+   d:DesignHeight="200"
+   d:DesignWidth="400"
+   mc:Ignorable="d">
+   <UserControl.Resources>
+      <ResourceDictionary>
+         <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="Resources/ResourceDictionary.xaml" />
+         </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+   </UserControl.Resources>
+   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <Grid.RowDefinitions>
+         <RowDefinition Height="Auto" />
+         <RowDefinition Height="1.5*" />
+         <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
+      <StackPanel
+         Grid.Row="0"
+         Width="Auto"
+         HorizontalAlignment="Left"
+         Orientation="Horizontal">
+         <Label
+            Margin="5,0,0,5"
+            Content="Language:"
+            Style="{StaticResource labelStyle}"
+            TextBlock.FontSize="14" />
+         <ComboBox
+            Width="100"
+            Margin="5,0,0,5"
+            DisplayMemberPath="Name"
+            ItemsSource="{Binding Languages}"
+            SelectedItem="{Binding SelectedLanguage}"
+            Style="{StaticResource comboBoxFlatStyle}"
+            TextBlock.TextAlignment="Left" />
+      </StackPanel>
+      <ListBox
+         Grid.Row="1"
+         VerticalAlignment="Stretch"
+         BorderBrush="{StaticResource SoftBlue}"
+         BorderThickness="1"
+         DataContext="{Binding SelectedLanguage.PresetsContainer}"
+         ItemsSource="{Binding Presets}"
+         SelectionMode="Extended"
+         Style="{StaticResource listBoxFlatStyle}">
+         <ListBox.ItemTemplate>
+            <DataTemplate>
+               <Grid>
+                  <Grid.ColumnDefinitions>
+                     <ColumnDefinition />
+                     <ColumnDefinition Width="Auto" />
+                     <ColumnDefinition Width="Auto" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                     Grid.Column="0"
+                     Width="Auto"
+                     Margin="6,0,0,0"
+                     Text="{Binding Name, Mode=OneWay}" />
+                  <Button
+                     Grid.Column="1"
+                     Margin="8,0,8,0"
+                     Command="{Binding ApplyPreset}"
+                     CommandParameter="{Binding}"
+                     Foreground="#5e5e5a"
+                     Style="{StaticResource ApplyPresetButton}" />
+                  <Button
+                     Grid.Column="2"
+                     Margin="8,0,8,0"
+                     Command="{Binding DeletePreset}"
+                     CommandParameter="{Binding}"
+                     DockPanel.Dock="Right"
+                     Foreground="#5e5e5a"
+                     Style="{StaticResource DeleteButton}" />
+               </Grid>
+            </DataTemplate>
+         </ListBox.ItemTemplate>
+         <ListBox.ItemContainerStyle>
+            <Style BasedOn="{StaticResource listBoxItemFlatStyle}" TargetType="ListBoxItem">
+               <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=OneWayToSource}" />
+            </Style>
+         </ListBox.ItemContainerStyle>
+      </ListBox>
+      <Grid Grid.Row="2" DataContext="{Binding SelectedLanguage.PresetsContainer}">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.5*" />
+            <ColumnDefinition Width="0.5*" />
+         </Grid.ColumnDefinitions>
+         <TextBox
+            Grid.Column="0"
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Center"
+            BorderThickness="0"
+            IsReadOnly="False"
+            Text="{Binding CreatedName, UpdateSourceTrigger=PropertyChanged}" />
+         <Button
+            Grid.Column="1"
+            Margin="8,0,8,0"
+            Background="{StaticResource SoftGrey}"
+            BorderBrush="{StaticResource SoftBlue}"
+            BorderThickness="1.5"
+            Command="{Binding CreatePreset}"
+            Content="Create" />
+      </Grid>
+   </Grid>
+</UserControl>
