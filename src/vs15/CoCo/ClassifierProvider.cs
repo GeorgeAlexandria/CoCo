@@ -16,6 +16,11 @@ namespace CoCo
     //[ContentType("text")]
     internal class ClassifierProvider : IClassifierProvider
     {
+        /// <summary>
+        /// Determines that settings was set to avoid a many sets settings from the classifier
+        /// </summary>
+        private static bool _wasSettingsSet;
+
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
 
@@ -37,8 +42,12 @@ namespace CoCo
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             MigrationService.MigrateSettings();
-            var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
-            FormattingService.SetFormatting(settings);
+            if (!_wasSettingsSet)
+            {
+                var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
+                FormattingService.SetFormatting(settings);
+                _wasSettingsSet = true;
+            }
 
             var classificationTypes = new Dictionary<string, IClassificationType>(32);
             foreach (var name in Names.All)
