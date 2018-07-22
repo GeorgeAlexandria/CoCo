@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v1.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v1.2.1-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.0.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.0.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio 2015 (VS14) and 2017 (VS15) extension that uses Roslyn API's for analyzing C# source code
@@ -16,62 +16,27 @@ Extension supports following elements:
 * Instance and enum fields
 * Labels
 
-Use Visual Studio ***Fonts and Colors*** options to change colors for items. Look for items in ***Display Items*** that starts with `CoCo format:`
+Use **CoCo/Classifications** options in the Visual Studio options to change colors for items or use **CoCo/Presets** to manage (create, delete) presets, 
+<br/>then apply them and accept your changes in the Visual Studio option page (just click OK button).
 
 # Examples
 
-(Extension doesn't contain the ***default*** colors, so you need to set they as pointed out above if you want to see how it works)
+Extension doesn't apply the ***default*** preset after installation. <br/>So you need to set colors manually or apply existing presets as pointed out above if you want to see how it works.
 
-List of the values (that's represented in RGB) for the various CoCo colour settings in the Dark theme:
+You can look at the screenshot where code was classified after applying the **CoCo dark theme** preset:
 
-|Item name|Value|
-|----------------------------------------|---------------------:|
-|CoCo format: alias namespace            |(default) 220 220 220 |
-|CoCo format: constructors               |(default) 220 220 220 |
-|CoCo format: enum field                 |  0 193 193 |
-|CoCo format: events                     |(default) 220 220 220 |
-|CoCo format: extenson methods           |233 122   1|
-|CoCo format: fields                     |255 157 255|
-|CoCo format: labels                     |120  20   0|
-|CoCo format: local methods              |187  20   0|
-|CoCo format: local variables            |128 128   0|
-|CoCo format: methods                    |187  54   4|
-|CoCo format: namespaces                 |(default) 220 220 220 |
-|CoCo format: parameters                 |128 128 128|
-|CoCo format: properties                 |255   0 255|
-|CoCo format: range variables            |128 128   0|
-|CoCo format: static methods             |154  82   1|
-<br/>
 <details>
-<summary>Screenshot the dark theme (expand me) </summary>
+<summary>Click to expand screenshot</summary>
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277591/1/DarkExample.PNG)
 
 </details>
-<br/>
 
-List of the values (that's represented in RGB) for the various CoCo colour settings in the Light|Blue theme:
 
-|Item name|Value|
-|----------------------------------------|---------------------:|
-|CoCo format: Alias namespace            |128   0 255|
-|CoCo format: constructors               |255   0   0|
-|CoCo format: enum field                 |  0 193 193|
-|CoCo format: events                     |200   0 128|
-|CoCo format: extenson methods           |224 118   1|
-|CoCo format: fields                     |174   0 174|
-|CoCo format: labels                     | 90  10  10|
-|CoCo format: local methods              |150  10  10|
-|CoCo format: local variables            |128 128   0|
-|CoCo format: methods                    |187   0   0|
-|CoCo format: namespace                  |  0 213   0|
-|CoCo format: parameters                 |108 108 108|
-|CoCo format: properties                 |255   0 255|
-|CoCo format: range variables            |128 128   0|
-|CoCo format: static methods             |163  86   1|
-<br/>
+And you can look at the similar screenshot where code was classified after applying another preset - **CoCo light|blue theme**:
+
 <details>
-<summary>Screenshot the light|blue theme (expand me)</summary>
+<summary>Click to expand screenshot</summary>
 
 ![](https://georgealeksandria.gallerycdn.vsassets.io/extensions/georgealeksandria/coco-19226/1.0/1504035613003/277592/1/LightExample.PNG)
 
