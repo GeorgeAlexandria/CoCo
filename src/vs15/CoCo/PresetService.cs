@@ -24,7 +24,7 @@ namespace CoCo
             {
                 new PresetSettings
                 {
-                    Name = "CoCo ligth|blue theme",
+                    Name = "CoCo light|blue theme",
                     Classifications = new List<ClassificationSettings>
                     {
                         CreateClassification(Names.AliasNamespaceName, 220, 220, 220),
