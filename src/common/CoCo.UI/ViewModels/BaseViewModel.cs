@@ -13,7 +13,7 @@ namespace CoCo.UI.ViewModels
 
         protected void SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = null)
         {
-            if (EqualityComparer<T>.Default.Equals(oldValue, default(T)) || !oldValue.Equals(newValue))
+            if (EqualityComparer<T>.Default.Equals(oldValue, default) || !oldValue.Equals(newValue))
             {
                 oldValue = newValue;
                 RaisePropertyChanged(propertyName);

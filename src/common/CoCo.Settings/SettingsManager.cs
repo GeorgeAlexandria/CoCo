@@ -124,7 +124,7 @@ namespace CoCo.Settings
             if (!(jClassification[nameof(ClassificationSettings.Name)] is JValue jValue) ||
                 !(jValue.Value is string name))
             {
-                classification = default(ClassificationSettings);
+                classification = default;
                 return false;
             }
 

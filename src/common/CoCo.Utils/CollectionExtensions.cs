@@ -17,8 +17,7 @@ namespace CoCo.Utils
             {
                 return true;
             }
-            // TODO: use C# 7.1
-            value = default(V);
+            value = default;
             return false;
         }
 

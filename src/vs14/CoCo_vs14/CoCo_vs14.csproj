@@ -24,6 +24,7 @@
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <CopyBuildOutputToOutputDirectory>true</CopyBuildOutputToOutputDirectory>
     <CopyOutputSymbolsToOutputDirectory>false</CopyOutputSymbolsToOutputDirectory>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>

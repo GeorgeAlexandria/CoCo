@@ -71,7 +71,7 @@ namespace CoCo.UI.ViewModels
             _isExecute = true;
             try
             {
-                var argument = parameter is T ? (T)parameter : default(T);
+                var argument = parameter is T ? (T)parameter : default;
                 RaiseCanExecuteChanged();
                 _execute(argument);
             }
