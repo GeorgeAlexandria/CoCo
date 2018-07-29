@@ -2,8 +2,9 @@
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
     <Configurations>Debug;Release</Configurations>
-    <RootNamespace>CoCo.Analyser</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RootNamespace>CoCo.Analyser</RootNamespace>
     <ProjectGuid>{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
