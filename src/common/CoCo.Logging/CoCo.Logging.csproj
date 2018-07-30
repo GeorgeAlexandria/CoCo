@@ -10,6 +10,7 @@
     <RootNamespace>CoCo.Logging</RootNamespace>
     <AssemblyName>CoCo.Logging</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,7 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.4.10" />
+    <PackageReference Include="NLog" Version="4.5.7" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />

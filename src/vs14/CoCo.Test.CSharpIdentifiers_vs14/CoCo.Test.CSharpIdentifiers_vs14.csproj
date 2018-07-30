@@ -11,6 +11,7 @@
     <RootNamespace>CoCo.Test.CSharpIdentifiers</RootNamespace>
     <AssemblyName>CoCo.Test.CSharpIdentifiers_vs14</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -36,7 +37,7 @@
     <ProjectReference Include="..\CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />

@@ -10,6 +10,7 @@
     <RootNamespace>CoCo.Analyser</RootNamespace>
     <AssemblyName>CoCo.Analyser</AssemblyName>
     <FileAlignment>512</FileAlignment>
+    <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,10 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.7.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.7.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="2.7.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.7.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.8.2" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="15.0.26606" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="15.0.26606" />
     <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
