@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Shell;
 
 namespace CoCo
 {
-    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
     [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
     [Guid("b933474d-306e-434f-952d-a820c849ed07")]
