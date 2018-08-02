@@ -229,7 +229,7 @@
       <VSIXCopyLocalReferenceSourceItem Include="@(ReferenceCopyLocalPaths)" Condition="$(IncludeDebugSymbolsInVSIXContainer) And '%(ReferenceCopyLocalPaths.Extension)' =='.pdb'" />
     </ItemGroup>
   </Target>
-    <!-- Force include a couple of assemblies because they are newer version in comparison with VS14-->
+  <!-- Force include a couple of assemblies because they are newer version in comparison with VS14-->
   <Target Name="ForceIncludeNewestAssemblies" AfterTargets="GetVsixSourceItems">
     <ItemGroup>
       <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" />
