@@ -120,7 +120,7 @@ namespace CoCo.UI.ViewModels
                     color = Color.FromArgb(outColor.A, outColor.R, outColor.G, outColor.B);
                     return true;
                 }
-                color = default(Color);
+                color = default;
                 return false;
             }
         }
