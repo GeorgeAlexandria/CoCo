@@ -41,6 +41,7 @@
     </Compile>
     <Compile Include="Access\Locals\DynamicVariable.cs" />
     <Compile Include="Access\Locals\PatternVariable.cs" />
+    <Compile Include="Access\Members\ConstantMember.cs" />
     <Compile Include="Access\Members\ValueTupleFields.cs" />
     <Compile Include="Access\Methods\ExtensionMethod.cs" />
     <Compile Include="Access\Methods\LocalMethod.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Declarations\Locals\ForeachControlVariable.cs" />
     <Compile Include="Declarations\Locals\SimpleVariable.cs" />
     <Compile Include="Declarations\Locals\UsingVariable.cs" />
+    <Compile Include="Declarations\Members\ConstantMember.cs" />
     <Compile Include="Declarations\Members\InstanceEvent.cs" />
     <Compile Include="Declarations\Members\InstanceField.cs" />
     <Compile Include="Declarations\Members\InstanceProperty.cs" />

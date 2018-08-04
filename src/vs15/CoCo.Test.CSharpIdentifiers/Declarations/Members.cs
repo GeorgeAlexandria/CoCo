@@ -27,6 +27,13 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                 .AssertContains(Names.EventName.ClassifyAt(145, 7));
         }
 
+        [Test]
+        public void MemberTest_ConstantMember()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Members\ConstantMember.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.FieldName.ClassifyAt(124, 5));
+        }
+
         // TODO: add a special classifications for Type' members ?
         [Test]
         public void MemberTest_TypeField()

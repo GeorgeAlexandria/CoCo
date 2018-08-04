@@ -36,6 +36,13 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         }
 
         [Test]
+        public void MemberTest_ConstantMember()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\ConstantMember.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.FieldName.ClassifyAt(190, 8));
+        }
+
+        [Test]
         public void MemberTest_TypeEvent()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\TypeEvent.cs".GetClassifications(ProjectInfo)
@@ -46,7 +53,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void MemberTest_TypeField()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\TypeField.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.FieldName.ClassifyAt(184, 8));
+                .AssertContains(Names.FieldName.ClassifyAt(186, 13));
         }
 
         [Test]

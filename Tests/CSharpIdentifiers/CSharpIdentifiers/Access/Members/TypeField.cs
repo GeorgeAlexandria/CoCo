@@ -6,7 +6,7 @@ namespace CSharpIdentifiers.Access.Member
     {
         public void Create()
         {
-            Console.WriteLine(System.Int32.MaxValue);
+            Console.WriteLine(System.IO.Path.PathSeparator);
         }
     }
 }
