@@ -4,13 +4,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace>CoCo.Analyser</RootNamespace>
+    <OutputPath>..\..\bin\CoCo.Analyser_vs14\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Analyser_vs14\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Analyser_vs14\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" />
@@ -33,6 +28,5 @@
     <Compile Include="..\..\vs15\CoCo.Analyser\Log.cs" Link="Log.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\SyntaxNodeExtensions.cs" Link="SyntaxNodeExtensions.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\WorkspaceExtensions.cs" Link="WorkspaceExtensions.cs" />
-    <None Include="app.config" />
   </ItemGroup>
 </Project>

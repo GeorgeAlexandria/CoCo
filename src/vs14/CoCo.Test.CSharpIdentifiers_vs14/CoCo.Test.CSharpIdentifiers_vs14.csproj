@@ -4,14 +4,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace>CoCo.Test.CSharpIdentifiers</RootNamespace>
+    <OutputPath>..\..\bin\CoCo.Test_vs14\$(Configuration)\</OutputPath>
     <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Test_vs14\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Test_vs14\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj" />

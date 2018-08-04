@@ -3,14 +3,9 @@
     <TargetFramework>net46</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\..\bin\CoCo.Analyser\$(Configuration)\</OutputPath>
     <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Analyser\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Analyser\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" />
@@ -32,6 +27,5 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <None Include="app.config" />
   </ItemGroup>
 </Project>

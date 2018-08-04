@@ -3,13 +3,8 @@
     <TargetFramework>net46</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>..\..\bin\CoCo.Settings\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Settings\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Settings\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoCo.Utils\CoCo.Utils.csproj" />

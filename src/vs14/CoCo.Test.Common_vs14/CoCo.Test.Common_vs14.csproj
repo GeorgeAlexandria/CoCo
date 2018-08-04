@@ -4,14 +4,9 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <RootNamespace>CoCo.Test.Common</RootNamespace>
+    <OutputPath>..\..\bin\CoCo.Test_vs14\$(Configuration)\</OutputPath>
     <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Test_vs14\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\bin\CoCo.Test_vs14\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj" />
@@ -48,6 +43,5 @@
     <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\StringOperand.cs" Link="Stubs\StringOperand.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\TrackingPoint.cs" Link="Stubs\TrackingPoint.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\TestHelper.cs" Link="TestHelper.cs" />
-    <None Include="app.config" />
   </ItemGroup>
 </Project>
