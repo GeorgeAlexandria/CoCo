@@ -30,6 +30,7 @@ namespace CoCo
         private readonly IClassificationType _aliasNamespaceType;
         private readonly IClassificationType _constructorMethodType;
         private readonly IClassificationType _labelType;
+        private readonly IClassificationType _constantFieldType;
 
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -64,6 +65,7 @@ namespace CoCo
             _aliasNamespaceType = classifications[Names.AliasNamespaceName];
             _constructorMethodType = classifications[Names.ConstructorName];
             _labelType = classifications[Names.LabelName];
+            _constantFieldType = classifications[Names.ConstantFieldName];
         }
 
         /// <remarks>
@@ -156,8 +158,11 @@ namespace CoCo
                         break;
 
                     case SymbolKind.Field:
-                        var fieldType = (symbol as IFieldSymbol).Type;
-                        var fieldClassification = fieldType.TypeKind == TypeKind.Enum ? _enumFieldType : _fieldType;
+                        var fieldSymbol = symbol as IFieldSymbol;
+                        var fieldClassification =
+                            fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
+                            fieldSymbol.IsConst ? _constantFieldType :
+                            _fieldType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldClassification));
                         break;
 

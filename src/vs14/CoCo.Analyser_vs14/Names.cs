@@ -18,6 +18,7 @@ namespace CoCo.Analyser
         public const string AliasNamespaceName = "Alias namespace name";
         public const string ConstructorName = "Constructor method name";
         public const string LabelName = "Label name";
+        public const string ConstantFieldName = "Constant field name";
 
         private static ImmutableArray<string> _all;
 
@@ -42,6 +43,7 @@ namespace CoCo.Analyser
                 builder.Add(AliasNamespaceName);
                 builder.Add(ConstructorName);
                 builder.Add(LabelName);
+                builder.Add(ConstantFieldName);
                 return _all = builder.ToImmutable();
             }
         }

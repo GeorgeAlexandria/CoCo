@@ -28,6 +28,7 @@ namespace CoCo
                     Classifications = new List<ClassificationSettings>
                     {
                         CreateClassification(Names.AliasNamespaceName, 220, 220, 220),
+                        CreateClassification(Names.ConstantFieldName, 255, 157, 255),
                         CreateClassification(Names.ConstructorName, 220, 220, 220),
                         CreateClassification(Names.EnumFieldName, 0, 193, 193),
                         CreateClassification(Names.EventName, 220, 220, 220),
@@ -49,6 +50,7 @@ namespace CoCo
                     Classifications = new List<ClassificationSettings>
                     {
                         CreateClassification(Names.AliasNamespaceName, 128, 0, 255),
+                        CreateClassification(Names.ConstantFieldName, 174, 0, 174),
                         CreateClassification(Names.ConstructorName, 255, 0, 0),
                         CreateClassification(Names.EnumFieldName, 0, 193, 193),
                         CreateClassification(Names.EventName, 200, 0, 128),

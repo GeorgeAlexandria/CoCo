@@ -39,7 +39,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void MemberTest_ConstantMember()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Members\ConstantMember.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.FieldName.ClassifyAt(190, 8));
+                .AssertContains(Names.ConstantFieldName.ClassifyAt(190, 8));
         }
 
         [Test]
