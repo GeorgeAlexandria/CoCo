@@ -62,4 +62,33 @@
          </Setter.Value>
       </Setter>
    </Style>
+   <Style x:Key="CustomizeButton" TargetType="Button">
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Opacity" Value="0.5" />
+      <Setter Property="Template">
+         <Setter.Value>
+            <ControlTemplate>
+               <Border
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Focusable="False">
+                  <Path
+                     Width="12"
+                     Height="12"
+                     VerticalAlignment="Center"
+                     Data="M0,0 h10 l1,7 l2,2 l6.5,-2.5 l5,9 l-5,4.5 l0,2 l5,4.5 l-5,9 l-6.5,-2.5 l-2,2 l-1,7 h-10 l-1,-7 l-2,-2 l-6.5,2.5 l-5,-9 l5,-4.5 l0,-2 l-5,-4.5 l5,-9 l6.5,2.5 l2,-2z M2,16 c2,-1 6,-3 9,3 c1,2 2,4 0,8 c-3.5,2.5 -7.5,2.5 -9,0 c-2,0 -3,-4 -2,-8z"
+                     Fill="{TemplateBinding Foreground}"
+                     Stretch="Fill"
+                     Stroke="Transparent"
+                     ToolTip="Customize" />
+               </Border>
+               <ControlTemplate.Triggers>
+                  <Trigger Property="IsMouseOver" Value="True">
+                     <Setter Property="Opacity" Value="1" />
+                  </Trigger>
+               </ControlTemplate.Triggers>
+            </ControlTemplate>
+         </Setter.Value>
+      </Setter>
+   </Style>
 </ResourceDictionary>

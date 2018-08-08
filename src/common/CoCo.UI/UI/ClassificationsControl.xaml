@@ -157,13 +157,10 @@
                   </StackPanel>
                </Border>
                <Button
-                  Width="63"
                   Margin="8,0,0,0"
-                  Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlue}"
-                  BorderThickness="1.5"
                   Command="{Binding CustomizeForeground}"
-                  Content="Customize" />
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CustomizeButton}" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -204,13 +201,10 @@
                   </StackPanel>
                </Border>
                <Button
-                  Width="63"
                   Margin="8,0,0,0"
-                  Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlue}"
-                  BorderThickness="1.5"
                   Command="{Binding CustomizeBackground}"
-                  Content="Customize" />
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CustomizeButton}" />
             </StackPanel>
             <StackPanel
                Width="Auto"
