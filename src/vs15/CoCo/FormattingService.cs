@@ -18,11 +18,9 @@ namespace CoCo
         /// <returns>Converted option</returns>
         public static Option SetFormatting(Settings.Settings settings)
         {
-            var classificationManager = ClassificationManager.Instance;
-
-            var classificationTypes = classificationManager.GetClassifications();
-            var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
-            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, classificationManager.DefaultClassification);
+            var classificationTypes = ClassificationManager.Instance.GetClassifications();
+            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
 
             var defaultPresets = PresetService.GetDefaultPresets(defaultFormatting);
 
@@ -97,10 +95,9 @@ namespace CoCo
 
         private static void SetFormatting(Option option, Dictionary<string, IClassificationType> classificationsMap = null)
         {
-            var classificationManager = ClassificationManager.Instance;
-            var classificationTypes = classificationManager.GetClassifications();
-            var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
-            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, classificationManager.DefaultClassification);
+            var classificationTypes = ClassificationManager.Instance.GetClassifications();
+            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
 
             if (classificationsMap is null)
             {
