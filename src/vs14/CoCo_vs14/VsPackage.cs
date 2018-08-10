@@ -25,7 +25,8 @@ namespace CoCo
             if (!(_optionViewModel is null)) return _optionViewModel;
 
             var option = OptionProvider.ReceiveOption();
-            return _optionViewModel = new OptionViewModel(option);
+            // TODO: implement
+            return _optionViewModel = new OptionViewModel(option, null);
         }
 
         internal static void SaveOption(OptionViewModel optionViewModel) =>

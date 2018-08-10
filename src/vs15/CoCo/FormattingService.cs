@@ -100,6 +100,7 @@ namespace CoCo
             var classificationManager = ClassificationManager.Instance;
             var classificationTypes = classificationManager.GetClassifications();
             var classificationFormatMap = classificationManager.FormatMapService.GetClassificationFormatMap(category: "text");
+            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, classificationManager.DefaultClassification);
 
             if (classificationsMap is null)
             {
@@ -122,7 +123,7 @@ namespace CoCo
                     if (classificationsMap.TryGetValue(classification.Name, out var classificationType))
                     {
                         var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
-                        formatting = Apply(formatting, classification);
+                        formatting = Apply(formatting, classification, defaultFormatting);
                         classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);
                     }
                 }
@@ -210,9 +211,13 @@ namespace CoCo
             return classificationSettings;
         }
 
-        private static TextFormattingRunProperties Apply(TextFormattingRunProperties formatting, Classification classification)
+        private static TextFormattingRunProperties Apply(
+            TextFormattingRunProperties formatting,
+            Classification classification,
+            TextFormattingRunProperties defaultFormatting)
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
+
             if (formatting.Italic != classification.IsItalic)
             {
                 formatting = formatting.SetItalic(classification.IsItalic);
@@ -221,16 +226,41 @@ namespace CoCo
             {
                 formatting = formatting.SetBold(classification.IsBold);
             }
-            if (Math.Abs(formatting.FontRenderingEmSize - classification.FontRenderingSize) > 0.001)
+
+            if (classification.FontRenderingSizeWasReset)
+            {
+                /// NOTE: we should not try to set a some of value from <param name="defaultFormatting" /> if it's marked as empty
+                /// to avoid set that will mark value from <param name="formatting" /> as non empty
+                formatting = defaultFormatting.FontRenderingEmSizeEmpty
+                    ? formatting.ClearFontRenderingEmSize()
+                    : formatting.SetFontHintingEmSize(defaultFormatting.FontRenderingEmSize);
+            }
+            else if (Math.Abs(formatting.FontRenderingEmSize - classification.FontRenderingSize) > 0.001)
             {
                 formatting = formatting.SetFontRenderingEmSize(classification.FontRenderingSize);
             }
-            if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
+
+            if (classification.BackgroundWasReset)
+            {
+                /// NOTE: we should not try to set a some of value from <param name="defaultFormatting" /> if it's marked as empty
+                /// to avoid set that will mark value from <param name="formatting" /> as non empty
+                formatting = defaultFormatting.BackgroundBrushEmpty
+                    ? formatting.ClearBackgroundBrush()
+                    : formatting.SetBackground(defaultFormatting.BackgroundBrush.GetColor());
+            }
+            else if (!(formatting.BackgroundBrush is SolidColorBrush backgroundBrush) ||
                 !backgroundBrush.Color.Equals(classification.Background))
             {
                 formatting = formatting.SetBackgroundBrush(new SolidColorBrush(classification.Background));
             }
-            if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
+
+            if (classification.ForegroundWasReset)
+            {
+                // NOTE: Foreground always is set, just look at
+                // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
+                formatting = formatting.SetForeground(defaultFormatting.ForegroundBrush.GetColor());
+            }
+            else if (!(formatting.ForegroundBrush is SolidColorBrush foregroundBrush) ||
                 !foregroundBrush.Color.Equals(classification.Foreground))
             {
                 formatting = formatting.SetForegroundBrush(new SolidColorBrush(classification.Foreground));
