@@ -19,8 +19,7 @@ namespace CoCo
         public static Option SetFormatting(Settings.Settings settings)
         {
             var classificationTypes = ClassificationManager.Instance.GetClassifications();
-            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
-            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
+            var defaultFormatting = GetDefaultFormatting();
 
             var defaultPresets = PresetService.GetDefaultPresets(defaultFormatting);
 
@@ -92,6 +91,12 @@ namespace CoCo
 
         /// NOTE: assume that <param name="option"/> is correct input data from options pages
         public static void SetFormatting(Option option) => SetFormatting(option, null);
+
+        public static TextFormattingRunProperties GetDefaultFormatting()
+        {
+            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            return GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
+        }
 
         private static void SetFormatting(Option option, Dictionary<string, IClassificationType> classificationsMap = null)
         {
