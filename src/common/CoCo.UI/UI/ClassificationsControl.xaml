@@ -161,6 +161,12 @@
                   Command="{Binding CustomizeForeground}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CustomizeButton}" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetForeground}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource ResetButton}"
+                  ToolTip="Reset to default" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -205,6 +211,12 @@
                   Command="{Binding CustomizeBackground}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CustomizeButton}" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetBackground}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource ResetButton}"
+                  ToolTip="Reset to default" />
             </StackPanel>
             <StackPanel
                Width="Auto"
