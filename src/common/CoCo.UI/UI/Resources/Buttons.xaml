@@ -5,118 +5,92 @@
    xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    mc:Ignorable="d">
-   <Style x:Key="DeleteButton" TargetType="Button">
+   <Style x:Key="CommonButton" TargetType="Button">
       <Setter Property="BorderThickness" Value="0" />
       <Setter Property="Opacity" Value="0.5" />
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate>
-               <Border
-                  Background="Transparent"
-                  BorderThickness="0"
-                  Focusable="False">
-                  <Path
-                     Width="12"
-                     Height="12"
-                     VerticalAlignment="Center"
-                     Data="M0,2 L2.5,2 L4,1 L6,1 L7.5,2 L10,2 L10,3 L0,3z M1,4 L9,4 L9,10 Q9,12 7,12 L3,12 Q1,12 1,10z"
-                     Fill="{TemplateBinding Foreground}"
-                     Stretch="Fill"
-                     ToolTip="Delete" />
-               </Border>
-               <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                     <Setter Property="Opacity" Value="1" />
-                  </Trigger>
-               </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
    </Style>
-   <Style x:Key="ApplyPresetButton" TargetType="Button">
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Opacity" Value="0.5" />
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate>
-               <Border
-                  Background="Transparent"
-                  BorderThickness="0"
-                  Focusable="False">
-                  <Path
-                     Width="12"
-                     Height="12"
-                     VerticalAlignment="Center"
-                     Data="M3.5,0 L8.5,0 L8.5,3 L12,3 L6,7 L0,3 L3.5,3 z M0,8 L12,8 L12,9 L0,9z"
-                     Fill="{TemplateBinding Foreground}"
-                     Stretch="Fill"
-                     Stroke="Transparent"
-                     ToolTip="Apply" />
-               </Border>
-               <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                     <Setter Property="Opacity" Value="1" />
-                  </Trigger>
-               </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
-   </Style>
-   <Style x:Key="CustomizeButton" TargetType="Button">
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Opacity" Value="0.5" />
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate>
-               <Border
-                  Background="Transparent"
-                  BorderThickness="0"
-                  Focusable="False">
-                  <Path
-                     Width="16"
-                     Height="16"
-                     VerticalAlignment="Center"
-                     Data="M0,0 h10 l1,7 l2,2 l6.5,-2.5 l5,9 l-5,4.5 l0,2 l5,4.5 l-5,9 l-6.5,-2.5 l-2,2 l-1,7 h-10 l-1,-7 l-2,-2 l-6.5,2.5 l-5,-9 l5,-4.5 l0,-2 l-5,-4.5 l5,-9 l6.5,2.5 l2,-2z M2,16 c2,-1 6,-3 9,3 c1,2 2,4 0,8 c-3.5,2.5 -7.5,2.5 -9,0 c-2,0 -3,-4 -2,-8z"
-                     Fill="{TemplateBinding Foreground}"
-                     Stretch="Fill"
-                     Stroke="Transparent"
-                     ToolTip="Customize" />
-               </Border>
-               <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                     <Setter Property="Opacity" Value="1" />
-                  </Trigger>
-               </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
-   </Style>
-   <Style x:Key="ResetButton" TargetType="Button">
-      <Setter Property="BorderThickness" Value="0" />
-      <Setter Property="Opacity" Value="0.5" />
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate>
-               <Border
-                  Background="Transparent"
-                  BorderThickness="0"
-                  Focusable="False">
-                  <Path
-                     Width="16"
-                     Height="16"
-                     VerticalAlignment="Center"
-                     Data="M-1,0 l2,-2 C3,1 2,5 -2,5 l0,1 l-2.5,-2 l2.5,-2 l0,1 C-0.5,3.5 1,1 -1,0z                       M-5.5,3 C-6.5,0 -5.5,-4 -1.5,-4 l0,-1 l2.5,2 l-2.5,2 l0,-1 C-2.5,-2.5 -4.5,0 -3.5,1z"
-                     Fill="{TemplateBinding Foreground}"
-                     Stretch="Fill"
-                     Stroke="Transparent" />
-               </Border>
-               <ControlTemplate.Triggers>
-                  <Trigger Property="IsMouseOver" Value="True">
-                     <Setter Property="Opacity" Value="1" />
-                  </Trigger>
-               </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
-   </Style>
+   <ControlTemplate x:Key="DeleteButton">
+      <Border
+         Background="Transparent"
+         BorderThickness="0"
+         Focusable="False">
+         <Path
+            Width="12"
+            Height="12"
+            VerticalAlignment="Center"
+            Data="M0,2 L2.5,2 L4,1 L6,1 L7.5,2 L10,2 L10,3 L0,3z M1,4 L9,4 L9,10 Q9,12 7,12 L3,12 Q1,12 1,10z"
+            Fill="{TemplateBinding Foreground}"
+            Stretch="Fill"
+            ToolTip="Delete" />
+      </Border>
+      <ControlTemplate.Triggers>
+         <Trigger Property="IsMouseOver" Value="True">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="ToolTip" Value="Delete" />
+         </Trigger>
+      </ControlTemplate.Triggers>
+   </ControlTemplate>
+   <ControlTemplate x:Key="ApplyPresetButton">
+      <Border
+         Background="Transparent"
+         BorderThickness="0"
+         Focusable="False">
+         <Path
+            Width="12"
+            Height="12"
+            VerticalAlignment="Center"
+            Data="M3.5,0 L8.5,0 L8.5,3 L12,3 L6,7 L0,3 L3.5,3 z M0,8 L12,8 L12,9 L0,9z"
+            Fill="{TemplateBinding Foreground}"
+            Stretch="Fill"
+            Stroke="Transparent" />
+      </Border>
+      <ControlTemplate.Triggers>
+         <Trigger Property="IsMouseOver" Value="True">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="ToolTip" Value="Apply" />
+         </Trigger>
+      </ControlTemplate.Triggers>
+   </ControlTemplate>
+   <ControlTemplate x:Key="CustomizeButton">
+      <Border
+         Background="Transparent"
+         BorderThickness="0"
+         Focusable="False">
+         <Path
+            Width="16"
+            Height="16"
+            VerticalAlignment="Center"
+            Data="M0,0 h10 l1,7 l2,2 l6.5,-2.5 l5,9 l-5,4.5 l0,2 l5,4.5 l-5,9 l-6.5,-2.5 l-2,2 l-1,7 h-10 l-1,-7 l-2,-2 l-6.5,2.5 l-5,-9 l5,-4.5 l0,-2 l-5,-4.5 l5,-9 l6.5,2.5 l2,-2z M2,16 c2,-1 6,-3 9,3 c1,2 2,4 0,8 c-3.5,2.5 -7.5,2.5 -9,0 c-2,0 -3,-4 -2,-8z"
+            Fill="{TemplateBinding Foreground}"
+            Stretch="Fill"
+            Stroke="Transparent" />
+      </Border>
+      <ControlTemplate.Triggers>
+         <Trigger Property="IsMouseOver" Value="True">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="ToolTip" Value="Customize" />
+         </Trigger>
+      </ControlTemplate.Triggers>
+   </ControlTemplate>
+   <ControlTemplate x:Key="ResetButton">
+      <Border
+         Background="Transparent"
+         BorderThickness="0"
+         Focusable="False">
+         <Path
+            Width="16"
+            Height="16"
+            VerticalAlignment="Center"
+            Data="M-1,0 l2,-2 C3,1 2,5 -2,5 l0,1 l-2.5,-2 l2.5,-2 l0,1 C-0.5,3.5 1,1 -1,0z M-5.5,3 C-6.5,0 -5.5,-4 -1.5,-4 l0,-1 l2.5,2 l-2.5,2 l0,-1 C-2.5,-2.5 -4.5,0 -3.5,1z"
+            Fill="{TemplateBinding Foreground}"
+            Stretch="Fill"
+            Stroke="Transparent" />
+      </Border>
+      <ControlTemplate.Triggers>
+         <Trigger Property="IsMouseOver" Value="True">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="ToolTip" Value="Reset to default" />
+         </Trigger>
+      </ControlTemplate.Triggers>
+   </ControlTemplate>
 </ResourceDictionary>
