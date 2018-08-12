@@ -117,6 +117,12 @@
                   Style="{StaticResource textBoxFlatStyle}"
                   Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
                   TextAlignment="Left" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetFontRenderingSize}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource ResetButton}"
+                  ToolTip="Reset to default" />
             </StackPanel>
             <StackPanel
                Width="Auto"
