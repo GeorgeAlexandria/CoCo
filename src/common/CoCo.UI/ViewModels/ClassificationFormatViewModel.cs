@@ -24,6 +24,11 @@ namespace CoCo.UI.ViewModels
             _foreground = classification.Foreground;
             _background = classification.Background;
             _fontRenderingSize = classification.FontRenderingSize;
+
+            _foregroundWasReset = classification.ForegroundWasReset;
+            _backgroundWasReset = classification.BackgroundWasReset;
+            _fontRenderingSizeWasReset = classification.FontRenderingSizeWasReset;
+
             DisplayName = classification.DisplayName;
 
             CustomizeForeground = new DelegateCommand(() =>

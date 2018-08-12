@@ -47,9 +47,8 @@ namespace CoCo
                     if (languageSettings.Name.Equals(language.Name))
                     {
                         isLanguageExists = true;
-                        patchedClassifications =
-                            PatchClassifications(classificationsMap.Keys, languageSettings.CurrentClassifications, defaultFormatting);
-                        AppendToClassifications(patchedClassifications, language.Classifications);
+                        FillClassifications(
+                            classificationsMap.Keys, languageSettings.CurrentClassifications, language.Classifications, defaultFormatting);
 
                         foreach (var presetSettings in languageSettings.Presets)
                         {
@@ -57,9 +56,8 @@ namespace CoCo
                             if (presetNames.ContainsKey(presetSettings.Name)) continue;
 
                             var preset = new Preset(presetSettings.Name);
-                            patchedClassifications = PatchClassifications(classificationsMap.Keys, presetSettings.Classifications, defaultFormatting);
-                            AppendToClassifications(patchedClassifications, preset.Classifications);
-
+                            FillClassifications(
+                                classificationsMap.Keys, presetSettings.Classifications, preset.Classifications, defaultFormatting);
                             language.Presets.Add(preset);
                         }
                         break;
@@ -70,17 +68,14 @@ namespace CoCo
                 foreach (var defaultPreset in defaultLanguagePresets)
                 {
                     var preset = new Preset(defaultPreset.Name);
-                    patchedClassifications = PatchClassifications(classificationsMap.Keys, defaultPreset.Classifications, defaultFormatting);
-                    AppendToClassifications(patchedClassifications, preset.Classifications);
-
+                    FillClassifications(classificationsMap.Keys, defaultPreset.Classifications, preset.Classifications, defaultFormatting);
                     language.Presets.Add(preset);
                 }
                 // NOTE: add default classifications
                 if (!isLanguageExists)
                 {
-                    patchedClassifications =
-                        PatchClassifications(classificationsMap.Keys, Array.Empty<ClassificationSettings>(), defaultFormatting);
-                    AppendToClassifications(patchedClassifications, language.Classifications);
+                    FillClassifications(
+                        classificationsMap.Keys, Array.Empty<ClassificationSettings>(), language.Classifications, defaultFormatting);
                 }
                 option.Languages.Add(language);
             }
@@ -132,35 +127,17 @@ namespace CoCo
             }
         }
 
-        private static void AppendToClassifications(
-            List<ClassificationSettings> classificationSettings,
-            ICollection<Classification> classifications)
-        {
-            foreach (var settings in classificationSettings)
-            {
-                // TODO: temporary the display name will equals it name
-                classifications.Add(new Classification(settings.Name, settings.Name)
-                {
-                    Background = settings.Background.Value,
-                    Foreground = settings.Foreground.Value,
-                    IsBold = settings.IsBold.Value,
-                    IsItalic = settings.IsItalic.Value,
-                    FontRenderingSize = settings.FontRenderingSize.Value,
-                    IsEnabled = settings.IsEnabled.Value,
-                });
-            }
-        }
-
         /// <summary>
-        /// Append non exist classifications in <paramref name="classificationsSettings"/> and
-        /// set the default values of non exist classifications fields using <paramref name="defaultFormatting"/>
+        /// Converts an existing <paramref name="classificationsSettings"/> to <see cref="Classification"/> and appen them to <paramref name="classifications"/>,
+        /// also create <see cref="Classification"/> from non existing classifications in <paramref name="classificationsSettings"/>
+        /// set the default values of fields using <paramref name="defaultFormatting"/>
         /// </summary>
-        private static List<ClassificationSettings> PatchClassifications(
+        private static void FillClassifications(
             IEnumerable<string> classificationNames,
             ICollection<ClassificationSettings> classificationsSettings,
+            ICollection<Classification> classifications,
             TextFormattingRunProperties defaultFormatting)
         {
-            var classifications = new List<ClassificationSettings>();
             foreach (var name in classificationNames)
             {
                 var isClassificationExists = false;
@@ -169,48 +146,68 @@ namespace CoCo
                     if (classificationSettings.Name.Equals(name))
                     {
                         isClassificationExists = true;
-                        classifications.Add(PatchClassification(classificationSettings, defaultFormatting));
+                        classifications.Add(ToClassification(classificationSettings, defaultFormatting));
                         break;
                     }
                 }
                 if (isClassificationExists) continue;
 
-                classifications.Add(defaultFormatting.ToSettings(name));
+                var classificationFromDefault = ToClassification(defaultFormatting.ToSettings(name), defaultFormatting);
+                // NOTE: mark classifications which was created from default formatting as reseted to avoid redundant saving 
+                classificationFromDefault.ForegroundWasReset = true;
+                classificationFromDefault.BackgroundWasReset = true;
+                classificationFromDefault.FontRenderingSizeWasReset = true;
+                classifications.Add(classificationFromDefault);
             }
-            return classifications;
         }
 
         /// <summary>
-        /// Set the default values of non exist classifications fields using <paramref name="defaultFormatting"/>
+        /// Conver <paramref name="classificationSettings"/> to <see cref="Classification"/> setting the default values
+        /// of non exist classifications fields using <paramref name="defaultFormatting"/>
         /// </summary>
-        private static ClassificationSettings PatchClassification(
-            ClassificationSettings classificationSettings, TextFormattingRunProperties defaultFormatting)
+        private static Classification ToClassification(
+            in ClassificationSettings classificationSettings, TextFormattingRunProperties defaultFormatting)
         {
+            // TODO: temporary the display name will equals it name
+            var classification = new Classification(classificationSettings.Name, classificationSettings.Name);
+
             if (!classificationSettings.Background.HasValue)
             {
-                classificationSettings.Background = defaultFormatting.BackgroundBrush.GetColor();
+                classification.Background = defaultFormatting.BackgroundBrush.GetColor();
+                classification.BackgroundWasReset = true;
             }
+            else
+            {
+                classification.Background = classificationSettings.Background.Value;
+            }
+
             if (!classificationSettings.Foreground.HasValue)
             {
-                classificationSettings.Foreground = defaultFormatting.ForegroundBrush.GetColor();
+                classification.Foreground = defaultFormatting.ForegroundBrush.GetColor();
+                classification.ForegroundWasReset = true;
             }
-            if (!classificationSettings.IsBold.HasValue)
+            else
             {
-                classificationSettings.IsBold = defaultFormatting.Bold;
-            }
-            if (!classificationSettings.IsItalic.HasValue)
-            {
-                classificationSettings.IsItalic = defaultFormatting.Italic;
+                classification.Foreground = classificationSettings.Foreground.Value;
             }
             if (!classificationSettings.FontRenderingSize.HasValue)
             {
-                classificationSettings.FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize;
+                classification.FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize;
+                classification.FontRenderingSizeWasReset = true;
             }
+            else
+            {
+                classification.FontRenderingSize = classificationSettings.FontRenderingSize.Value;
+            }
+
+            classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
+            classification.IsItalic = classificationSettings.IsItalic ?? defaultFormatting.Italic;
+
             if (!classificationSettings.IsEnabled.HasValue)
             {
-                classificationSettings.IsEnabled = true;
+                classification.IsEnabled = true;
             }
-            return classificationSettings;
+            return classification;
         }
 
         private static TextFormattingRunProperties Apply(
