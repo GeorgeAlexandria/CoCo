@@ -7,16 +7,13 @@ namespace CoCo
     public static class Extensions
     {
         /// <summary>
-        /// Creates classification from <paramref name="formatting"/>
+        /// Creates the default classification from <paramref name="formatting"/> 
+        /// which doesn't set the default values for properties that can be reset
         /// </summary>
-        public static ClassificationSettings ToSettings(
-           this TextFormattingRunProperties formatting,
-           string classificationName) => new ClassificationSettings
+        public static ClassificationSettings ToDefaultSettings(
+           this TextFormattingRunProperties formatting, string classificationName) => new ClassificationSettings
            {
                Name = classificationName,
-               Background = formatting.BackgroundBrush.GetColor(),
-               Foreground = formatting.ForegroundBrush.GetColor(),
-               FontRenderingSize = (int)formatting.FontRenderingEmSize,
                IsBold = formatting.Bold,
                IsItalic = formatting.Italic,
                IsEnabled = true,

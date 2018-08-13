@@ -152,11 +152,9 @@ namespace CoCo
                 }
                 if (isClassificationExists) continue;
 
-                var classificationFromDefault = ToClassification(defaultFormatting.ToSettings(name), defaultFormatting);
-                // NOTE: mark classifications which was created from default formatting as reseted to avoid redundant saving 
-                classificationFromDefault.ForegroundWasReset = true;
-                classificationFromDefault.BackgroundWasReset = true;
-                classificationFromDefault.FontRenderingSizeWasReset = true;
+                /// NOTE: Don't set classifications settings field that can be reset,
+                /// because they will be handled correctly in the <see cref="ToClassification"/>
+                var classificationFromDefault = ToClassification(defaultFormatting.ToDefaultSettings(name), defaultFormatting);
                 classifications.Add(classificationFromDefault);
             }
         }
@@ -190,6 +188,7 @@ namespace CoCo
             {
                 classification.Foreground = classificationSettings.Foreground.Value;
             }
+
             if (!classificationSettings.FontRenderingSize.HasValue)
             {
                 classification.FontRenderingSize = (int)defaultFormatting.FontRenderingEmSize;
