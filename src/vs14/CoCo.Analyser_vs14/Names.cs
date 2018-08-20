@@ -19,6 +19,7 @@ namespace CoCo.Analyser
         public const string ConstructorName = "Constructor method name";
         public const string LabelName = "Label name";
         public const string ConstantFieldName = "Constant field name";
+        public const string DestructorName = "Destructor method name";
 
         private static ImmutableArray<string> _all;
 
@@ -44,6 +45,7 @@ namespace CoCo.Analyser
                 builder.Add(ConstructorName);
                 builder.Add(LabelName);
                 builder.Add(ConstantFieldName);
+                builder.Add(DestructorName);
                 return _all = builder.ToImmutable();
             }
         }

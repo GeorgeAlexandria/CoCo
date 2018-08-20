@@ -20,6 +20,7 @@ namespace CoCo.Analyser
         public const string LabelName = "CoCo label name";
         public const string LocalMethodName = "CoCo local method name";
         public const string ConstantFieldName = "CoCo constant field name";
+        public const string DestructorName = "CoCo destructor method name";
 
         private static ImmutableArray<string> _all;
 
@@ -46,6 +47,7 @@ namespace CoCo.Analyser
                 builder.Add(LabelName);
                 builder.Add(LocalMethodName);
                 builder.Add(ConstantFieldName);
+                builder.Add(DestructorName);
                 return _all = builder.ToImmutable();
             }
         }

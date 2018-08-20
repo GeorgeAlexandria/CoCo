@@ -92,6 +92,7 @@
     <Compile Include="Declarations\Members\TypeEvent.cs" />
     <Compile Include="Declarations\Members\TypeField.cs" />
     <Compile Include="Declarations\Members\TypeProperty.cs" />
+    <Compile Include="Declarations\Methods\Destructor.cs" />
     <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
     <Compile Include="Declarations\Methods\Constructor.cs" />
     <Compile Include="Declarations\Methods\LocalMethod.cs" />

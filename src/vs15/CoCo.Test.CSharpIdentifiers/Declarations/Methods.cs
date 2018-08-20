@@ -14,6 +14,13 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         }
 
         [Test]
+        public void MethodTest_Destructor()
+        {
+            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Destructor.cs".GetClassifications(ProjectInfo)
+                .AssertContains(Names.DestructorName.ClassifyAt(100, 10));
+        }
+
+        [Test]
         public void MethodTest()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Method.cs".GetClassifications(ProjectInfo)

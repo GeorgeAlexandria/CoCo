@@ -31,6 +31,7 @@ namespace CoCo
         private readonly IClassificationType _constructorMethodType;
         private readonly IClassificationType _labelType;
         private readonly IClassificationType _constantFieldType;
+        private readonly IClassificationType _destructorMethodType;
 
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -66,6 +67,7 @@ namespace CoCo
             _constructorMethodType = classifications[Names.ConstructorName];
             _labelType = classifications[Names.LabelName];
             _constantFieldType = classifications[Names.ConstantFieldName];
+            _destructorMethodType = classifications[Names.DestructorName];
         }
 
         /// <remarks>
@@ -194,6 +196,7 @@ namespace CoCo
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
                             methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
