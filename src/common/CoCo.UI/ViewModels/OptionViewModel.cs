@@ -5,14 +5,14 @@ namespace CoCo.UI.ViewModels
 {
     public class OptionViewModel : BaseViewModel
     {
-        public OptionViewModel(Option option)
+        public OptionViewModel(Option option, IResetValuesProvider resetValuesProvider)
         {
             // TODO: it will invoke one event at invocation of clear and by one event per added item
             // Write custom BulkObservableCollection to avoid so many events
             Languages.Clear();
             foreach (var language in option.Languages)
             {
-                Languages.Add(new LanguageViewModel(language));
+                Languages.Add(new LanguageViewModel(language, resetValuesProvider));
             }
         }
 

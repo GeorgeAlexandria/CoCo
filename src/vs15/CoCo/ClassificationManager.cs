@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
 using CoCo.Analyser;
-using EnvDTE;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Language.StandardClassification;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -15,47 +10,16 @@ namespace CoCo
     {
         private static Dictionary<string, List<IClassificationType>> _classifications;
 
-#pragma warning disable 649
-
-        [Import]
-        private IClassificationTypeRegistryService _registryService;
-
-        [Import]
-        private IClassificationFormatMapService _formatMapService;
-
         private ClassificationManager()
         {
         }
 
-#pragma warning restore 649
-
         private static ClassificationManager _instance;
 
-        public static ClassificationManager Instance
-        {
-            get
-            {
-                if (_instance != null) return _instance;
-
-                if (ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) is IComponentModel componentModel)
-                {
-                    _instance = new ClassificationManager();
-                    componentModel.DefaultCompositionService.SatisfyImportsOnce(_instance);
-                    _instance.DTE = ServiceProvider.GlobalProvider.GetService(typeof(EnvDTE.DTE)) as _DTE;
-                    return _instance;
-                }
-
-                // TODO: change to custom exception type?
-                throw new InvalidOperationException("Couldn't retrieve IComponentModel service");
-            }
-        }
-
-        public _DTE DTE { get; private set; }
-
-        public IClassificationFormatMapService FormatMapService => _formatMapService;
+        public static ClassificationManager Instance => _instance ?? (_instance = new ClassificationManager());
 
         public IClassificationType DefaultClassification =>
-            _registryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
+            ServicesProvider.Instance.RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
 
         /// <returns>
         /// Classifications are grouped by language
@@ -66,13 +30,16 @@ namespace CoCo
 
             _classifications = new Dictionary<string, List<IClassificationType>>();
 
-            var formatMap = _formatMapService.GetClassificationFormatMap(category: "text");
-            var identifierPosition = GetIdentifierPosition(_registryService, formatMap);
+            var registryService = ServicesProvider.Instance.RegistryService;
+            var formatMapService = ServicesProvider.Instance.FormatMapService;
+
+            var formatMap = formatMapService.GetClassificationFormatMap(category: "text");
+            var identifierPosition = GetIdentifierPosition(registryService, formatMap);
 
             var languageClassifications = new List<IClassificationType>();
             foreach (var name in Names.All)
             {
-                var classificationType = _registryService.GetClassificationType(name);
+                var classificationType = registryService.GetClassificationType(name);
                 if (classificationType != null)
                 {
                     // TODO: need to carefully test this case
@@ -84,7 +51,7 @@ namespace CoCo
                 }
                 else
                 {
-                    classificationType = _registryService.CreateClassificationType(name, new IClassificationType[0]);
+                    classificationType = registryService.CreateClassificationType(name, new IClassificationType[0]);
                     var formatting = TextFormattingRunProperties.CreateTextFormattingRunProperties();
                     if (identifierPosition > 0)
                     {

@@ -7,17 +7,17 @@ namespace CoCo.UI.ViewModels
 {
     public class LanguageViewModel : BaseViewModel, IClassificationProvider
     {
-        public LanguageViewModel(Language language)
+        public LanguageViewModel(Language language, IResetValuesProvider resetValuesProvider)
         {
             Name = language.Name;
             foreach (var classification in language.Classifications)
             {
-                var classificationViewModel = new ClassificationFormatViewModel(classification);
+                var classificationViewModel = new ClassificationFormatViewModel(classification, resetValuesProvider);
                 classificationViewModel.PropertyChanged += OnClassificationPropertyChanged;
                 Classifications.Add(classificationViewModel);
             }
 
-            PresetsContainer = new PresetsViewModel(language.Presets, this);
+            PresetsContainer = new PresetsViewModel(language.Presets, this, resetValuesProvider);
         }
 
         public PresetsViewModel PresetsContainer { get; }

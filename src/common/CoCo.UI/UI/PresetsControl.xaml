@@ -70,7 +70,8 @@
                      Command="{Binding ApplyPreset}"
                      CommandParameter="{Binding}"
                      Foreground="#5e5e5a"
-                     Style="{StaticResource ApplyPresetButton}" />
+                     Style="{StaticResource CommonButton}"
+                     Template="{StaticResource ApplyPresetButton}" />
                   <Button
                      Grid.Column="2"
                      Margin="8,0,8,0"
@@ -78,7 +79,8 @@
                      CommandParameter="{Binding}"
                      DockPanel.Dock="Right"
                      Foreground="#5e5e5a"
-                     Style="{StaticResource DeleteButton}" />
+                     Style="{StaticResource CommonButton}"
+                     Template="{StaticResource DeleteButton}" />
                </Grid>
             </DataTemplate>
          </ListBox.ItemTemplate>

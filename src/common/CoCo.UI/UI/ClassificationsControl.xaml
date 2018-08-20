@@ -117,6 +117,12 @@
                   Style="{StaticResource textBoxFlatStyle}"
                   Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
                   TextAlignment="Left" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetFontRenderingSize}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CommonButton}"
+                  Template="{StaticResource ResetButton}" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -157,13 +163,17 @@
                   </StackPanel>
                </Border>
                <Button
-                  Width="63"
                   Margin="8,0,0,0"
-                  Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlue}"
-                  BorderThickness="1.5"
                   Command="{Binding CustomizeForeground}"
-                  Content="Customize" />
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CommonButton}"
+                  Template="{StaticResource CustomizeButton}" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetForeground}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CommonButton}"
+                  Template="{StaticResource ResetButton}" />
             </StackPanel>
             <StackPanel
                Width="Auto"
@@ -204,13 +214,17 @@
                   </StackPanel>
                </Border>
                <Button
-                  Width="63"
                   Margin="8,0,0,0"
-                  Background="{StaticResource SoftGrey}"
-                  BorderBrush="{StaticResource SoftBlue}"
-                  BorderThickness="1.5"
                   Command="{Binding CustomizeBackground}"
-                  Content="Customize" />
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CommonButton}"
+                  Template="{StaticResource CustomizeButton}" />
+               <Button
+                  Margin="8,0,0,0"
+                  Command="{Binding ResetBackground}"
+                  Foreground="#5e5e5a"
+                  Style="{StaticResource CommonButton}"
+                  Template="{StaticResource ResetButton}" />
             </StackPanel>
             <StackPanel
                Width="Auto"

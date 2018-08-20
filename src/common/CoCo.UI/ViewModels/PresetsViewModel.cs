@@ -7,8 +7,9 @@ namespace CoCo.UI.ViewModels
     public class PresetsViewModel : BaseViewModel
     {
         private readonly IClassificationProvider _provider;
+        private readonly IResetValuesProvider _resetValuesProvider;
 
-        public PresetsViewModel(ICollection<Preset> presets, IClassificationProvider provider)
+        public PresetsViewModel(ICollection<Preset> presets, IClassificationProvider provider, IResetValuesProvider resetValuesProvider)
         {
             foreach (var item in presets)
             {
@@ -17,6 +18,7 @@ namespace CoCo.UI.ViewModels
 
             CreatePreset = new DelegateCommand(Create, CanCreate);
             _provider = provider;
+            _resetValuesProvider = resetValuesProvider;
         }
 
         public ObservableCollection<PresetViewModel> Presets { get; } = new ObservableCollection<PresetViewModel>();
@@ -41,7 +43,7 @@ namespace CoCo.UI.ViewModels
             var list = new List<ClassificationFormatViewModel>(data.Classifications.Count);
             foreach (var item in data.Classifications)
             {
-                list.Add(new ClassificationFormatViewModel(item));
+                list.Add(new ClassificationFormatViewModel(item, _resetValuesProvider));
             }
             _provider.SetCurrentClassificaions(list);
         }

@@ -55,13 +55,13 @@ namespace CoCo
             }
 
             // NOTE: assumes that if the configuration file exists, the migration is complete
-            if (cocoSettings.Exists || ClassificationManager.Instance.DTE is null) return;
+            if (cocoSettings.Exists || ServicesProvider.Instance.DTE is null) return;
 
             /// NOTE: <see cref="Microsoft.VisualStudio.Shell.Interop.IVsCommandWindow.ExecuteCommand"/> just posts message
             /// of execution command to shell's queue, that doesn't match the current synchronous model,
             /// <see cref="EnvDTE._DTE.ExecuteCommand"/> aslo is asynchronous, but more usefull, if use it together with a busy-looping
             /// (<see cref="EnvDTE._dispCommandEvents_Event.AfterExecute"/> doesn't solve the issue)
-            ClassificationManager.Instance.DTE.ExecuteCommand("Tools.ImportandExportSettings", $"/export:\"{_tempCurrenSettings}\"");
+            ServicesProvider.Instance.DTE.ExecuteCommand("Tools.ImportandExportSettings", $"/export:\"{_tempCurrenSettings}\"");
             if (!IsExportDone(60)) return;
 
             var tryToDelete = true;

@@ -15,7 +15,7 @@ namespace CoCo
         {
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
-                var classification = defaultFormatting.ToSettings(name);
+                var classification = defaultFormatting.ToDefaultSettings(name);
                 classification.Foreground = Color.FromRgb(r, g, b);
                 return classification;
             }

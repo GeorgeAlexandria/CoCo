@@ -57,16 +57,29 @@ namespace CoCo
             SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
         }
 
-        private static ClassificationSettings ToSettings(Classification classification) =>
-            new ClassificationSettings
+        private static ClassificationSettings ToSettings(Classification classification)
+        {
+            var settings = new ClassificationSettings
             {
                 Name = classification.Name,
-                Background = classification.Background,
-                Foreground = classification.Foreground,
                 IsBold = classification.IsBold,
                 IsItalic = classification.IsItalic,
-                FontRenderingSize = classification.FontRenderingSize,
                 IsEnabled = classification.IsEnabled,
             };
+
+            if (!classification.BackgroundWasReset)
+            {
+                settings.Background = classification.Background;
+            }
+            if (!classification.ForegroundWasReset)
+            {
+                settings.Foreground = classification.Foreground;
+            }
+            if (!classification.FontRenderingSizeWasReset)
+            {
+                settings.FontRenderingSize = classification.FontRenderingSize;
+            }
+            return settings;
+        }
     }
 }

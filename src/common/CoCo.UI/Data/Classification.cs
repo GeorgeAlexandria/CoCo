@@ -22,9 +22,15 @@ namespace CoCo.UI.Data
 
         public Color Foreground { get; set; }
 
+        public bool ForegroundWasReset { get; set; }
+
         public Color Background { get; set; }
 
+        public bool BackgroundWasReset { get; set; }
+
         public int FontRenderingSize { get; set; }
+
+        public bool FontRenderingSizeWasReset { get; set; }
 
         public bool IsEnabled { get; set; }
     }

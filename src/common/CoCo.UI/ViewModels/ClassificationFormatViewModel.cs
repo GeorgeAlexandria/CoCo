@@ -6,10 +6,17 @@ namespace CoCo.UI.ViewModels
 {
     public class ClassificationFormatViewModel : BaseViewModel
     {
+        private readonly IResetValuesProvider _resetValuesProvider;
         private readonly string _classificationName;
 
-        public ClassificationFormatViewModel(Classification classification)
+        private bool _foregroundWasReset;
+        private bool _backgroundWasReset;
+        private bool _fontRenderingSizeWasReset;
+
+        public ClassificationFormatViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
         {
+            _resetValuesProvider = resetValuesProvider;
+
             _classificationName = classification.Name;
             _isEnabled = classification.IsEnabled;
             _isBold = classification.IsBold;
@@ -17,6 +24,11 @@ namespace CoCo.UI.ViewModels
             _foreground = classification.Foreground;
             _background = classification.Background;
             _fontRenderingSize = classification.FontRenderingSize;
+
+            _foregroundWasReset = classification.ForegroundWasReset;
+            _backgroundWasReset = classification.BackgroundWasReset;
+            _fontRenderingSizeWasReset = classification.FontRenderingSizeWasReset;
+
             DisplayName = classification.DisplayName;
 
             CustomizeForeground = new DelegateCommand(() =>
@@ -33,11 +45,32 @@ namespace CoCo.UI.ViewModels
                     Background = color;
                 }
             });
+            ResetForeground = new DelegateCommand(() =>
+            {
+                Foreground = _resetValuesProvider.Foreground;
+                _foregroundWasReset = true;
+            });
+            ResetBackground = new DelegateCommand(() =>
+            {
+                Background = _resetValuesProvider.Background;
+                _backgroundWasReset = true;
+            });
+            ResetFontRenderingSize = new DelegateCommand(() =>
+            {
+                SetProperty(ref _fontRenderingSize, _resetValuesProvider.FontRenderingSize, nameof(Size));
+                _fontRenderingSizeWasReset = true;
+            });
         }
 
         public DelegateCommand CustomizeForeground { get; }
 
         public DelegateCommand CustomizeBackground { get; }
+
+        public DelegateCommand ResetForeground { get; }
+
+        public DelegateCommand ResetBackground { get; }
+
+        public DelegateCommand ResetFontRenderingSize { get; }
 
         private bool _isEnabled;
 
@@ -75,6 +108,7 @@ namespace CoCo.UI.ViewModels
                 if (int.TryParse(value, out var size) && size > 0)
                 {
                     _fontRenderingSize = size;
+                    _fontRenderingSizeWasReset = false;
                 }
                 RaisePropertyChanged();
             }
@@ -87,7 +121,11 @@ namespace CoCo.UI.ViewModels
         public Color Foreground
         {
             get => _foreground;
-            set => SetProperty(ref _foreground, value);
+            set
+            {
+                SetProperty(ref _foreground, value);
+                _foregroundWasReset = false;
+            }
         }
 
         private Color _background;
@@ -95,7 +133,11 @@ namespace CoCo.UI.ViewModels
         public Color Background
         {
             get => _background;
-            set => SetProperty(ref _background, value);
+            set
+            {
+                SetProperty(ref _background, value);
+                _backgroundWasReset = false;
+            }
         }
 
         public Classification ExtractData() => new Classification(_classificationName, DisplayName)
@@ -105,7 +147,11 @@ namespace CoCo.UI.ViewModels
             IsBold = IsBold,
             IsItalic = IsItalic,
             FontRenderingSize = _fontRenderingSize,
-            IsEnabled = IsChecked
+            IsEnabled = IsChecked,
+
+            ForegroundWasReset = _foregroundWasReset,
+            BackgroundWasReset = _backgroundWasReset,
+            FontRenderingSizeWasReset = _fontRenderingSizeWasReset,
         };
 
         // TODO: would be a better solution to implement a custom color picker in wpf...
