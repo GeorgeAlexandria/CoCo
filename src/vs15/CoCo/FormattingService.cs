@@ -128,9 +128,9 @@ namespace CoCo
         }
 
         /// <summary>
-        /// Converts an existing <paramref name="classificationsSettings"/> to <see cref="Classification"/> and appen them to <paramref name="classifications"/>,
-        /// also create <see cref="Classification"/> from non existing classifications in <paramref name="classificationsSettings"/>
-        /// set the default values of fields using <paramref name="defaultFormatting"/>
+        /// Converts an existing <paramref name="classificationsSettings"/> to <see cref="Classification"/> and appends them to
+        /// <paramref name="classifications"/>, also create <see cref="Classification"/> from non existing classifications in
+        /// <paramref name="classificationsSettings"/> set the default values of fields using <paramref name="defaultFormatting"/>
         /// </summary>
         private static void FillClassifications(
             IEnumerable<string> classificationNames,
@@ -154,13 +154,13 @@ namespace CoCo
 
                 /// NOTE: Don't set classifications settings field that can be reset,
                 /// because they will be handled correctly in the <see cref="ToClassification"/>
-                var classificationFromDefault = ToClassification(defaultFormatting.ToDefaultSettings(name), defaultFormatting);
-                classifications.Add(classificationFromDefault);
+                var settings = defaultFormatting.ToDefaultSettings(name);
+                classifications.Add(ToClassification(settings, defaultFormatting));
             }
         }
 
         /// <summary>
-        /// Conver <paramref name="classificationSettings"/> to <see cref="Classification"/> setting the default values
+        /// Converts <paramref name="classificationSettings"/> to <see cref="Classification"/> setting the default values
         /// of non exist classifications fields using <paramref name="defaultFormatting"/>
         /// </summary>
         private static Classification ToClassification(
@@ -227,8 +227,8 @@ namespace CoCo
 
             if (classification.FontRenderingSizeWasReset)
             {
-                /// NOTE: we should not try to set a some of value from <param name="defaultFormatting" /> if it's marked as empty
-                /// to avoid set that will mark value from <param name="formatting" /> as non empty
+                /// NOTE: we should not try to set property of <param name="defaultFormatting" /> if it's marked as empty
+                /// to avoid set which will mark property of <param name="formatting" /> as non empty
                 formatting = defaultFormatting.FontRenderingEmSizeEmpty
                     ? formatting.ClearFontRenderingEmSize()
                     : formatting.SetFontHintingEmSize(defaultFormatting.FontRenderingEmSize);
