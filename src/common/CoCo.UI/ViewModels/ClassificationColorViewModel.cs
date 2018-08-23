@@ -1,6 +1,6 @@
-﻿using System.Globalization;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using System.Windows.Media;
+using CoCo.Utils;
 
 namespace CoCo.UI.ViewModels
 {
@@ -87,23 +87,8 @@ namespace CoCo.UI.ViewModels
 
         private static bool TryParseColor(string value, out Color color)
         {
-            byte ToByte(int integer, int offset) => (byte)(integer >> offset & 0xFF);
-
             // NOTE: #ARGB – 9 chars
-            if (value.Length == 9)
-            {
-                value = value.Substring(1);
-            }
-
-            // NOTE: ARGB - 8 chars
-            if (value.Length == 8 && int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var res))
-            {
-                color = Color.FromArgb(ToByte(res, 24), ToByte(res, 16), ToByte(res, 8), ToByte(res, 0));
-                return true;
-            }
-
-            color = new Color();
-            return false;
+            return ColorHelpers.TryParseColor(value.Length == 9 ? value.Substring(1) : value, out color);
         }
 
         // TODO: would be a better solution to implement a custom color picker in wpf...

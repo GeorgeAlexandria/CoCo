@@ -9,4 +9,7 @@
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+  </ItemGroup>
 </Project>
