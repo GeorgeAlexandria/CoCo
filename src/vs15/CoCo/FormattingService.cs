@@ -166,8 +166,7 @@ namespace CoCo
         private static Classification ToClassification(
             in ClassificationSettings classificationSettings, TextFormattingRunProperties defaultFormatting)
         {
-            // TODO: temporary the display name will equals it name
-            var classification = new Classification(classificationSettings.Name, classificationSettings.Name);
+            var classification = new Classification(classificationSettings.Name, classificationSettings.Name.ToDisplayName());
 
             if (!classificationSettings.Background.HasValue)
             {

@@ -53,6 +53,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="ClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
+    <Compile Include="NameExtensions.cs" />
     <Compile Include="OptionProvider.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="PresetService.cs" />
