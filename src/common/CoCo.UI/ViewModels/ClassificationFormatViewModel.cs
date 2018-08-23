@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Globalization;
+using System.Windows.Forms;
 using System.Windows.Media;
 using CoCo.UI.Data;
 
@@ -22,7 +23,9 @@ namespace CoCo.UI.ViewModels
             _isBold = classification.IsBold;
             _isItalic = classification.IsItalic;
             _foreground = classification.Foreground;
+            _foregroundText = _foreground.ToString();
             _background = classification.Background;
+            _backgroundText = _background.ToString();
             _fontRenderingSize = classification.FontRenderingSize;
 
             _foregroundWasReset = classification.ForegroundWasReset;
@@ -60,6 +63,9 @@ namespace CoCo.UI.ViewModels
                 SetProperty(ref _fontRenderingSize, _resetValuesProvider.FontRenderingSize, nameof(Size));
                 _fontRenderingSizeWasReset = true;
             });
+
+            ForegroundLostFocus = new DelegateCommand(SetForegroundText);
+            BackgroundLostFocus = new DelegateCommand(SetBackgroundText);
         }
 
         public DelegateCommand CustomizeForeground { get; }
@@ -71,6 +77,16 @@ namespace CoCo.UI.ViewModels
         public DelegateCommand ResetBackground { get; }
 
         public DelegateCommand ResetFontRenderingSize { get; }
+
+        /// <remarks>
+        /// It's used to restore foreground's text from the current foreground's value
+        /// </remarks>
+        public DelegateCommand ForegroundLostFocus { get; }
+
+        /// <remarks>
+        /// It's used to restore background's text from the current background's value
+        /// </remarks>
+        public DelegateCommand BackgroundLostFocus { get; }
 
         private bool _isEnabled;
 
@@ -123,8 +139,38 @@ namespace CoCo.UI.ViewModels
             get => _foreground;
             set
             {
-                SetProperty(ref _foreground, value);
-                _foregroundWasReset = false;
+                SetForeground(value);
+                SetForegroundText();
+            }
+        }
+
+        private string _foregroundText;
+
+        public string ForegroundText
+        {
+            get => _foregroundText;
+            set
+            {
+                if (TryParseColor(value, out var color))
+                {
+                    SetForeground(color);
+                }
+                SetProperty(ref _foregroundText, value);
+            }
+        }
+
+        private string _backgroundText;
+
+        public string BackgroundText
+        {
+            get => _backgroundText;
+            set
+            {
+                if (TryParseColor(value, out var color))
+                {
+                    SetBackground(color);
+                }
+                SetProperty(ref _backgroundText, value);
             }
         }
 
@@ -135,8 +181,8 @@ namespace CoCo.UI.ViewModels
             get => _background;
             set
             {
-                SetProperty(ref _background, value);
-                _backgroundWasReset = false;
+                SetBackground(value);
+                SetBackgroundText();
             }
         }
 
@@ -153,6 +199,55 @@ namespace CoCo.UI.ViewModels
             BackgroundWasReset = _backgroundWasReset,
             FontRenderingSizeWasReset = _fontRenderingSizeWasReset,
         };
+
+        /// <summary>
+        /// Sets only the color of foreground, raise on it and set state of reset
+        /// </summary>
+        private void SetForeground(Color value)
+        {
+            SetProperty(ref _foreground, value, nameof(Foreground));
+            _foregroundWasReset = false;
+        }
+
+        /// <summary>
+        /// Sets only the text of foreground and raise on it
+        /// </summary>
+        private void SetForegroundText() => SetProperty(ref _foregroundText, _foreground.ToString(), nameof(ForegroundText));
+
+        /// <summary>
+        /// Sets only the color of background, raise on it and set state of reset
+        /// </summary>
+        private void SetBackground(Color value)
+        {
+            SetProperty(ref _background, value, nameof(Background));
+            _backgroundWasReset = false;
+        }
+
+        /// <summary>
+        /// Sets only the text of background and raise on it
+        /// </summary>
+        private void SetBackgroundText() => SetProperty(ref _backgroundText, _background.ToString(), nameof(BackgroundText));
+
+        private static bool TryParseColor(string value, out Color color)
+        {
+            byte ToByte(int integer, int offset) => (byte)(integer >> offset & 0xFF);
+
+            // NOTE: #ARGB – 9 chars
+            if (value.Length == 9)
+            {
+                value = value.Substring(1);
+            }
+
+            // NOTE: ARGB - 8 chars
+            if (value.Length == 8 && int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var res))
+            {
+                color = Color.FromArgb(ToByte(res, 24), ToByte(res, 16), ToByte(res, 8), ToByte(res, 0));
+                return true;
+            }
+
+            color = new Color();
+            return false;
+        }
 
         // TODO: would be a better solution to implement a custom color picker in wpf...
         // or move all logic of setter color from button to control code behind.

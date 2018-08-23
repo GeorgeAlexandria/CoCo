@@ -157,9 +157,9 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
+                        local:FocusExtension.LostFocusCommand="{Binding ForegroundLostFocus}"
                         BorderThickness="0"
-                        IsReadOnly="True"
-                        Text="{Binding Foreground}" />
+                        Text="{Binding ForegroundText, UpdateSourceTrigger=PropertyChanged}" />
                   </StackPanel>
                </Border>
                <Button
@@ -208,9 +208,9 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
+                        local:FocusExtension.LostFocusCommand="{Binding BackgroundLostFocus}"
                         BorderThickness="0"
-                        IsReadOnly="True"
-                        Text="{Binding Background}" />
+                        Text="{Binding BackgroundText, UpdateSourceTrigger=PropertyChanged}" />
                   </StackPanel>
                </Border>
                <Button
