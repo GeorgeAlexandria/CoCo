@@ -74,9 +74,9 @@ namespace CoCo.UI.ViewModels
         {
             get
             {
-                if (_selectedClassification == null && _classifications.Count > 0)
+                if (_selectedClassification == null && Classifications.MoveCurrentToFirst())
                 {
-                    SelectedClassification = _classifications[0];
+                    SelectedClassification = (ClassificationFormatViewModel)Classifications.CurrentItem;
                 }
                 return _selectedClassification;
             }
