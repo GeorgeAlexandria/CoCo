@@ -150,6 +150,26 @@ namespace CoCo.Settings
             {
                 classification.IsItalic = isItalic;
             }
+            if (jClassification[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
+                jOverline.Value is bool isOverline)
+            {
+                classification.IsOverline = isOverline;
+            }
+            if (jClassification[nameof(ClassificationSettings.IsUnderline)] is JValue jUnderline &&
+                jUnderline.Value is bool isUnderline)
+            {
+                classification.IsUnderline = isUnderline;
+            }
+            if (jClassification[nameof(ClassificationSettings.IsStrikethrough)] is JValue jStrikethrough &&
+                jStrikethrough.Value is bool isStrikethrough)
+            {
+                classification.IsStrikethrough = isStrikethrough;
+            }
+            if (jClassification[nameof(ClassificationSettings.IsBaseline)] is JValue jBaseline &&
+                jBaseline.Value is bool isBaseline)
+            {
+                classification.IsBaseline = isBaseline;
+            }
             if (jClassification[nameof(ClassificationSettings.FontRenderingSize)] is JValue jRenderingSize &&
                 jRenderingSize.Value is long renderingSize && renderingSize < 512)
             {
@@ -194,6 +214,22 @@ namespace CoCo.Settings
             if (classification.IsItalic.HasValue)
             {
                 jClassification.Add(nameof(classification.IsItalic), new JValue(classification.IsItalic.Value));
+            }
+            if (classification.IsOverline.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsOverline), new JValue(classification.IsOverline.Value));
+            }
+            if (classification.IsUnderline.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsUnderline), new JValue(classification.IsUnderline.Value));
+            }
+            if (classification.IsStrikethrough.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsStrikethrough), new JValue(classification.IsStrikethrough.Value));
+            }
+            if (classification.IsBaseline.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsBaseline), new JValue(classification.IsBaseline.Value));
             }
             if (classification.FontRenderingSize.HasValue)
             {

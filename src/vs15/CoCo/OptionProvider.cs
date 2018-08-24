@@ -64,6 +64,10 @@ namespace CoCo
                 Name = classification.Name,
                 IsBold = classification.IsBold,
                 IsItalic = classification.IsItalic,
+                IsOverline = classification.IsOverline,
+                IsUnderline = classification.IsUnderline,
+                IsStrikethrough = classification.IsStrikethrough,
+                IsBaseline = classification.IsBaseline,
                 IsEnabled = classification.IsEnabled,
             };
 

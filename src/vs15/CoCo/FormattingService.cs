@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using CoCo.Settings;
 using CoCo.UI.Data;
@@ -201,6 +202,15 @@ namespace CoCo
             classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
             classification.IsItalic = classificationSettings.IsItalic ?? defaultFormatting.Italic;
 
+            classification.IsOverline = classificationSettings.IsOverline ??
+                defaultFormatting.TextDecorations.Contains(TextDecorations.OverLine[0]);
+            classification.IsUnderline = classificationSettings.IsUnderline ??
+                defaultFormatting.TextDecorations.Contains(TextDecorations.Underline[0]);
+            classification.IsStrikethrough = classificationSettings.IsStrikethrough ??
+                defaultFormatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]);
+            classification.IsBaseline = classificationSettings.IsBaseline ??
+                defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
+
             if (!classificationSettings.IsEnabled.HasValue)
             {
                 classification.IsEnabled = true;
@@ -261,6 +271,38 @@ namespace CoCo
                 !foregroundBrush.Color.Equals(classification.Foreground))
             {
                 formatting = formatting.SetForegroundBrush(new SolidColorBrush(classification.Foreground));
+            }
+
+            formatting = ApplyDecoration(formatting, classification.IsOverline, TextDecorations.OverLine[0]);
+            formatting = ApplyDecoration(formatting, classification.IsUnderline, TextDecorations.Underline[0]);
+            formatting = ApplyDecoration(formatting, classification.IsStrikethrough, TextDecorations.Strikethrough[0]);
+            formatting = ApplyDecoration(formatting, classification.IsBaseline, TextDecorations.Baseline[0]);
+
+            return formatting;
+        }
+
+        /// <summary>
+        /// Try to add or remove <paramref name="decoration"/> to the <paramref name="formatting"/> using <paramref name="needToAddDecoration"/>
+        /// </summary>
+        /// <param name="formatting"></param>
+        /// <param name="needToAddDecoration">Determines when the input <paramref name="decoration"/> should be added or removed</param>
+        private static TextFormattingRunProperties ApplyDecoration(
+            TextFormattingRunProperties formatting, bool needToAddDecoration, TextDecoration decoration)
+        {
+            if (formatting.TextDecorations.Contains(decoration) ^ needToAddDecoration)
+            {
+                // NOTE: directly creates a new instance from existing collection to correctly determines
+                // in the future that items are contained or not
+                var clone = new TextDecorationCollection(formatting.TextDecorations);
+                if (needToAddDecoration)
+                {
+                    clone.Add(decoration);
+                }
+                else
+                {
+                    clone.Remove(decoration);
+                }
+                return formatting.SetTextDecorations(clone);
             }
             return formatting;
         }
