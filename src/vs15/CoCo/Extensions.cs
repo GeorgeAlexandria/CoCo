@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Windows;
+using System.Windows.Media;
 using CoCo.Settings;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -7,7 +8,7 @@ namespace CoCo
     public static class Extensions
     {
         /// <summary>
-        /// Creates the default classification from <paramref name="formatting"/> 
+        /// Creates the default classification from <paramref name="formatting"/>
         /// which doesn't set the default values for properties that can be reset
         /// </summary>
         public static ClassificationSettings ToDefaultSettings(
@@ -16,6 +17,10 @@ namespace CoCo
                Name = classificationName,
                IsBold = formatting.Bold,
                IsItalic = formatting.Italic,
+               IsOverline = formatting.TextDecorations.Contains(TextDecorations.OverLine[0]),
+               IsUnderline = formatting.TextDecorations.Contains(TextDecorations.Underline[0]),
+               IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
+               IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
                IsEnabled = true,
            };
 

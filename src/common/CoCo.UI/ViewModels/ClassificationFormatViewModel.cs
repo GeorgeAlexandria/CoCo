@@ -14,6 +14,10 @@ namespace CoCo.UI.ViewModels
             _isEnabled = classification.IsEnabled;
             _isBold = classification.IsBold;
             _isItalic = classification.IsItalic;
+            _isOverline = classification.IsOverline;
+            _isUnderline = classification.IsUnderline;
+            _isStrikethrough = classification.IsStrikethrough;
+            _isBaseLine = classification.IsBaseline;
             _fontRenderingSize = classification.FontRenderingSize;
 
             Foreground = new ClassificationColorViewModel(
@@ -62,6 +66,38 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _isItalic, value);
         }
 
+        private bool _isOverline;
+
+        public bool IsOverline
+        {
+            get => _isOverline;
+            set => SetProperty(ref _isOverline, value);
+        }
+
+        private bool _isUnderline;
+
+        public bool IsUnderline
+        {
+            get => _isUnderline;
+            set => SetProperty(ref _isUnderline, value);
+        }
+
+        private bool _isStrikethrough;
+
+        public bool IsStrikethrough
+        {
+            get => _isStrikethrough;
+            set => SetProperty(ref _isStrikethrough, value);
+        }
+
+        private bool _isBaseLine;
+
+        public bool IsBaseline
+        {
+            get => _isBaseLine;
+            set => SetProperty(ref _isBaseLine, value);
+        }
+
         private int _fontRenderingSize;
 
         public string Size
@@ -88,6 +124,10 @@ namespace CoCo.UI.ViewModels
             Foreground = Foreground.Color,
             IsBold = IsBold,
             IsItalic = IsItalic,
+            IsOverline = IsOverline,
+            IsUnderline = IsUnderline,
+            IsStrikethrough = IsStrikethrough,
+            IsBaseline = IsBaseline,
             FontRenderingSize = _fontRenderingSize,
             IsEnabled = IsChecked,
 
