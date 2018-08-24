@@ -228,11 +228,11 @@
                   Style="{StaticResource CommonButton}"
                   Template="{StaticResource ResetButton}" />
             </StackPanel>
-            <StackPanel
+            <WrapPanel
                Width="Auto"
+               MaxWidth="270"
                Margin="5,0,0,0"
-               HorizontalAlignment="Left"
-               Orientation="Horizontal">
+               HorizontalAlignment="Left">
                <CheckBox
                   VerticalContentAlignment="Center"
                   Content="Bold"
@@ -246,7 +246,34 @@
                   IsChecked="{Binding IsItalic}"
                   Style="{StaticResource checkBoxFlatStyle}"
                   TextBlock.FontSize="14" />
-            </StackPanel>
+               <CheckBox
+                  Margin="10,0,0,0"
+                  VerticalContentAlignment="Center"
+                  Content="Overline"
+                  IsChecked="{Binding IsOverline}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+               <CheckBox
+                  Margin="10,0,0,0"
+                  VerticalContentAlignment="Center"
+                  Content="Underline"
+                  IsChecked="{Binding IsUnderline}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+               <CheckBox
+                  VerticalContentAlignment="Center"
+                  Content="Strikethrough"
+                  IsChecked="{Binding IsStrikethrough}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+               <CheckBox
+                  Margin="10,0,0,0"
+                  VerticalContentAlignment="Center"
+                  Content="Baseline"
+                  IsChecked="{Binding IsBaseline}"
+                  Style="{StaticResource checkBoxFlatStyle}"
+                  TextBlock.FontSize="14" />
+            </WrapPanel>
          </StackPanel>
       </Grid>
    </Grid>

@@ -20,6 +20,14 @@ namespace CoCo.UI.Data
 
         public bool IsItalic { get; set; }
 
+        public bool IsOverline { get; set; }
+
+        public bool IsUnderline { get; set; }
+
+        public bool IsBaseline { get; set; }
+
+        public bool IsStrikethrough { get; set; }
+
         public Color Foreground { get; set; }
 
         public bool ForegroundWasReset { get; set; }
