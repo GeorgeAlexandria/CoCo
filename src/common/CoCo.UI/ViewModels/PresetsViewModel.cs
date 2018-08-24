@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Data;
 using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
@@ -8,20 +10,26 @@ namespace CoCo.UI.ViewModels
     {
         private readonly IClassificationProvider _provider;
         private readonly IResetValuesProvider _resetValuesProvider;
+        private readonly ObservableCollection<PresetViewModel> _presets = new ObservableCollection<PresetViewModel>();
 
         public PresetsViewModel(ICollection<Preset> presets, IClassificationProvider provider, IResetValuesProvider resetValuesProvider)
         {
             foreach (var item in presets)
             {
-                Presets.Add(new PresetViewModel(item, Apply, Delete));
+                _presets.Add(new PresetViewModel(item, Apply, Delete));
             }
+
+            PresetsView = CollectionViewSource.GetDefaultView(_presets);
+            PresetsView.SortDescriptions.Add(new SortDescription(nameof(PresetViewModel.Name), ListSortDirection.Ascending));
 
             CreatePreset = new DelegateCommand(Create, CanCreate);
             _provider = provider;
             _resetValuesProvider = resetValuesProvider;
         }
 
-        public ObservableCollection<PresetViewModel> Presets { get; } = new ObservableCollection<PresetViewModel>();
+        public ICollectionView PresetsView { get; }
+
+        public IEnumerable<PresetViewModel> Presets => _presets;
 
         public DelegateCommand CreatePreset { get; }
 
@@ -51,12 +59,12 @@ namespace CoCo.UI.ViewModels
         private void Delete(PresetViewModel arg)
         {
             var i = 0;
-            while (i < Presets.Count)
+            while (i < _presets.Count)
             {
-                var preset = Presets[i++];
+                var preset = _presets[i++];
                 if (preset.IsSelected || ReferenceEquals(preset, arg))
                 {
-                    Presets.RemoveAt(--i);
+                    _presets.RemoveAt(--i);
                 }
             }
         }
@@ -69,7 +77,7 @@ namespace CoCo.UI.ViewModels
             {
                 preset.Classifications.Add(item.ExtractData());
             }
-            Presets.Add(new PresetViewModel(preset, Apply, Delete));
+            _presets.Add(new PresetViewModel(preset, Apply, Delete));
             CreatedName = string.Empty;
         }
 

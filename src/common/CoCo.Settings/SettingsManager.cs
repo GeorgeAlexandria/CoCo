@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Windows.Media;
 using CoCo.Utils;
@@ -166,18 +165,12 @@ namespace CoCo.Settings
 
         private static bool TryParseColor(string value, out Color color)
         {
-            byte ToByte(int integer, int offset) => (byte)(integer >> offset & 0xFF);
-
             // NOTE: #ARGB – 9 chars
             if (value.Length == 9)
             {
-                value = value.Substring(1);
-                if (int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out var res))
-                {
-                    color = Color.FromArgb(ToByte(res, 24), ToByte(res, 16), ToByte(res, 8), ToByte(res, 0));
-                    return true;
-                }
+                return ColorHelpers.TryParseColor(value.Substring(1), out color);
             }
+
             color = new Color();
             return false;
         }

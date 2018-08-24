@@ -48,7 +48,7 @@
          BorderBrush="{StaticResource SoftBlue}"
          BorderThickness="1"
          DataContext="{Binding SelectedLanguage.PresetsContainer}"
-         ItemsSource="{Binding Presets}"
+         ItemsSource="{Binding PresetsView}"
          SelectionMode="Extended"
          Style="{StaticResource listBoxFlatStyle}">
          <ListBox.ItemTemplate>

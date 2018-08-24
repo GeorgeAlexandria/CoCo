@@ -1,12 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Data;
 using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
     public class LanguageViewModel : BaseViewModel, IClassificationProvider
     {
+        private readonly ObservableCollection<ClassificationFormatViewModel> _classifications =
+            new ObservableCollection<ClassificationFormatViewModel>();
+
         public LanguageViewModel(Language language, IResetValuesProvider resetValuesProvider)
         {
             Name = language.Name;
@@ -14,8 +18,12 @@ namespace CoCo.UI.ViewModels
             {
                 var classificationViewModel = new ClassificationFormatViewModel(classification, resetValuesProvider);
                 classificationViewModel.PropertyChanged += OnClassificationPropertyChanged;
-                Classifications.Add(classificationViewModel);
+                _classifications.Add(classificationViewModel);
             }
+
+            Classifications = CollectionViewSource.GetDefaultView(_classifications);
+            Classifications.SortDescriptions.Add(
+                new SortDescription(nameof(ClassificationFormatViewModel.DisplayName), ListSortDirection.Ascending));
 
             PresetsContainer = new PresetsViewModel(language.Presets, this, resetValuesProvider);
         }
@@ -32,7 +40,7 @@ namespace CoCo.UI.ViewModels
             {
                 // NOTE: 01 – all uncheked, 10 – all cheked, 11 – has different states
                 var flag = 0;
-                foreach (var item in Classifications)
+                foreach (var item in _classifications)
                 {
                     flag |= item.IsChecked ? 0b10 : 0b01;
                 }
@@ -51,15 +59,14 @@ namespace CoCo.UI.ViewModels
                 }
 
                 // TODO: add some mechanism to suspend notification at a few time
-                foreach (var item in Classifications)
+                foreach (var item in _classifications)
                 {
                     item.IsChecked = isCheked;
                 }
             }
         }
 
-        public ObservableCollection<ClassificationFormatViewModel> Classifications { get; } =
-            new ObservableCollection<ClassificationFormatViewModel>();
+        public ICollectionView Classifications { get; }
 
         private ClassificationFormatViewModel _selectedClassification;
 
@@ -67,9 +74,9 @@ namespace CoCo.UI.ViewModels
         {
             get
             {
-                if (_selectedClassification == null && Classifications.Count > 0)
+                if (_selectedClassification == null && Classifications.MoveCurrentToFirst())
                 {
-                    SelectedClassification = Classifications[0];
+                    SelectedClassification = (ClassificationFormatViewModel)Classifications.CurrentItem;
                 }
                 return _selectedClassification;
             }
@@ -79,7 +86,7 @@ namespace CoCo.UI.ViewModels
         public Language ExtractData()
         {
             var language = new Language(Name);
-            foreach (var classificationViewModel in Classifications)
+            foreach (var classificationViewModel in _classifications)
             {
                 language.Classifications.Add(classificationViewModel.ExtractData());
             }
@@ -100,21 +107,21 @@ namespace CoCo.UI.ViewModels
             }
         }
 
-        ICollection<ClassificationFormatViewModel> IClassificationProvider.GetCurrentClassificaions() => Classifications;
+        ICollection<ClassificationFormatViewModel> IClassificationProvider.GetCurrentClassificaions() => _classifications;
 
         void IClassificationProvider.SetCurrentClassificaions(ICollection<ClassificationFormatViewModel> classifications)
         {
             /// TODO: again bulk operation under a <see cref="ObservableCollection{T}"/>
-            while (Classifications.Count > 0)
+            while (_classifications.Count > 0)
             {
-                Classifications[0].PropertyChanged -= OnClassificationPropertyChanged;
-                Classifications.RemoveAt(0);
+                _classifications[0].PropertyChanged -= OnClassificationPropertyChanged;
+                _classifications.RemoveAt(0);
             }
 
             foreach (var item in classifications)
             {
                 item.PropertyChanged += OnClassificationPropertyChanged;
-                Classifications.Add(item);
+                _classifications.Add(item);
             }
             // NOTE: Reset selected classification from old items
             SelectedClassification = null;

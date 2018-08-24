@@ -61,6 +61,7 @@
     <Compile Include="..\..\vs15\CoCo\FormattingService.cs" Link="FormattingService.cs" />
     <Compile Include="..\..\vs15\CoCo\OptionProvider.cs" Link="OptionProvider.cs" />
     <Compile Include="MigrationService.cs" />
+    <Compile Include="NameExtensions.cs" />
     <Compile Include="VsPackage.cs" />
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

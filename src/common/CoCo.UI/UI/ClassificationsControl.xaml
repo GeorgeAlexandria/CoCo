@@ -128,6 +128,7 @@
                Width="Auto"
                Margin="0,0,0,4"
                HorizontalAlignment="Left"
+               DataContext="{Binding Foreground}"
                Orientation="Horizontal">
                <Label
                   Width="78"
@@ -148,7 +149,7 @@
                         BorderThickness="1.2">
                         <Rectangle>
                            <Rectangle.Fill>
-                              <SolidColorBrush Color="{Binding Foreground}" />
+                              <SolidColorBrush Color="{Binding Color}" />
                            </Rectangle.Fill>
                         </Rectangle>
                      </Border>
@@ -157,20 +158,20 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
+                        local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
                         BorderThickness="0"
-                        IsReadOnly="True"
-                        Text="{Binding Foreground}" />
+                        Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
                   </StackPanel>
                </Border>
                <Button
                   Margin="8,0,0,0"
-                  Command="{Binding CustomizeForeground}"
+                  Command="{Binding CustomizeColor}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CommonButton}"
                   Template="{StaticResource CustomizeButton}" />
                <Button
                   Margin="8,0,0,0"
-                  Command="{Binding ResetForeground}"
+                  Command="{Binding ResetColor}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CommonButton}"
                   Template="{StaticResource ResetButton}" />
@@ -179,6 +180,7 @@
                Width="Auto"
                Margin="0,0,0,4"
                HorizontalAlignment="Left"
+               DataContext="{Binding Background}"
                Orientation="Horizontal">
                <Label
                   Width="78"
@@ -199,7 +201,7 @@
                         BorderThickness="1.2">
                         <Rectangle>
                            <Rectangle.Fill>
-                              <SolidColorBrush Color="{Binding Background}" />
+                              <SolidColorBrush Color="{Binding Color}" />
                            </Rectangle.Fill>
                         </Rectangle>
                      </Border>
@@ -208,20 +210,20 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         VerticalContentAlignment="Center"
+                        local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
                         BorderThickness="0"
-                        IsReadOnly="True"
-                        Text="{Binding Background}" />
+                        Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
                   </StackPanel>
                </Border>
                <Button
                   Margin="8,0,0,0"
-                  Command="{Binding CustomizeBackground}"
+                  Command="{Binding CustomizeColor}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CommonButton}"
                   Template="{StaticResource CustomizeButton}" />
                <Button
                   Margin="8,0,0,0"
-                  Command="{Binding ResetBackground}"
+                  Command="{Binding ResetColor}"
                   Foreground="#5e5e5a"
                   Style="{StaticResource CommonButton}"
                   Template="{StaticResource ResetButton}" />
