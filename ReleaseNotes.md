@@ -1,5 +1,15 @@
 # Release notes
 
+## 2.2.0
+
+**2018-08-25**
+
+ - [x] Release issue [#30](https://github.com/GeorgeAlexandria/CoCo/issues/30) – Supporting of overline, underline, strikethrough and baseline fonts
+ - [x] Release issue [#25](https://github.com/GeorgeAlexandria/CoCo/issues/25) – Enable hex inputs for foreground and background
+ - [x] Release issue [#28](https://github.com/GeorgeAlexandria/CoCo/issues/28) – Sorts classifications by alphabetic order in the CoCo/Classifications option page  
+ - [x] Release issue [#29](https://github.com/GeorgeAlexandria/CoCo/issues/29) – Sorts presets by alphabetic order in the CoCo/Presets option page 
+ - [x] Release issue [#32](https://github.com/GeorgeAlexandria/CoCo/issues/32) – Cleanup the claassification's display names  
+
 ## 2.1.0
 
 **2018-08-21**
