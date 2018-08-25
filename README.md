@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.1.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio 2015 (VS14) and 2017 (VS15) extension that uses Roslyn API's for analyzing C# source code
@@ -21,32 +21,34 @@ And supports the following decorations:
 * Changing foreground and background
 * Using bold and italic font
 * Changing font rendering size
+* Using overline, underline, strikethrough and baseline font
 
-# Examples
+## Examples
 
-The following screenshots show a different applying decorations and colors to the code
+The following screenshots show a different applying decorations and colors to the code:
 
-![](https://user-images.githubusercontent.com/13402478/44366917-e82cb200-a4d6-11e8-8a40-d58418bcd08e.png)
+![](https://user-images.githubusercontent.com/13402478/44617734-03017c80-a871-11e8-86ac-5cc4e0c4d73f.png)
 
-![](https://user-images.githubusercontent.com/13402478/44366921-eb27a280-a4d6-11e8-9ba5-c8f7bce5f1ad.png)
+![](https://user-images.githubusercontent.com/13402478/44617735-04cb4000-a871-11e8-9f69-52caf1210996.png)
 
 
-# How to use extension
-Use **CoCo/Classifications** option page in the Visual Studio options to change colors of items or to apply decorations
+## How to use 
+Use **CoCo/Classifications** option page in the Visual Studio options to change colors of items or to apply decorations:
 
-![](https://user-images.githubusercontent.com/13402478/44366474-7b64e800-a4d5-11e8-8b82-f844050e5707.png)
+![](https://user-images.githubusercontent.com/13402478/44617730-efeeac80-a870-11e8-8364-a697b747b9d5.png)
 
-You need to click **OK** button to confirm your changes.
 
-Also you can use **CoCo/Presets** option page to save your current settings as preset and to apply or delete existing presets
+Also you can use **CoCo/Presets** option page to save your current settings as preset and to apply or delete existing presets:
 
-![](https://user-images.githubusercontent.com/13402478/44367297-0646e200-a4d8-11e8-9b7e-0e6f8c1ce554.png)
+![](https://user-images.githubusercontent.com/13402478/44617733-009f2280-a871-11e8-8619-35aadf25f734.png)
 
-You also need to click **OK** button to confirm applying, creating or deleting preset.
+You need to click **OK** button to confirm your changes on the **CoCo/Classifications** and 
+to confirm applying, creating or deleting preset on the **CoCo/Presets**. If you will not click the **OK** button 
+extension will use the previous (or default) settings for both of pages.
 
-If you will not click the **OK** button extension will use the previous (or default) settings for both of pages.
-
-Extension doesn't apply the ***default*** preset after installation. <br/>So you need to set colors and decorations manually or apply existing presets as pointed out above if you want to see how extension works.
+### After installation
+Extension doesn't apply the one of ***default*** presets after installation. It only apply settings from config file if it exists on your system, 
+else you need to set colors and decorations manually or apply existing presets as pointed out above if you want to see how the extension works.
 
 You can look at the screenshot where code was classified after applying the **CoCo dark theme** preset:
 
@@ -66,7 +68,8 @@ And you can look at the similar screenshot where code was classified after apply
 
 </details>
 
-
+## Changelog
+For more information on project's changelog, please see [ReleaseNotes.md](https://github.com/GeorgeAlexandria/CoCo/blob/dev/ReleaseNotes.md)
 
 ## Contributing
 For more information on contributing to the project, please see [CONTRIBUTING.md](https://github.com/GeorgeAlexandria/CoCo/blob/dev/CONTRIBUTING.md)
