@@ -11,8 +11,8 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\EnumField.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.EnumFieldName.ClassifyAt(152, 9),
-                    Names.EnumFieldName.ClassifyAt(209, 3));
+                    CSharpNames.EnumFieldName.ClassifyAt(152, 9),
+                    CSharpNames.EnumFieldName.ClassifyAt(209, 3));
         }
     }
 }

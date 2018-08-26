@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using CoCo.Analyser;
+﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.CSharp;
@@ -9,100 +7,45 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo
+namespace CoCo.Analyser
 {
     /// <summary>
-    /// Classifier that classifies all text as an instance of the "EditorClassifier" classification type.
+    /// Classifies csharp code
     /// </summary>
-    internal class EditorClassifier : IClassifier
+    internal class CSharpClassifier : RoslynEditorClassifier
     {
-        private readonly IClassificationType _localVariableType;
-        private readonly IClassificationType _rangeVariableType;
-        private readonly IClassificationType _namespaceType;
-        private readonly IClassificationType _parameterType;
-        private readonly IClassificationType _extensionMethodType;
-        private readonly IClassificationType _methodType;
-        private readonly IClassificationType _eventType;
-        private readonly IClassificationType _propertyType;
-        private readonly IClassificationType _fieldType;
-        private readonly IClassificationType _staticMethodType;
-        private readonly IClassificationType _enumFieldType;
-        private readonly IClassificationType _aliasNamespaceType;
-        private readonly IClassificationType _constructorMethodType;
-        private readonly IClassificationType _labelType;
-        private readonly IClassificationType _constantFieldType;
-        private readonly IClassificationType _destructorMethodType;
+        private IClassificationType _localVariableType;
+        private IClassificationType _rangeVariableType;
+        private IClassificationType _namespaceType;
+        private IClassificationType _parameterType;
+        private IClassificationType _extensionMethodType;
+        private IClassificationType _methodType;
+        private IClassificationType _eventType;
+        private IClassificationType _propertyType;
+        private IClassificationType _fieldType;
+        private IClassificationType _staticMethodType;
+        private IClassificationType _enumFieldType;
+        private IClassificationType _aliasNamespaceType;
+        private IClassificationType _constructorMethodType;
+        private IClassificationType _labelType;
+        private IClassificationType _constantFieldType;
+        private IClassificationType _destructorMethodType;
 
-        private readonly ITextBuffer _textBuffer;
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
-
-        private SemanticModel _semanticModel;
-
-        internal EditorClassifier(
+        internal CSharpClassifier(
             Dictionary<string, IClassificationType> classifications,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : this(classifications)
+            ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
         {
-            _textBuffer = buffer;
-            _textDocumentFactoryService = textDocumentFactoryService;
-
-            _textBuffer.Changed += OnTextBufferChanged;
-            _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+            InitializeClassifications(classifications);
         }
 
-        internal EditorClassifier(Dictionary<string, IClassificationType> classifications)
+        internal CSharpClassifier(Dictionary<string, IClassificationType> classifications)
         {
-            _localVariableType = classifications[Names.LocalVariableName];
-            _rangeVariableType = classifications[Names.RangeVariableName];
-            _namespaceType = classifications[Names.NamespaceName];
-            _parameterType = classifications[Names.ParameterName];
-            _extensionMethodType = classifications[Names.ExtensionMethodName];
-            _methodType = classifications[Names.MethodName];
-            _eventType = classifications[Names.EventName];
-            _propertyType = classifications[Names.PropertyName];
-            _fieldType = classifications[Names.FieldName];
-            _staticMethodType = classifications[Names.StaticMethodName];
-            _enumFieldType = classifications[Names.EnumFieldName];
-            _aliasNamespaceType = classifications[Names.AliasNamespaceName];
-            _constructorMethodType = classifications[Names.ConstructorName];
-            _labelType = classifications[Names.LabelName];
-            _constantFieldType = classifications[Names.ConstantFieldName];
-            _destructorMethodType = classifications[Names.DestructorName];
+            InitializeClassifications(classifications);
         }
 
-        /// <remarks>
-        /// This event gets raised if a non-text change would affect the classification in some way,
-        /// for example typing /* would cause the classification to change in C# without directly
-        /// affecting the span.
-        /// </remarks>
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-
-        /// <summary>
-        /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range
-        /// of text.
-        /// </summary>
-        public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
-        {
-            Log.Debug("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
-
-            /// NOTE: <see cref="Workspace"/> can be null for "Using directive is unnecessary". Also workspace can
-            /// be null when solution|project failed to load and VS gave some reasons of it or when
-            /// try to open a file doesn't contained in the current solution
-            var workspace = span.Snapshot.TextBuffer.GetWorkspace();
-            if (workspace == null)
-            {
-                // TODO: Add supporting a files that doesn't included to the current solution
-                return new List<ClassificationSpan>();
-            }
-
-            var document = workspace.GetDocument(span.Snapshot.AsText());
-            var semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
-            var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
-
-            return GetClassificationSpans(workspace, semanticModel, root, span);
-        }
-
-        internal List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
+        internal override List<ClassificationSpan> GetClassificationSpans(
+            Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
         {
             var spans = new List<ClassificationSpan>();
 
@@ -209,18 +152,24 @@ namespace CoCo
             return spans;
         }
 
-        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
-
-        // TODO: it's not good idea subscribe on text document disposed. Try to subscribe on text
-        // document closed.
-        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
+        private void InitializeClassifications(Dictionary<string, IClassificationType> classifications)
         {
-            if (e.TextDocument.TextBuffer == _textBuffer)
-            {
-                _semanticModel = null;
-                _textBuffer.Changed -= OnTextBufferChanged;
-                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
-            }
+            _localVariableType = classifications[CSharpNames.LocalVariableName];
+            _rangeVariableType = classifications[CSharpNames.RangeVariableName];
+            _namespaceType = classifications[CSharpNames.NamespaceName];
+            _parameterType = classifications[CSharpNames.ParameterName];
+            _extensionMethodType = classifications[CSharpNames.ExtensionMethodName];
+            _methodType = classifications[CSharpNames.MethodName];
+            _eventType = classifications[CSharpNames.EventName];
+            _propertyType = classifications[CSharpNames.PropertyName];
+            _fieldType = classifications[CSharpNames.FieldName];
+            _staticMethodType = classifications[CSharpNames.StaticMethodName];
+            _enumFieldType = classifications[CSharpNames.EnumFieldName];
+            _aliasNamespaceType = classifications[CSharpNames.AliasNamespaceName];
+            _constructorMethodType = classifications[CSharpNames.ConstructorName];
+            _labelType = classifications[CSharpNames.LabelName];
+            _constantFieldType = classifications[CSharpNames.ConstantFieldName];
+            _destructorMethodType = classifications[CSharpNames.DestructorName];
         }
 
         private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>

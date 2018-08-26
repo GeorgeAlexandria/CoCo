@@ -11,10 +11,10 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\EnumDeclaration.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.EnumFieldName.ClassifyAt(84, 4),
-                    Names.EnumFieldName.ClassifyAt(99, 5),
-                    Names.EnumFieldName.ClassifyAt(115, 6),
-                    Names.EnumFieldName.ClassifyAt(132, 6));
+                    CSharpNames.EnumFieldName.ClassifyAt(84, 4),
+                    CSharpNames.EnumFieldName.ClassifyAt(99, 5),
+                    CSharpNames.EnumFieldName.ClassifyAt(115, 6),
+                    CSharpNames.EnumFieldName.ClassifyAt(132, 6));
         }
     }
 }

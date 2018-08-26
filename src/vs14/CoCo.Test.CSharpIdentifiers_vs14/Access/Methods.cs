@@ -11,22 +11,22 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\ExtensionMethod.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
-                    Names.ExtensionMethodName.ClassifyAt(297, 5),
-                    Names.ExtensionMethodName.ClassifyAt(315, 6));
+                    CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
+                    CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
         }
 
         [Test]
         public void MethodTest()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\Method.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.MethodName.ClassifyAt(146, 9));
+                .AssertContains(CSharpNames.MethodName.ClassifyAt(146, 9));
         }
 
         [Test]
         public void MethodTest_Static()
         {
             @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\StaticMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.StaticMethodName.ClassifyAt(165, 9));
+                .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(165, 9));
         }
     }
 }

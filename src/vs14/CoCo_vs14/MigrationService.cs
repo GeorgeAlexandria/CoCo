@@ -99,7 +99,7 @@ namespace CoCo
 
         private static void MigateSettings(XmlNodeList existingSettings)
         {
-            var hashSet = new HashSet<string>(Names.All);
+            var hashSet = new HashSet<string>(CSharpNames.All);
 
             var result = new Dictionary<string, ClassificationSettings>();
             for (int i = 0; i < existingSettings.Count; ++i)

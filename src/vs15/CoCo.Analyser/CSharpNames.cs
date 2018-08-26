@@ -2,7 +2,7 @@
 
 namespace CoCo.Analyser
 {
-    public static class Names
+    public static class CSharpNames
     {
         public const string LocalVariableName = "CoCo local variable name";
         public const string RangeVariableName = "CoCo range variable name";

@@ -8,13 +8,13 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo
 {
     /// <summary>
-    /// Classifier provider. It adds the classifier to the set of classifiers.
+    /// Classifier provider which adds <see cref="CSharpClassifier"/> to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("CSharp")]
     // TODO: uncomment when will try to add analyzing of an annotates, texts and etx
     //[ContentType("text")]
-    internal class ClassifierProvider : IClassifierProvider
+    internal class CSharpClassifierProvider : IClassifierProvider
     {
         /// <summary>
         /// Determines that settings was set to avoid a many sets settings from the classifier
@@ -35,7 +35,7 @@ namespace CoCo
         /// Text document factory to be used for getting a event of text document disposed.
         /// </summary>
         [Import]
-        private ITextDocumentFactoryService _textDocumentFactoryService;
+        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
 
 #pragma warning restore 649
 
@@ -50,13 +50,13 @@ namespace CoCo
             }
 
             var classificationTypes = new Dictionary<string, IClassificationType>(32);
-            foreach (var name in Names.All)
+            foreach (var name in CSharpNames.All)
             {
                 classificationTypes.Add(name, _classificationRegistry.GetClassificationType(name));
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new EditorClassifier(classificationTypes, _textDocumentFactoryService, textBuffer));
+                new CSharpClassifier(classificationTypes, _textDocumentFactoryService, textBuffer));
         }
     }
 }

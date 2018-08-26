@@ -27,22 +27,22 @@ namespace CoCo
                     Name = "CoCo light|blue theme",
                     Classifications = new List<ClassificationSettings>
                     {
-                        CreateClassification(Names.AliasNamespaceName, 220, 220, 220),
-                        CreateClassification(Names.ConstantFieldName, 255, 157, 255),
-                        CreateClassification(Names.ConstructorName, 220, 220, 220),
-                        CreateClassification(Names.DestructorName, 220, 220, 220),
-                        CreateClassification(Names.EnumFieldName, 0, 193, 193),
-                        CreateClassification(Names.EventName, 220, 220, 220),
-                        CreateClassification(Names.ExtensionMethodName, 233, 122, 0),
-                        CreateClassification(Names.FieldName, 255, 157, 255),
-                        CreateClassification(Names.LabelName, 120, 20, 0),
-                        CreateClassification(Names.LocalVariableName, 128, 128, 0),
-                        CreateClassification(Names.MethodName, 187, 54, 4),
-                        CreateClassification(Names.NamespaceName, 220, 220, 220),
-                        CreateClassification(Names.ParameterName, 128, 128, 128),
-                        CreateClassification(Names.PropertyName, 255, 0, 255),
-                        CreateClassification(Names.RangeVariableName, 128, 128, 0),
-                        CreateClassification(Names.StaticMethodName, 154, 82, 0)
+                        CreateClassification(CSharpNames.AliasNamespaceName, 220, 220, 220),
+                        CreateClassification(CSharpNames.ConstantFieldName, 255, 157, 255),
+                        CreateClassification(CSharpNames.ConstructorName, 220, 220, 220),
+                        CreateClassification(CSharpNames.DestructorName, 220, 220, 220),
+                        CreateClassification(CSharpNames.EnumFieldName, 0, 193, 193),
+                        CreateClassification(CSharpNames.EventName, 220, 220, 220),
+                        CreateClassification(CSharpNames.ExtensionMethodName, 233, 122, 0),
+                        CreateClassification(CSharpNames.FieldName, 255, 157, 255),
+                        CreateClassification(CSharpNames.LabelName, 120, 20, 0),
+                        CreateClassification(CSharpNames.LocalVariableName, 128, 128, 0),
+                        CreateClassification(CSharpNames.MethodName, 187, 54, 4),
+                        CreateClassification(CSharpNames.NamespaceName, 220, 220, 220),
+                        CreateClassification(CSharpNames.ParameterName, 128, 128, 128),
+                        CreateClassification(CSharpNames.PropertyName, 255, 0, 255),
+                        CreateClassification(CSharpNames.RangeVariableName, 128, 128, 0),
+                        CreateClassification(CSharpNames.StaticMethodName, 154, 82, 0)
                     }
                 },
                 new PresetSettings
@@ -50,22 +50,22 @@ namespace CoCo
                     Name = "CoCo dark theme",
                     Classifications = new List<ClassificationSettings>
                     {
-                        CreateClassification(Names.AliasNamespaceName, 128, 0, 255),
-                        CreateClassification(Names.ConstantFieldName, 174, 0, 174),
-                        CreateClassification(Names.ConstructorName, 255, 0, 0),
-                        CreateClassification(Names.DestructorName, 255, 0, 0),
-                        CreateClassification(Names.EnumFieldName, 0, 193, 193),
-                        CreateClassification(Names.EventName, 200, 0, 128),
-                        CreateClassification(Names.ExtensionMethodName, 224, 118, 0),
-                        CreateClassification(Names.FieldName, 174, 0, 174),
-                        CreateClassification(Names.LabelName, 90, 10, 10),
-                        CreateClassification(Names.LocalVariableName, 128, 128, 0),
-                        CreateClassification(Names.MethodName, 187, 0, 0),
-                        CreateClassification(Names.NamespaceName, 0, 213, 0),
-                        CreateClassification(Names.ParameterName, 108, 108, 108),
-                        CreateClassification(Names.PropertyName, 255, 0, 255),
-                        CreateClassification(Names.RangeVariableName, 128, 128, 0),
-                        CreateClassification(Names.StaticMethodName, 163, 86, 0)
+                        CreateClassification(CSharpNames.AliasNamespaceName, 128, 0, 255),
+                        CreateClassification(CSharpNames.ConstantFieldName, 174, 0, 174),
+                        CreateClassification(CSharpNames.ConstructorName, 255, 0, 0),
+                        CreateClassification(CSharpNames.DestructorName, 255, 0, 0),
+                        CreateClassification(CSharpNames.EnumFieldName, 0, 193, 193),
+                        CreateClassification(CSharpNames.EventName, 200, 0, 128),
+                        CreateClassification(CSharpNames.ExtensionMethodName, 224, 118, 0),
+                        CreateClassification(CSharpNames.FieldName, 174, 0, 174),
+                        CreateClassification(CSharpNames.LabelName, 90, 10, 10),
+                        CreateClassification(CSharpNames.LocalVariableName, 128, 128, 0),
+                        CreateClassification(CSharpNames.MethodName, 187, 0, 0),
+                        CreateClassification(CSharpNames.NamespaceName, 0, 213, 0),
+                        CreateClassification(CSharpNames.ParameterName, 108, 108, 108),
+                        CreateClassification(CSharpNames.PropertyName, 255, 0, 255),
+                        CreateClassification(CSharpNames.RangeVariableName, 128, 128, 0),
+                        CreateClassification(CSharpNames.StaticMethodName, 163, 86, 0)
                     }
                 }
             };

@@ -51,7 +51,7 @@
     </Compile>
     <Compile Include="ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="ClassifierProvider.cs" />
+    <Compile Include="CSharpClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
     <Compile Include="NameExtensions.cs" />
     <Compile Include="OptionProvider.cs" />

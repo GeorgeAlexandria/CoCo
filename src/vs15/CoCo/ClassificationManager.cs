@@ -37,7 +37,7 @@ namespace CoCo
             var identifierPosition = GetIdentifierPosition(registryService, formatMap);
 
             var languageClassifications = new List<IClassificationType>();
-            foreach (var name in Names.All)
+            foreach (var name in CSharpNames.All)
             {
                 var classificationType = registryService.GetClassificationType(name);
                 if (classificationType != null)

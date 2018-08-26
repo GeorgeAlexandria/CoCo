@@ -20,9 +20,9 @@ namespace CoCo.Test.Common
 
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {
-            if (!Names.All.Contains(name))
+            if (!CSharpNames.All.Contains(name))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"Argument must be one of {nameof(Names)} constants");
+                throw new ArgumentOutOfRangeException(nameof(name), $"Argument must be one of {nameof(CSharpNames)} constants");
             }
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
@@ -61,12 +61,12 @@ namespace CoCo.Test.Common
                     var root = syntaxTree.GetCompilationUnitRoot();
 
                     var classificationTypes = new Dictionary<string, IClassificationType>(32);
-                    foreach (var item in Names.All)
+                    foreach (var item in CSharpNames.All)
                     {
                         classificationTypes.Add(item, new ClassificationType(item));
                     }
 
-                    var classifier = new EditorClassifier(classificationTypes);
+                    var classifier = new CSharpClassifier(classificationTypes);
                     actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
