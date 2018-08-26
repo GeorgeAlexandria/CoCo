@@ -58,13 +58,12 @@ namespace CoCo.Analyser
 
             var document = workspace.GetDocument(span.Snapshot.AsText());
             var semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
-            var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
 
-            return GetClassificationSpans(workspace, semanticModel, root, span);
+            return GetClassificationSpans(workspace, semanticModel, span);
         }
 
         internal abstract List<ClassificationSpan> GetClassificationSpans(
-            Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span);
+            Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
 

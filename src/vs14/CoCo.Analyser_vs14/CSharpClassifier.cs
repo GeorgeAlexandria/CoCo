@@ -45,10 +45,11 @@ namespace CoCo.Analyser
         }
 
         internal override List<ClassificationSpan> GetClassificationSpans(
-            Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
+            Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
             var spans = new List<ClassificationSpan>();
 
+            var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {

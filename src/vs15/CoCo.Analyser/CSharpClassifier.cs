@@ -45,7 +45,8 @@ namespace CoCo.Analyser
             InitializeClassifications(classifications);
         }
 
-        internal override List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SemanticModel semanticModel, SyntaxNode root, SnapshotSpan span)
+        internal override List<ClassificationSpan> GetClassificationSpans(
+            Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
             bool IsSupportedClassification(string classification) =>
                 classification == "identifier" || classification == "extension method name" || classification == "field name" ||
@@ -55,6 +56,7 @@ namespace CoCo.Analyser
 
             var spans = new List<ClassificationSpan>();
 
+            var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {

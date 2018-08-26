@@ -58,8 +58,6 @@ namespace CoCo.Test.Common
                     var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
-                    var root = syntaxTree.GetCompilationUnitRoot();
-
                     var classificationTypes = new Dictionary<string, IClassificationType>(32);
                     foreach (var item in CSharpNames.All)
                     {
@@ -67,7 +65,7 @@ namespace CoCo.Test.Common
                     }
 
                     var classifier = new CSharpClassifier(classificationTypes);
-                    actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
+                    actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
