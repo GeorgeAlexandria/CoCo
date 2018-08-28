@@ -32,14 +32,14 @@ namespace CoCo.Analyser
         private IClassificationType _destructorMethodType;
 
         internal CSharpClassifier(
-            Dictionary<string, IClassificationType> classifications,
+            IReadOnlyDictionary<string, IClassificationType> classifications,
             ITextDocumentFactoryService textDocumentFactoryService,
             ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
         {
             InitializeClassifications(classifications);
         }
 
-        internal CSharpClassifier(Dictionary<string, IClassificationType> classifications)
+        internal CSharpClassifier(IReadOnlyDictionary<string, IClassificationType> classifications)
         {
             InitializeClassifications(classifications);
         }
@@ -153,7 +153,7 @@ namespace CoCo.Analyser
             return spans;
         }
 
-        private void InitializeClassifications(Dictionary<string, IClassificationType> classifications)
+        private void InitializeClassifications(IReadOnlyDictionary<string, IClassificationType> classifications)
         {
             _localVariableType = classifications[CSharpNames.LocalVariableName];
             _rangeVariableType = classifications[CSharpNames.RangeVariableName];

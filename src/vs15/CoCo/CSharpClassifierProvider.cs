@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using Microsoft.VisualStudio.Text;
@@ -20,6 +20,8 @@ namespace CoCo
         /// Determines that settings was set to avoid a many sets settings from the classifier
         /// </summary>
         private static bool _wasSettingsSet;
+
+        private ImmutableDictionary<string, IClassificationType> _classificationTypes;
 
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
@@ -49,14 +51,18 @@ namespace CoCo
                 _wasSettingsSet = true;
             }
 
-            var classificationTypes = new Dictionary<string, IClassificationType>(32);
-            foreach (var name in CSharpNames.All)
+            if (_classificationTypes is null)
             {
-                classificationTypes.Add(name, _classificationRegistry.GetClassificationType(name));
+                var builder = ImmutableDictionary.CreateBuilder<string, IClassificationType>();
+                foreach (var name in CSharpNames.All)
+                {
+                    builder.Add(name, _classificationRegistry.GetClassificationType(name));
+                }
+                _classificationTypes = builder.ToImmutable();
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new CSharpClassifier(classificationTypes, _textDocumentFactoryService, textBuffer));
+                new CSharpClassifier(_classificationTypes, _textDocumentFactoryService, textBuffer));
         }
     }
 }

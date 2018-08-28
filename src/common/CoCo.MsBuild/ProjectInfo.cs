@@ -10,16 +10,16 @@ namespace CoCo.MsBuild
     {
         internal ProjectInfo(
             string projectPath,
-            ICollection<string> references,
+            ICollection<string> assemblyReferences,
             ICollection<ProjectInfo> projectReferences,
             ICollection<string> compileItems)
         {
-            var builder = ImmutableArray.CreateBuilder<string>(references.Count);
-            foreach (var item in references)
+            var builder = ImmutableArray.CreateBuilder<string>(assemblyReferences.Count);
+            foreach (var item in assemblyReferences)
             {
                 builder.Add(item);
             }
-            References = builder.MoveToImmutable();
+            AssemblyReferences = builder.MoveToImmutable();
 
             var builderProjects = ImmutableArray.CreateBuilder<ProjectInfo>(projectReferences.Count);
             foreach (var item in projectReferences)
@@ -39,7 +39,7 @@ namespace CoCo.MsBuild
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
         }
 
-        public ImmutableArray<string> References { get; }
+        public ImmutableArray<string> AssemblyReferences { get; }
 
         public ImmutableArray<ProjectInfo> ProjectReferences { get; }
 

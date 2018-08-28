@@ -4,10 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using CoCo.Analyser;
+using CoCo.Logging;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Project = CoCo.MsBuild.ProjectInfo;
@@ -20,16 +22,16 @@ namespace CoCo.Test.Common
 
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {
-            if (!CSharpNames.All.Contains(name))
+            if (!CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"Argument must be one of {nameof(CSharpNames)} constants");
+                throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
             }
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
         public static List<SimplifiedClassificationSpan> GetClassifications(this string path, Project project)
         {
-            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
+            using (var logger = LogManager.GetLogger("Test execution"))
             {
                 path = TestHelper.GetPathRelativeToTest(path);
                 if (!File.Exists(path))
@@ -38,33 +40,39 @@ namespace CoCo.Test.Common
                     return _empty;
                 }
 
-                var code = File.ReadAllText(path);
-                var buffer = new TextBuffer(new ContentType("csharp"), new StringOperand(code));
+                var compilationUnits = ExtractCompilationUnits(project);
 
-                var compilation = CreateCompilation(project);
-                var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(x => x.FilePath.EqualsNoCase(path));
-                if (syntaxTree == null)
+                SemanticModel semanticModel = null;
+                ProgrammingLanguage language = default;
+                foreach (var unit in compilationUnits)
+                {
+                    var roslynCompilation = unit.Compilation;
+                    var syntaxTree = roslynCompilation.SyntaxTrees.FirstOrDefault(x => x.FilePath.EqualsNoCase(path));
+                    if (!(syntaxTree is null))
+                    {
+                        semanticModel = roslynCompilation.GetSemanticModel(syntaxTree, true);
+                        language = unit.Language;
+                        break;
+                    }
+                }
+
+                if (semanticModel is null)
                 {
                     logger.Warn("Project {0} doesn't have the file {1}. Check that it's included.", project.ProjectPath, path);
                     return _empty;
                 }
-                var semanticModel = compilation.GetSemanticModel(syntaxTree, true);
 
                 List<ClassificationSpan> actualSpans = null;
+                // TODO: cache workspaces by project
                 using (var workspace = new AdhocWorkspace())
                 {
+                    var buffer = new TextBuffer(GetContentType(language), new StringOperand(semanticModel.SyntaxTree.ToString()));
                     var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
 
                     var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
-                    var classificationTypes = new Dictionary<string, IClassificationType>(32);
-                    foreach (var item in CSharpNames.All)
-                    {
-                        classificationTypes.Add(item, new ClassificationType(item));
-                    }
-
-                    var classifier = new CSharpClassifier(classificationTypes);
+                    var classifier = GetClassifier(language);
                     actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
@@ -76,7 +84,7 @@ namespace CoCo.Test.Common
             IEnumerable<SimplifiedClassificationSpan> otherCollection)
         {
             var currentSet = new HashSet<Span>();
-            using (var logger = Logging.LogManager.GetLogger("Test execution"))
+            using (var logger = LogManager.GetLogger("Test execution"))
             {
                 foreach (var item in currentCollection)
                 {
@@ -195,7 +203,7 @@ namespace CoCo.Test.Common
             return (false, builder.ToString());
         }
 
-        private const string tabs = "    ";
+        private const string _tabs = "    ";
 
         private static void AppendClassificationSpan(this StringBuilder builder, SimplifiedClassificationSpan span) =>
             builder
@@ -205,18 +213,36 @@ namespace CoCo.Test.Common
 
         private static StringBuilder AppenClassificationType(this StringBuilder builder, IClassificationType classificationType) =>
             builder
-                .Append(tabs).AppendLine("Type:")
-                .Append(tabs).Append(tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
-                .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine();
+                .Append(_tabs).AppendLine("Type:")
+                .Append(_tabs).Append(_tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
+                .Append(_tabs).Append(_tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine();
 
         private static StringBuilder AppendSpan(this StringBuilder builder, Span span) =>
-            builder.Append(tabs).Append("Span: ").Append(span).AppendLine();
+            builder.Append(_tabs).Append("Span: ").Append(span).AppendLine();
 
-        private static Compilation CreateCompilation(Project project)
+        private static RoslynEditorClassifier GetClassifier(ProgrammingLanguage language)
         {
-            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
+            var classificationTypes = new Dictionary<string, IClassificationType>(32);
+            var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
+            foreach (var item in names)
             {
-                var trees = new List<SyntaxTree>(project.CompileItems.Length);
+                classificationTypes.Add(item, new ClassificationType(item));
+            }
+
+            return language == ProgrammingLanguage.VisualBasic
+                ? new VisualBasicClassifier(classificationTypes)
+                : (RoslynEditorClassifier)new CSharpClassifier(classificationTypes);
+        }
+
+        private static ContentType GetContentType(ProgrammingLanguage language) =>
+            new ContentType(language == ProgrammingLanguage.VisualBasic ? "basic" : "csharp");
+
+        private static CompilationUnit[] ExtractCompilationUnits(Project project)
+        {
+            using (var logger = LogManager.GetLogger("Test execution"))
+            {
+                var csharpTrees = new List<SyntaxTree>(project.CompileItems.Length);
+                var visualBasicTrees = new List<SyntaxTree>(project.CompileItems.Length);
                 foreach (var item in project.CompileItems)
                 {
                     if (!File.Exists(item))
@@ -224,14 +250,43 @@ namespace CoCo.Test.Common
                         logger.Error($"File {item} doesn't exist");
                         continue;
                     }
+
                     var code = File.ReadAllText(item);
-                    trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                    if (Path.GetExtension(item).EqualsNoCase(".vb"))
+                    {
+                        visualBasicTrees.Add(VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default));
+                    }
+                    else
+                    {
+                        // NOTE: currently is assumed that all this files is C#
+                        // TODO: fix it in the future
+                        csharpTrees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                    }
                 }
-                // TODO: improve
-                return CSharpCompilation.Create(project.ProjectName)
-                    .AddSyntaxTrees(trees)
-                    .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
-                    .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
+
+                var references = new List<MetadataReference>(project.AssemblyReferences.Length + project.ProjectReferences.Length);
+                foreach (var item in project.AssemblyReferences)
+                {
+                    references.Add(MetadataReference.CreateFromFile(item));
+                }
+                foreach (var item in project.ProjectReferences)
+                {
+                    foreach (var unit in ExtractCompilationUnits(item))
+                    {
+                        references.Add(unit.Compilation.ToMetadataReference());
+                    }
+                }
+
+                return new CompilationUnit[2]
+                {
+                    CSharpCompilation.Create($"{project.ProjectName}_{LanguageNames.CSharp}")
+                        .AddSyntaxTrees(csharpTrees)
+                        .AddReferences(references),
+                    // TODO: set Infer, Strict and other vb compilation options.
+                    VisualBasicCompilation.Create($"{project.ProjectName}_{LanguageNames.VisualBasic}")
+                        .AddSyntaxTrees(visualBasicTrees)
+                        .AddReferences(references)
+                };
             }
         }
     }
