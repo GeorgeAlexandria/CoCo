@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Catch_Variable()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\CatchVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\CatchVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(311, 9),
                     CSharpNames.PropertyName.ClassifyAt(321, 7));
@@ -18,7 +18,7 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_ForForeach_Variable()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\ForForeachControlVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\ForForeachControlVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(242, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(251, 5),
@@ -29,14 +29,14 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Using_Variable()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\UsingVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\UsingVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(228, 6));
         }
 
         [Test]
         public void ConstructionTest_Nameof()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Nameof.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\Nameof.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(229, 8),
                     CSharpNames.EnumFieldName.ClassifyAt(287, 9),
@@ -47,21 +47,21 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Return()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Return.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\Return.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(172, 6));
         }
 
         [Test]
         public void ConstructionTest_Throw()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\Throw.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\Throw.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(204, 9));
         }
 
         [Test]
         public void ConstructionTest_YieldReturn()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Constructions\YieldReturn.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Constructions\YieldReturn.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(235, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(337, 4));

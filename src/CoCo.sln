@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser_vs14", "vs14\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers", "vs15\CoCo.Test.VisualBasicIdentifiers\CoCo.Test.VisualBasicIdentifiers.csproj", "{3947C041-178C-4338-8ED3-66196E529753}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.VisualBasicIdentifiers_vs14", "vs14\CoCo.Test.VisualBasicIdentifiers_vs14\CoCo.Test.VisualBasicIdentifiers_vs14.csproj", "{71F544A5-6CDE-442F-875B-DA42037DDD44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{3947C041-178C-4338-8ED3-66196E529753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3947C041-178C-4338-8ED3-66196E529753}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3947C041-178C-4338-8ED3-66196E529753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

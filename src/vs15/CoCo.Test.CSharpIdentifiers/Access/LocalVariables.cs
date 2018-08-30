@@ -9,14 +9,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Out()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\OutVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Access\Locals\OutVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(306, 8));
         }
 
         [Test]
         public void LocalVariableTest_ValueTuple()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Access\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(194, 6),
                     CSharpNames.LocalVariableName.ClassifyAt(209, 6));
@@ -25,7 +25,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Pattern()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Access\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(188, 4),
                     CSharpNames.LocalVariableName.ClassifyAt(196, 4));
@@ -34,7 +34,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Dynamic()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
+            @"Tests\Identifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(195, 4));
         }
     }

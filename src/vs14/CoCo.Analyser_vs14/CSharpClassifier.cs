@@ -53,10 +53,7 @@ namespace CoCo.Analyser
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (item.ClassificationType != "identifier")
-                {
-                    continue;
-                }
+                if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
                 /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a specific way
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
