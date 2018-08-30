@@ -48,22 +48,13 @@ namespace CoCo.Analyser
         internal override List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
-            bool IsSupportedClassification(string classification) =>
-                classification == "identifier" || classification == "extension method name" || classification == "field name" ||
-                classification == "property name" || classification == "method name" || classification == "local name" ||
-                classification == "parameter name" || classification == "event name" || classification == "enum member name" ||
-                classification == "constant name";
-
             var spans = new List<ClassificationSpan>();
 
             var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (!IsSupportedClassification(item.ClassificationType))
-                {
-                    continue;
-                }
+                if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
                 /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a specific way
                 var node = root.FindNode(item.TextSpan, true).HandleNode();

@@ -24,14 +24,14 @@ namespace CoCo.Analyser
         private IClassificationType _propertyType;
 
         internal VisualBasicClassifier(
-                   Dictionary<string, IClassificationType> classifications,
-                   ITextDocumentFactoryService textDocumentFactoryService,
-                   ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            IReadOnlyDictionary<string, IClassificationType> classifications,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
         {
             InitializeClassifications(classifications);
         }
 
-        internal VisualBasicClassifier(Dictionary<string, IClassificationType> classifications)
+        internal VisualBasicClassifier(IReadOnlyDictionary<string, IClassificationType> classifications)
         {
             InitializeClassifications(classifications);
         }
@@ -39,17 +39,13 @@ namespace CoCo.Analyser
         internal override List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
-            // TODO: need to check the existing vs classifications for vb
-            bool IsSupportedClassification(string classification) =>
-                classification == "identifier";
-
             var spans = new List<ClassificationSpan>();
 
             var root = semanticModel.SyntaxTree.GetCompilationUnitRoot();
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (IsSupportedClassification(item.ClassificationType)) continue;
+                if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
                 var node = root.FindNode(item.TextSpan, true);
 
@@ -67,6 +63,7 @@ namespace CoCo.Analyser
                 switch (symbol.Kind)
                 {
                     case SymbolKind.Field:
+                        // TODO: static local varialbe should be classified separately
                         var fieldSymbol = symbol as IFieldSymbol;
                         var fieldType =
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
@@ -114,7 +111,7 @@ namespace CoCo.Analyser
         private static ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
            new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
 
-        private void InitializeClassifications(Dictionary<string, IClassificationType> classifications)
+        private void InitializeClassifications(IReadOnlyDictionary<string, IClassificationType> classifications)
         {
             _localVariableType = classifications[VisualBasicNames.LocalVariableName];
             _functionVariableType = classifications[VisualBasicNames.FunctionVariableName];

@@ -1,20 +1,20 @@
 ﻿using CoCo.MsBuild;
 using CoCo.Test.Common;
 
-namespace CoCo.Test.CSharpIdentifiers
+namespace CoCo.Test.VisualBasicIdentifiers
 {
-    internal class CSharpIdentifierTests : CommonTests
+    internal class VisualBasicIdentifierTests : CommonTests
     {
-        private static string _projectPath = @"Tests\Identifiers\CSharpIdentifiers\CSharpIdentifiers.csproj";
+        private static readonly string _projectPath = @"Tests\Identifiers\VisualBasicIdentifiers\VisualBasicIdentifiers.vbproj";
 
-        private static ProjectInfo _projectInfo;
+        private static readonly ProjectInfo _projectInfo;
 
         protected override string ProjectPath { get; set; } = _projectPath;
 
         protected override ProjectInfo ProjectInfo { get; set; } = _projectInfo;
 
         // NOTE: workaround to initialize project only once for all of instance a derived classes
-        static CSharpIdentifierTests()
+        static VisualBasicIdentifierTests()
         {
             _projectInfo = SetUp(ref _projectPath);
         }

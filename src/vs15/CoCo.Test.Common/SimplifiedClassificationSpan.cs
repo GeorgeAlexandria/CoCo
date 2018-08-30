@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Test.Common
 {
+    [DebuggerDisplay("{ClassificationType.Classification}")]
     public class SimplifiedClassificationSpan : IEquatable<SimplifiedClassificationSpan>
     {
         public IClassificationType ClassificationType { get; }

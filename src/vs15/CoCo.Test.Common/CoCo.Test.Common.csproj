@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.8.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="2.8.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.8.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.8.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.8.2" />
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="15.6.27740" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="15.6.27740" />

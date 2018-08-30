@@ -254,7 +254,7 @@ namespace CoCo.Test.Common
                     var code = File.ReadAllText(item);
                     if (Path.GetExtension(item).EqualsNoCase(".vb"))
                     {
-                        visualBasicTrees.Add(VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default));
+                        visualBasicTrees.Add(VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default, item));
                     }
                     else
                     {
