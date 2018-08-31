@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Test.Common
 {
-    public class ClassificationComparer : IEqualityComparer<SimplifiedClassificationSpan>
+    public sealed class ClassificationComparer : IEqualityComparer<SimplifiedClassificationSpan>
     {
         private ClassificationComparer()
         {
@@ -14,26 +15,26 @@ namespace CoCo.Test.Common
 
         public bool Equals(SimplifiedClassificationSpan x, SimplifiedClassificationSpan y)
         {
-            if (x == null ^ y == null) return false;
-            if (x == null) return true;
+            if (x is null ^ y is null) return false;
+            if (x is null) return true;
 
             return x.Span == y.Span && AreClassificationTypeEquals(x.ClassificationType, y.ClassificationType);
         }
 
         public int GetHashCode(SimplifiedClassificationSpan obj)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            if (obj is null) throw new ArgumentNullException(nameof(obj));
             return obj.ClassificationType.Classification.GetHashCode() ^ obj.Span.GetHashCode();
         }
 
         private static bool AreClassificationTypeEquals(IClassificationType expected, IClassificationType actual)
         {
-            if (expected == null ^ actual == null) return false;
-            if (expected == null) return true;
+            if (expected is null ^ actual is null) return false;
+            if (expected is null) return true;
             if (!expected.Classification.Equals(actual.Classification, StringComparison.OrdinalIgnoreCase)) return false;
 
-            var expectedBaseTypes = new List<IClassificationType>(expected.BaseTypes);
-            var actualBaseTypes = new List<IClassificationType>(actual.BaseTypes);
+            var expectedBaseTypes = expected.BaseTypes.ToList();
+            var actualBaseTypes = actual.BaseTypes.ToList();
 
             int i = 0;
             while (i < expectedBaseTypes.Count && actualBaseTypes.Count > 0)
