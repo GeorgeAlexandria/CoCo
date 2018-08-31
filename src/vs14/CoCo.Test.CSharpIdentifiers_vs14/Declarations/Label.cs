@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LabelTest()
         {
-            @"Tests\Identifiers\CSharpIdentifiers\Declarations\Label.cs".GetClassifications(ProjectInfo)
+            @"Declarations\Label.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.LabelName.ClassifyAt(131, 10),
                     CSharpNames.LabelName.ClassifyAt(171, 11));

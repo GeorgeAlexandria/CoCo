@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Dynamic()
         {
-            @"Tests\Identifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
+            @"Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(195, 4));
         }
     }

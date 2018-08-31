@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void EnumTest()
         {
-            @"Tests\Identifiers\CSharpIdentifiers\Declarations\EnumDeclaration.cs".GetClassifications(ProjectInfo)
+            @"Declarations\EnumDeclaration.cs".GetClassifications(ProjectInfo)
                 .AssertContains(
                     CSharpNames.EnumFieldName.ClassifyAt(84, 4),
                     CSharpNames.EnumFieldName.ClassifyAt(99, 5),

@@ -32,7 +32,7 @@ namespace CoCo.Test.Common
         {
             using (var logger = LogManager.GetLogger("Test execution"))
             {
-                path = TestHelper.GetPathRelativeToTest(path);
+                path = Path.Combine(project.ProjectPath.GetDirectoryName(), path);
                 if (!File.Exists(path))
                 {
                     logger.Warn("File {0} doesn't exist.", path);
