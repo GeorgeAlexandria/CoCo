@@ -68,6 +68,11 @@
     <Compile Include="..\..\AssemblyInfoCommon.vb">
       <Link>My Project\AssemblyInfoCommon.vb</Link>
     </Compile>
+    <Compile Include="Declarations\Methods\Constructor.vb" />
+    <Compile Include="Declarations\Methods\ExtensionMethod.vb" />
+    <Compile Include="Declarations\Methods\FunctionMethod.vb" />
+    <Compile Include="Declarations\Methods\StaticConstructor.vb" />
+    <Compile Include="Declarations\Methods\SubMethod.vb" />
     <Compile Include="Example.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
