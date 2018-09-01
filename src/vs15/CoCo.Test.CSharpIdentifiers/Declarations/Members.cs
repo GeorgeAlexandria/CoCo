@@ -9,28 +9,28 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void MemberTest_InstanceField()
         {
-            @"Declarations\Members\InstanceField.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\InstanceField.cs")
                 .AssertContains(CSharpNames.FieldName.ClassifyAt(113, 5));
         }
 
         [Test]
         public void MemberTest_InstanceProperty()
         {
-            @"Declarations\Members\InstanceProperty.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\InstanceProperty.cs")
                 .AssertContains(CSharpNames.PropertyName.ClassifyAt(116, 10));
         }
 
         [Test]
         public void MemberTest_InstanceEvent()
         {
-            @"Declarations\Members\InstanceEvent.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\InstanceEvent.cs")
                 .AssertContains(CSharpNames.EventName.ClassifyAt(145, 7));
         }
 
         [Test]
         public void MemberTest_ConstantMember()
         {
-            @"Declarations\Members\ConstantMember.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\ConstantMember.cs")
                 .AssertContains(CSharpNames.ConstantFieldName.ClassifyAt(124, 5));
         }
 
@@ -38,21 +38,21 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void MemberTest_TypeField()
         {
-            @"Declarations\Members\TypeField.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\TypeField.cs")
                 .AssertContains(CSharpNames.FieldName.ClassifyAt(123, 5));
         }
 
         [Test]
         public void MemberTest_TypeProperty()
         {
-            @"Declarations\Members\TypeProperty.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\TypeProperty.cs")
                 .AssertContains(CSharpNames.PropertyName.ClassifyAt(126, 8));
         }
 
         [Test]
         public void MemberTest_TypeEvent()
         {
-            @"Declarations\Members\TypeEvent.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Members\TypeEvent.cs")
                 .AssertContains(CSharpNames.EventName.ClassifyAt(155, 7));
         }
     }

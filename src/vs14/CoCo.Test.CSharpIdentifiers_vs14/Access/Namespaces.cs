@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamespaceTest()
         {
-            @"Access\Namespaces\ByNamespace.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Namespaces\ByNamespace.cs")
                 .AssertContains(
                     CSharpNames.NamespaceName.ClassifyAt(142, 6),
                     CSharpNames.NamespaceName.ClassifyAt(149, 11),
@@ -21,14 +21,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamespaceTest_GlobalNotExists()
         {
-            @"Access\Namespaces\ByNamespace.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Namespaces\ByNamespace.cs")
                 .AssertNotContains(CSharpNames.NamespaceName.ClassifyAt(245, 6));
         }
 
         [Test]
         public void NamesapceTest_Alias()
         {
-            @"Access\Namespaces\ByNamespaceAlias.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Namespaces\ByNamespaceAlias.cs")
                 .AssertContains(
                     CSharpNames.AliasNamespaceName.ClassifyAt(381, 8),
                     CSharpNames.AliasNamespaceName.ClassifyAt(432, 11),

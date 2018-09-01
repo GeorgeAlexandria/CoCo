@@ -1,4 +1,5 @@
-﻿using CoCo.MsBuild;
+﻿using System.Collections.Generic;
+using CoCo.MsBuild;
 using NUnit.Framework;
 
 namespace CoCo.Test.Common
@@ -15,5 +16,8 @@ namespace CoCo.Test.Common
             projectPath = TestHelper.GetPathRelativeToTest(projectPath);
             return MsBuild.MsBuild.CreateProject(projectPath);
         }
+
+        protected List<SimplifiedClassificationSpan> GetClassifications(string path) =>
+            ClassificationHelper.GetClassifications(path, ProjectInfo);
     }
 }

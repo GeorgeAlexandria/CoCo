@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         [Test]
         public void CommonTest()
         {
-            @"Example.vb".GetClassifications(ProjectInfo)
+            GetClassifications(@"Example.vb")
                 .AssertIsEquivalent(VisualBasicNames.SubName.ClassifyAt(37, 6));
         }
     }

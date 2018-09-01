@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void EnumTest()
         {
-            @"Access\EnumField.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\EnumField.cs")
                 .AssertContains(
                     CSharpNames.EnumFieldName.ClassifyAt(152, 9),
                     CSharpNames.EnumFieldName.ClassifyAt(209, 3));

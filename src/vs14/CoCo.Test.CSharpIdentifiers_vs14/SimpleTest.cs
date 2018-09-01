@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void CommonTest()
         {
-            @"SimpleExample.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"SimpleExample.cs")
                 .AssertIsEquivalent(
                     CSharpNames.NamespaceName.ClassifyAt(10, 17),
                     CSharpNames.MethodName.ClassifyAt(94, 6),

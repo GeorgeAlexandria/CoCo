@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_Declaration()
         {
-            @"Declarations\Namespace\SimpleDeclaration.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Namespace\SimpleDeclaration.cs")
                 .AssertIsEquivalent(
                     CSharpNames.NamespaceName.ClassifyAt(87, 6),
                     CSharpNames.NamespaceName.ClassifyAt(102, 6),
@@ -20,7 +20,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_DeclarationWithAlias()
         {
-            @"Declarations\Namespace\Alias.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Namespace\Alias.cs")
                 .AssertIsEquivalent(
                     CSharpNames.AliasNamespaceName.ClassifyAt(87, 8),
                     CSharpNames.NamespaceName.ClassifyAt(98, 6),
@@ -31,7 +31,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_TypeAlias()
         {
-            @"Declarations\Namespace\TypeAlias.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Namespace\TypeAlias.cs")
                 .AssertIsEquivalent(
                     CSharpNames.NamespaceName.ClassifyAt(67, 6),
                     CSharpNames.NamespaceName.ClassifyAt(74, 11),
@@ -41,7 +41,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_StaticType()
         {
-            @"Declarations\Namespace\StaticType.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Namespace\StaticType.cs")
                 .AssertIsEquivalent(
                     CSharpNames.NamespaceName.ClassifyAt(13, 6),
                     CSharpNames.NamespaceName.ClassifyAt(20, 9));
@@ -50,7 +50,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_InsideNamespace()
         {
-            @"Declarations\Namespace\InsideNamespace.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Namespace\InsideNamespace.cs")
                 .AssertContains(
                     CSharpNames.NamespaceName.ClassifyAt(65, 6),
                     CSharpNames.NamespaceName.ClassifyAt(72, 11),

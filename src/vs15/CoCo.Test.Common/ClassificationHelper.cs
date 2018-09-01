@@ -28,7 +28,7 @@ namespace CoCo.Test.Common
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
-        public static List<SimplifiedClassificationSpan> GetClassifications(this string path, Project project)
+        public static List<SimplifiedClassificationSpan> GetClassifications(string path, Project project)
         {
             using (var logger = LogManager.GetLogger("Test execution"))
             {

@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Catch_Variable()
         {
-            @"Constructions\CatchVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\CatchVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(311, 9),
                     CSharpNames.PropertyName.ClassifyAt(321, 7));
@@ -18,7 +18,7 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_ForForeach_Variable()
         {
-            @"Constructions\ForForeachControlVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\ForForeachControlVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(242, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(251, 5),
@@ -29,14 +29,14 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_If_PatternVariable()
         {
-            @"Constructions\IfPatternVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\IfPatternVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(254, 5));
         }
 
         [Test]
         public void ConstructionTest_Switch_PatternVariable()
         {
-            @"Constructions\SwitchPatternVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\SwitchPatternVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(279, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(391, 4));
@@ -45,14 +45,14 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Using_Variable()
         {
-            @"Constructions\UsingVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\UsingVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(228, 6));
         }
 
         [Test]
         public void ConstructionTest_Nameof()
         {
-            @"Constructions\Nameof.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\Nameof.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(229, 8),
                     CSharpNames.EnumFieldName.ClassifyAt(287, 9),
@@ -63,21 +63,21 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Return()
         {
-            @"Constructions\Return.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\Return.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(172, 6));
         }
 
         [Test]
         public void ConstructionTest_Throw()
         {
-            @"Constructions\Throw.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\Throw.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(204, 9));
         }
 
         [Test]
         public void ConstructionTest_YieldReturn()
         {
-            @"Constructions\YieldReturn.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Constructions\YieldReturn.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(235, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(337, 4));

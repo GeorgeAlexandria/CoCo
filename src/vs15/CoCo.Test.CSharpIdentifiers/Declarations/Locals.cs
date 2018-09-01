@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest()
         {
-            @"Declarations\Locals\SimpleVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\SimpleVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(151, 6),
                     CSharpNames.LocalVariableName.ClassifyAt(226, 9),
@@ -19,7 +19,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest_ForControlVariable()
         {
-            @"Declarations\Locals\ForControlVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\ForControlVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(160, 5),
                     CSharpNames.LocalVariableName.ClassifyAt(171, 5),
@@ -29,42 +29,42 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest_ForeachControlVariable()
         {
-            @"Declarations\Locals\ForeachControlVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\ForeachControlVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(168, 4));
         }
 
         [Test]
         public void LocalTest_CatchVariable()
         {
-            @"Declarations\Locals\CatchVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\CatchVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(256, 9));
         }
 
         [Test]
         public void LocalTest_OutVariable()
         {
-            @"Declarations\Locals\OutVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\OutVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(253, 8));
         }
 
         [Test]
         public void LocalTest_PatternVariable()
         {
-            @"Declarations\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\PatternVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(204, 5));
         }
 
         [Test]
         public void LocalTest_UsingVariable()
         {
-            @"Declarations\Locals\UsingVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\UsingVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(157, 6));
         }
 
         [Test]
         public void LocalTest_ValueTupleVariable()
         {
-            @"Declarations\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\ValueTupleVariable.cs")
                 .AssertContains(
                     CSharpNames.LocalVariableName.ClassifyAt(156, 4),
                     CSharpNames.LocalVariableName.ClassifyAt(162, 4),
@@ -74,7 +74,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest_RangeVariable()
         {
-            @"Declarations\Locals\RangeVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\RangeVariable.cs")
                 .AssertContains(
                     CSharpNames.RangeVariableName.ClassifyAt(186, 4),
                     CSharpNames.RangeVariableName.ClassifyAt(242, 5),
@@ -85,7 +85,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest_DynamicVariable()
         {
-            @"Declarations\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Declarations\Locals\DynamicVariable.cs")
                 .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(156, 5));
         }
     }

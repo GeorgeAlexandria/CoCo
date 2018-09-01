@@ -9,14 +9,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void ParameterTest_DelegateParameter()
         {
-            @"Access\Parameters\Delegate.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Parameters\Delegate.cs")
                 .AssertContains(CSharpNames.ParameterName.ClassifyAt(243, 3));
         }
 
         [Test]
         public void ParameterTest_LambdaParameter()
         {
-            @"Access\Parameters\Lambda.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Parameters\Lambda.cs")
                 .AssertContains(
                     CSharpNames.ParameterName.ClassifyAt(196, 3),
                     CSharpNames.ParameterName.ClassifyAt(341, 3));
@@ -25,14 +25,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void ParameterTest_OptionalParameter()
         {
-            @"Access\Parameters\Optional.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Parameters\Optional.cs")
                 .AssertContains(CSharpNames.ParameterName.ClassifyAt(190, 4));
         }
 
         [Test]
         public void ParameterTest_RefInOutParameters()
         {
-            @"Access\Parameters\RefInOut.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Parameters\RefInOut.cs")
                 .AssertContains(
                     CSharpNames.ParameterName.ClassifyAt(178, 4),
                     CSharpNames.ParameterName.ClassifyAt(185, 4),
@@ -43,7 +43,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void ParameterTest_VariableParameter()
         {
-            @"Access\Parameters\Variable.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Parameters\Variable.cs")
                 .AssertContains(CSharpNames.ParameterName.ClassifyAt(195, 5));
         }
     }

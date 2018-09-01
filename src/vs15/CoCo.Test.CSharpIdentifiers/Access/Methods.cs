@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Extension()
         {
-            @"Access\Methods\ExtensionMethod.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Methods\ExtensionMethod.cs")
                 .AssertContains(
                     CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
                     CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
@@ -18,7 +18,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Local()
         {
-            @"Access\Methods\LocalMethod.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Methods\LocalMethod.cs")
                 .AssertContains(
                     CSharpNames.LocalMethodName.ClassifyAt(226, 10),
                     CSharpNames.LocalMethodName.ClassifyAt(274, 10));
@@ -27,14 +27,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest()
         {
-            @"Access\Methods\Method.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Methods\Method.cs")
                 .AssertContains(CSharpNames.MethodName.ClassifyAt(146, 9));
         }
 
         [Test]
         public void MethodTest_Static()
         {
-            @"Access\Methods\StaticMethod.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Methods\StaticMethod.cs")
                 .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(165, 9));
         }
     }
