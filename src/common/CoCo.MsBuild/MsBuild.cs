@@ -21,7 +21,10 @@ namespace CoCo.MsBuild
 
         private static readonly string[] allowedAssemblyExtensions = { ".dll" };
 
-        public static ProjectInfo CreateProject(string projectPath)
+        /// <summary>
+        /// Get existing project for <paramref name="projectPath"/> or create a new
+        /// </summary>
+        public static ProjectInfo GetProject(string projectPath)
         {
             if (!_cache.TryGetValue(projectPath, out ProjectInfo projectInfo))
             {
@@ -33,6 +36,7 @@ namespace CoCo.MsBuild
 
         private static ProjectInfo ParseProject(string projectPath)
         {
+            /// TODO: avoid redundant creation of lists and immutablearry
             var project = new Project(projectPath);
 
             var assemblyReferences = ResolveAssemblyReferences(project);
@@ -46,7 +50,7 @@ namespace CoCo.MsBuild
             var projects = new List<ProjectInfo>(projectRefereneces.Count);
             foreach (var item in projectRefereneces)
             {
-                var projectInfo = CreateProject(item.ItemSpec);
+                var projectInfo = GetProject(item.ItemSpec);
                 projects.Add(projectInfo);
             }
 
@@ -204,6 +208,17 @@ namespace CoCo.MsBuild
                 }
                 references.Add(new TaskItem(reference.EvaluatedInclude, metadata));
             }
+
+            // NOTE: append references to standard assemblies
+            // TODO: it would not be work for .netcore & .netstandard
+            references.Add(new TaskItem("mscorlib"));
+            references.Add(new TaskItem("System"));
+            references.Add(new TaskItem("System.Core"));
+            if (project.FullPath.EndsWith(".vbproj"))
+            {
+                references.Add(new TaskItem("Microsoft.VisualBasic"));
+            }
+
             return references.ToArray();
         }
 

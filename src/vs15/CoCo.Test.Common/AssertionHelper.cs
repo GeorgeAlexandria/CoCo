@@ -14,6 +14,11 @@ namespace CoCo.Test.Common
         private const string _tabs = "    ";
 
         // TODO: think how to convert it to a some of fluent api (test.Contains(...).NotContains(...))
+        public static void AssertIsEmpty(this IEnumerable<SimplifiedClassificationSpan> actualSpans)
+        {
+            Assert.IsEmpty(actualSpans);
+        }
+
         public static void AssertIsEquivalent(
             this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
         {

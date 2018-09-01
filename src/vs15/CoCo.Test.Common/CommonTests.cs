@@ -14,7 +14,7 @@ namespace CoCo.Test.Common
         public static ProjectInfo SetUp(ref string projectPath)
         {
             projectPath = TestHelper.GetPathRelativeToTest(projectPath);
-            return MsBuild.MsBuild.CreateProject(projectPath);
+            return MsBuild.MsBuild.GetProject(projectPath);
         }
 
         protected List<SimplifiedClassificationSpan> GetClassifications(string path) =>
