@@ -7,10 +7,4 @@ Public Module ExtensionMethod
 
   End Sub
 
-  '' Check type definition with type character
-  <Extension>
-  Public Sub Create2(arg$)
-
-  End Sub
-
 End Module

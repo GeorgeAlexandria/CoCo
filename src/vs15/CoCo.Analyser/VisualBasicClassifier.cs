@@ -60,6 +60,7 @@ namespace CoCo.Analyser
                     continue;
                 }
 
+                // TODO: add posibility to turn off classification a type characters as part of identifiers
                 switch (symbol.Kind)
                 {
                     case SymbolKind.Field:

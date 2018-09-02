@@ -73,6 +73,12 @@
     <Compile Include="Declarations\Methods\FunctionMethod.vb" />
     <Compile Include="Declarations\Methods\StaticConstructor.vb" />
     <Compile Include="Declarations\Methods\SubMethod.vb" />
+    <Compile Include="Declarations\Parameters\ByValRef.vb" />
+    <Compile Include="Declarations\Parameters\DelegateParameter.vb" />
+    <Compile Include="Declarations\Parameters\OptionalParameter.vb" />
+    <Compile Include="Declarations\Parameters\SimpleParameter.vb" />
+    <Compile Include="Declarations\Parameters\TypeCharacter.vb" />
+    <Compile Include="Declarations\Parameters\Variable.vb" />
     <Compile Include="Example.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
