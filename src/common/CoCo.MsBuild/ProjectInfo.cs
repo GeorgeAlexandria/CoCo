@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 
@@ -10,33 +9,19 @@ namespace CoCo.MsBuild
     {
         internal ProjectInfo(
             string projectPath,
-            ICollection<string> assemblyReferences,
-            ICollection<ProjectInfo> projectReferences,
-            ICollection<string> compileItems)
+            ImmutableArray<string> assemblyReferences,
+            ImmutableArray<ProjectInfo> projectReferences,
+            ImmutableArray<string> compileItems,
+            ImmutableArray<string> imports,
+            string rootNamespace)
         {
-            var builder = ImmutableArray.CreateBuilder<string>(assemblyReferences.Count);
-            foreach (var item in assemblyReferences)
-            {
-                builder.Add(item);
-            }
-            AssemblyReferences = builder.MoveToImmutable();
-
-            var builderProjects = ImmutableArray.CreateBuilder<ProjectInfo>(projectReferences.Count);
-            foreach (var item in projectReferences)
-            {
-                builderProjects.Add(item);
-            }
-            ProjectReferences = builderProjects.MoveToImmutable();
-
-            var builderCompile = ImmutableArray.CreateBuilder<string>(compileItems.Count);
-            foreach (var item in compileItems)
-            {
-                builderCompile.Add(item);
-            }
-
-            CompileItems = builderCompile.MoveToImmutable();
+            AssemblyReferences = assemblyReferences;
+            ProjectReferences = projectReferences;
+            CompileItems = compileItems;
             ProjectPath = projectPath;
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
+            Imports = imports;
+            RootNamespace = rootNamespace;
         }
 
         public ImmutableArray<string> AssemblyReferences { get; }
@@ -45,8 +30,12 @@ namespace CoCo.MsBuild
 
         public ImmutableArray<string> CompileItems { get; }
 
+        public ImmutableArray<string> Imports { get; }
+
         public string ProjectPath { get; }
 
         public string ProjectName { get; }
+
+        public string RootNamespace { get; }
     }
 }

@@ -135,13 +135,17 @@ namespace CoCo.Test.Common
                     }
                 }
 
+                var visualBasicOptions = new VisualBasicCompilationOptions(
+                    OutputKind.DynamicallyLinkedLibrary,
+                    rootNamespace: project.RootNamespace,
+                    globalImports: project.Imports.Select(GlobalImport.Parse));
                 return new CompilationUnit[2]
                 {
                     CSharpCompilation.Create($"{project.ProjectName}_{LanguageNames.CSharp}")
                         .AddSyntaxTrees(csharpTrees)
                         .AddReferences(references),
                     // TODO: set Infer, Strict and other vb compilation options.
-                    VisualBasicCompilation.Create($"{project.ProjectName}_{LanguageNames.VisualBasic}")
+                    VisualBasicCompilation.Create($"{project.ProjectName}_{LanguageNames.VisualBasic}", options: visualBasicOptions)
                         .AddSyntaxTrees(visualBasicTrees)
                         .AddReferences(references)
                 };
