@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.VisualBasic
 {
     // TODO: Do we need to write visual basic classifier on VB?
     internal class VisualBasicClassifier : RoslynEditorClassifier
@@ -47,7 +47,7 @@ namespace CoCo.Analyser
             {
                 if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
-                var node = root.FindNode(item.TextSpan, true);
+                var node = root.FindNode(item.TextSpan, true).HandleNode();
 
                 var info = semanticModel.GetSymbolInfo(node);
                 // TODO: handle resolution failed

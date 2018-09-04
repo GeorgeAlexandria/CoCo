@@ -26,11 +26,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasicClassifier.cs" Link="VisualBasicClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasicNames.cs" Link="VisualBasicNames.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicClassifier.cs" Link="VisualBasic\VisualBasicClassifier.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicNames.cs" Link="VisualBasic\VisualBasicNames.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicSyntaxNodeExtensions.cs" Link="VisualBasic\VisualBasicSyntaxNodeExtensions.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Log.cs" Link="Log.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\SyntaxNodeExtensions.cs" Link="SyntaxNodeExtensions.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpSyntaxNodeExtensions.cs" Link="CSharp\CSharpSyntaxNodeExtensions.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\WorkspaceExtensions.cs" Link="WorkspaceExtensions.cs" />
   </ItemGroup>
 </Project>

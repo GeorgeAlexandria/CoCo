@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
+using CoCo.Analyser.VisualBasic;
 using CoCo.Logging;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;

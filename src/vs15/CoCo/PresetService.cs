@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
-using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Settings;
 using Microsoft.VisualStudio.Text.Formatting;
 

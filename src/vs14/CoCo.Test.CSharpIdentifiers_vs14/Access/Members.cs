@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,30 +9,27 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MemberTest_Event()
         {
-            GetClassifications(@"Access\Members\Event.cs")
-                .AssertContains(
-                    CSharpNames.EventName.ClassifyAt(195, 7),
-                    CSharpNames.EventName.ClassifyAt(234, 7));
+            GetClassifications(@"Access\Members\Event.cs").AssertContains(
+                CSharpNames.EventName.ClassifyAt(195, 7),
+                CSharpNames.EventName.ClassifyAt(234, 7));
         }
 
         [Test]
         public void MemberTest_Field()
         {
-            GetClassifications(@"Access\Members\Field.cs")
-                .AssertContains(
-                    CSharpNames.FieldName.ClassifyAt(171, 5),
-                    CSharpNames.FieldName.ClassifyAt(215, 5),
-                    CSharpNames.FieldName.ClassifyAt(270, 5));
+            GetClassifications(@"Access\Members\Field.cs").AssertContains(
+                CSharpNames.FieldName.ClassifyAt(171, 5),
+                CSharpNames.FieldName.ClassifyAt(215, 5),
+                CSharpNames.FieldName.ClassifyAt(270, 5));
         }
 
         [Test]
         public void MemberTest_Property()
         {
-            GetClassifications(@"Access\Members\Property.cs")
-                .AssertContains(
-                    CSharpNames.PropertyName.ClassifyAt(204, 5),
-                    CSharpNames.PropertyName.ClassifyAt(249, 5),
-                    CSharpNames.PropertyName.ClassifyAt(298, 5));
+            GetClassifications(@"Access\Members\Property.cs").AssertContains(
+                CSharpNames.PropertyName.ClassifyAt(204, 5),
+                CSharpNames.PropertyName.ClassifyAt(249, 5),
+                CSharpNames.PropertyName.ClassifyAt(298, 5));
         }
 
         [Test]

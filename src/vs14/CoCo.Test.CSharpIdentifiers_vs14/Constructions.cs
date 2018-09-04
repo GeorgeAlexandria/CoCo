@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -36,12 +36,11 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_Nameof()
         {
-            GetClassifications(@"Constructions\Nameof.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(229, 8),
-                    CSharpNames.EnumFieldName.ClassifyAt(287, 9),
-                    CSharpNames.PropertyName.ClassifyAt(342, 12),
-                    CSharpNames.FieldName.ClassifyAt(389, 5));
+            GetClassifications(@"Constructions\Nameof.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(229, 8),
+                CSharpNames.EnumFieldName.ClassifyAt(287, 9),
+                CSharpNames.PropertyName.ClassifyAt(342, 12),
+                CSharpNames.FieldName.ClassifyAt(389, 5));
         }
 
         [Test]
@@ -61,10 +60,9 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_YieldReturn()
         {
-            GetClassifications(@"Constructions\YieldReturn.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(235, 5),
-                    CSharpNames.LocalVariableName.ClassifyAt(337, 4));
+            GetClassifications(@"Constructions\YieldReturn.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(235, 5),
+                CSharpNames.LocalVariableName.ClassifyAt(337, 4));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -32,12 +33,11 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void ParameterTest_RefInOutParameters()
         {
-            GetClassifications(@"Access\Parameters\RefInOut.cs")
-                .AssertContains(
-                    CSharpNames.ParameterName.ClassifyAt(178, 4),
-                    CSharpNames.ParameterName.ClassifyAt(185, 4),
-                    CSharpNames.ParameterName.ClassifyAt(204, 4),
-                    CSharpNames.ParameterName.ClassifyAt(211, 4));
+            GetClassifications(@"Access\Parameters\RefInOut.cs").AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(178, 4),
+                CSharpNames.ParameterName.ClassifyAt(185, 4),
+                CSharpNames.ParameterName.ClassifyAt(204, 4),
+                CSharpNames.ParameterName.ClassifyAt(211, 4));
         }
 
         [Test]

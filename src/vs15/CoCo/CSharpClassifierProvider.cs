@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.Composition;
-using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;

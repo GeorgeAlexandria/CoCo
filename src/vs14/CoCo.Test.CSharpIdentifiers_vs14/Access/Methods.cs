@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,10 +9,9 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Extension()
         {
-            GetClassifications(@"Access\Methods\ExtensionMethod.cs")
-                .AssertContains(
-                    CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
-                    CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
+            GetClassifications(@"Access\Methods\ExtensionMethod.cs").AssertContains(
+                CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
+                CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
         }
 
         [Test]

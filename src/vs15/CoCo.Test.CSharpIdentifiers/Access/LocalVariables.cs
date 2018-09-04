@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -16,19 +16,17 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_ValueTuple()
         {
-            GetClassifications(@"Access\Locals\ValueTupleVariable.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(194, 6),
-                    CSharpNames.LocalVariableName.ClassifyAt(209, 6));
+            GetClassifications(@"Access\Locals\ValueTupleVariable.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(194, 6),
+                CSharpNames.LocalVariableName.ClassifyAt(209, 6));
         }
 
         [Test]
         public void LocalVariableTest_Pattern()
         {
-            GetClassifications(@"Access\Locals\PatternVariable.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(188, 4),
-                    CSharpNames.LocalVariableName.ClassifyAt(196, 4));
+            GetClassifications(@"Access\Locals\PatternVariable.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(188, 4),
+                CSharpNames.LocalVariableName.ClassifyAt(196, 4));
         }
 
         [Test]

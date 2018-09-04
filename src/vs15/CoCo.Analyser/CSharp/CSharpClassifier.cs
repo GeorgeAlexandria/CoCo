@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.CSharp
 {
     /// <summary>
     /// Classifies csharp code
@@ -26,10 +26,11 @@ namespace CoCo.Analyser
         private IClassificationType _staticMethodType;
         private IClassificationType _enumFieldType;
         private IClassificationType _aliasNamespaceType;
-        private IClassificationType _constructorMethodType;
+        private IClassificationType _constructorType;
         private IClassificationType _labelType;
+        private IClassificationType _localMethodType;
         private IClassificationType _constantFieldType;
-        private IClassificationType _destructorMethodType;
+        private IClassificationType _destructorType;
 
         internal CSharpClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
@@ -60,7 +61,7 @@ namespace CoCo.Analyser
 
                 var info = semanticModel.GetSymbolInfo(node);
                 var symbol = info.Symbol ?? semanticModel.GetDeclaredSymbol(node);
-                if (symbol == null)
+                if (symbol is null)
                 {
                     // NOTE: handle alias in using directive
                     if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax)
@@ -77,21 +78,6 @@ namespace CoCo.Analyser
 
                 switch (symbol.Kind)
                 {
-                    case SymbolKind.Alias:
-                    case SymbolKind.ArrayType:
-                    case SymbolKind.Assembly:
-                    case SymbolKind.DynamicType:
-                    case SymbolKind.ErrorType:
-                    case SymbolKind.NetModule:
-                    case SymbolKind.NamedType:
-                    case SymbolKind.PointerType:
-                    case SymbolKind.TypeParameter:
-                    case SymbolKind.Preprocessing:
-                        //case SymbolKind.Discard:
-                        Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
-                        Log.Debug("Text was: {0}", node.GetText().ToString());
-                        break;
-
                     case SymbolKind.Label:
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _labelType));
                         break;
@@ -128,6 +114,7 @@ namespace CoCo.Analyser
 
                     case SymbolKind.Parameter:
                         // NOTE: Skip argument in summaries
+                        // TODO: add tests for it!
                         if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
                         {
                             spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
@@ -137,12 +124,18 @@ namespace CoCo.Analyser
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
-                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
+                        break;
+
+                    default:
+                        Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
+                        Log.Debug("Node is: {0}", node);
                         break;
                 }
             }
@@ -164,10 +157,11 @@ namespace CoCo.Analyser
             _staticMethodType = classifications[CSharpNames.StaticMethodName];
             _enumFieldType = classifications[CSharpNames.EnumFieldName];
             _aliasNamespaceType = classifications[CSharpNames.AliasNamespaceName];
-            _constructorMethodType = classifications[CSharpNames.ConstructorName];
+            _constructorType = classifications[CSharpNames.ConstructorName];
             _labelType = classifications[CSharpNames.LabelName];
+            _localMethodType = classifications[CSharpNames.LocalMethodName];
             _constantFieldType = classifications[CSharpNames.ConstantFieldName];
-            _destructorMethodType = classifications[CSharpNames.DestructorName];
+            _destructorType = classifications[CSharpNames.DestructorName];
         }
 
         private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>

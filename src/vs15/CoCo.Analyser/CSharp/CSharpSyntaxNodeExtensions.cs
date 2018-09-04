@@ -2,9 +2,9 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.CSharp
 {
-    public static class SyntaxNodeExtensions
+    public static class CSharpSyntaxNodeExtensions
     {
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
            node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression : node;

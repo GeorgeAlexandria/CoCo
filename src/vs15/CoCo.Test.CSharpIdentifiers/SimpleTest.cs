@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -10,12 +10,11 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void CommonTest()
         {
-            GetClassifications(@"SimpleExample.cs")
-                .AssertIsEquivalent(
-                    CSharpNames.NamespaceName.ClassifyAt(10, 17),
-                    CSharpNames.MethodName.ClassifyAt(94, 6),
-                    CSharpNames.ParameterName.ClassifyAt(108, 6),
-                    CSharpNames.LocalVariableName.ClassifyAt(144, 5));
+            GetClassifications(@"SimpleExample.cs").AssertIsEquivalent(
+                CSharpNames.NamespaceName.ClassifyAt(10, 17),
+                CSharpNames.MethodName.ClassifyAt(94, 6),
+                CSharpNames.ParameterName.ClassifyAt(108, 6),
+                CSharpNames.LocalVariableName.ClassifyAt(144, 5));
         }
     }
 }

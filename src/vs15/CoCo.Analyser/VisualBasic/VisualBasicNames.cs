@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.VisualBasic
 {
     public static class VisualBasicNames
     {

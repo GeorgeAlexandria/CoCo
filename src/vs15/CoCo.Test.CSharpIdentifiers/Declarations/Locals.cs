@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -64,22 +64,20 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LocalTest_ValueTupleVariable()
         {
-            GetClassifications(@"Declarations\Locals\ValueTupleVariable.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(156, 4),
-                    CSharpNames.LocalVariableName.ClassifyAt(162, 4),
-                    CSharpNames.LocalVariableName.ClassifyAt(201, 5));
+            GetClassifications(@"Declarations\Locals\ValueTupleVariable.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(156, 4),
+                CSharpNames.LocalVariableName.ClassifyAt(162, 4),
+                CSharpNames.LocalVariableName.ClassifyAt(201, 5));
         }
 
         [Test]
         public void LocalTest_RangeVariable()
         {
-            GetClassifications(@"Declarations\Locals\RangeVariable.cs")
-                .AssertContains(
-                    CSharpNames.RangeVariableName.ClassifyAt(186, 4),
-                    CSharpNames.RangeVariableName.ClassifyAt(242, 5),
-                    CSharpNames.RangeVariableName.ClassifyAt(250, 4),
-                    CSharpNames.RangeVariableName.ClassifyAt(292, 4));
+            GetClassifications(@"Declarations\Locals\RangeVariable.cs").AssertContains(
+                CSharpNames.RangeVariableName.ClassifyAt(186, 4),
+                CSharpNames.RangeVariableName.ClassifyAt(242, 5),
+                CSharpNames.RangeVariableName.ClassifyAt(250, 4),
+                CSharpNames.RangeVariableName.ClassifyAt(292, 4));
         }
 
         [Test]

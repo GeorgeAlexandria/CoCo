@@ -12,11 +12,8 @@ namespace CoCo.Analyser
             if (workspace == null) throw new ArgumentException("Input parameter is null", nameof(workspace));
             if (text == null) throw new ArgumentException("Input parameter is null", nameof(text));
 
-            DocumentId id = workspace.GetDocumentIdInCurrentContext(text.Container);
-            if (id == null)
-            {
-                return null;
-            }
+            var id = workspace.GetDocumentIdInCurrentContext(text.Container);
+            if (id == null) return null;
 
             return !workspace.CurrentSolution.ContainsDocument(id)
                 ? workspace.CurrentSolution.WithDocumentText(id, text, PreservationMode.PreserveIdentity).GetDocument(id)

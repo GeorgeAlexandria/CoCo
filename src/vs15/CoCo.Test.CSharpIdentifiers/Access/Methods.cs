@@ -1,4 +1,5 @@
 ﻿using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -18,10 +19,9 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Local()
         {
-            GetClassifications(@"Access\Methods\LocalMethod.cs")
-                .AssertContains(
-                    CSharpNames.LocalMethodName.ClassifyAt(226, 10),
-                    CSharpNames.LocalMethodName.ClassifyAt(274, 10));
+            GetClassifications(@"Access\Methods\LocalMethod.cs").AssertContains(
+                CSharpNames.LocalMethodName.ClassifyAt(226, 10),
+                CSharpNames.LocalMethodName.ClassifyAt(274, 10));
         }
 
         [Test]

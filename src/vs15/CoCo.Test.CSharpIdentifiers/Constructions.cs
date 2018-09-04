@@ -1,4 +1,5 @@
 ﻿using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -77,10 +78,9 @@ namespace CoCo.Test.CSharpIdentifiers
         [Test]
         public void ConstructionTest_YieldReturn()
         {
-            GetClassifications(@"Constructions\YieldReturn.cs")
-                .AssertContains(
-                    CSharpNames.LocalVariableName.ClassifyAt(235, 5),
-                    CSharpNames.LocalVariableName.ClassifyAt(337, 4));
+            GetClassifications(@"Constructions\YieldReturn.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(235, 5),
+                CSharpNames.LocalVariableName.ClassifyAt(337, 4));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.CSharp
 {
     public static class CSharpNames
     {

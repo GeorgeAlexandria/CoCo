@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.XPath;
-using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Settings;
 using CoCo.Utils;
 
