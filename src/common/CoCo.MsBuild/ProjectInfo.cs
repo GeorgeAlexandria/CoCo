@@ -13,7 +13,11 @@ namespace CoCo.MsBuild
             ImmutableArray<ProjectInfo> projectReferences,
             ImmutableArray<string> compileItems,
             ImmutableArray<string> imports,
-            string rootNamespace)
+            string rootNamespace,
+            bool optionCompare,
+            bool optionExplicit,
+            bool optionInfer,
+            bool optionStrict)
         {
             AssemblyReferences = assemblyReferences;
             ProjectReferences = projectReferences;
@@ -22,6 +26,10 @@ namespace CoCo.MsBuild
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
             Imports = imports;
             RootNamespace = rootNamespace;
+            OptionCompare = optionCompare;
+            OptionExplicit = optionExplicit;
+            OptionInfer = optionInfer;
+            OptionStrict = optionStrict;
         }
 
         public ImmutableArray<string> AssemblyReferences { get; }
@@ -37,5 +45,25 @@ namespace CoCo.MsBuild
         public string ProjectName { get; }
 
         public string RootNamespace { get; }
+
+        /// <summary>
+        /// It's true when compare set to "Text"
+        /// </summary>
+        public bool OptionCompare { get; }
+
+        /// <summary>
+        /// It's true when explicit is enabled
+        /// </summary>
+        public bool OptionExplicit { get; }
+
+        /// <summary>
+        /// It's true when infer is enabled
+        /// </summary>
+        public bool OptionInfer { get; }
+
+        /// <summary>
+        /// It's true when strict is enabled
+        /// </summary>
+        public bool OptionStrict { get; }
     }
 }

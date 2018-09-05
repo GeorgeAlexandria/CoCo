@@ -52,7 +52,15 @@ namespace CoCo.MsBuild
             var imports = GetImports(project);
             var rootNamespace = project.GetPropertyValue("RootNamespace");
 
-            return new ProjectInfo(projectPath, references, projects, compileItems, imports, rootNamespace);
+            var optionCompare = project.GetPropertyValue("OptionInfer").EqualsNoCase("Text");
+            var optionExplicit = project.GetPropertyValue("OptionExplicit").IsOn();
+            var optionInfer = project.GetPropertyValue("OptionInfer").IsOn();
+            // TODO: strict should be retrieved using "warning as error", because Rolsyn has a three states for the strict option
+            var optionStrict = project.GetPropertyValue("OptionStrict").IsOn();
+
+            return new ProjectInfo(
+                projectPath, references, projects, compileItems, imports, rootNamespace,
+                optionCompare, optionExplicit, optionInfer, optionStrict);
         }
 
         // NOTE: https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
@@ -259,6 +267,8 @@ namespace CoCo.MsBuild
             }
             return builder.TryMoveToImmutable();
         }
+
+        private static bool IsOn(this string value) => value.EqualsNoCase("on");
 
         private static ImmutableArray<T> TryMoveToImmutable<T>(this ImmutableArray<T>.Builder builder) =>
             builder.Count == builder.Capacity ? builder.MoveToImmutable() : builder.ToImmutable();
