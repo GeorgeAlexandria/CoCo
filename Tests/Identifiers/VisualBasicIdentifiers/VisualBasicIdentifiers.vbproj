@@ -68,6 +68,11 @@
     <Compile Include="..\..\AssemblyInfoCommon.vb">
       <Link>My Project\AssemblyInfoCommon.vb</Link>
     </Compile>
+    <Compile Include="Declarations\EnumDeclaration.vb" />
+    <Compile Include="Declarations\Members\ConstantMember.vb" />
+    <Compile Include="Declarations\Members\InstanceField.vb" />
+    <Compile Include="Declarations\Members\ModuleField.vb" />
+    <Compile Include="Declarations\Members\TypeField.vb" />
     <Compile Include="Declarations\Methods\Constructor.vb" />
     <Compile Include="Declarations\Methods\ExtensionMethod.vb" />
     <Compile Include="Declarations\Methods\FunctionMethod.vb" />

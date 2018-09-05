@@ -64,7 +64,6 @@ namespace CoCo.Analyser.VisualBasic
                 switch (symbol.Kind)
                 {
                     case SymbolKind.Field:
-                        // TODO: static local varialbe should be classified separately
                         var fieldSymbol = symbol as IFieldSymbol;
                         var fieldType =
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
@@ -74,6 +73,7 @@ namespace CoCo.Analyser.VisualBasic
                         break;
 
                     case SymbolKind.Local:
+                        // TODO: static local varialbe should be classified separately
                         var localSymbol = symbol as ILocalSymbol;
                         var localType = localSymbol.IsFunctionValue ? _functionVariableType : _localVariableType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, localType));
