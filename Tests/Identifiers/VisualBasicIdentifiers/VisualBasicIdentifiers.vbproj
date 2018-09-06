@@ -13,6 +13,11 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <OptionExplicit>Off</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,18 +36,6 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>VisualBasicIdentifiers.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionExplicit>On</OptionExplicit>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionCompare>Binary</OptionCompare>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionStrict>Off</OptionStrict>
-  </PropertyGroup>
-  <PropertyGroup>
-    <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -69,6 +62,15 @@
       <Link>My Project\AssemblyInfoCommon.vb</Link>
     </Compile>
     <Compile Include="Declarations\EnumDeclaration.vb" />
+    <Compile Include="Declarations\Locals\CatchVariable.vb" />
+    <Compile Include="Declarations\Locals\ForeachVariable.vb" />
+    <Compile Include="Declarations\Locals\ForVariable.vb" />
+    <Compile Include="Declarations\Locals\FunctionVariable.vb" />
+    <Compile Include="Declarations\Locals\RangeVariable.vb" />
+    <Compile Include="Declarations\Locals\SimpleVariable.vb" />
+    <Compile Include="Declarations\Locals\UsingVariable.vb" />
+    <Compile Include="Declarations\Locals\ValueTupleVariable.vb" />
+    <Compile Include="Declarations\Locals\WithVariable.vb" />
     <Compile Include="Declarations\Members\ConstantMember.vb" />
     <Compile Include="Declarations\Members\InstanceField.vb" />
     <Compile Include="Declarations\Members\ModuleField.vb" />

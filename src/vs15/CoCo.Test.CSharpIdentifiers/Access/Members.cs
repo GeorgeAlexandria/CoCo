@@ -69,7 +69,12 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                 CSharpNames.FieldName.ClassifyAt(157, 4),
                 CSharpNames.FieldName.ClassifyAt(166, 4),
                 CSharpNames.FieldName.ClassifyAt(209, 4),
-                CSharpNames.FieldName.ClassifyAt(222, 4));
+                CSharpNames.FieldName.ClassifyAt(222, 4),
+                CSharpNames.LocalVariableName.ClassifyAt(262, 5),
+                CSharpNames.LocalVariableName.ClassifyAt(269, 5),
+                CSharpNames.FieldName.ClassifyAt(314, 5),
+                CSharpNames.FieldName.ClassifyAt(320, 4),
+                CSharpNames.FieldName.ClassifyAt(339, 5));
         }
     }
 }

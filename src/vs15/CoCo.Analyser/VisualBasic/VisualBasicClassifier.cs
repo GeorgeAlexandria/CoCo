@@ -12,6 +12,7 @@ namespace CoCo.Analyser.VisualBasic
     internal class VisualBasicClassifier : RoslynEditorClassifier
     {
         private IClassificationType _localVariableType;
+        private IClassificationType _rangeVariableType;
         private IClassificationType _functionVariableType;
         private IClassificationType _functionType;
         private IClassificationType _subType;
@@ -72,6 +73,10 @@ namespace CoCo.Analyser.VisualBasic
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldType));
                         break;
 
+                    case SymbolKind.RangeVariable:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeVariableType));
+                        break;
+
                     case SymbolKind.Local:
                         // TODO: static local varialbe should be classified separately
                         var localSymbol = symbol as ILocalSymbol;
@@ -115,6 +120,7 @@ namespace CoCo.Analyser.VisualBasic
         private void InitializeClassifications(IReadOnlyDictionary<string, IClassificationType> classifications)
         {
             _localVariableType = classifications[VisualBasicNames.LocalVariableName];
+            _rangeVariableType = classifications[VisualBasicNames.RangeVariableName];
             _functionVariableType = classifications[VisualBasicNames.FunctionVariableName];
             _extensionMethodType = classifications[VisualBasicNames.ExtensionMethodName];
             _sharedMethodType = classifications[VisualBasicNames.SharedMethodName];

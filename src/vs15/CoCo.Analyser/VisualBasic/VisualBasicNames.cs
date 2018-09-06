@@ -5,6 +5,7 @@ namespace CoCo.Analyser.VisualBasic
     public static class VisualBasicNames
     {
         public const string LocalVariableName = "CoCo VB local variable name";
+        public const string RangeVariableName = "CoCo VB range variable name";
         public const string FunctionVariableName = "CoCo VB function variable name";
         public const string FunctionName = "CoCo VB function name";
         public const string SubName = "CoCo VB sub name";
@@ -26,6 +27,7 @@ namespace CoCo.Analyser.VisualBasic
 
                 var builder = ImmutableArray.CreateBuilder<string>(10);
                 builder.Add(LocalVariableName);
+                builder.Add(RangeVariableName);
                 builder.Add(FunctionVariableName);
                 builder.Add(FunctionName);
                 builder.Add(SubName);
