@@ -16,6 +16,7 @@ namespace CoCo.Analyser.VisualBasic
         public const string EnumFieldName = "CoCo VB enum field name";
         public const string ParameterName = "CoCo VB parameter name";
         public const string PropertyName = "CoCo VB property name";
+        public const string WithEventsPropertyName = "CoCo VB with events property name";
 
         private static ImmutableArray<string> _all;
 
@@ -38,6 +39,7 @@ namespace CoCo.Analyser.VisualBasic
                 builder.Add(EnumFieldName);
                 builder.Add(ParameterName);
                 builder.Add(PropertyName);
+                builder.Add(WithEventsPropertyName);
 
                 return _all = builder.ToImmutable();
             }

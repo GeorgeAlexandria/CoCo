@@ -23,6 +23,7 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _enumFieldType;
         private IClassificationType _parameterType;
         private IClassificationType _propertyType;
+        private IClassificationType _withEventsPropertyType;
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
@@ -99,8 +100,9 @@ namespace CoCo.Analyser.VisualBasic
                         break;
 
                     case SymbolKind.Property:
-                        // TODO: "with events" should be classified separately
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _propertyType));
+                        var propertySymbol = symbol as IPropertySymbol;
+                        var propertyType = propertySymbol.IsWithEvents ? _withEventsPropertyType : _propertyType;
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, propertyType));
 
                         break;
 
@@ -131,6 +133,7 @@ namespace CoCo.Analyser.VisualBasic
             _enumFieldType = classifications[VisualBasicNames.EnumFieldName];
             _parameterType = classifications[VisualBasicNames.ParameterName];
             _propertyType = classifications[VisualBasicNames.PropertyName];
+            _withEventsPropertyType = classifications[VisualBasicNames.WithEventsPropertyName];
         }
     }
 }

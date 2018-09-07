@@ -33,5 +33,33 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
             GetClassifications(@"Declarations\Members\ConstantMember.vb")
                 .AssertContains(VisualBasicNames.ConstantFieldName.ClassifyAt(46, 8));
         }
+
+        [Test]
+        public void MemberTest_InstanceProperty()
+        {
+            GetClassifications(@"Declarations\Members\InstanceProperty.vb")
+                .AssertContains(VisualBasicNames.PropertyName.ClassifyAt(51, 5));
+        }
+
+        [Test]
+        public void MemberTest_TypeProperty()
+        {
+            GetClassifications(@"Declarations\Members\TypeProperty.vb")
+                .AssertContains(VisualBasicNames.PropertyName.ClassifyAt(54, 11));
+        }
+
+        [Test]
+        public void MemberTest_ModuleProperty()
+        {
+            GetClassifications(@"Declarations\Members\ModuleProperty.vb")
+                .AssertContains(VisualBasicNames.PropertyName.ClassifyAt(50, 5));
+        }
+
+        [Test]
+        public void MemberTest_WithEvents()
+        {
+            GetClassifications(@"Declarations\Members\WithEventsProperty.vb")
+                .AssertContains(VisualBasicNames.WithEventsPropertyName.ClassifyAt(55, 5));
+        }
     }
 }

@@ -73,8 +73,12 @@
     <Compile Include="Declarations\Locals\WithVariable.vb" />
     <Compile Include="Declarations\Members\ConstantMember.vb" />
     <Compile Include="Declarations\Members\InstanceField.vb" />
+    <Compile Include="Declarations\Members\InstanceProperty.vb" />
     <Compile Include="Declarations\Members\ModuleField.vb" />
+    <Compile Include="Declarations\Members\ModuleProperty.vb" />
     <Compile Include="Declarations\Members\TypeField.vb" />
+    <Compile Include="Declarations\Members\TypeProperty.vb" />
+    <Compile Include="Declarations\Members\WithEventsProperty.vb" />
     <Compile Include="Declarations\Methods\Constructor.vb" />
     <Compile Include="Declarations\Methods\ExtensionMethod.vb" />
     <Compile Include="Declarations\Methods\FunctionMethod.vb" />
