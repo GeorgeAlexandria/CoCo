@@ -80,6 +80,11 @@
     <Compile Include="Access\Parameters\DelegateParameter.vb" />
     <Compile Include="Access\Parameters\OptionalParameter.vb" />
     <Compile Include="Access\Parameters\Variable.vb" />
+    <Compile Include="Constructions\If.vb" />
+    <Compile Include="Constructions\Nameof.vb" />
+    <Compile Include="Constructions\Throw.vb" />
+    <Compile Include="Constructions\Using.vb" />
+    <Compile Include="Constructions\With.vb" />
     <Compile Include="Declarations\EnumDeclaration.vb" />
     <Compile Include="Declarations\Locals\CatchVariable.vb" />
     <Compile Include="Declarations\Locals\ForeachVariable.vb" />
