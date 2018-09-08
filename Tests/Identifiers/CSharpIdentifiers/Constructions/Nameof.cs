@@ -13,6 +13,7 @@ namespace CSharpIdentifiers.Constructions
             var enumField = nameof(ConsoleKey.Backspace);
             var property = nameof(Console.BufferHeight);
             var field = nameof(value);
+            var method = nameof(Create);
         }
     }
 }

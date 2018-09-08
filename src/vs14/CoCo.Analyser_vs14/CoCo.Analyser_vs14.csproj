@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\RoslynExtensions.cs" Link="RoslynExtensions.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicClassifier.cs" Link="VisualBasic\VisualBasicClassifier.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicNames.cs" Link="VisualBasic\VisualBasicNames.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicSyntaxNodeExtensions.cs" Link="VisualBasic\VisualBasicSyntaxNodeExtensions.cs" />

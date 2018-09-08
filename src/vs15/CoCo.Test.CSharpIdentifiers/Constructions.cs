@@ -58,7 +58,8 @@ namespace CoCo.Test.CSharpIdentifiers
                     CSharpNames.LocalVariableName.ClassifyAt(229, 8),
                     CSharpNames.EnumFieldName.ClassifyAt(287, 9),
                     CSharpNames.PropertyName.ClassifyAt(342, 12),
-                    CSharpNames.FieldName.ClassifyAt(389, 5));
+                    CSharpNames.FieldName.ClassifyAt(389, 5),
+                    CSharpNames.MethodName.ClassifyAt(430, 6));
         }
 
         [Test]

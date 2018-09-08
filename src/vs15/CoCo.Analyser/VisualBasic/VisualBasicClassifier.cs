@@ -50,14 +50,10 @@ namespace CoCo.Analyser.VisualBasic
                 if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
-
-                var info = semanticModel.GetSymbolInfo(node);
-                // TODO: handle resolution failed
-                var symbol = info.Symbol ?? semanticModel.GetDeclaredSymbol(node);
-                if (symbol is null)
+                if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
                 {
-                    Log.Debug("Nothing is found. Span start at {0} and end at {1}", span.Start.Position, span.End.Position);
-                    Log.Debug("Candidate Reason {0}", info.CandidateReason);
+                    Log.Debug("Nothing is found. Span start at {0} and end at {1}", item.TextSpan.Start, item.TextSpan.End);
+                    Log.Debug("Candidate Reason is {0}", reason);
                     Log.Debug("Node is {0}", node);
                     continue;
                 }
