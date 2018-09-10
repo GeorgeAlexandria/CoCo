@@ -21,9 +21,18 @@ namespace CoCo.Analyser.CSharp
                 case QualifiedNameSyntax qualifiedName when qualifiedName.Left != identifierName: return false;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
             }
+            if(!(symbol is INamespaceSymbol namespaceSymbol))
+            {
+                Log.Error($"Symbol {symbol} isn't INamespaceSymbol");
+                return false;
+            }
 
-            // TODO: can it replace to getting the first level namespace (first level can be global namespace)?
-            var namespaceText = symbol.ToString();
+            while (!(namespaceSymbol is null) && !namespaceSymbol.ContainingNamespace.IsGlobalNamespace)
+            {
+                namespaceSymbol = namespaceSymbol.ContainingNamespace;
+            }
+
+            var namespaceText = namespaceSymbol.Name;
             var identifierText = identifierName.Identifier.ValueText;
 
             // NOTE: identifier is longer than a namespace => alias

@@ -31,7 +31,8 @@ namespace CoCo.Test.CSharpIdentifiers.Access
             GetClassifications(@"Access\Namespaces\ByNamespaceAlias.cs").AssertContains(
                 CSharpNames.AliasNamespaceName.ClassifyAt(381, 8),
                 CSharpNames.AliasNamespaceName.ClassifyAt(432, 11),
-                CSharpNames.AliasNamespaceName.ClassifyAt(494, 3));
+                CSharpNames.AliasNamespaceName.ClassifyAt(494, 3),
+                CSharpNames.AliasNamespaceName.ClassifyAt(542, 3));
         }
     }
 }

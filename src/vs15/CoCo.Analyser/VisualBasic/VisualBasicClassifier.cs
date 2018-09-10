@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -24,6 +25,8 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _parameterType;
         private IClassificationType _propertyType;
         private IClassificationType _withEventsPropertyType;
+        private IClassificationType _namespaceType;
+        private IClassificationType _aliasNamespaceType;
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
@@ -52,6 +55,13 @@ namespace CoCo.Analyser.VisualBasic
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
                 {
+                    // NOTE: handle alias in imports directive
+                    if (node is ImportAliasClauseSyntax aliasSyntax)
+                    {
+                        spans.Add(CreateClassificationSpan(span.Snapshot, aliasSyntax.Identifier.Span, _aliasNamespaceType));
+                        continue;
+                    }
+
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", item.TextSpan.Start, item.TextSpan.End);
                     Log.Debug("Candidate Reason is {0}", reason);
                     Log.Debug("Node is {0}", node);
@@ -99,7 +109,11 @@ namespace CoCo.Analyser.VisualBasic
                         var propertySymbol = symbol as IPropertySymbol;
                         var propertyType = propertySymbol.IsWithEvents ? _withEventsPropertyType : _propertyType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, propertyType));
+                        break;
 
+                    case SymbolKind.Namespace:
+                        var namespaceType = node.IsAliasNamespace(symbol) ? _aliasNamespaceType : _namespaceType;
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namespaceType));
                         break;
 
                     default:
@@ -130,6 +144,8 @@ namespace CoCo.Analyser.VisualBasic
             _parameterType = classifications[VisualBasicNames.ParameterName];
             _propertyType = classifications[VisualBasicNames.PropertyName];
             _withEventsPropertyType = classifications[VisualBasicNames.WithEventsPropertyName];
+            _namespaceType = classifications[VisualBasicNames.NamespaceName];
+            _aliasNamespaceType = classifications[VisualBasicNames.AliasNamespaceName];
         }
     }
 }

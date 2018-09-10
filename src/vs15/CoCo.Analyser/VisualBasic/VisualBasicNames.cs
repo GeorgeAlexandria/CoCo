@@ -17,6 +17,8 @@ namespace CoCo.Analyser.VisualBasic
         public const string ParameterName = "CoCo VB parameter name";
         public const string PropertyName = "CoCo VB property name";
         public const string WithEventsPropertyName = "CoCo VB with events property name";
+        public const string NamespaceName = "CoCo VB namespace name";
+        public const string AliasNamespaceName = "CoCo VB alias namespace name";
 
         private static ImmutableArray<string> _all;
 
@@ -40,6 +42,8 @@ namespace CoCo.Analyser.VisualBasic
                 builder.Add(ParameterName);
                 builder.Add(PropertyName);
                 builder.Add(WithEventsPropertyName);
+                builder.Add(NamespaceName);
+                builder.Add(AliasNamespaceName);
 
                 return _all = builder.ToImmutable();
             }

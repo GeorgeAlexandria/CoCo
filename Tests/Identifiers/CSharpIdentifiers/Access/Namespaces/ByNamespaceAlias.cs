@@ -14,6 +14,7 @@ namespace CSharpIdentifiers.Access.Namespace
             var list = new Generics.List<int>();
             var list2 = new Collections.Generic.List<int>();
             var error = new Sys.ArgumentOutOfRangeException();
+            Sys.ArgumentOutOfRangeException.ReferenceEquals("", "");
         }
     }
 }
