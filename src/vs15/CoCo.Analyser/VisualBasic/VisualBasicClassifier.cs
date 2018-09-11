@@ -27,6 +27,7 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _withEventsPropertyType;
         private IClassificationType _namespaceType;
         private IClassificationType _aliasNamespaceType;
+        private IClassificationType _staticLocalVariableType;
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
@@ -85,9 +86,11 @@ namespace CoCo.Analyser.VisualBasic
                         break;
 
                     case SymbolKind.Local:
-                        // TODO: static local varialbe should be classified separately
                         var localSymbol = symbol as ILocalSymbol;
-                        var localType = localSymbol.IsFunctionValue ? _functionVariableType : _localVariableType;
+                        var localType =
+                            localSymbol.IsStatic ? _staticLocalVariableType :
+                            localSymbol.IsFunctionValue ? _functionVariableType :
+                            _localVariableType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, localType));
                         break;
 
@@ -146,6 +149,7 @@ namespace CoCo.Analyser.VisualBasic
             _withEventsPropertyType = classifications[VisualBasicNames.WithEventsPropertyName];
             _namespaceType = classifications[VisualBasicNames.NamespaceName];
             _aliasNamespaceType = classifications[VisualBasicNames.AliasNamespaceName];
+            _staticLocalVariableType = classifications[VisualBasicNames.StaticLocalVariableName];
         }
     }
 }

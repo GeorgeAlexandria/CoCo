@@ -66,5 +66,13 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
             GetClassifications(@"Declarations\Locals\FunctionVariable.vb")
                 .AssertContains(VisualBasicNames.FunctionVariableName.ClassifyAt(76, 6));
         }
+
+        [Test]
+        public void LocalVariableTest_Static()
+        {
+            GetClassifications(@"Declarations\Locals\StaticVariable.vb").AssertContains(
+                VisualBasicNames.StaticLocalVariableName.ClassifyAt(65, 8),
+                VisualBasicNames.StaticLocalVariableName.ClassifyAt(75, 8));
+        }
     }
 }

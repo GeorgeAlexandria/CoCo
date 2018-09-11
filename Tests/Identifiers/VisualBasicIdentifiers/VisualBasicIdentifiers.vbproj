@@ -64,6 +64,7 @@
     <Compile Include="Access\EnumAccess.vb" />
     <Compile Include="Access\Locals\FunctionVariable.vb" />
     <Compile Include="Access\Locals\SimpleVariable.vb" />
+    <Compile Include="Access\Locals\StaticVariable.vb" />
     <Compile Include="Access\Locals\ValueTupleVariable.vb" />
     <Compile Include="Access\Members\ConstantMember.vb" />
     <Compile Include="Access\Members\InstanceField.vb" />
@@ -89,6 +90,7 @@
     <Compile Include="Constructions\With.vb" />
     <Compile Include="Declarations\EnumDeclaration.vb" />
     <Compile Include="Declarations\Locals\CatchVariable.vb" />
+    <Compile Include="Declarations\Locals\StaticVariable.vb" />
     <Compile Include="Declarations\Locals\ForeachVariable.vb" />
     <Compile Include="Declarations\Locals\ForVariable.vb" />
     <Compile Include="Declarations\Locals\FunctionVariable.vb" />

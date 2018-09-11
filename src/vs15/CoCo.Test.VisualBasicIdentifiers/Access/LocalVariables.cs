@@ -27,5 +27,12 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
                 VisualBasicNames.LocalVariableName.ClassifyAt(137, 3),
                 VisualBasicNames.LocalVariableName.ClassifyAt(149, 3));
         }
+
+        [Test]
+        public void LocalVariableTest_Static()
+        {
+            GetClassifications(@"Access\Locals\StaticVariable.vb")
+                .AssertContains(VisualBasicNames.StaticLocalVariableName.ClassifyAt(159, 8));
+        }
     }
 }
