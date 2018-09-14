@@ -28,6 +28,7 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _namespaceType;
         private IClassificationType _aliasNamespaceType;
         private IClassificationType _staticLocalVariableType;
+        private IClassificationType _eventType;
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
@@ -119,6 +120,10 @@ namespace CoCo.Analyser.VisualBasic
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namespaceType));
                         break;
 
+                    case SymbolKind.Event:
+                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
+                        break;
+
                     default:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         Log.Debug("Node is: {0}", node);
@@ -150,6 +155,7 @@ namespace CoCo.Analyser.VisualBasic
             _namespaceType = classifications[VisualBasicNames.NamespaceName];
             _aliasNamespaceType = classifications[VisualBasicNames.AliasNamespaceName];
             _staticLocalVariableType = classifications[VisualBasicNames.StaticLocalVariableName];
+            _eventType = classifications[VisualBasicNames.EventName];
         }
     }
 }

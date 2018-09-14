@@ -1,4 +1,4 @@
-﻿Namespace Access.Locals
+﻿Namespace Access.Members
 
   Public Class TypeField
 

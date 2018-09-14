@@ -61,5 +61,33 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
             GetClassifications(@"Declarations\Members\WithEventsProperty.vb")
                 .AssertContains(VisualBasicNames.WithEventsPropertyName.ClassifyAt(55, 5));
         }
+
+        [Test]
+        public void MemberTest_CustomEvent()
+        {
+            GetClassifications(@"Declarations\Members\CustomEvent.vb")
+                .AssertContains(VisualBasicNames.EventName.ClassifyAt(50, 7));
+        }
+
+        [Test]
+        public void MemberTest_InstanceEvent()
+        {
+            GetClassifications(@"Declarations\Members\InstanceEvent.vb")
+                .AssertContains(VisualBasicNames.EventName.ClassifyAt(45, 7));
+        }
+
+        [Test]
+        public void MemberTest_ModuleEvent()
+        {
+            GetClassifications(@"Declarations\Members\ModuleEvent.vb")
+                .AssertContains(VisualBasicNames.EventName.ClassifyAt(37, 7));
+        }
+
+        [Test]
+        public void MemberTest_TypeEvent()
+        {
+            GetClassifications(@"Declarations\Members\TypeEvent.vb")
+                .AssertContains(VisualBasicNames.EventName.ClassifyAt(48, 7));
+        }
     }
 }
