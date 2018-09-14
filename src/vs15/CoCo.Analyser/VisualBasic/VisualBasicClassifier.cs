@@ -95,10 +95,10 @@ namespace CoCo.Analyser.VisualBasic
                         break;
 
                     case SymbolKind.Method:
-                        // TODO: shared methods
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsShared() || methodSymbol.ContainingType?.TypeKind == TypeKind.Module ? _sharedMethodType :
                             methodSymbol.ReturnType.SpecialType == SpecialType.System_Void ? _subType :
                             _functionType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));

@@ -26,5 +26,19 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
             GetClassifications(@"Access\Methods\SubMethod.vb")
                 .AssertContains(VisualBasicNames.SubName.ClassifyAt(86, 6));
         }
+
+        [Test]
+        public void MethodTest_Shared()
+        {
+            GetClassifications(@"Access\Methods\SharedMethod.vb")
+                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(98, 6));
+        }
+
+        [Test]
+        public void MethodTest_ModuleMethod()
+        {
+            GetClassifications(@"Access\Methods\ModuleMethod.vb")
+                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(97, 3));
+        }
     }
 }

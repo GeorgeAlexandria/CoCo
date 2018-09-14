@@ -74,6 +74,8 @@
     <Compile Include="Access\Members\TypeField.vb" />
     <Compile Include="Access\Members\TypeProperty.vb" />
     <Compile Include="Access\Members\WithEventsProperty.vb" />
+    <Compile Include="Access\Methods\ModuleMethod.vb" />
+    <Compile Include="Access\Methods\SharedMethod.vb" />
     <Compile Include="Access\Namespaces\AliasNamespace.vb" />
     <Compile Include="Access\Namespaces\Namespace.vb" />
     <Compile Include="Access\Parameters\ByValRef.vb" />
@@ -110,6 +112,8 @@
     <Compile Include="Declarations\Methods\Constructor.vb" />
     <Compile Include="Declarations\Methods\ExtensionMethod.vb" />
     <Compile Include="Declarations\Methods\FunctionMethod.vb" />
+    <Compile Include="Declarations\Methods\ModuleMethod.vb" />
+    <Compile Include="Declarations\Methods\SharedMethod.vb" />
     <Compile Include="Declarations\Methods\StaticConstructor.vb" />
     <Compile Include="Declarations\Methods\SubMethod.vb" />
     <Compile Include="Declarations\Namespaces\Alias.vb" />

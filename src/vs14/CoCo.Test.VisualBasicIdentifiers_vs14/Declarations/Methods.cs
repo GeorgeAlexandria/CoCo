@@ -38,5 +38,19 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         {
             GetClassifications(@"Declarations\Methods\SharedConstructor.vb").AssertIsEmpty();
         }
+
+        [Test]
+        public void MethodTest_Shared()
+        {
+            GetClassifications(@"Declarations\Methods\SharedMethod.vb")
+                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(49, 6));
+        }
+
+        [Test]
+        public void MethodTest_ModuleMethod()
+        {
+            GetClassifications(@"Declarations\Methods\ModuleMethod.vb")
+                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(43, 6));
+        }
     }
 }
