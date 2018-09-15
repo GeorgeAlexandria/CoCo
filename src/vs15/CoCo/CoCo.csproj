@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResetValuesProvider.cs" />
     <Compile Include="ServicesProvider.cs" />
+    <Compile Include="VisualBasicClassifierProvider.cs" />
     <Compile Include="VsPackage.cs" />
     <Compile Include="MigrationService.cs" />
   </ItemGroup>

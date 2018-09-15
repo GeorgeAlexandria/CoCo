@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser_vs14", "vs14\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers", "vs15\CoCo.Test.VisualBasicIdentifiers\CoCo.Test.VisualBasicIdentifiers.csproj", "{3947C041-178C-4338-8ED3-66196E529753}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.VisualBasicIdentifiers_vs14", "vs14\CoCo.Test.VisualBasicIdentifiers_vs14\CoCo.Test.VisualBasicIdentifiers_vs14.csproj", "{71F544A5-6CDE-442F-875B-DA42037DDD44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers_vs14", "vs14\CoCo.Test.VisualBasicIdentifiers_vs14\CoCo.Test.VisualBasicIdentifiers_vs14.csproj", "{71F544A5-6CDE-442F-875B-DA42037DDD44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA735785-0FD4-4D4A-9592-EFC63AE0F294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +104,14 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0B57BF2D-6001-4317-9527-96C7CF4B20D1} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{DE073BD6-DEB9-4103-B081-4B43016F890F} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{3947C041-178C-4338-8ED3-66196E529753} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{71F544A5-6CDE-442F-875B-DA42037DDD44} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E41ADD5-581D-4F7B-82ED-2908A04877E8}

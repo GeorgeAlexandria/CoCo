@@ -29,16 +29,18 @@ namespace CoCo
             foreach (var (languageName, classifications) in classificationTypes)
             {
                 var language = new Language(languageName);
+                var languageClassifications = new List<string>(17);
                 foreach (var item in classifications)
                 {
                     classificationsMap.Add(item.Classification, item);
+                    languageClassifications.Add(item.Classification);
                 }
 
                 if (!defaultPresets.TryGetValue(language.Name, out var defaultLanguagePresets))
                 {
                     defaultLanguagePresets = new List<PresetSettings>();
                 }
-                var presetNames = defaultLanguagePresets.ToDictionary(x => x.Name);
+                var presetNames = defaultLanguagePresets.ToHashSet(x => x.Name);
 
                 List<ClassificationSettings> patchedClassifications;
                 var isLanguageExists = false;
@@ -49,16 +51,16 @@ namespace CoCo
                     {
                         isLanguageExists = true;
                         FillClassifications(
-                            classificationsMap.Keys, languageSettings.CurrentClassifications, language.Classifications, defaultFormatting);
+                            languageClassifications, languageSettings.CurrentClassifications, language.Classifications, defaultFormatting);
 
                         foreach (var presetSettings in languageSettings.Presets)
                         {
                             // NOTE: skip CoCo default presets, they will be added below
-                            if (presetNames.ContainsKey(presetSettings.Name)) continue;
+                            if (presetNames.Contains(presetSettings.Name)) continue;
 
                             var preset = new Preset(presetSettings.Name);
                             FillClassifications(
-                                classificationsMap.Keys, presetSettings.Classifications, preset.Classifications, defaultFormatting);
+                                languageClassifications, presetSettings.Classifications, preset.Classifications, defaultFormatting);
                             language.Presets.Add(preset);
                         }
                         break;
@@ -69,14 +71,14 @@ namespace CoCo
                 foreach (var defaultPreset in defaultLanguagePresets)
                 {
                     var preset = new Preset(defaultPreset.Name);
-                    FillClassifications(classificationsMap.Keys, defaultPreset.Classifications, preset.Classifications, defaultFormatting);
+                    FillClassifications(languageClassifications, defaultPreset.Classifications, preset.Classifications, defaultFormatting);
                     language.Presets.Add(preset);
                 }
                 // NOTE: add default classifications
                 if (!isLanguageExists)
                 {
                     FillClassifications(
-                        classificationsMap.Keys, Array.Empty<ClassificationSettings>(), language.Classifications, defaultFormatting);
+                        languageClassifications, Array.Empty<ClassificationSettings>(), language.Classifications, defaultFormatting);
                 }
                 option.Languages.Add(language);
             }
