@@ -1,4 +1,4 @@
-﻿namespace CSharpIdentifiers.Access.Namespace
+﻿namespace CSharpIdentifiers.Access.Namespaces
 {
     internal class ByNamespace
     {

@@ -99,10 +99,10 @@
     <Compile Include="Declarations\Methods\Method.cs" />
     <Compile Include="Declarations\Methods\StaticConstructor.cs" />
     <Compile Include="Declarations\Methods\StaticMethod.cs" />
-    <Compile Include="Declarations\Namespace\StaticType.cs" />
-    <Compile Include="Declarations\Namespace\InsideNamespace.cs" />
-    <Compile Include="Declarations\Namespace\Alias.cs" />
-    <Compile Include="Declarations\Namespace\SimpleDeclaration.cs" />
+    <Compile Include="Declarations\Namespaces\StaticType.cs" />
+    <Compile Include="Declarations\Namespaces\InsideNamespace.cs" />
+    <Compile Include="Declarations\Namespaces\Alias.cs" />
+    <Compile Include="Declarations\Namespaces\SimpleDeclaration.cs" />
     <Compile Include="Declarations\Parameters\DelegateParameter.cs" />
     <Compile Include="Declarations\Parameters\LambdaParameter.cs" />
     <Compile Include="Declarations\Parameters\RefOutIn.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Declarations\Parameters\SimpleParameter.cs" />
     <Compile Include="SimpleExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Declarations\Namespace\TypeAlias.cs" />
+    <Compile Include="Declarations\Namespaces\TypeAlias.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

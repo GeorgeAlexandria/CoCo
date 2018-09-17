@@ -9,11 +9,18 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest()
         {
-            GetClassifications(@"Declarations\Namespaces\Simple.vb").AssertIsEquivalent(
+            GetClassifications(@"Declarations\Namespaces\Simple.vb")
+                .AssertIsEquivalent(VisualBasicNames.NamespaceName.ClassifyAt(10, 8));
+        }
+
+        [Test]
+        public void NamespaceTest_Import()
+        {
+            GetClassifications(@"Declarations\Namespaces\SimpleImport.vb").AssertIsEquivalent(
                 VisualBasicNames.NamespaceName.ClassifyAt(89, 6),
-                VisualBasicNames.NamespaceName.ClassifyAt(106, 6),
-                VisualBasicNames.NamespaceName.ClassifyAt(113, 11),
-                VisualBasicNames.NamespaceName.ClassifyAt(125, 7));
+                VisualBasicNames.NamespaceName.ClassifyAt(105, 6),
+                VisualBasicNames.NamespaceName.ClassifyAt(112, 11),
+                VisualBasicNames.NamespaceName.ClassifyAt(124, 7));
         }
 
         [Test]
@@ -37,6 +44,14 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         {
             GetClassifications(@"Declarations\Namespaces\TypeAlias.vb")
                 .AssertIsEquivalent(VisualBasicNames.NamespaceName.ClassifyAt(13, 6));
+        }
+
+        [Test]
+        public void NamespaceTest_CustomAlias()
+        {
+            GetClassifications(@"Declarations\Namespaces\CustomAlias.vb").AssertContains(
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(89, 4),
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(183, 6));
         }
     }
 }

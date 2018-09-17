@@ -5,7 +5,7 @@ using Generics = System.Collections.Generic;
 // Check the alias for the first level namespace
 using Sys = System;
 
-namespace CSharpIdentifiers.Access.Namespace
+namespace CSharpIdentifiers.Access.Namespaces
 {
     internal class ByNamespaceAlias
     {

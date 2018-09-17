@@ -9,6 +9,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' " />
+    <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />

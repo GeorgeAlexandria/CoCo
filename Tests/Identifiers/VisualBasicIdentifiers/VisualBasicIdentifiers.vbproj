@@ -80,6 +80,7 @@
     <Compile Include="Access\Methods\ModuleMethod.vb" />
     <Compile Include="Access\Methods\SharedMethod.vb" />
     <Compile Include="Access\Namespaces\AliasNamespace.vb" />
+    <Compile Include="Access\Namespaces\CustomNamespace.vb" />
     <Compile Include="Access\Namespaces\Namespace.vb" />
     <Compile Include="Access\Parameters\ByValRef.vb" />
     <Compile Include="Access\Methods\ExtensionMethod.vb" />
@@ -124,7 +125,9 @@
     <Compile Include="Declarations\Methods\StaticConstructor.vb" />
     <Compile Include="Declarations\Methods\SubMethod.vb" />
     <Compile Include="Declarations\Namespaces\Alias.vb" />
+    <Compile Include="Declarations\Namespaces\CustomAlias.vb" />
     <Compile Include="Declarations\Namespaces\Simple.vb" />
+    <Compile Include="Declarations\Namespaces\SimpleImport.vb" />
     <Compile Include="Declarations\Namespaces\StaticType.vb" />
     <Compile Include="Declarations\Namespaces\TypeAlias.vb" />
     <Compile Include="Declarations\Parameters\ByValRef.vb" />

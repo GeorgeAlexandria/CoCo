@@ -11,11 +11,11 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void NamespaceTest()
         {
             GetClassifications(@"Access\Namespaces\ByNamespace.cs").AssertContains(
-                CSharpNames.NamespaceName.ClassifyAt(142, 6),
-                CSharpNames.NamespaceName.ClassifyAt(149, 11),
-                CSharpNames.NamespaceName.ClassifyAt(161, 7),
-                CSharpNames.NamespaceName.ClassifyAt(253, 6),
-                CSharpNames.NamespaceName.ClassifyAt(260, 11));
+                CSharpNames.NamespaceName.ClassifyAt(143, 6),
+                CSharpNames.NamespaceName.ClassifyAt(150, 11),
+                CSharpNames.NamespaceName.ClassifyAt(162, 7),
+                CSharpNames.NamespaceName.ClassifyAt(254, 6),
+                CSharpNames.NamespaceName.ClassifyAt(261, 11));
         }
 
         [Test]
@@ -29,10 +29,10 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void NamesapceTest_Alias()
         {
             GetClassifications(@"Access\Namespaces\ByNamespaceAlias.cs").AssertContains(
-                CSharpNames.AliasNamespaceName.ClassifyAt(381, 8),
-                CSharpNames.AliasNamespaceName.ClassifyAt(432, 11),
-                CSharpNames.AliasNamespaceName.ClassifyAt(494, 3),
-                CSharpNames.AliasNamespaceName.ClassifyAt(542, 3));
+                CSharpNames.AliasNamespaceName.ClassifyAt(382, 8),
+                CSharpNames.AliasNamespaceName.ClassifyAt(433, 11),
+                CSharpNames.AliasNamespaceName.ClassifyAt(495, 3),
+                CSharpNames.AliasNamespaceName.ClassifyAt(543, 3));
         }
     }
 }

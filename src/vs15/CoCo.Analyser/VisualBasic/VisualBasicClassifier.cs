@@ -116,7 +116,7 @@ namespace CoCo.Analyser.VisualBasic
                         break;
 
                     case SymbolKind.Namespace:
-                        var namespaceType = node.IsAliasNamespace(symbol) ? _aliasNamespaceType : _namespaceType;
+                        var namespaceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namespaceType));
                         break;
 
