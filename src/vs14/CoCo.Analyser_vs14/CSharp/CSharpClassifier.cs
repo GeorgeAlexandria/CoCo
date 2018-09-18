@@ -104,7 +104,7 @@ namespace CoCo.Analyser.CSharp
                         break;
 
                     case SymbolKind.Namespace:
-                        var namesapceType = node.IsAliasNamespace(symbol) ? _aliasNamespaceType : _namespaceType;
+                        var namesapceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
                         spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
                         break;
 

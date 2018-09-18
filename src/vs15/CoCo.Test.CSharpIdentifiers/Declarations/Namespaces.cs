@@ -51,5 +51,13 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
                 CSharpNames.NamespaceName.ClassifyAt(73, 11),
                 CSharpNames.NamespaceName.ClassifyAt(85, 7));
         }
+
+        [Test]
+        public void NamespaceTest_CustomAlias()
+        {
+            GetClassifications(@"Declarations\Namespaces\CustomAlias.cs").AssertContains(
+                CSharpNames.AliasNamespaceName.ClassifyAt(6, 10),
+                CSharpNames.AliasNamespaceName.ClassifyAt(69, 3));
+        }
     }
 }

@@ -47,6 +47,7 @@
     <Compile Include="Access\Methods\LocalMethod.cs" />
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
+    <Compile Include="Access\Namespaces\CustomNamespaces.cs" />
     <Compile Include="Constructions\CatchVariable.cs" />
     <Compile Include="Constructions\Return.cs" />
     <Compile Include="Constructions\Throw.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="Declarations\Methods\Method.cs" />
     <Compile Include="Declarations\Methods\StaticConstructor.cs" />
     <Compile Include="Declarations\Methods\StaticMethod.cs" />
+    <Compile Include="Declarations\Namespaces\CustomAlias.cs" />
     <Compile Include="Declarations\Namespaces\StaticType.cs" />
     <Compile Include="Declarations\Namespaces\InsideNamespace.cs" />
     <Compile Include="Declarations\Namespaces\Alias.cs" />

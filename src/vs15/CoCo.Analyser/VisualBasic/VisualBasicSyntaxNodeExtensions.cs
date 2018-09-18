@@ -39,9 +39,11 @@ namespace CoCo.Analyser.VisualBasic
             }
 
             // NOTE: collect all namespaces which members are reachibille from the current context
-            var namespaces = new HashSet<INamespaceSymbol>();
-            namespaces.Add(semanticModel.Compilation.RootNamespace());
-            namespaces.Add(semanticModel.Compilation.GlobalNamespace);
+            var namespaces = new HashSet<INamespaceSymbol>
+            {
+                semanticModel.Compilation.RootNamespace(),
+                semanticModel.Compilation.GlobalNamespace
+            };
 
             var enclosingNamespace = semanticModel.GetEnclosingSymbol(node.Span.Start)?.ContainingNamespace;
             while (!(enclosingNamespace is null))

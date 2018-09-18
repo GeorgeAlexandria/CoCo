@@ -34,5 +34,17 @@ namespace CoCo.Test.CSharpIdentifiers.Access
                 CSharpNames.AliasNamespaceName.ClassifyAt(495, 3),
                 CSharpNames.AliasNamespaceName.ClassifyAt(543, 3));
         }
+
+        [Test]
+        public void NamesapceTest_Custom()
+        {
+            GetClassifications(@"Access\Namespaces\CustomNamespaces.cs").AssertContains(
+                CSharpNames.NamespaceName.ClassifyAt(161, 17),
+                CSharpNames.NamespaceName.ClassifyAt(179, 6),
+                CSharpNames.NamespaceName.ClassifyAt(186, 10),
+                CSharpNames.NamespaceName.ClassifyAt(242, 6),
+                CSharpNames.NamespaceName.ClassifyAt(249, 10),
+                CSharpNames.NamespaceName.ClassifyAt(305, 10));
+        }
     }
 }
