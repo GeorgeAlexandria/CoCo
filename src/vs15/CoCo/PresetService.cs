@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using CoCo.Analyser.CSharp;
+using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -11,7 +12,7 @@ namespace CoCo
         /// <summary>
         /// Returns the default CoCo settings that are grouped by languages
         /// </summary>
-        public static Dictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
+        public static IReadOnlyDictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
         {
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
@@ -19,6 +20,8 @@ namespace CoCo
                 classification.Foreground = Color.FromRgb(r, g, b);
                 return classification;
             }
+
+            var languages = new Dictionary<string, List<PresetSettings>>();
 
             var presets = new List<PresetSettings>
             {
@@ -71,8 +74,62 @@ namespace CoCo
                     }
                 }
             };
+            languages["CSharp"] = presets;
 
-            return new Dictionary<string, List<PresetSettings>> { ["CSharp"] = presets };
+            presets = new List<PresetSettings>
+            {
+                new PresetSettings
+                {
+                    Name = "CoCo light|blue theme",
+                    Classifications = new List<ClassificationSettings>
+                    {
+                        CreateClassification(VisualBasicNames.AliasNamespaceName, 220, 220, 220),
+                        CreateClassification(VisualBasicNames.ConstantFieldName, 255, 157, 255),
+                        CreateClassification(VisualBasicNames.EnumFieldName, 0, 193, 193),
+                        CreateClassification(VisualBasicNames.EventName, 220, 220, 220),
+                        CreateClassification(VisualBasicNames.ExtensionMethodName, 233, 122, 0),
+                        CreateClassification(VisualBasicNames.FieldName, 255, 157, 255),
+                        CreateClassification(VisualBasicNames.FunctionName, 187, 54, 4),
+                        CreateClassification(VisualBasicNames.FunctionVariableName, 128, 64, 0),
+                        CreateClassification(VisualBasicNames.LocalVariableName, 128, 128, 0),
+                        CreateClassification(VisualBasicNames.NamespaceName, 220, 220, 220),
+                        CreateClassification(VisualBasicNames.ParameterName, 128, 128, 128),
+                        CreateClassification(VisualBasicNames.PropertyName, 255, 0, 255),
+                        CreateClassification(VisualBasicNames.RangeVariableName, 128, 128, 0),
+                        CreateClassification(VisualBasicNames.SharedMethodName, 154, 82, 0),
+                        CreateClassification(VisualBasicNames.StaticLocalVariableName, 64, 128, 0),
+                        CreateClassification(VisualBasicNames.SubName, 187, 34, 0),
+                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128)
+                    }
+                },
+                new PresetSettings
+                {
+                    Name = "CoCo dark theme",
+                    Classifications = new List<ClassificationSettings>
+                    {
+                        CreateClassification(VisualBasicNames.AliasNamespaceName, 128, 0, 255),
+                        CreateClassification(VisualBasicNames.ConstantFieldName, 174, 0, 174),
+                        CreateClassification(VisualBasicNames.EnumFieldName, 0, 193, 193),
+                        CreateClassification(VisualBasicNames.EventName, 200, 0, 128),
+                        CreateClassification(VisualBasicNames.ExtensionMethodName, 224, 118, 0),
+                        CreateClassification(VisualBasicNames.FieldName, 174, 0, 174),
+                        CreateClassification(VisualBasicNames.FunctionName, 187, 0, 0),
+                        CreateClassification(VisualBasicNames.FunctionVariableName, 128, 64, 0),
+                        CreateClassification(VisualBasicNames.LocalVariableName, 128, 128, 0),
+                        CreateClassification(VisualBasicNames.NamespaceName, 0, 213, 0),
+                        CreateClassification(VisualBasicNames.ParameterName, 108, 108, 108),
+                        CreateClassification(VisualBasicNames.PropertyName, 255, 0, 255),
+                        CreateClassification(VisualBasicNames.RangeVariableName, 128, 128, 0),
+                        CreateClassification(VisualBasicNames.SharedMethodName, 163, 86, 0),
+                        CreateClassification(VisualBasicNames.StaticLocalVariableName, 64, 128, 0),
+                        CreateClassification(VisualBasicNames.SubName, 187, 34, 0),
+                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128)
+                    }
+                }
+            };
+            languages["VisualBasic"] = presets;
+
+            return languages;
         }
     }
 }
