@@ -26,6 +26,7 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\RoslynExtensions.cs" Link="RoslynExtensions.cs" />

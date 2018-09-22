@@ -43,10 +43,11 @@ namespace CoCo
 
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
-            MigrationService.MigrateSettings();
+            MigrationService.MigrateSettingsTo_2_0_0();
             if (!_wasSettingsSet)
             {
                 var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
+                settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
                 FormattingService.SetFormatting(settings);
                 _wasSettingsSet = true;
             }

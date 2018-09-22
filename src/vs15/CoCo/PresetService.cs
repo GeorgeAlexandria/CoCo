@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
+using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
@@ -74,7 +75,7 @@ namespace CoCo
                     }
                 }
             };
-            languages["CSharp"] = presets;
+            languages[Languages.CSharp] = presets;
 
             presets = new List<PresetSettings>
             {
@@ -127,7 +128,7 @@ namespace CoCo
                     }
                 }
             };
-            languages["VisualBasic"] = presets;
+            languages[Languages.VisualBasic] = presets;
 
             return languages;
         }

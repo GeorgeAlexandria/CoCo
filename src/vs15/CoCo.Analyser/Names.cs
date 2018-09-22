@@ -18,8 +18,8 @@ namespace CoCo.Analyser
                 if (!(_all is null)) return _all;
 
                 return _all = ImmutableDictionary<string, ImmutableArray<string>>.Empty
-                    .Add("CSharp", CSharpNames.All)
-                    .Add("VisualBasic", VisualBasicNames.All);
+                    .Add(Languages.CSharp, CSharpNames.All)
+                    .Add(Languages.VisualBasic, VisualBasicNames.All);
             }
         }
     }

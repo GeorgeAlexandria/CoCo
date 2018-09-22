@@ -6,13 +6,14 @@ using System.Threading;
 using System.Windows.Media;
 using System.Xml;
 using System.Xml.XPath;
+using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Settings;
 using CoCo.Utils;
 
 namespace CoCo
 {
-    public static class MigrationService
+    public static partial class MigrationService
     {
         /// <summary>
         /// VS seaves the default background as #FF010000 for light and dark theme.
@@ -44,7 +45,7 @@ namespace CoCo
         /// it cannot be used to retrieve the old CoCo classifications, because they aren't actual => Try to retrieve they directly
         /// from current vssettings, and find usages of old CoCo classifications
         /// </remarks>
-        public static void MigrateSettings()
+        public static void MigrateSettingsTo_2_0_0()
         {
             var cocoSettings = new FileInfo(Paths.CoCoSettingsFile);
 
@@ -146,7 +147,7 @@ namespace CoCo
                 {
                     new LanguageSettings
                     {
-                        Name="CSharp",
+                        Name = Languages.CSharp,
                         CurrentClassifications = result.Values.ToList(),
                         Presets = new List<PresetSettings>(),
                     }
@@ -168,8 +169,6 @@ namespace CoCo
                 try
                 {
                     using (var stream = File.OpenText(_tempCurrenSettings))
-                    {
-                    }
                     return true;
                 }
                 catch (IOException)

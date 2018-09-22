@@ -4,23 +4,23 @@ namespace CoCo.Analyser.CSharp
 {
     public static class CSharpNames
     {
-        public const string LocalVariableName = "CoCo local variable name";
-        public const string RangeVariableName = "CoCo range variable name";
-        public const string ParameterName = "CoCo parameter name";
-        public const string NamespaceName = "CoCo namespace name";
-        public const string ExtensionMethodName = "CoCo extension method name";
-        public const string MethodName = "CoCo method name";
-        public const string EventName = "CoCo event name";
-        public const string PropertyName = "CoCo property name";
-        public const string FieldName = "CoCo field name";
-        public const string StaticMethodName = "CoCo static method name";
-        public const string EnumFieldName = "CoCo enum field name";
-        public const string AliasNamespaceName = "CoCo alias namespace name";
-        public const string ConstructorName = "CoCo constructor method name";
-        public const string LabelName = "CoCo label name";
-        public const string LocalMethodName = "CoCo local method name";
-        public const string ConstantFieldName = "CoCo constant field name";
-        public const string DestructorName = "CoCo destructor method name";
+        public const string LocalVariableName = "CoCo csharp local variable name";
+        public const string RangeVariableName = "CoCo csharp range variable name";
+        public const string ParameterName = "CoCo csharp parameter name";
+        public const string NamespaceName = "CoCo csharp namespace name";
+        public const string ExtensionMethodName = "CoCo csharp extension method name";
+        public const string MethodName = "CoCo csharp method name";
+        public const string EventName = "CoCo csharp event name";
+        public const string PropertyName = "CoCo csharp property name";
+        public const string FieldName = "CoCo csharp field name";
+        public const string StaticMethodName = "CoCo csharp static method name";
+        public const string EnumFieldName = "CoCo csharp enum field name";
+        public const string AliasNamespaceName = "CoCo csharp alias namespace name";
+        public const string ConstructorName = "CoCo csharp constructor method name";
+        public const string LabelName = "CoCo csharp label name";
+        public const string LocalMethodName = "CoCo csharp local method name";
+        public const string ConstantFieldName = "CoCo csharp constant field name";
+        public const string DestructorName = "CoCo csharp destructor method name";
 
         private static ImmutableArray<string> _all;
 

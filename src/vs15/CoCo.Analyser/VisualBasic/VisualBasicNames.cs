@@ -4,23 +4,23 @@ namespace CoCo.Analyser.VisualBasic
 {
     public static class VisualBasicNames
     {
-        public const string LocalVariableName = "CoCo VB local variable name";
-        public const string RangeVariableName = "CoCo VB range variable name";
-        public const string FunctionVariableName = "CoCo VB function variable name";
-        public const string FunctionName = "CoCo VB function name";
-        public const string SubName = "CoCo VB sub name";
-        public const string ExtensionMethodName = "CoCo VB extension method name";
-        public const string SharedMethodName = "CoCo VB shared method name";
-        public const string FieldName = "CoCo VB field name";
-        public const string ConstantFieldName = "CoCo VB constant field name";
-        public const string EnumFieldName = "CoCo VB enum field name";
-        public const string ParameterName = "CoCo VB parameter name";
-        public const string PropertyName = "CoCo VB property name";
-        public const string WithEventsPropertyName = "CoCo VB with events property name";
-        public const string NamespaceName = "CoCo VB namespace name";
-        public const string AliasNamespaceName = "CoCo VB alias namespace name";
-        public const string StaticLocalVariableName = "CoCo VB static local variable name";
-        public const string EventName = "CoCo VB event name";
+        public const string LocalVariableName = "CoCo visual basic local variable name";
+        public const string RangeVariableName = "CoCo visual basic range variable name";
+        public const string FunctionVariableName = "CoCo visual basic function variable name";
+        public const string FunctionName = "CoCo visual basic function name";
+        public const string SubName = "CoCo visual basic sub name";
+        public const string ExtensionMethodName = "CoCo visual basic extension method name";
+        public const string SharedMethodName = "CoCo visual basic shared method name";
+        public const string FieldName = "CoCo visual basic field name";
+        public const string ConstantFieldName = "CoCo visual basic constant field name";
+        public const string EnumFieldName = "CoCo visual basic enum field name";
+        public const string ParameterName = "CoCo visual basic parameter name";
+        public const string PropertyName = "CoCo visual basic property name";
+        public const string WithEventsPropertyName = "CoCo visual basic with events property name";
+        public const string NamespaceName = "CoCo visual basic namespace name";
+        public const string AliasNamespaceName = "CoCo visual basic alias namespace name";
+        public const string StaticLocalVariableName = "CoCo visual basic static local variable name";
+        public const string EventName = "CoCo visual basic event name";
 
         private static ImmutableArray<string> _all;
 
@@ -30,7 +30,7 @@ namespace CoCo.Analyser.VisualBasic
             {
                 if (!_all.IsDefaultOrEmpty) return _all;
 
-                var builder = ImmutableArray.CreateBuilder<string>(10);
+                var builder = ImmutableArray.CreateBuilder<string>(17);
                 builder.Add(LocalVariableName);
                 builder.Add(RangeVariableName);
                 builder.Add(FunctionVariableName);
