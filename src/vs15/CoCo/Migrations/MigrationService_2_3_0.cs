@@ -38,7 +38,11 @@ namespace CoCo
             var languages = new List<Settings.LanguageSettings>(settings.Languages.Count);
             foreach (var languageSettings in settings.Languages)
             {
-                if (!languageSettings.Name.EqualsNoCase(Languages.CSharp)) continue;
+                if (!languageSettings.Name.EqualsNoCase(Languages.CSharp))
+                {
+                    languages.Add(languageSettings);
+                    continue;
+                }
 
                 var language = languageSettings;
                 language.CurrentClassifications = MigrateClassifications(language.CurrentClassifications);

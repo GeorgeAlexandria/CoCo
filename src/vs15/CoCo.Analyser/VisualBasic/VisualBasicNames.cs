@@ -7,8 +7,8 @@ namespace CoCo.Analyser.VisualBasic
         public const string LocalVariableName = "CoCo visual basic local variable name";
         public const string RangeVariableName = "CoCo visual basic range variable name";
         public const string FunctionVariableName = "CoCo visual basic function variable name";
-        public const string FunctionName = "CoCo visual basic function name";
-        public const string SubName = "CoCo visual basic sub name";
+        public const string FunctionName = "CoCo visual basic function method name";
+        public const string SubName = "CoCo visual basic sub method name";
         public const string ExtensionMethodName = "CoCo visual basic extension method name";
         public const string SharedMethodName = "CoCo visual basic shared method name";
         public const string FieldName = "CoCo visual basic field name";
