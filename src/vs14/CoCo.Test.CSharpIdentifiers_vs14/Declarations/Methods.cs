@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,44 +9,44 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void MethodTest_Constructor()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Constructor.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.ConstructorName.ClassifyAt(107, 11));
+            GetClassifications(@"Declarations\Methods\Constructor.cs")
+                .AssertContains(CSharpNames.ConstructorName.ClassifyAt(107, 11));
         }
 
         [Test]
         public void MethodTest_Destructor()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Destructor.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.DestructorName.ClassifyAt(100, 10));
+            GetClassifications(@"Declarations\Methods\Destructor.cs")
+                .AssertContains(CSharpNames.DestructorName.ClassifyAt(100, 10));
         }
 
         [Test]
         public void MethodTest()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\Method.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.MethodName.ClassifyAt(107, 6));
+            GetClassifications(@"Declarations\Methods\Method.cs")
+                .AssertContains(CSharpNames.MethodName.ClassifyAt(107, 6));
         }
 
         [Test]
         public void MethodTest_StaticMethod()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\StaticMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.StaticMethodName.ClassifyAt(120, 3));
+            GetClassifications(@"Declarations\Methods\StaticMethod.cs")
+                .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(120, 3));
         }
 
         [Test]
         public void MethodTest_ExtensionMethod()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\ExtensionMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.ExtensionMethodName.ClassifyAt(131, 12));
+            GetClassifications(@"Declarations\Methods\ExtensionMethod.cs")
+                .AssertContains(CSharpNames.ExtensionMethodName.ClassifyAt(131, 12));
         }
 
         [Test]
         public void MethodTest_StaticConstructor()
         {
             // NOTE: .cctor doesn't have a special classification, so it will be recognized as static method
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Methods\StaticConstructor.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.StaticMethodName.ClassifyAt(113, 17));
+            GetClassifications(@"Declarations\Methods\StaticConstructor.cs")
+                .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(113, 17));
         }
     }
 }

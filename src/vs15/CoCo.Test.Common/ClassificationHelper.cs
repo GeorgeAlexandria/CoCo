@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
+using CoCo.Analyser.VisualBasic;
+using CoCo.Logging;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Project = CoCo.MsBuild.ProjectInfo;
@@ -20,205 +23,86 @@ namespace CoCo.Test.Common
 
         public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
         {
-            if (!Names.All.Contains(name))
+            if (!CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name))
             {
-                throw new ArgumentOutOfRangeException(nameof(name), $"Argument must be one of {nameof(Names)} constants");
+                throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
             }
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
-        public static List<SimplifiedClassificationSpan> GetClassifications(this string path, Project project)
+        public static List<SimplifiedClassificationSpan> GetClassifications(string path, Project project)
         {
-            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
+            using (var logger = LogManager.GetLogger("Test execution"))
             {
-                path = TestHelper.GetPathRelativeToTest(path);
+                path = Path.Combine(project.ProjectPath.GetDirectoryName(), path);
                 if (!File.Exists(path))
                 {
                     logger.Warn("File {0} doesn't exist.", path);
                     return _empty;
                 }
 
-                var code = File.ReadAllText(path);
-                var buffer = new TextBuffer(new ContentType("csharp"), new StringOperand(code));
+                var compilationUnits = ExtractCompilationUnits(project);
 
-                var compilation = CreateCompilation(project);
-                var syntaxTree = compilation.SyntaxTrees.FirstOrDefault(x => x.FilePath.EqualsNoCase(path));
-                if (syntaxTree == null)
+                SemanticModel semanticModel = null;
+                ProgrammingLanguage language = default;
+                foreach (var unit in compilationUnits)
+                {
+                    var roslynCompilation = unit.Compilation;
+                    var syntaxTree = roslynCompilation.SyntaxTrees.FirstOrDefault(x => x.FilePath.EqualsNoCase(path));
+                    if (!(syntaxTree is null))
+                    {
+                        semanticModel = roslynCompilation.GetSemanticModel(syntaxTree, true);
+                        language = unit.Language;
+                        break;
+                    }
+                }
+
+                if (semanticModel is null)
                 {
                     logger.Warn("Project {0} doesn't have the file {1}. Check that it's included.", project.ProjectPath, path);
                     return _empty;
                 }
-                var semanticModel = compilation.GetSemanticModel(syntaxTree, true);
 
                 List<ClassificationSpan> actualSpans = null;
+                // TODO: cache workspaces by project
                 using (var workspace = new AdhocWorkspace())
                 {
+                    var buffer = new TextBuffer(GetContentType(language), new StringOperand(semanticModel.SyntaxTree.ToString()));
                     var snapshotSpan = new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length);
 
                     var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
-                    var root = syntaxTree.GetCompilationUnitRoot();
-
-                    var classificationTypes = new Dictionary<string, IClassificationType>(32);
-                    foreach (var item in Names.All)
-                    {
-                        classificationTypes.Add(item, new ClassificationType(item));
-                    }
-
-                    var classifier = new EditorClassifier(classificationTypes);
-                    actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, root, snapshotSpan);
+                    var classifier = GetClassifier(language);
+                    actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
         }
 
-        public static (bool, string message) NotContains(
-            IEnumerable<SimplifiedClassificationSpan> currentCollection,
-            IEnumerable<SimplifiedClassificationSpan> otherCollection)
+        private static RoslynEditorClassifier GetClassifier(ProgrammingLanguage language)
         {
-            var currentSet = new HashSet<Span>();
-            using (var logger = Logging.LogManager.GetLogger("Test execution"))
+            var classificationTypes = new Dictionary<string, IClassificationType>(32);
+            var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
+            foreach (var item in names)
             {
-                foreach (var item in currentCollection)
-                {
-                    if (!currentSet.Add(item.Span))
-                    {
-                        logger.Warn($"Input collection has the same item {item.Span}");
-                    }
-                }
-            }
-            var otherList = new List<SimplifiedClassificationSpan>(otherCollection);
-
-            int i = 0;
-            while (i < otherList.Count && currentSet.Count > 0)
-            {
-                if (!currentSet.Remove(otherList[i].Span))
-                {
-                    otherList.RemoveAt(i);
-                    continue;
-                }
-                ++i;
+                classificationTypes.Add(item, new ClassificationType(item));
             }
 
-            if (otherList.Count == 0) return (true, String.Empty);
-
-            var builder = new StringBuilder(1 << 12);
-            builder.AppendLine("This items were exist:");
-            foreach (var item in otherList)
-            {
-                builder.AppendClassificationSpan(item);
-            }
-            return (false, builder.ToString());
+            return language == ProgrammingLanguage.VisualBasic
+                ? new VisualBasicClassifier(classificationTypes)
+                : (RoslynEditorClassifier)new CSharpClassifier(classificationTypes);
         }
 
-        public static (bool, string message) Contains(
-            IEnumerable<SimplifiedClassificationSpan> currentCollection,
-            IEnumerable<SimplifiedClassificationSpan> otherCollection)
+        private static ContentType GetContentType(ProgrammingLanguage language) =>
+            new ContentType(language == ProgrammingLanguage.VisualBasic ? "basic" : "csharp");
+
+        private static CompilationUnit[] ExtractCompilationUnits(Project project)
         {
-            var currentSet = new HashSet<SimplifiedClassificationSpan>(currentCollection);
-            var otherList = new List<SimplifiedClassificationSpan>(otherCollection);
-
-            int i = 0;
-            while (i < otherList.Count && currentSet.Count > 0)
+            using (var logger = LogManager.GetLogger("Test execution"))
             {
-                if (currentSet.Remove(otherList[i]))
-                {
-                    otherList.RemoveAt(i);
-                    continue;
-                }
-                ++i;
-            }
-
-            if (otherList.Count == 0) return (true, String.Empty);
-
-            var builder = new StringBuilder(1 << 12);
-            var actualSetBySpan = currentSet.ToDictionary(x => x.Span);
-            i = 0;
-            while (i < otherList.Count && actualSetBySpan.Count > 0)
-            {
-                var expectedClassification = otherList[i];
-                if (actualSetBySpan.TryRemoveValue(expectedClassification.Span, out var value))
-                {
-                    builder
-                        .AppendLine().AppendLine($"Classification at {expectedClassification.Span} has incorrect type:")
-                        .AppendLine("Expected:").AppenClassificationType(expectedClassification.ClassificationType)
-                        .AppendLine("But was:").AppenClassificationType(value.ClassificationType);
-                }
-                else
-                {
-                    builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(expectedClassification);
-                }
-                otherList.RemoveAt(i++);
-            }
-
-            if (otherList.Count > 0)
-            {
-                foreach (var item in otherList)
-                {
-                    builder.AppendLine().AppendLine("Classification was not found:").AppendClassificationSpan(item);
-                }
-            }
-            return (false, builder.ToString());
-        }
-
-        public static (bool, string) AreEquivalent(
-            IEnumerable<SimplifiedClassificationSpan> leftSpans,
-            IEnumerable<SimplifiedClassificationSpan> rightSpans)
-        {
-            var leftSet = new HashSet<SimplifiedClassificationSpan>(rightSpans);
-            var rightList = leftSpans.ToList();
-
-            int i = 0;
-            while (i < rightList.Count && leftSet.Count > 0)
-            {
-                if (leftSet.Remove(rightList[i]))
-                {
-                    rightList.RemoveAt(i);
-                    continue;
-                }
-                ++i;
-            }
-
-            if ((leftSet.Count | rightList.Count) == 0) return (true, String.Empty);
-
-            var builder = new StringBuilder(1 << 12);
-            if (rightList.Count > 0) builder.AppendLine().AppendLine("This items were not found:");
-            foreach (var item in rightList)
-            {
-                AppendClassificationSpan(builder, item);
-            }
-
-            if (leftSet.Count > 0) builder.AppendLine().AppendLine("This items were redundant:");
-            foreach (var item in leftSet)
-            {
-                AppendClassificationSpan(builder, item);
-            }
-            return (false, builder.ToString());
-        }
-
-        private const string tabs = "    ";
-
-        private static void AppendClassificationSpan(this StringBuilder builder, SimplifiedClassificationSpan span) =>
-            builder
-            .AppendLine("Item:")
-            .AppendSpan(span.Span)
-            .AppenClassificationType(span.ClassificationType);
-
-        private static StringBuilder AppenClassificationType(this StringBuilder builder, IClassificationType classificationType) =>
-            builder
-                .Append(tabs).AppendLine("Type:")
-                .Append(tabs).Append(tabs).AppendFormat("Classification: {0}", classificationType.Classification).AppendLine()
-                .Append(tabs).Append(tabs).AppendFormat("Base types count: {0}", classificationType.BaseTypes.Count()).AppendLine();
-
-        private static StringBuilder AppendSpan(this StringBuilder builder, Span span) =>
-            builder.Append(tabs).Append("Span: ").Append(span).AppendLine();
-
-        private static Compilation CreateCompilation(Project project)
-        {
-            using (var logger = CoCo.Logging.LogManager.GetLogger("Test execution"))
-            {
-                var trees = new List<SyntaxTree>(project.CompileItems.Length);
+                var csharpTrees = new List<SyntaxTree>(project.CompileItems.Length);
+                var visualBasicTrees = new List<SyntaxTree>(project.CompileItems.Length);
                 foreach (var item in project.CompileItems)
                 {
                     if (!File.Exists(item))
@@ -226,14 +110,51 @@ namespace CoCo.Test.Common
                         logger.Error($"File {item} doesn't exist");
                         continue;
                     }
+
                     var code = File.ReadAllText(item);
-                    trees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                    if (Path.GetExtension(item).EqualsNoCase(".vb"))
+                    {
+                        visualBasicTrees.Add(VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default, item));
+                    }
+                    else
+                    {
+                        // NOTE: currently is assumed that all this files is C#
+                        // TODO: fix it in the future
+                        csharpTrees.Add(CSharpSyntaxTree.ParseText(code, CSharpParseOptions.Default, item));
+                    }
                 }
-                // TODO: improve
-                return CSharpCompilation.Create(project.ProjectName)
-                    .AddSyntaxTrees(trees)
-                    .AddReferences(project.References.Select(x => MetadataReference.CreateFromFile(x)))
-                    .AddReferences(project.ProjectReferences.Select(x => CreateCompilation(x).ToMetadataReference()));
+
+                var references = new List<MetadataReference>(project.AssemblyReferences.Length + project.ProjectReferences.Length);
+                foreach (var item in project.AssemblyReferences)
+                {
+                    references.Add(MetadataReference.CreateFromFile(item));
+                }
+                foreach (var item in project.ProjectReferences)
+                {
+                    foreach (var unit in ExtractCompilationUnits(item))
+                    {
+                        references.Add(unit.Compilation.ToMetadataReference());
+                    }
+                }
+
+                var visualBasicOptions = new VisualBasicCompilationOptions(
+                    OutputKind.DynamicallyLinkedLibrary,
+                    rootNamespace: project.RootNamespace,
+                    globalImports: project.Imports.Select(GlobalImport.Parse),
+                    optionCompareText: project.OptionCompare,
+                    optionExplicit: project.OptionExplicit,
+                    optionInfer: project.OptionInfer,
+                    optionStrict: project.OptionStrict ? OptionStrict.On : OptionStrict.Off);
+                return new CompilationUnit[2]
+                {
+                    CSharpCompilation.Create($"{project.ProjectName}_{LanguageNames.CSharp}")
+                        .AddSyntaxTrees(csharpTrees)
+                        .AddReferences(references),
+
+                    VisualBasicCompilation.Create($"{project.ProjectName}_{LanguageNames.VisualBasic}", options: visualBasicOptions)
+                        .AddSyntaxTrees(visualBasicTrees)
+                        .AddReferences(references)
+                };
             }
         }
     }

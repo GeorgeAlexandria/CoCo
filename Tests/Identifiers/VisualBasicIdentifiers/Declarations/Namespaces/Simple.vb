@@ -1,0 +1,2 @@
+﻿Namespace [Simple]
+End Namespace

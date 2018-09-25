@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using CoCo.Logging;
 using CoCo.Utils;
@@ -21,7 +22,10 @@ namespace CoCo.MsBuild
 
         private static readonly string[] allowedAssemblyExtensions = { ".dll" };
 
-        public static ProjectInfo CreateProject(string projectPath)
+        /// <summary>
+        /// Get existing project for <paramref name="projectPath"/> or create a new
+        /// </summary>
+        public static ProjectInfo GetProject(string projectPath)
         {
             if (!_cache.TryGetValue(projectPath, out ProjectInfo projectInfo))
             {
@@ -36,27 +40,27 @@ namespace CoCo.MsBuild
             var project = new Project(projectPath);
 
             var assemblyReferences = ResolveAssemblyReferences(project);
-            var references = new List<string>(assemblyReferences.Length);
+            var referencesBuilder = ImmutableArray.CreateBuilder<string>(assemblyReferences.Length);
             foreach (var item in assemblyReferences)
             {
-                references.Add(item.ItemSpec);
+                referencesBuilder.Add(item.ItemSpec);
             }
+            var references = referencesBuilder.TryMoveToImmutable();
 
-            var projectRefereneces = GetProjectReferences(project);
-            var projects = new List<ProjectInfo>(projectRefereneces.Count);
-            foreach (var item in projectRefereneces)
-            {
-                var projectInfo = CreateProject(item.ItemSpec);
-                projects.Add(projectInfo);
-            }
+            var projects = GetProjectReferences(project);
+            var compileItems = GetCompileItems(project);
+            var imports = GetImports(project);
+            var rootNamespace = project.GetPropertyValue("RootNamespace");
 
-            var compileItems = new List<string>(512);
-            foreach (var item in GetCompileItems(project))
-            {
-                compileItems.Add(item.ItemSpec);
-            }
+            var optionCompare = project.GetPropertyValue("OptionInfer").EqualsNoCase("Text");
+            var optionExplicit = project.GetPropertyValue("OptionExplicit").IsOn();
+            var optionInfer = project.GetPropertyValue("OptionInfer").IsOn();
+            // TODO: strict should be retrieved using "warning as error", because Rolsyn has a three states for the strict option
+            var optionStrict = project.GetPropertyValue("OptionStrict").IsOn();
 
-            return new ProjectInfo(projectPath, references, projects, compileItems);
+            return new ProjectInfo(
+                projectPath, references, projects, compileItems, imports, rootNamespace,
+                optionCompare, optionExplicit, optionInfer, optionStrict);
         }
 
         // NOTE: https://github.com/Microsoft/msbuild/wiki/ResolveAssemblyReference
@@ -204,23 +208,28 @@ namespace CoCo.MsBuild
                 }
                 references.Add(new TaskItem(reference.EvaluatedInclude, metadata));
             }
+
+            // NOTE: append references to standard assemblies
+            // TODO: it would not be work for .netcore & .netstandard
+            references.Add(new TaskItem("mscorlib"));
+            references.Add(new TaskItem("System"));
+            references.Add(new TaskItem("System.Core"));
+            if (project.FullPath.EndsWith(".vbproj"))
+            {
+                references.Add(new TaskItem("Microsoft.VisualBasic"));
+            }
+
             return references.ToArray();
         }
 
-        private static List<ITaskItem> GetProjectReferences(Project project)
+        private static ImmutableArray<ProjectInfo> GetProjectReferences(Project project)
         {
-            var references = new List<ITaskItem>(32);
+            var referencesBuilder = ImmutableArray.CreateBuilder<ProjectInfo>(32);
             foreach (var reference in project.GetItems("ProjectReference"))
             {
-                var metadata = new Dictionary<string, string>(64);
-                foreach (var item in reference.Metadata)
-                {
-                    metadata.Add(item.Name, item.EvaluatedValue);
-                }
-
-                references.Add(new TaskItem(reference.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
+                referencesBuilder.Add(GetProject(reference.EvaluatedInclude.GetFullPath(project.DirectoryPath)));
             }
-            return references;
+            return referencesBuilder.TryMoveToImmutable();
         }
 
         private static TaskItem[] GetAssemblyFiles(Project project)
@@ -239,20 +248,29 @@ namespace CoCo.MsBuild
             return references.ToArray();
         }
 
-        private static List<TaskItem> GetCompileItems(Project project)
+        private static ImmutableArray<string> GetCompileItems(Project project)
         {
-            var compiles = new List<TaskItem>(512);
+            var compilesBuilder = ImmutableArray.CreateBuilder<string>(512);
             foreach (var compile in project.GetItems("Compile"))
             {
-                var metadata = new Dictionary<string, string>(32);
-                foreach (var item in compile.Metadata)
-                {
-                    metadata.Add(item.Name, item.EvaluatedValue);
-                }
-
-                compiles.Add(new TaskItem(compile.EvaluatedInclude.GetFullPath(project.DirectoryPath), metadata));
+                compilesBuilder.Add(compile.EvaluatedInclude.GetFullPath(project.DirectoryPath));
             }
-            return compiles;
+            return compilesBuilder.TryMoveToImmutable();
         }
+
+        private static ImmutableArray<string> GetImports(Project project)
+        {
+            var builder = ImmutableArray.CreateBuilder<string>();
+            foreach (var item in project.GetItems("Import"))
+            {
+                builder.Add(item.EvaluatedInclude);
+            }
+            return builder.TryMoveToImmutable();
+        }
+
+        private static bool IsOn(this string value) => value.EqualsNoCase("on");
+
+        private static ImmutableArray<T> TryMoveToImmutable<T>(this ImmutableArray<T>.Builder builder) =>
+            builder.Count == builder.Capacity ? builder.MoveToImmutable() : builder.ToImmutable();
     }
 }

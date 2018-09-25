@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C91BFA80-61BF-4C54-AE46-40704EF2C7A0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CSharpIdentifiers</RootNamespace>
+    <AssemblyName>CSharpIdentifiers</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.2</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
+    <Compile Include="Access\Locals\DynamicVariable.cs" />
+    <Compile Include="Access\Locals\PatternVariable.cs" />
+    <Compile Include="Access\Members\ConstantMember.cs" />
+    <Compile Include="Access\Members\ValueTupleFields.cs" />
+    <Compile Include="Access\Methods\ExtensionMethod.cs" />
+    <Compile Include="Access\Methods\LocalMethod.cs" />
+    <Compile Include="Access\Methods\Method.cs" />
+    <Compile Include="Access\Methods\StaticMethod.cs" />
+    <Compile Include="Access\Namespaces\CustomNamespaces.cs" />
+    <Compile Include="Constructions\CatchVariable.cs" />
+    <Compile Include="Constructions\Return.cs" />
+    <Compile Include="Constructions\Throw.cs" />
+    <Compile Include="Constructions\Nameof.cs" />
+    <Compile Include="Constructions\ForForeachControlVariable.cs" />
+    <Compile Include="Access\Locals\OutVariable.cs" />
+    <Compile Include="Constructions\IfPatternVariable.cs" />
+    <Compile Include="Constructions\SwitchPatternVariable.cs" />
+    <Compile Include="Constructions\UsingVariable.cs" />
+    <Compile Include="Access\Locals\ValueTupleVariable.cs" />
+    <Compile Include="Access\Members\Event.cs" />
+    <Compile Include="Access\Members\Field.cs" />
+    <Compile Include="Access\Members\Property.cs" />
+    <Compile Include="Access\Members\TypeEvent.cs" />
+    <Compile Include="Access\Members\TypeField.cs" />
+    <Compile Include="Access\Members\TypeProperty.cs" />
+    <Compile Include="Access\Namespaces\ByNamespace.cs" />
+    <Compile Include="Access\Namespaces\ByNamespaceAlias.cs" />
+    <Compile Include="Access\EnumField.cs" />
+    <Compile Include="Access\Label.cs" />
+    <Compile Include="Access\Parameters\Delegate.cs" />
+    <Compile Include="Access\Parameters\Lambda.cs" />
+    <Compile Include="Access\Parameters\Optional.cs" />
+    <Compile Include="Access\Parameters\RefInOut.cs" />
+    <Compile Include="Access\Parameters\Variable.cs" />
+    <Compile Include="Constructions\YieldReturn.cs" />
+    <Compile Include="Declarations\Label.cs" />
+    <Compile Include="Declarations\EnumDeclaration.cs" />
+    <Compile Include="Declarations\Locals\CatchVariable.cs" />
+    <Compile Include="Declarations\Locals\DynamicVariable.cs" />
+    <Compile Include="Declarations\Locals\RangeVariable.cs" />
+    <Compile Include="Declarations\Locals\ValueTupleVariable.cs" />
+    <Compile Include="Declarations\Locals\OutVariable.cs" />
+    <Compile Include="Declarations\Locals\PatternVariable.cs" />
+    <Compile Include="Declarations\Locals\ForControlVariable.cs" />
+    <Compile Include="Declarations\Locals\ForeachControlVariable.cs" />
+    <Compile Include="Declarations\Locals\SimpleVariable.cs" />
+    <Compile Include="Declarations\Locals\UsingVariable.cs" />
+    <Compile Include="Declarations\Members\ConstantMember.cs" />
+    <Compile Include="Declarations\Members\InstanceEvent.cs" />
+    <Compile Include="Declarations\Members\InstanceField.cs" />
+    <Compile Include="Declarations\Members\InstanceProperty.cs" />
+    <Compile Include="Declarations\Members\TypeEvent.cs" />
+    <Compile Include="Declarations\Members\TypeField.cs" />
+    <Compile Include="Declarations\Members\TypeProperty.cs" />
+    <Compile Include="Declarations\Methods\Destructor.cs" />
+    <Compile Include="Declarations\Methods\ExtensionMethod.cs" />
+    <Compile Include="Declarations\Methods\Constructor.cs" />
+    <Compile Include="Declarations\Methods\LocalMethod.cs" />
+    <Compile Include="Declarations\Methods\Method.cs" />
+    <Compile Include="Declarations\Methods\StaticConstructor.cs" />
+    <Compile Include="Declarations\Methods\StaticMethod.cs" />
+    <Compile Include="Declarations\Namespaces\CustomAlias.cs" />
+    <Compile Include="Declarations\Namespaces\StaticType.cs" />
+    <Compile Include="Declarations\Namespaces\InsideNamespace.cs" />
+    <Compile Include="Declarations\Namespaces\Alias.cs" />
+    <Compile Include="Declarations\Namespaces\SimpleDeclaration.cs" />
+    <Compile Include="Declarations\Parameters\DelegateParameter.cs" />
+    <Compile Include="Declarations\Parameters\LambdaParameter.cs" />
+    <Compile Include="Declarations\Parameters\RefOutIn.cs" />
+    <Compile Include="Declarations\Parameters\Variable.cs" />
+    <Compile Include="Declarations\Parameters\Optional.cs" />
+    <Compile Include="Declarations\Parameters\SimpleParameter.cs" />
+    <Compile Include="SimpleExample.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Declarations\Namespaces\TypeAlias.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

@@ -1,4 +1,5 @@
 ﻿using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,30 +10,41 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamespaceTest()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Namespaces\ByNamespace.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.NamespaceName.ClassifyAt(142, 6),
-                    Names.NamespaceName.ClassifyAt(149, 11),
-                    Names.NamespaceName.ClassifyAt(161, 7),
-                    Names.NamespaceName.ClassifyAt(253, 6),
-                    Names.NamespaceName.ClassifyAt(260, 11));
+            GetClassifications(@"Access\Namespaces\ByNamespace.cs").AssertContains(
+                CSharpNames.NamespaceName.ClassifyAt(143, 6),
+                CSharpNames.NamespaceName.ClassifyAt(150, 11),
+                CSharpNames.NamespaceName.ClassifyAt(162, 7),
+                CSharpNames.NamespaceName.ClassifyAt(254, 6),
+                CSharpNames.NamespaceName.ClassifyAt(261, 11));
         }
 
         [Test]
         public void NamespaceTest_GlobalNotExists()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Namespaces\ByNamespace.cs".GetClassifications(ProjectInfo)
-                .AssertNotContains(Names.NamespaceName.ClassifyAt(245, 6));
+            GetClassifications(@"Access\Namespaces\ByNamespace.cs")
+                .AssertNotContains(CSharpNames.NamespaceName.ClassifyAt(245, 6));
         }
 
         [Test]
         public void NamesapceTest_Alias()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Namespaces\ByNamespaceAlias.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.AliasNamespaceName.ClassifyAt(381, 8),
-                    Names.AliasNamespaceName.ClassifyAt(432, 11),
-                    Names.AliasNamespaceName.ClassifyAt(494, 3));
+            GetClassifications(@"Access\Namespaces\ByNamespaceAlias.cs").AssertContains(
+                CSharpNames.AliasNamespaceName.ClassifyAt(382, 8),
+                CSharpNames.AliasNamespaceName.ClassifyAt(433, 11),
+                CSharpNames.AliasNamespaceName.ClassifyAt(495, 3),
+                CSharpNames.AliasNamespaceName.ClassifyAt(543, 3));
+        }
+
+        [Test]
+        public void NamesapceTest_Custom()
+        {
+            GetClassifications(@"Access\Namespaces\CustomNamespaces.cs").AssertContains(
+                CSharpNames.NamespaceName.ClassifyAt(161, 17),
+                CSharpNames.NamespaceName.ClassifyAt(179, 6),
+                CSharpNames.NamespaceName.ClassifyAt(186, 10),
+                CSharpNames.NamespaceName.ClassifyAt(242, 6),
+                CSharpNames.NamespaceName.ClassifyAt(249, 10),
+                CSharpNames.NamespaceName.ClassifyAt(305, 10));
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,33 +9,31 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Out()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\OutVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalVariableName.ClassifyAt(306, 8));
+            GetClassifications(@"Access\Locals\OutVariable.cs")
+                .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(306, 8));
         }
 
         [Test]
         public void LocalVariableTest_ValueTuple()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\ValueTupleVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.LocalVariableName.ClassifyAt(194, 6),
-                    Names.LocalVariableName.ClassifyAt(209, 6));
+            GetClassifications(@"Access\Locals\ValueTupleVariable.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(194, 6),
+                CSharpNames.LocalVariableName.ClassifyAt(209, 6));
         }
 
         [Test]
         public void LocalVariableTest_Pattern()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\PatternVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.LocalVariableName.ClassifyAt(188, 4),
-                    Names.LocalVariableName.ClassifyAt(196, 4));
+            GetClassifications(@"Access\Locals\PatternVariable.cs").AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(188, 4),
+                CSharpNames.LocalVariableName.ClassifyAt(196, 4));
         }
 
         [Test]
         public void LocalVariableTest_Dynamic()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalVariableName.ClassifyAt(195, 4));
+            GetClassifications(@"Access\Locals\DynamicVariable.cs")
+                .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(195, 4));
         }
     }
 }

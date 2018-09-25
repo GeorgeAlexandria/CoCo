@@ -54,14 +54,17 @@
     <Compile Include="..\..\vs15\CoCo\ServicesProvider.cs">
       <Link>ServicesProvider.cs</Link>
     </Compile>
+    <Compile Include="..\..\vs15\CoCo\VisualBasicClassifierProvider.cs">
+      <Link>VisualBasicClassifierProvider.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <Compile Include="..\..\vs15\CoCo\ClassificationManager.cs" Link="ClassificationManager.cs" />
-    <Compile Include="..\..\vs15\CoCo\ClassifierProvider.cs" Link="ClassifierProvider.cs" />
+    <Compile Include="..\..\vs15\CoCo\CSharpClassifierProvider.cs" Link="CSharpClassifierProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\Extensions.cs" Link="Extensions.cs" />
     <Compile Include="..\..\vs15\CoCo\FormattingService.cs" Link="FormattingService.cs" />
     <Compile Include="..\..\vs15\CoCo\OptionProvider.cs" Link="OptionProvider.cs" />
-    <Compile Include="MigrationService.cs" />
-    <Compile Include="NameExtensions.cs" />
+    <Compile Include="Migrations\MigrationService_2_0_0.cs" />
+    <Compile Include="Migrations\MigrationService_2_3_0.cs" />
     <Compile Include="VsPackage.cs" />
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -151,10 +154,14 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>True</SpecificVersion>
+      <HintPath>..\lib\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ValueTuple, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -228,7 +235,6 @@
   <Target Name="ForceIncludeNewestAssemblies" AfterTargets="GetVsixSourceItems">
     <ItemGroup>
       <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" />
-      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)System.Collections.Immutable.dll'))" />
     </ItemGroup>
   </Target>
   <Import Project="..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.7.17\build\Microsoft.VisualStudio.Threading.Analyzers.targets" Condition="Exists('..\..\packages\Microsoft.VisualStudio.Threading.Analyzers.15.7.17\build\Microsoft.VisualStudio.Threading.Analyzers.targets')" />

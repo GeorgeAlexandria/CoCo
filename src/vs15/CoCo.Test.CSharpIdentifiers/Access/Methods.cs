@@ -1,4 +1,5 @@
 ﻿using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,33 +10,32 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Extension()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\ExtensionMethod.cs".GetClassifications(ProjectInfo)
+            GetClassifications(@"Access\Methods\ExtensionMethod.cs")
                 .AssertContains(
-                    Names.ExtensionMethodName.ClassifyAt(297, 5),
-                    Names.ExtensionMethodName.ClassifyAt(315, 6));
+                    CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
+                    CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
         }
 
         [Test]
         public void MethodTest_Local()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\LocalMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.LocalMethodName.ClassifyAt(226, 10),
-                    Names.LocalMethodName.ClassifyAt(274, 10));
+            GetClassifications(@"Access\Methods\LocalMethod.cs").AssertContains(
+                CSharpNames.LocalMethodName.ClassifyAt(226, 10),
+                CSharpNames.LocalMethodName.ClassifyAt(274, 10));
         }
 
         [Test]
         public void MethodTest()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\Method.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.MethodName.ClassifyAt(146, 9));
+            GetClassifications(@"Access\Methods\Method.cs")
+                .AssertContains(CSharpNames.MethodName.ClassifyAt(146, 9));
         }
 
         [Test]
         public void MethodTest_Static()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Methods\StaticMethod.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.StaticMethodName.ClassifyAt(165, 9));
+            GetClassifications(@"Access\Methods\StaticMethod.cs")
+                .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(165, 9));
         }
     }
 }

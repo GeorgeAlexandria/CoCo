@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CoCo.Analyser;
+using CoCo.Utils;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -36,40 +37,43 @@ namespace CoCo
             var formatMap = formatMapService.GetClassificationFormatMap(category: "text");
             var identifierPosition = GetIdentifierPosition(registryService, formatMap);
 
-            var languageClassifications = new List<IClassificationType>();
-            foreach (var name in Names.All)
+            foreach (var (language, names) in Names.All)
             {
-                var classificationType = registryService.GetClassificationType(name);
-                if (classificationType != null)
+                var languageClassifications = new List<IClassificationType>();
+                foreach (var name in names)
                 {
-                    // TODO: need to carefully test this case
-                    if (identifierPosition > 0)
+                    var classificationType = registryService.GetClassificationType(name);
+                    if (classificationType != null)
                     {
-                        // NOTE: Set priority of classification next to identifier
-                        SetPriority(formatMap, classificationType, identifierPosition);
-                    }
-                }
-                else
-                {
-                    classificationType = registryService.CreateClassificationType(name, new IClassificationType[0]);
-                    var formatting = TextFormattingRunProperties.CreateTextFormattingRunProperties();
-                    if (identifierPosition > 0)
-                    {
-                        // NOTE: Set priority of classification next to identifier
-                        var afterIdentifierClassification = formatMap.CurrentPriorityOrder[identifierPosition + 1];
-                        formatMap.AddExplicitTextProperties(classificationType, formatting, afterIdentifierClassification);
+                        // TODO: need to carefully test this case
+                        if (identifierPosition > 0)
+                        {
+                            // NOTE: Set priority of classification next to identifier
+                            SetPriority(formatMap, classificationType, identifierPosition);
+                        }
                     }
                     else
                     {
-                        // NOTE: Set the last priority
-                        formatMap.AddExplicitTextProperties(classificationType, formatting);
+                        classificationType = registryService.CreateClassificationType(name, new IClassificationType[0]);
+                        var formatting = TextFormattingRunProperties.CreateTextFormattingRunProperties();
+                        if (identifierPosition > 0)
+                        {
+                            // NOTE: Set priority of classification next to identifier
+                            var afterIdentifierClassification = formatMap.CurrentPriorityOrder[identifierPosition + 1];
+                            formatMap.AddExplicitTextProperties(classificationType, formatting, afterIdentifierClassification);
+                        }
+                        else
+                        {
+                            // NOTE: Set the last priority
+                            formatMap.AddExplicitTextProperties(classificationType, formatting);
+                        }
                     }
-                }
 
-                languageClassifications.Add(classificationType);
+                    languageClassifications.Add(classificationType);
+                }
+                _classifications.Add(language, languageClassifications);
             }
 
-            _classifications.Add("CSharp", languageClassifications);
             return _classifications;
         }
 

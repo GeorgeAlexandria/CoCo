@@ -7,27 +7,33 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo", "vs15\CoCo\CoCo.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo_vs14", "vs14\CoCo_vs14\CoCo_vs14.csproj", "{A8FA0172-2477-434F-B60A-1DE5AD28B8EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.Common", "vs15\CoCo.Test.Common\CoCo.Test.Common.csproj", "{0B57BF2D-6001-4317-9527-96C7CF4B20D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.Common", "vs15\CoCo.Test.Common\CoCo.Test.Common.csproj", "{0B57BF2D-6001-4317-9527-96C7CF4B20D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Logging", "common\CoCo.Logging\CoCo.Logging.csproj", "{A64F3639-B51D-4C8E-A680-75310FFDA8F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Logging", "common\CoCo.Logging\CoCo.Logging.csproj", "{A64F3639-B51D-4C8E-A680-75310FFDA8F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.CSharpIdentifiers", "vs15\CoCo.Test.CSharpIdentifiers\CoCo.Test.CSharpIdentifiers.csproj", "{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.CSharpIdentifiers", "vs15\CoCo.Test.CSharpIdentifiers\CoCo.Test.CSharpIdentifiers.csproj", "{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Utils", "common\CoCo.Utils\CoCo.Utils.csproj", "{601A2A25-2348-4F00-9858-70FF10B39DAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Utils", "common\CoCo.Utils\CoCo.Utils.csproj", "{601A2A25-2348-4F00-9858-70FF10B39DAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.MsBuild", "common\CoCo.MsBuild\CoCo.MsBuild.csproj", "{EDBA3202-304B-4EE4-971F-5C3478F97ABD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.MsBuild", "common\CoCo.MsBuild\CoCo.MsBuild.csproj", "{EDBA3202-304B-4EE4-971F-5C3478F97ABD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.CSharpIdentifiers_vs14", "vs14\CoCo.Test.CSharpIdentifiers_vs14\CoCo.Test.CSharpIdentifiers_vs14.csproj", "{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.CSharpIdentifiers_vs14", "vs14\CoCo.Test.CSharpIdentifiers_vs14\CoCo.Test.CSharpIdentifiers_vs14.csproj", "{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Test.Common_vs14", "vs14\CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj", "{DE073BD6-DEB9-4103-B081-4B43016F890F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.Common_vs14", "vs14\CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj", "{DE073BD6-DEB9-4103-B081-4B43016F890F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.UI", "common\CoCo.UI\CoCo.UI.csproj", "{136C09A9-8354-4600-8226-B24FA712DF9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.UI", "common\CoCo.UI\CoCo.UI.csproj", "{136C09A9-8354-4600-8226-B24FA712DF9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Settings", "common\CoCo.Settings\CoCo.Settings.csproj", "{425B6593-2587-4AB2-A844-EDA72C0BB060}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Settings", "common\CoCo.Settings\CoCo.Settings.csproj", "{425B6593-2587-4AB2-A844-EDA72C0BB060}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Analyser", "vs15\CoCo.Analyser\CoCo.Analyser.csproj", "{98E40CFE-9133-4A71-9160-76FC16A723C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser", "vs15\CoCo.Analyser\CoCo.Analyser.csproj", "{98E40CFE-9133-4A71-9160-76FC16A723C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo.Analyser_vs14", "vs14\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj", "{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser_vs14", "vs14\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj", "{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers", "vs15\CoCo.Test.VisualBasicIdentifiers\CoCo.Test.VisualBasicIdentifiers.csproj", "{3947C041-178C-4338-8ED3-66196E529753}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers_vs14", "vs14\CoCo.Test.VisualBasicIdentifiers_vs14\CoCo.Test.VisualBasicIdentifiers_vs14.csproj", "{71F544A5-6CDE-442F-875B-DA42037DDD44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DA735785-0FD4-4D4A-9592-EFC63AE0F294}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,9 +93,25 @@ Global
 		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3947C041-178C-4338-8ED3-66196E529753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3947C041-178C-4338-8ED3-66196E529753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3947C041-178C-4338-8ED3-66196E529753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3947C041-178C-4338-8ED3-66196E529753}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F544A5-6CDE-442F-875B-DA42037DDD44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0B57BF2D-6001-4317-9527-96C7CF4B20D1} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{C0B0A3BA-9B3C-4BCE-948D-19C76C4FAB0B} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{DE073BD6-DEB9-4103-B081-4B43016F890F} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{3947C041-178C-4338-8ED3-66196E529753} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
+		{71F544A5-6CDE-442F-875B-DA42037DDD44} = {DA735785-0FD4-4D4A-9592-EFC63AE0F294}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E41ADD5-581D-4F7B-82ED-2908A04877E8}

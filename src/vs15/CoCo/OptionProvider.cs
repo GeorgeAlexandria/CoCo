@@ -8,8 +8,9 @@ namespace CoCo
     {
         public static Option ReceiveOption()
         {
-            MigrationService.MigrateSettings();
+            MigrationService.MigrateSettingsTo_2_0_0();
             var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
+            settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
             return FormattingService.SetFormatting(settings);
         }
 

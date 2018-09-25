@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,8 +9,8 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LabelTest()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Label.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LabelName.ClassifyAt(187, 4));
+            GetClassifications(@"Access\Label.cs")
+                .AssertContains(CSharpNames.LabelName.ClassifyAt(187, 4));
         }
     }
 }

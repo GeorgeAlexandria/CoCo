@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,10 +9,9 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void LabelTest()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Declarations\Label.cs".GetClassifications(ProjectInfo)
-                .AssertContains(
-                    Names.LabelName.ClassifyAt(131, 10),
-                    Names.LabelName.ClassifyAt(171, 11));
+            GetClassifications(@"Declarations\Label.cs").AssertContains(
+                CSharpNames.LabelName.ClassifyAt(131, 10),
+                CSharpNames.LabelName.ClassifyAt(171, 11));
         }
     }
 }

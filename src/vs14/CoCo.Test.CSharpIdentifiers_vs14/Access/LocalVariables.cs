@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -9,8 +9,8 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Dynamic()
         {
-            @"Tests\CSharpIdentifiers\CSharpIdentifiers\Access\Locals\DynamicVariable.cs".GetClassifications(ProjectInfo)
-                .AssertContains(Names.LocalVariableName.ClassifyAt(195, 4));
+            GetClassifications(@"Access\Locals\DynamicVariable.cs")
+                .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(195, 4));
         }
     }
 }

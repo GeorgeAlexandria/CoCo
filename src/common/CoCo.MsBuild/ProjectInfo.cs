@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.IO;
 
@@ -10,43 +9,61 @@ namespace CoCo.MsBuild
     {
         internal ProjectInfo(
             string projectPath,
-            ICollection<string> references,
-            ICollection<ProjectInfo> projectReferences,
-            ICollection<string> compileItems)
+            ImmutableArray<string> assemblyReferences,
+            ImmutableArray<ProjectInfo> projectReferences,
+            ImmutableArray<string> compileItems,
+            ImmutableArray<string> imports,
+            string rootNamespace,
+            bool optionCompare,
+            bool optionExplicit,
+            bool optionInfer,
+            bool optionStrict)
         {
-            var builder = ImmutableArray.CreateBuilder<string>(references.Count);
-            foreach (var item in references)
-            {
-                builder.Add(item);
-            }
-            References = builder.MoveToImmutable();
-
-            var builderProjects = ImmutableArray.CreateBuilder<ProjectInfo>(projectReferences.Count);
-            foreach (var item in projectReferences)
-            {
-                builderProjects.Add(item);
-            }
-            ProjectReferences = builderProjects.MoveToImmutable();
-
-            var builderCompile = ImmutableArray.CreateBuilder<string>(compileItems.Count);
-            foreach (var item in compileItems)
-            {
-                builderCompile.Add(item);
-            }
-
-            CompileItems = builderCompile.MoveToImmutable();
+            AssemblyReferences = assemblyReferences;
+            ProjectReferences = projectReferences;
+            CompileItems = compileItems;
             ProjectPath = projectPath;
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
+            Imports = imports;
+            RootNamespace = rootNamespace;
+            OptionCompare = optionCompare;
+            OptionExplicit = optionExplicit;
+            OptionInfer = optionInfer;
+            OptionStrict = optionStrict;
         }
 
-        public ImmutableArray<string> References { get; }
+        public ImmutableArray<string> AssemblyReferences { get; }
 
         public ImmutableArray<ProjectInfo> ProjectReferences { get; }
 
         public ImmutableArray<string> CompileItems { get; }
 
+        public ImmutableArray<string> Imports { get; }
+
         public string ProjectPath { get; }
 
         public string ProjectName { get; }
+
+        public string RootNamespace { get; }
+
+        /// <summary>
+        /// It's true when compare set to "Text"
+        /// </summary>
+        public bool OptionCompare { get; }
+
+        /// <summary>
+        /// It's true when explicit is enabled
+        /// </summary>
+        public bool OptionExplicit { get; }
+
+        /// <summary>
+        /// It's true when infer is enabled
+        /// </summary>
+        public bool OptionInfer { get; }
+
+        /// <summary>
+        /// It's true when strict is enabled
+        /// </summary>
+        public bool OptionStrict { get; }
     }
 }

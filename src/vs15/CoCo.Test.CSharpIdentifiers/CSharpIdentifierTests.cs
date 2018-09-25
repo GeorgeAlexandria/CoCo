@@ -5,13 +5,13 @@ namespace CoCo.Test.CSharpIdentifiers
 {
     internal class CSharpIdentifierTests : CommonTests
     {
-        private static string _projectPath = @"Tests\CSharpIdentifiers\CSharpIdentifiers\CSharpIdentifiers.csproj";
+        private static readonly string _projectPath = @"Tests\Identifiers\CSharpIdentifiers\CSharpIdentifiers.csproj";
 
-        private static ProjectInfo _projectInfo;
+        private static readonly ProjectInfo _projectInfo;
 
-        protected override string ProjectPath { get; set; } = _projectPath;
+        protected override string ProjectPath => _projectPath;
 
-        protected override ProjectInfo ProjectInfo { get; set; } = _projectInfo;
+        protected override ProjectInfo ProjectInfo => _projectInfo;
 
         // NOTE: workaround to initialize project only once for all of instance a derived classes
         static CSharpIdentifierTests()
