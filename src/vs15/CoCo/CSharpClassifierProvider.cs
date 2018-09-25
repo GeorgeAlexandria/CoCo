@@ -37,7 +37,7 @@ namespace CoCo
         /// Text document factory to be used for getting a event of text document disposed.
         /// </summary>
         [Import]
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+        private ITextDocumentFactoryService _textDocumentFactoryService;
 
 #pragma warning restore 649
 
