@@ -1,10 +1,13 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.2.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.3.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.3.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
-A Visual Studio 2015 (VS14) and 2017 (VS15) extension that uses Roslyn API's for analyzing C# source code
-to colorize appropriate syntax nodes to different colors and decorate them to different styles. It makes easily recognizabling the supported elements. 
+A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (VS14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (VS15) extension that is analyzing C#, VB\.Net source codes to colorize 
+appropriate syntax nodes to different colors and decorate them to different styles. It makes easily recognizabling the supported elements. 
 
 Extension supports the following elements:
+
+#### CSharp
+
 * Namespaces and aliases for them
 * Local and range variables
 * Parameters
@@ -17,7 +20,19 @@ Extension supports the following elements:
 * Instance, enum and constant fields
 * Labels
 
-And supports the following decorations:
+#### VisualBasic
+
+* Namespaces and aliases for them
+* Local and range variables
+* Static local and function variables
+* Parameters
+* Function and sub methods 
+* Shared and extension methods
+* Events
+* Properties and "WithEvents" fields
+* Instance, enum and constant fields
+
+and supports the following decorations:
 * Changing foreground and background
 * Using bold and italic font
 * Changing font rendering size
@@ -30,6 +45,8 @@ The following screenshots show a different applying decorations and colors to th
 ![](https://user-images.githubusercontent.com/13402478/44617734-03017c80-a871-11e8-86ac-5cc4e0c4d73f.png)
 
 ![](https://user-images.githubusercontent.com/13402478/44617735-04cb4000-a871-11e8-9f69-52caf1210996.png)
+
+![](https://user-images.githubusercontent.com/13402478/46107422-05deec80-c1e4-11e8-9978-c5195a19f37c.png)
 
 
 ## How to use 
@@ -73,3 +90,7 @@ For more information on project's changelog, please see [ReleaseNotes.md](https:
 
 ## Contributing
 For more information on contributing to the project, please see [CONTRIBUTING.md](https://github.com/GeorgeAlexandria/CoCo/blob/dev/CONTRIBUTING.md)
+
+## License
+
+CoCo is licensed under the [MIT license](https://github.com/GeorgeAlexandria/CoCo/blob/dev/LICENSE.txt)
