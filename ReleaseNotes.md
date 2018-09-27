@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.3.0
+
+**2018-09-27**
+
+ - [x] Release issue [#22](https://github.com/GeorgeAlexandria/CoCo/issues/22) – Append supporting of **VisualBasic**. For more information on supporting elements, visit the [home page](https://github.com/GeorgeAlexandria/CoCo)
+ - [x] Fixed classifications of items under the `nameof(..)` **C#** operator
+ - [x] Improved classifications of namespaces and aliases for them in **C#**   
+
 ## 2.2.0
 
 **2018-08-25**
