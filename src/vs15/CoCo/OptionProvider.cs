@@ -33,9 +33,16 @@ namespace CoCo
             {
                 var classificationsSettings = ToSettings(language.Classifications);
 
+                if (!PresetService.GetDefaultPresetsNames().TryGetValue(language.Name, out var defaultPresets))
+                {
+                    defaultPresets = new HashSet<string>();
+                }
+
                 var presetsSettings = new List<PresetSettings>(language.Presets.Count);
                 foreach (var preset in language.Presets)
                 {
+                    if (defaultPresets.Contains(preset.Name)) continue;
+
                     presetsSettings.Add(new PresetSettings
                     {
                         Name = preset.Name,
