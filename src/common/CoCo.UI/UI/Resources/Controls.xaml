@@ -8,6 +8,7 @@
    <ResourceDictionary.MergedDictionaries>
       <ResourceDictionary Source="Colors.xaml" />
    </ResourceDictionary.MergedDictionaries>
+   <BorderGapMaskConverter x:Key="BorderGapMaskConverter" />
 
    <Style x:Key="labelStyle" TargetType="{x:Type Label}">
       <Setter Property="FontSize" Value="14" />
@@ -46,6 +47,64 @@
          </Trigger>
       </ControlTemplate.Triggers>
    </ControlTemplate>
+
+   <ControlTemplate x:Key="groupBoxControlTemplate" TargetType="{x:Type GroupBox}">
+      <Grid SnapsToDevicePixels="true">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="6" />
+         </Grid.ColumnDefinitions>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="6" />
+         </Grid.RowDefinitions>
+         <Border
+            Grid.Row="1"
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="4"
+            BorderBrush="Transparent"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            CornerRadius="4">
+            <Border.OpacityMask>
+               <MultiBinding Converter="{StaticResource BorderGapMaskConverter}" ConverterParameter="7">
+                  <Binding ElementName="Header" Path="ActualWidth" />
+                  <Binding Path="ActualWidth" RelativeSource="{RelativeSource Self}" />
+                  <Binding Path="ActualHeight" RelativeSource="{RelativeSource Self}" />
+               </MultiBinding>
+            </Border.OpacityMask>
+            <Border
+               BorderBrush="{TemplateBinding BorderBrush}"
+               BorderThickness="{TemplateBinding BorderThickness}"
+               CornerRadius="3">
+               <Border
+                  BorderBrush="Transparent"
+                  BorderThickness="{TemplateBinding BorderThickness}"
+                  CornerRadius="2" />
+            </Border>
+         </Border>
+         <Border
+            x:Name="Header"
+            Grid.RowSpan="2"
+            Grid.Column="1"
+            Padding="2,1,1,0">
+            <ContentPresenter
+               ContentSource="Header"
+               RecognizesAccessKey="True"
+               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+         </Border>
+         <ContentPresenter
+            Grid.Row="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="{TemplateBinding Padding}"
+            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+      </Grid>
+   </ControlTemplate>
+
    <Style x:Key="cbItemStyle" TargetType="{x:Type ComboBoxItem}">
       <Setter Property="Template">
          <Setter.Value>
@@ -67,6 +126,7 @@
          </Setter.Value>
       </Setter>
    </Style>
+
    <Style x:Key="comboBoxFlatStyle" TargetType="{x:Type ComboBox}">
       <Setter Property="Background" Value="{StaticResource WhiteColor}" />
       <Setter Property="SnapsToDevicePixels" Value="True" />

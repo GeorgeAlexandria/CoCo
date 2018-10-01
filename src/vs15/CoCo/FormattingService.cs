@@ -214,10 +214,7 @@ namespace CoCo
             classification.IsBaseline = classificationSettings.IsBaseline ??
                 defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
 
-            if (!classificationSettings.IsEnabled.HasValue)
-            {
-                classification.IsEnabled = true;
-            }
+            classification.IsClassified = classificationSettings.IsClassified ?? true;
             return classification;
         }
 

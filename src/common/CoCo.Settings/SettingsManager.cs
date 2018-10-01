@@ -175,10 +175,10 @@ namespace CoCo.Settings
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
-            if (jClassification[nameof(ClassificationSettings.IsEnabled)] is JValue jEnabled &&
-                jEnabled.Value is bool isEnabled)
+            if (jClassification[nameof(ClassificationSettings.IsClassified)] is JValue jClassified &&
+                jClassified.Value is bool isClassified)
             {
-                classification.IsEnabled = isEnabled;
+                classification.IsClassified = isClassified;
             }
             return true;
         }
@@ -235,9 +235,9 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value));
             }
-            if (classification.IsEnabled.HasValue)
+            if (classification.IsClassified.HasValue)
             {
-                jClassification.Add(nameof(classification.IsEnabled), new JValue(classification.IsEnabled.Value));
+                jClassification.Add(nameof(classification.IsClassified), new JValue(classification.IsClassified.Value));
             }
             return jClassification;
         }

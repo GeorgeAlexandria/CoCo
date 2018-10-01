@@ -76,7 +76,7 @@ namespace CoCo
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,
                 IsBaseline = classification.IsBaseline,
-                IsEnabled = classification.IsEnabled,
+                IsClassified = classification.IsClassified,
             };
 
             if (!classification.BackgroundWasReset)
