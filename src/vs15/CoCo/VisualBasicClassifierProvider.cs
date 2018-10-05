@@ -60,7 +60,7 @@ namespace CoCo
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new VisualBasicClassifier(_classificationTypes, _textDocumentFactoryService, textBuffer));
+                new VisualBasicClassifier(_classificationTypes, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
         }
     }
 }

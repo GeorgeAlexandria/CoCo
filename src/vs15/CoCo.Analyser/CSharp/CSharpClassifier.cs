@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.CSharp;
@@ -14,6 +15,11 @@ namespace CoCo.Analyser.CSharp
     /// </summary>
     internal class CSharpClassifier : RoslynEditorClassifier
     {
+        private readonly Dictionary<IClassificationType, ClassificationInfo> _options =
+            new Dictionary<IClassificationType, ClassificationInfo>();
+
+        private ImmutableArray<IClassificationType> _classifications;
+
         private IClassificationType _localVariableType;
         private IClassificationType _rangeVariableType;
         private IClassificationType _namespaceType;
@@ -33,14 +39,15 @@ namespace CoCo.Analyser.CSharp
         private IClassificationType _destructorType;
 
         internal CSharpClassifier(
-            IReadOnlyDictionary<string, IClassificationType> classifications,
+            IReadOnlyDictionary<string, ClassificationInfo> classifications,
+            IAnalyzingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {
             InitializeClassifications(classifications);
         }
 
-        internal CSharpClassifier(IReadOnlyDictionary<string, IClassificationType> classifications)
+        internal CSharpClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             InitializeClassifications(classifications);
         }
@@ -63,7 +70,7 @@ namespace CoCo.Analyser.CSharp
                     // NOTE: handle alias in using directive
                     if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax)
                     {
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _aliasNamespaceType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _aliasNamespaceType);
                         continue;
                     }
 
@@ -76,11 +83,11 @@ namespace CoCo.Analyser.CSharp
                 switch (symbol.Kind)
                 {
                     case SymbolKind.Label:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _labelType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _labelType);
                         break;
 
                     case SymbolKind.RangeVariable:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeVariableType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _rangeVariableType);
                         break;
 
                     case SymbolKind.Field:
@@ -89,24 +96,24 @@ namespace CoCo.Analyser.CSharp
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
                             fieldSymbol.IsConst ? _constantFieldType :
                             _fieldType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldClassification));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldClassification);
                         break;
 
                     case SymbolKind.Property:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _propertyType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _propertyType);
                         break;
 
                     case SymbolKind.Event:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType);
                         break;
 
                     case SymbolKind.Local:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _localVariableType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _localVariableType);
                         break;
 
                     case SymbolKind.Namespace:
                         var namesapceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namesapceType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namesapceType);
                         break;
 
                     case SymbolKind.Parameter:
@@ -114,7 +121,7 @@ namespace CoCo.Analyser.CSharp
                         // TODO: add tests for it!
                         if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
                         {
-                            spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType);
                         }
                         break;
 
@@ -127,7 +134,7 @@ namespace CoCo.Analyser.CSharp
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType);
                         break;
 
                     default:
@@ -140,28 +147,56 @@ namespace CoCo.Analyser.CSharp
             return spans;
         }
 
-        private void InitializeClassifications(IReadOnlyDictionary<string, IClassificationType> classifications)
+        protected override void OnAnalyzingOptionChanged(ClassificationChangedEventArgs args)
         {
-            _localVariableType = classifications[CSharpNames.LocalVariableName];
-            _rangeVariableType = classifications[CSharpNames.RangeVariableName];
-            _namespaceType = classifications[CSharpNames.NamespaceName];
-            _parameterType = classifications[CSharpNames.ParameterName];
-            _extensionMethodType = classifications[CSharpNames.ExtensionMethodName];
-            _methodType = classifications[CSharpNames.MethodName];
-            _eventType = classifications[CSharpNames.EventName];
-            _propertyType = classifications[CSharpNames.PropertyName];
-            _fieldType = classifications[CSharpNames.FieldName];
-            _staticMethodType = classifications[CSharpNames.StaticMethodName];
-            _enumFieldType = classifications[CSharpNames.EnumFieldName];
-            _aliasNamespaceType = classifications[CSharpNames.AliasNamespaceName];
-            _constructorType = classifications[CSharpNames.ConstructorName];
-            _labelType = classifications[CSharpNames.LabelName];
-            _localMethodType = classifications[CSharpNames.LocalMethodName];
-            _constantFieldType = classifications[CSharpNames.ConstantFieldName];
-            _destructorType = classifications[CSharpNames.DestructorName];
+            foreach (var classification in _classifications)
+            {
+                if (args.ChangedClassifications.TryGetValue(classification, out var option))
+                {
+                    _options[classification] = option;
+                }
+            }
         }
 
-        private ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
-            new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
+        private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)
+        {
+            var builder = ImmutableArray.CreateBuilder<IClassificationType>(17);
+            void InitializeClassification(string name, ref IClassificationType type)
+            {
+                var info = classifications[name];
+                type = info.ClassificationType;
+                _options[type] = info;
+                builder.Add(type);
+            }
+
+            InitializeClassification(CSharpNames.LocalVariableName, ref _localVariableType);
+            InitializeClassification(CSharpNames.RangeVariableName, ref _rangeVariableType);
+            InitializeClassification(CSharpNames.NamespaceName, ref _namespaceType);
+            InitializeClassification(CSharpNames.ParameterName, ref _parameterType);
+            InitializeClassification(CSharpNames.ExtensionMethodName, ref _extensionMethodType);
+            InitializeClassification(CSharpNames.MethodName, ref _methodType);
+            InitializeClassification(CSharpNames.EventName, ref _eventType);
+            InitializeClassification(CSharpNames.PropertyName, ref _propertyType);
+            InitializeClassification(CSharpNames.FieldName, ref _fieldType);
+            InitializeClassification(CSharpNames.StaticMethodName, ref _staticMethodType);
+            InitializeClassification(CSharpNames.EnumFieldName, ref _enumFieldType);
+            InitializeClassification(CSharpNames.AliasNamespaceName, ref _aliasNamespaceType);
+            InitializeClassification(CSharpNames.ConstructorName, ref _constructorType);
+            InitializeClassification(CSharpNames.LabelName, ref _labelType);
+            InitializeClassification(CSharpNames.LocalMethodName, ref _localMethodType);
+            InitializeClassification(CSharpNames.ConstantFieldName, ref _constantFieldType);
+            InitializeClassification(CSharpNames.DestructorName, ref _destructorType);
+
+            _classifications = builder.ToImmutable();
+        }
+
+        private void AppendClassificationSpan(
+            List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type)
+        {
+            if (_options[type].IsClassified)
+            {
+                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
+        }
     }
 }

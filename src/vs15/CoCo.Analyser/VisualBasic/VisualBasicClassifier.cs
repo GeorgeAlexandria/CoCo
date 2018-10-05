@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
@@ -32,8 +33,9 @@ namespace CoCo.Analyser.VisualBasic
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, IClassificationType> classifications,
+            IAnalyzingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {
             InitializeClassifications(classifications);
         }
@@ -133,6 +135,8 @@ namespace CoCo.Analyser.VisualBasic
 
             return spans;
         }
+
+        protected override void OnAnalyzingOptionChanged(ClassificationChangedEventArgs args) => throw new NotImplementedException();
 
         private static ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
            new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);

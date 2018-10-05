@@ -78,7 +78,7 @@ namespace CoCo.Test.Common
             while (i < expectedList.Count && actualSetBySpan.Count > 0)
             {
                 var expectedClassification = expectedList[i];
-                if (actualSetBySpan.TryRemoveValue(expectedClassification.Span, out var value))
+                if (actualSetBySpan.TryRemove(expectedClassification.Span, out var value))
                 {
                     builder
                         .AppendLine().AppendLine($"Classification at {expectedClassification.Span} has incorrect type:")

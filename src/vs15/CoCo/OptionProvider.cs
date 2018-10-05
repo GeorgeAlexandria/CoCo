@@ -27,6 +27,7 @@ namespace CoCo
             }
 
             FormattingService.SetFormatting(option);
+            AnalyzingService.SetAnalyzingOptions(option);
 
             var languagesSettings = new List<LanguageSettings>(option.Languages.Count);
             foreach (var language in option.Languages)

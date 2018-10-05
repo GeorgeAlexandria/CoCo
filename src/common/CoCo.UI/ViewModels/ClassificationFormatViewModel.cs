@@ -129,7 +129,7 @@ namespace CoCo.UI.ViewModels
             IsStrikethrough = IsStrikethrough,
             IsBaseline = IsBaseline,
             FontRenderingSize = _fontRenderingSize,
-            IsClassified = IsClassified,
+            IsClassified = _isClassified,
 
             ForegroundWasReset = Foreground.ColorWasReset,
             BackgroundWasReset = Background.ColorWasReset,

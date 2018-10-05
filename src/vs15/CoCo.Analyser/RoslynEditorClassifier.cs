@@ -14,6 +14,7 @@ namespace CoCo.Analyser
     {
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+        private readonly IAnalyzingService _analyzingService;
 
         private SemanticModel _semanticModel;
 
@@ -21,13 +22,16 @@ namespace CoCo.Analyser
         {
         }
 
-        protected RoslynEditorClassifier(ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
+        protected RoslynEditorClassifier(
+            IAnalyzingService analyzingService, ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
         {
             _textBuffer = buffer;
             _textDocumentFactoryService = textDocumentFactoryService;
+            _analyzingService = analyzingService;
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+            analyzingService.ClassificationChanged += OnAnalyzingOptionChanged;
         }
 
         /// <remarks>
@@ -35,7 +39,7 @@ namespace CoCo.Analyser
         /// for example typing /* would cause the classification to change in C# without directly
         /// affecting the span.
         /// </remarks>
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+        public event EventHandler<Microsoft.VisualStudio.Text.Classification.ClassificationChangedEventArgs> ClassificationChanged;
 
         /// <summary>
         /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range
@@ -64,6 +68,8 @@ namespace CoCo.Analyser
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
 
+        protected abstract void OnAnalyzingOptionChanged(ClassificationChangedEventArgs args);
+
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
 
         // TODO: it's not good idea to subscribe on text document disposed. Try to subscribe on text
@@ -75,6 +81,7 @@ namespace CoCo.Analyser
                 _semanticModel = null;
                 _textBuffer.Changed -= OnTextBufferChanged;
                 _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
+                _analyzingService.ClassificationChanged -= OnAnalyzingOptionChanged;
             }
         }
     }

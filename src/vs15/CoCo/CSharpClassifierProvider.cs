@@ -1,6 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
+using CoCo.Utils;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -16,12 +19,22 @@ namespace CoCo
     //[ContentType("text")]
     internal class CSharpClassifierProvider : IClassifierProvider
     {
+        public CSharpClassifierProvider()
+        {
+            _classificationsInfo = new Dictionary<string, ClassificationInfo>();
+            foreach (var item in CSharpNames.All)
+            {
+                _classificationsInfo[item] = default;
+            }
+            AnalyzingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
+        }
+
         /// <summary>
         /// Determines that settings was set to avoid a many sets settings from the classifier
         /// </summary>
         private static bool _wasSettingsSet;
 
-        private ImmutableDictionary<string, IClassificationType> _classificationTypes;
+        private Dictionary<string, ClassificationInfo> _classificationsInfo;
 
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
@@ -48,22 +61,24 @@ namespace CoCo
             {
                 var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
                 settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
-                FormattingService.SetFormatting(settings);
+                var option = FormattingService.SetFormatting(settings);
+                AnalyzingService.SetAnalyzingOptions(option);
                 _wasSettingsSet = true;
             }
 
-            if (_classificationTypes is null)
-            {
-                var builder = ImmutableDictionary.CreateBuilder<string, IClassificationType>();
-                foreach (var name in CSharpNames.All)
-                {
-                    builder.Add(name, _classificationRegistry.GetClassificationType(name));
-                }
-                _classificationTypes = builder.ToImmutable();
-            }
-
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new CSharpClassifier(_classificationTypes, _textDocumentFactoryService, textBuffer));
+                new CSharpClassifier(_classificationsInfo, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
+        }
+
+        private void OnAnalyzeOptionChanged(Analyser.ClassificationChangedEventArgs args)
+        {
+            foreach (var (classificationType, info) in args.ChangedClassifications)
+            {
+                if (_classificationsInfo.ContainsKey(classificationType.Classification))
+                {
+                    _classificationsInfo[classificationType.Classification] = info;
+                }
+            }
         }
     }
 }
