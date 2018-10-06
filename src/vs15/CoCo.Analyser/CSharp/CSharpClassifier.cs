@@ -15,11 +15,6 @@ namespace CoCo.Analyser.CSharp
     /// </summary>
     internal class CSharpClassifier : RoslynEditorClassifier
     {
-        private readonly Dictionary<IClassificationType, ClassificationInfo> _options =
-            new Dictionary<IClassificationType, ClassificationInfo>();
-
-        private ImmutableArray<IClassificationType> _classifications;
-
         private IClassificationType _localVariableType;
         private IClassificationType _rangeVariableType;
         private IClassificationType _namespaceType;
@@ -147,17 +142,6 @@ namespace CoCo.Analyser.CSharp
             return spans;
         }
 
-        protected override void OnAnalyzingOptionChanged(ClassificationChangedEventArgs args)
-        {
-            foreach (var classification in _classifications)
-            {
-                if (args.ChangedClassifications.TryGetValue(classification, out var option))
-                {
-                    _options[classification] = option;
-                }
-            }
-        }
-
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             var builder = ImmutableArray.CreateBuilder<IClassificationType>(17);
@@ -165,7 +149,7 @@ namespace CoCo.Analyser.CSharp
             {
                 var info = classifications[name];
                 type = info.ClassificationType;
-                _options[type] = info;
+                options[type] = info;
                 builder.Add(type);
             }
 
@@ -187,16 +171,7 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.ConstantFieldName, ref _constantFieldType);
             InitializeClassification(CSharpNames.DestructorName, ref _destructorType);
 
-            _classifications = builder.ToImmutable();
-        }
-
-        private void AppendClassificationSpan(
-            List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type)
-        {
-            if (_options[type].IsClassified)
-            {
-                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
-            }
+            base.classifications = builder.ToImmutable();
         }
     }
 }

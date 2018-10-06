@@ -4,11 +4,11 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser
 {
-    public delegate void ClassificationChangedEventHandler(ClassificationChangedEventArgs args);
+    public delegate void ClassificationChangedEventHandler(ClassificationsChangedEventArgs args);
 
-    public class ClassificationChangedEventArgs : EventArgs
+    public class ClassificationsChangedEventArgs : EventArgs
     {
-        public ClassificationChangedEventArgs(
+        public ClassificationsChangedEventArgs(
             IReadOnlyDictionary<IClassificationType, ClassificationInfo> changedClassifications)
         {
             ChangedClassifications = changedClassifications;

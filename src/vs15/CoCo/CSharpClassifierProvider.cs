@@ -19,9 +19,16 @@ namespace CoCo
     //[ContentType("text")]
     internal class CSharpClassifierProvider : IClassifierProvider
     {
+        /// <summary>
+        /// Determines that settings was set to avoid a many sets settings from the classifier
+        /// </summary>
+        private static bool _wasSettingsSet;
+
+        private readonly Dictionary<string, ClassificationInfo> _classificationsInfo;
+
         public CSharpClassifierProvider()
         {
-            _classificationsInfo = new Dictionary<string, ClassificationInfo>();
+            _classificationsInfo = new Dictionary<string, ClassificationInfo>(CSharpNames.All.Length);
             foreach (var item in CSharpNames.All)
             {
                 _classificationsInfo[item] = default;
@@ -29,22 +36,8 @@ namespace CoCo
             AnalyzingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
         }
 
-        /// <summary>
-        /// Determines that settings was set to avoid a many sets settings from the classifier
-        /// </summary>
-        private static bool _wasSettingsSet;
-
-        private Dictionary<string, ClassificationInfo> _classificationsInfo;
-
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
 #pragma warning disable 649
-
-        /// <summary>
-        /// Classification registry to be used for getting a reference to the custom classification
-        /// type later.
-        /// </summary>
-        [Import]
-        private IClassificationTypeRegistryService _classificationRegistry;
 
         /// <summary>
         /// Text document factory to be used for getting a event of text document disposed.
@@ -70,7 +63,7 @@ namespace CoCo
                 new CSharpClassifier(_classificationsInfo, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
         }
 
-        private void OnAnalyzeOptionChanged(Analyser.ClassificationChangedEventArgs args)
+        private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)
         {
             foreach (var (classificationType, info) in args.ChangedClassifications)
             {

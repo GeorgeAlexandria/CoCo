@@ -82,11 +82,11 @@ namespace CoCo.Test.Common
 
         private static RoslynEditorClassifier GetClassifier(ProgrammingLanguage language)
         {
-            var classificationTypes = new Dictionary<string, IClassificationType>(32);
+            var classificationTypes = new Dictionary<string, ClassificationInfo>(32);
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
             foreach (var item in names)
             {
-                classificationTypes.Add(item, new ClassificationType(item));
+                classificationTypes.Add(item, new ClassificationInfo(new ClassificationType(item), true));
             }
 
             return language == ProgrammingLanguage.VisualBasic

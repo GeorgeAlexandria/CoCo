@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\vs15\CoCo\AnalyzingService.cs">
+      <Link>AnalyzingService.cs</Link>
+    </Compile>
     <Compile Include="..\..\vs15\CoCo\Paths.cs" Link="Paths.cs" />
     <Compile Include="..\..\vs15\CoCo\ResetValuesProvider.cs">
       <Link>ResetValuesProvider.cs</Link>

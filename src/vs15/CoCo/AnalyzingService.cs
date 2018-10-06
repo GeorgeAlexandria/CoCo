@@ -17,7 +17,7 @@ namespace CoCo
 
         public static void SetAnalyzingOptions(Option option)
         {
-            var classificationTypes = new Dictionary<string, IClassificationType>();
+            var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
             foreach (var languageClassifications in ClassificationManager.Instance.GetClassifications().Values)
             {
                 foreach (var classification in languageClassifications)
@@ -37,7 +37,7 @@ namespace CoCo
                     }
                 }
             }
-            Instance.ClassificationChanged?.Invoke(new Analyser.ClassificationChangedEventArgs(classifications));
+            Instance.ClassificationChanged?.Invoke(new Analyser.ClassificationsChangedEventArgs(classifications));
         }
     }
 }

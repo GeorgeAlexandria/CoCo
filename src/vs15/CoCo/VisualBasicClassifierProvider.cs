@@ -1,6 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using CoCo.Analyser;
 using CoCo.Analyser.VisualBasic;
+using CoCo.Utils;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
@@ -19,16 +21,19 @@ namespace CoCo
         /// </summary>
         private static bool _wasSettingsSet;
 
-        private ImmutableDictionary<string, IClassificationType> _classificationTypes;
+        private readonly Dictionary<string, ClassificationInfo> _classificationsInfo;
+
+        public VisualBasicClassifierProvider()
+        {
+            _classificationsInfo = new Dictionary<string, ClassificationInfo>(VisualBasicNames.All.Length);
+            foreach (var item in VisualBasicNames.All)
+            {
+                _classificationsInfo[item] = default;
+            }
+            AnalyzingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
+        }
 
 #pragma warning disable 649
-
-        /// <summary>
-        /// Classification registry to be used for getting a reference to the custom classification
-        /// type later.
-        /// </summary>
-        [Import]
-        private IClassificationTypeRegistryService _classificationRegistry;
 
         /// <summary>
         /// Text document factory to be used for getting a event of text document disposed.
@@ -45,22 +50,24 @@ namespace CoCo
             {
                 var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
                 settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
-                FormattingService.SetFormatting(settings);
+                var option = FormattingService.SetFormatting(settings);
+                AnalyzingService.SetAnalyzingOptions(option);
                 _wasSettingsSet = true;
             }
 
-            if (_classificationTypes is null)
-            {
-                var builder = ImmutableDictionary.CreateBuilder<string, IClassificationType>();
-                foreach (var name in VisualBasicNames.All)
-                {
-                    builder.Add(name, _classificationRegistry.GetClassificationType(name));
-                }
-                _classificationTypes = builder.ToImmutable();
-            }
-
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new VisualBasicClassifier(_classificationTypes, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
+                new VisualBasicClassifier(_classificationsInfo, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
+        }
+
+        private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)
+        {
+            foreach (var (classificationType, info) in args.ChangedClassifications)
+            {
+                if (_classificationsInfo.ContainsKey(classificationType.Classification))
+                {
+                    _classificationsInfo[classificationType.Classification] = info;
+                }
+            }
         }
     }
 }

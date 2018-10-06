@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
@@ -18,6 +19,11 @@ namespace CoCo.Analyser
 
         private SemanticModel _semanticModel;
 
+        protected readonly Dictionary<IClassificationType, ClassificationInfo> options =
+            new Dictionary<IClassificationType, ClassificationInfo>();
+
+        protected ImmutableArray<IClassificationType> classifications;
+
         protected RoslynEditorClassifier()
         {
         }
@@ -31,7 +37,7 @@ namespace CoCo.Analyser
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
-            analyzingService.ClassificationChanged += OnAnalyzingOptionChanged;
+            _analyzingService.ClassificationChanged += OnClassificationsChanged;
         }
 
         /// <remarks>
@@ -42,8 +48,7 @@ namespace CoCo.Analyser
         public event EventHandler<Microsoft.VisualStudio.Text.Classification.ClassificationChangedEventArgs> ClassificationChanged;
 
         /// <summary>
-        /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range
-        /// of text.
+        /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range of text.
         /// </summary>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
@@ -53,7 +58,7 @@ namespace CoCo.Analyser
             /// be null when solution|project failed to load and VS gave some reasons of it or when
             /// try to open a file doesn't contained in the current solution
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
-            if (workspace == null)
+            if (workspace is null)
             {
                 // TODO: Add supporting a files that doesn't included to the current solution
                 return new List<ClassificationSpan>();
@@ -68,7 +73,25 @@ namespace CoCo.Analyser
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
 
-        protected abstract void OnAnalyzingOptionChanged(ClassificationChangedEventArgs args);
+        protected void AppendClassificationSpan(
+           List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type)
+        {
+            if (options[type].IsClassified)
+            {
+                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
+        }
+
+        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
+        {
+            foreach (var classification in classifications)
+            {
+                if (args.ChangedClassifications.TryGetValue(classification, out var option))
+                {
+                    options[classification] = option;
+                }
+            }
+        }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
 
@@ -81,7 +104,7 @@ namespace CoCo.Analyser
                 _semanticModel = null;
                 _textBuffer.Changed -= OnTextBufferChanged;
                 _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
-                _analyzingService.ClassificationChanged -= OnAnalyzingOptionChanged;
+                _analyzingService.ClassificationChanged -= OnClassificationsChanged;
             }
         }
     }
