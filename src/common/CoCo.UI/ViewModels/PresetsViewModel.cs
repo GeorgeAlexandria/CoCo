@@ -12,7 +12,8 @@ namespace CoCo.UI.ViewModels
         private readonly IResetValuesProvider _resetValuesProvider;
         private readonly ObservableCollection<PresetViewModel> _presets = new ObservableCollection<PresetViewModel>();
 
-        public PresetsViewModel(ICollection<Preset> presets, IClassificationProvider provider, IResetValuesProvider resetValuesProvider)
+        public PresetsViewModel(
+            ICollection<Preset> presets, IClassificationProvider provider, IResetValuesProvider resetValuesProvider)
         {
             foreach (var item in presets)
             {
@@ -48,10 +49,10 @@ namespace CoCo.UI.ViewModels
         private void Apply(PresetViewModel preset)
         {
             var data = preset.ExtractData();
-            var list = new List<ClassificationFormatViewModel>(data.Classifications.Count);
+            var list = new List<ClassificationViewModel>(data.Classifications.Count);
             foreach (var item in data.Classifications)
             {
-                list.Add(new ClassificationFormatViewModel(item, _resetValuesProvider));
+                list.Add(new ClassificationViewModel(item, _resetValuesProvider));
             }
             _provider.SetCurrentClassificaions(list);
         }

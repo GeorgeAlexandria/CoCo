@@ -38,8 +38,7 @@
             DisplayMemberPath="Name"
             ItemsSource="{Binding Languages}"
             SelectedItem="{Binding SelectedLanguage}"
-            Style="{StaticResource comboBoxFlatStyle}"
-            TextBlock.TextAlignment="Left" />
+            Style="{StaticResource comboBoxFlatStyle}" />
       </StackPanel>
       <Grid
          Grid.Row="1"
@@ -53,11 +52,11 @@
             Name="listView"
             Grid.Column="0"
             BorderBrush="{StaticResource SoftBlue}"
-            DataContext="{Binding SelectedLanguage}"
-            ItemsSource="{Binding Classifications}"
+            DataContext="{Binding SelectedLanguage.ClassificationsContainer}"
+            ItemsSource="{Binding ClassificationsView}"
             ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
             SelectedItem="{Binding SelectedClassification}"
-            Style="{StaticResource classificationListViewStyle}">
+            Style="{StaticResource listViewFlatStyle}">
             <ListView.View>
                <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeaderWithoutGripper}">
                   <GridViewColumn>
@@ -103,11 +102,9 @@
                   HorizontalAlignment="Left"
                   DataContext="{Binding ElementName=listView, Path=SelectedItem}">
                   <CheckBox
-                     VerticalContentAlignment="Center"
                      Content="Disable classification"
                      IsChecked="{Binding IsClassified}"
-                     Style="{StaticResource checkBoxFlatStyle}"
-                     TextBlock.FontSize="14" />
+                     Style="{StaticResource checkBoxFlatStyle}" />
                </WrapPanel>
             </GroupBox>
             <GroupBox
@@ -146,8 +143,7 @@
                      <Button
                         Margin="8,0,0,0"
                         Command="{Binding ResetFontRenderingSize}"
-                        Foreground="#5e5e5a"
-                        Style="{StaticResource CommonButton}"
+                        Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource ResetButton}" />
                   </StackPanel>
                   <StackPanel
@@ -192,14 +188,12 @@
                      <Button
                         Margin="8,0,0,0"
                         Command="{Binding CustomizeColor}"
-                        Foreground="#5e5e5a"
-                        Style="{StaticResource CommonButton}"
+                        Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource CustomizeButton}" />
                      <Button
                         Margin="8,0,0,0"
                         Command="{Binding ResetColor}"
-                        Foreground="#5e5e5a"
-                        Style="{StaticResource CommonButton}"
+                        Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource ResetButton}" />
                   </StackPanel>
                   <StackPanel
@@ -244,14 +238,12 @@
                      <Button
                         Margin="8,0,0,0"
                         Command="{Binding CustomizeColor}"
-                        Foreground="#5e5e5a"
-                        Style="{StaticResource CommonButton}"
+                        Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource CustomizeButton}" />
                      <Button
                         Margin="8,0,0,0"
                         Command="{Binding ResetColor}"
-                        Foreground="#5e5e5a"
-                        Style="{StaticResource CommonButton}"
+                        Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource ResetButton}" />
                   </StackPanel>
                   <WrapPanel
@@ -260,45 +252,33 @@
                      Margin="5,0,0,0"
                      HorizontalAlignment="Left">
                      <CheckBox
-                        VerticalContentAlignment="Center"
                         Content="Bold"
                         IsChecked="{Binding IsBold}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
                         Margin="10,0,0,0"
-                        VerticalContentAlignment="Center"
                         Content="Italic"
                         IsChecked="{Binding IsItalic}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
                         Margin="10,0,0,0"
-                        VerticalContentAlignment="Center"
                         Content="Overline"
                         IsChecked="{Binding IsOverline}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
                         Margin="10,0,0,0"
-                        VerticalContentAlignment="Center"
                         Content="Underline"
                         IsChecked="{Binding IsUnderline}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
-                        VerticalContentAlignment="Center"
                         Content="Strikethrough"
                         IsChecked="{Binding IsStrikethrough}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
                         Margin="10,0,0,0"
-                        VerticalContentAlignment="Center"
                         Content="Baseline"
                         IsChecked="{Binding IsBaseline}"
-                        Style="{StaticResource checkBoxFlatStyle}"
-                        TextBlock.FontSize="14" />
+                        Style="{StaticResource checkBoxFlatStyle}" />
                   </WrapPanel>
                </StackPanel>
             </GroupBox>

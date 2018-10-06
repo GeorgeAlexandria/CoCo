@@ -7,8 +7,8 @@ namespace CoCo.UI.ViewModels
     /// </summary>
     public interface IClassificationProvider
     {
-        ICollection<ClassificationFormatViewModel> GetCurrentClassificaions();
+        ICollection<ClassificationViewModel> GetCurrentClassificaions();
 
-        void SetCurrentClassificaions(ICollection<ClassificationFormatViewModel> classifications);
+        void SetCurrentClassificaions(ICollection<ClassificationViewModel> classifications);
     }
 }

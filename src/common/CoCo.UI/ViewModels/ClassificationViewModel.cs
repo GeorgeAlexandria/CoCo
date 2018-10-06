@@ -2,13 +2,13 @@
 
 namespace CoCo.UI.ViewModels
 {
-    public class ClassificationFormatViewModel : BaseViewModel
+    public class ClassificationViewModel : BaseViewModel
     {
         private readonly string _classificationName;
 
         private bool _fontRenderingSizeWasReset;
 
-        public ClassificationFormatViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
+        public ClassificationViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
         {
             _classificationName = classification.Name;
             _isClassified = classification.IsClassified;

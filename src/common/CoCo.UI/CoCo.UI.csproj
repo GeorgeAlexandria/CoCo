@@ -24,19 +24,19 @@
     <Compile Update="UI\PresetsControl.xaml.cs">
       <DependentUpon>PresetsControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="UI\Resources\GridView.xaml">
+    <Page Include="UI\Resources\Templates\Buttons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Resources\Styles\GridView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Resources\ItemsControls.xaml">
+    <Page Include="UI\Resources\Styles\ItemsControls.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\Resources\Buttons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Resources\Controls.xaml">
+    <Page Include="UI\Resources\Styles\Controls.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -56,5 +56,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UI\Resources\Templates\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="UI\Resources\Templates\Buttons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="UI\Resources\Templates\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 </Project>
