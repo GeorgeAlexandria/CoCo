@@ -18,7 +18,7 @@ namespace CoCo.Test.Common
             Span = span;
         }
 
-        public override bool Equals(object obj) => Equals(obj as SimplifiedClassificationSpan);
+        public override bool Equals(object obj) => obj is SimplifiedClassificationSpan span && Equals(span);
 
         public override int GetHashCode() => ClassificationComparer.Instance.GetHashCode(this);
 

@@ -55,7 +55,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="CSharpClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
-    <Compile Include="OptionProvider.cs" />
+    <Compile Include="OptionService.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

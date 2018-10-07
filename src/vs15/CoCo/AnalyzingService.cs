@@ -37,7 +37,7 @@ namespace CoCo
                     }
                 }
             }
-            Instance.ClassificationChanged?.Invoke(new Analyser.ClassificationsChangedEventArgs(classifications));
+            Instance.ClassificationChanged?.Invoke(new ClassificationsChangedEventArgs(classifications));
         }
     }
 }

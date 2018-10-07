@@ -50,7 +50,8 @@ namespace CoCo
             {
                 var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
                 settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
-                var option = FormattingService.SetFormatting(settings);
+                var option = OptionService.ToOption(settings);
+                FormattingService.SetFormattingOptions(option);
                 AnalyzingService.SetAnalyzingOptions(option);
                 _wasSettingsSet = true;
             }
