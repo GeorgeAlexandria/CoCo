@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
@@ -31,14 +32,15 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _eventType;
 
         internal VisualBasicClassifier(
-            IReadOnlyDictionary<string, IClassificationType> classifications,
+            IReadOnlyDictionary<string, ClassificationInfo> classifications,
+            IAnalyzingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {
             InitializeClassifications(classifications);
         }
 
-        internal VisualBasicClassifier(IReadOnlyDictionary<string, IClassificationType> classifications)
+        internal VisualBasicClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             InitializeClassifications(classifications);
         }
@@ -60,7 +62,7 @@ namespace CoCo.Analyser.VisualBasic
                     // NOTE: handle alias in imports directive
                     if (node is ImportAliasClauseSyntax aliasSyntax)
                     {
-                        spans.Add(CreateClassificationSpan(span.Snapshot, aliasSyntax.Identifier.Span, _aliasNamespaceType));
+                        AppendClassificationSpan(spans, span.Snapshot, aliasSyntax.Identifier.Span, _aliasNamespaceType);
                         continue;
                     }
 
@@ -79,11 +81,11 @@ namespace CoCo.Analyser.VisualBasic
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
                             fieldSymbol.IsConst ? _constantFieldType :
                             _fieldType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, fieldType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldType);
                         break;
 
                     case SymbolKind.RangeVariable:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _rangeVariableType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _rangeVariableType);
                         break;
 
                     case SymbolKind.Local:
@@ -92,7 +94,7 @@ namespace CoCo.Analyser.VisualBasic
                             localSymbol.IsStatic ? _staticLocalVariableType :
                             localSymbol.IsFunctionValue ? _functionVariableType :
                             _localVariableType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, localType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, localType);
                         break;
 
                     case SymbolKind.Method:
@@ -102,26 +104,26 @@ namespace CoCo.Analyser.VisualBasic
                             methodSymbol.IsShared() || methodSymbol.ContainingType?.TypeKind == TypeKind.Module ? _sharedMethodType :
                             methodSymbol.ReturnType.SpecialType == SpecialType.System_Void ? _subType :
                             _functionType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, methodType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType);
                         break;
 
                     case SymbolKind.Parameter:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _parameterType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType);
                         break;
 
                     case SymbolKind.Property:
                         var propertySymbol = symbol as IPropertySymbol;
                         var propertyType = propertySymbol.IsWithEvents ? _withEventsPropertyType : _propertyType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, propertyType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, propertyType);
                         break;
 
                     case SymbolKind.Namespace:
                         var namespaceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, namespaceType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namespaceType);
                         break;
 
                     case SymbolKind.Event:
-                        spans.Add(CreateClassificationSpan(span.Snapshot, item.TextSpan, _eventType));
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType);
                         break;
 
                     default:
@@ -134,28 +136,36 @@ namespace CoCo.Analyser.VisualBasic
             return spans;
         }
 
-        private static ClassificationSpan CreateClassificationSpan(ITextSnapshot snapshot, TextSpan span, IClassificationType type) =>
-           new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type);
-
-        private void InitializeClassifications(IReadOnlyDictionary<string, IClassificationType> classifications)
+        private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
-            _localVariableType = classifications[VisualBasicNames.LocalVariableName];
-            _rangeVariableType = classifications[VisualBasicNames.RangeVariableName];
-            _functionVariableType = classifications[VisualBasicNames.FunctionVariableName];
-            _extensionMethodType = classifications[VisualBasicNames.ExtensionMethodName];
-            _sharedMethodType = classifications[VisualBasicNames.SharedMethodName];
-            _subType = classifications[VisualBasicNames.SubName];
-            _functionType = classifications[VisualBasicNames.FunctionName];
-            _fieldType = classifications[VisualBasicNames.FieldName];
-            _constantFieldType = classifications[VisualBasicNames.ConstantFieldName];
-            _enumFieldType = classifications[VisualBasicNames.EnumFieldName];
-            _parameterType = classifications[VisualBasicNames.ParameterName];
-            _propertyType = classifications[VisualBasicNames.PropertyName];
-            _withEventsPropertyType = classifications[VisualBasicNames.WithEventsPropertyName];
-            _namespaceType = classifications[VisualBasicNames.NamespaceName];
-            _aliasNamespaceType = classifications[VisualBasicNames.AliasNamespaceName];
-            _staticLocalVariableType = classifications[VisualBasicNames.StaticLocalVariableName];
-            _eventType = classifications[VisualBasicNames.EventName];
+            var builder = ImmutableArray.CreateBuilder<IClassificationType>(17);
+            void InitializeClassification(string name, ref IClassificationType type)
+            {
+                var info = classifications[name];
+                type = info.ClassificationType;
+                options[type] = info;
+                builder.Add(type);
+            }
+
+            InitializeClassification(VisualBasicNames.LocalVariableName, ref _localVariableType);
+            InitializeClassification(VisualBasicNames.RangeVariableName, ref _rangeVariableType);
+            InitializeClassification(VisualBasicNames.FunctionVariableName, ref _functionVariableType);
+            InitializeClassification(VisualBasicNames.ExtensionMethodName, ref _extensionMethodType);
+            InitializeClassification(VisualBasicNames.SharedMethodName, ref _sharedMethodType);
+            InitializeClassification(VisualBasicNames.SubName, ref _subType);
+            InitializeClassification(VisualBasicNames.FunctionName, ref _functionType);
+            InitializeClassification(VisualBasicNames.FieldName, ref _fieldType);
+            InitializeClassification(VisualBasicNames.ConstantFieldName, ref _constantFieldType);
+            InitializeClassification(VisualBasicNames.EnumFieldName, ref _enumFieldType);
+            InitializeClassification(VisualBasicNames.ParameterName, ref _parameterType);
+            InitializeClassification(VisualBasicNames.PropertyName, ref _propertyType);
+            InitializeClassification(VisualBasicNames.WithEventsPropertyName, ref _withEventsPropertyType);
+            InitializeClassification(VisualBasicNames.NamespaceName, ref _namespaceType);
+            InitializeClassification(VisualBasicNames.AliasNamespaceName, ref _aliasNamespaceType);
+            InitializeClassification(VisualBasicNames.StaticLocalVariableName, ref _staticLocalVariableType);
+            InitializeClassification(VisualBasicNames.EventName, ref _eventType);
+
+            base.classifications = builder.ToImmutable();
         }
     }
 }

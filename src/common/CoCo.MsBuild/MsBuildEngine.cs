@@ -197,7 +197,7 @@ namespace CoCo.MsBuild
             GetCache(lifetime).TryGetValue(key, out var value) ? value : null;
 
         public object UnregisterTaskObject(object key, RegisteredTaskObjectLifetime lifetime) =>
-            GetCache(lifetime).TryRemoveValue(key, out var value) ? value : null;
+            GetCache(lifetime).TryRemove(key, out var value) ? value : null;
 
         private IDictionary<object, object> GetCache(RegisteredTaskObjectLifetime lifetime) =>
             lifetime == RegisteredTaskObjectLifetime.Build ? _objectCacheLivingUntilBuild : _objectCacheLivingInAppDomain;

@@ -2,12 +2,18 @@
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-   xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    mc:Ignorable="d">
    <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="Colors.xaml" />
+      <ResourceDictionary Source="..\Colors.xaml" />
+      <ResourceDictionary Source="..\Templates\Controls.xaml" />
    </ResourceDictionary.MergedDictionaries>
+
+   <Style x:Key="commonButtonStyle" TargetType="Button">
+      <Setter Property="BorderThickness" Value="0" />
+      <Setter Property="Foreground" Value="#5e5e5a" />
+      <Setter Property="Opacity" Value="0.5" />
+   </Style>
 
    <Style x:Key="labelStyle" TargetType="{x:Type Label}">
       <Setter Property="FontSize" Value="14" />
@@ -18,34 +24,6 @@
       <Setter Property="Margin" Value="0,0,5,0" />
    </Style>
 
-   <ControlTemplate x:Key="cbToggleButtonTemplate" TargetType="{x:Type ToggleButton}">
-      <Grid>
-         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="16" />
-         </Grid.ColumnDefinitions>
-         <Border
-            x:Name="Border"
-            Grid.ColumnSpan="2"
-            Background="{TemplateBinding Background}"
-            BorderBrush="{StaticResource SoftBlue}"
-            BorderThickness="1,1,1,1"
-            CornerRadius="0" />
-         <Path
-            x:Name="Arrow"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Data="M0,0 L3,3 L6,0 L6,2 L3,5 L0,2 z"
-            Fill="#5e5e5a" />
-      </Grid>
-      <ControlTemplate.Triggers>
-         <Trigger Property="IsMouseOver" Value="True">
-            <Setter TargetName="Border" Property="Background" Value="{StaticResource SoftYellow}" />
-            <Setter TargetName="Arrow" Property="Fill" Value="#353533" />
-         </Trigger>
-      </ControlTemplate.Triggers>
-   </ControlTemplate>
    <Style x:Key="cbItemStyle" TargetType="{x:Type ComboBoxItem}">
       <Setter Property="Template">
          <Setter.Value>
@@ -67,6 +45,7 @@
          </Setter.Value>
       </Setter>
    </Style>
+
    <Style x:Key="comboBoxFlatStyle" TargetType="{x:Type ComboBox}">
       <Setter Property="Background" Value="{StaticResource WhiteColor}" />
       <Setter Property="SnapsToDevicePixels" Value="True" />
@@ -75,6 +54,7 @@
       <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
       <Setter Property="Foreground" Value="Black" />
       <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+      <Setter Property="TextBlock.TextAlignment" Value="Left" />
       <Setter Property="ItemContainerStyle" Value="{StaticResource cbItemStyle}" />
       <Setter Property="Template">
          <Setter.Value>
@@ -150,6 +130,8 @@
       <Setter Property="FocusVisualStyle" Value="{x:Null}" />
       <Setter Property="Background" Value="{StaticResource WhiteColor}" />
       <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="TextBlock.FontSize" Value="14" />
+      <Setter Property="VerticalContentAlignment" Value="Center" />
       <Setter Property="Template">
          <Setter.Value>
             <ControlTemplate TargetType="{x:Type CheckBox}">

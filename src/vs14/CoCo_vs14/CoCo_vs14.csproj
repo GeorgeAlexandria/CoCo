@@ -47,6 +47,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\vs15\CoCo\AnalyzingService.cs">
+      <Link>AnalyzingService.cs</Link>
+    </Compile>
     <Compile Include="..\..\vs15\CoCo\Paths.cs" Link="Paths.cs" />
     <Compile Include="..\..\vs15\CoCo\ResetValuesProvider.cs">
       <Link>ResetValuesProvider.cs</Link>
@@ -62,7 +65,7 @@
     <Compile Include="..\..\vs15\CoCo\CSharpClassifierProvider.cs" Link="CSharpClassifierProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\Extensions.cs" Link="Extensions.cs" />
     <Compile Include="..\..\vs15\CoCo\FormattingService.cs" Link="FormattingService.cs" />
-    <Compile Include="..\..\vs15\CoCo\OptionProvider.cs" Link="OptionProvider.cs" />
+    <Compile Include="..\..\vs15\CoCo\OptionService.cs" Link="OptionService.cs" />
     <Compile Include="Migrations\MigrationService_2_0_0.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
     <Compile Include="VsPackage.cs" />

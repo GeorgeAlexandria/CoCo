@@ -9,7 +9,7 @@ namespace CoCo
 {
     public sealed class ClassificationManager
     {
-        private static Dictionary<string, List<IClassificationType>> _classifications;
+        private static Dictionary<string, ICollection<IClassificationType>> _classifications;
 
         private ClassificationManager()
         {
@@ -25,11 +25,11 @@ namespace CoCo
         /// <returns>
         /// Classifications are grouped by language
         /// </returns>
-        public Dictionary<string, List<IClassificationType>> GetClassifications()
+        public IReadOnlyDictionary<string, ICollection<IClassificationType>> GetClassifications()
         {
             if (_classifications != null) return _classifications;
 
-            _classifications = new Dictionary<string, List<IClassificationType>>();
+            _classifications = new Dictionary<string, ICollection<IClassificationType>>();
 
             var registryService = ServicesProvider.Instance.RegistryService;
             var formatMapService = ServicesProvider.Instance.FormatMapService;

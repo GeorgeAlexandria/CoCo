@@ -2,7 +2,9 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using CoCo.Settings;
 using CoCo.UI;
+using CoCo.UI.Data;
 using CoCo.UI.ViewModels;
 using Microsoft.VisualStudio.Shell;
 
@@ -24,8 +26,7 @@ namespace CoCo
             ++_receivedCount;
             if (!(_optionViewModel is null)) return _optionViewModel;
 
-            var option = OptionProvider.ReceiveOption();
-            return _optionViewModel = new OptionViewModel(option, ResetValuesProvider.Instance);
+            return _optionViewModel = new OptionViewModel(Receive(), ResetValuesProvider.Instance);
         }
 
         internal static void SaveOption(OptionViewModel optionViewModel) =>
@@ -37,18 +38,35 @@ namespace CoCo
 
             if (_isApply)
             {
-                var option = _optionViewModel.ExtractData();
-                OptionProvider.ReleaseOption(option);
+                Release(_optionViewModel.ExtractData());
                 _isApply = false;
             }
 
             _optionViewModel = null;
         }
+
+        private static Option Receive()
+        {
+            MigrationService.MigrateSettingsTo_2_0_0();
+            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
+            settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
+            var option = OptionService.ToOption(settings);
+            FormattingService.SetFormattingOptions(option);
+            return option;
+        }
+
+        private static void Release(Option option)
+        {
+            FormattingService.SetFormattingOptions(option);
+            AnalyzingService.SetAnalyzingOptions(option);
+            var settings = OptionService.ToSettings(option);
+            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
+        }
     }
 
     public abstract class DialogPage : UIElementDialogPage
     {
-        private OptionViewModel _view;
+        private OptionViewModel _childDataContext;
 
         private FrameworkElement _child;
 
@@ -59,10 +77,10 @@ namespace CoCo
         protected override void OnActivate(CancelEventArgs e)
         {
             /// NOTE: imitate page's initialization using <see cref="OnActivate"/>
-            if (_view is null)
+            if (_childDataContext is null)
             {
-                _view = VsPackage.ReceiveOption();
-                _child.DataContext = _view;
+                _childDataContext = VsPackage.ReceiveOption();
+                _child.DataContext = _childDataContext;
             }
 
             base.OnActivate(e);
@@ -70,8 +88,8 @@ namespace CoCo
 
         protected override void OnClosed(EventArgs e)
         {
-            VsPackage.ReleaseOption(_view);
-            _view = null;
+            VsPackage.ReleaseOption(_childDataContext);
+            _childDataContext = null;
 
             base.OnClosed(e);
         }
@@ -81,7 +99,7 @@ namespace CoCo
             // NOTE: save options only when was clicked Ok button at the options page
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                VsPackage.SaveOption(_view);
+                VsPackage.SaveOption(_childDataContext);
             }
             base.OnApply(e);
         }

@@ -112,7 +112,7 @@ namespace CoCo.MsBuild
             var primaryList = new List<TaskItem>(64);
             foreach (var projectItem in project.GetItems("None"))
             {
-                var metadata = new Dictionary<string, string>(64);
+                var metadata = new Dictionary<string, string>(32);
                 foreach (var item in projectItem.Metadata)
                 {
                     metadata.Add(item.Name, item.EvaluatedValue);
@@ -123,7 +123,7 @@ namespace CoCo.MsBuild
             var secondaryList = new List<TaskItem>(64);
             foreach (var projectItem in project.GetItems("Content"))
             {
-                var metadata = new Dictionary<string, string>(64);
+                var metadata = new Dictionary<string, string>(32);
                 foreach (var item in projectItem.Metadata)
                 {
                     metadata.Add(item.Name, item.EvaluatedValue);
@@ -198,7 +198,7 @@ namespace CoCo.MsBuild
             var references = new List<TaskItem>(64);
             foreach (var reference in project.GetItems("Reference"))
             {
-                var metadata = new Dictionary<string, string>(64);
+                var metadata = new Dictionary<string, string>(32);
                 foreach (var item in reference.Metadata)
                 {
                     var value = item.Name.EqualsNoCase("HintPath")
@@ -237,7 +237,7 @@ namespace CoCo.MsBuild
             var references = new List<TaskItem>(32);
             foreach (var reference in project.GetItems("_ExplicitReference"))
             {
-                var metadata = new Dictionary<string, string>(64);
+                var metadata = new Dictionary<string, string>(32);
                 foreach (var item in reference.Metadata)
                 {
                     metadata.Add(item.Name, item.EvaluatedValue);
@@ -250,7 +250,7 @@ namespace CoCo.MsBuild
 
         private static ImmutableArray<string> GetCompileItems(Project project)
         {
-            var compilesBuilder = ImmutableArray.CreateBuilder<string>(512);
+            var compilesBuilder = ImmutableArray.CreateBuilder<string>(256);
             foreach (var compile in project.GetItems("Compile"))
             {
                 compilesBuilder.Add(compile.EvaluatedInclude.GetFullPath(project.DirectoryPath));

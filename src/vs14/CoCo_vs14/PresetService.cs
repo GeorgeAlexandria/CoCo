@@ -10,10 +10,12 @@ namespace CoCo
 {
     public static class PresetService
     {
+        private static Dictionary<string, List<PresetSettings>> _defaultPresets;
+
         /// <summary>
         /// Returns the default CoCo settings that are grouped by languages
         /// </summary>
-        public static Dictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
+        public static IReadOnlyDictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
         {
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
@@ -22,7 +24,9 @@ namespace CoCo
                 return classification;
             }
 
-            var languages = new Dictionary<string, List<PresetSettings>>();
+            if (!(_defaultPresets is null)) return _defaultPresets;
+
+            _defaultPresets = new Dictionary<string, List<PresetSettings>>();
 
             var presets = new List<PresetSettings>
             {
@@ -73,7 +77,7 @@ namespace CoCo
                     }
                 }
             };
-            languages[Languages.CSharp] = presets;
+            _defaultPresets[Languages.CSharp] = presets;
 
             presets = new List<PresetSettings>
             {
@@ -126,9 +130,20 @@ namespace CoCo
                     }
                 }
             };
-            languages[Languages.VisualBasic] = presets;
+            _defaultPresets[Languages.VisualBasic] = presets;
 
-            return languages;
+            return _defaultPresets;
+        }
+
+        public static IReadOnlyDictionary<string, ISet<string>> GetDefaultPresetsNames()
+        {
+            var presets = new HashSet<string> { "CoCo light|blue theme", "CoCo dark theme" };
+
+            return new Dictionary<string, ISet<string>>
+            {
+                [Languages.CSharp] = presets,
+                [Languages.VisualBasic] = presets,
+            };
         }
     }
 }

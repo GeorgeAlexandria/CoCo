@@ -11,7 +11,7 @@ namespace CoCo.Utils
         /// true if the element is successfully removed; otherwise, false. This method also
         /// returns false if <paramref name="key"/> was not found in <paramref name="dictionary"/>
         /// </returns>
-        public static bool TryRemoveValue<K, V>(this IDictionary<K, V> dictionary, K key, out V value)
+        public static bool TryRemove<K, V>(this IDictionary<K, V> dictionary, K key, out V value)
         {
             if (dictionary.TryGetValue(key, out value) && dictionary.Remove(key))
             {

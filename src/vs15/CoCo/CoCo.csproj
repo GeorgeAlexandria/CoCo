@@ -49,12 +49,13 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="AnalyzingService.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
     <Compile Include="ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CSharpClassifierProvider.cs" />
     <Compile Include="FormattingService.cs" />
-    <Compile Include="OptionProvider.cs" />
+    <Compile Include="OptionService.cs" />
     <Compile Include="Paths.cs" />
     <Compile Include="PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

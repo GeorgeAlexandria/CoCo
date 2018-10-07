@@ -2,16 +2,16 @@
 
 namespace CoCo.UI.ViewModels
 {
-    public class ClassificationFormatViewModel : BaseViewModel
+    public class ClassificationViewModel : BaseViewModel
     {
         private readonly string _classificationName;
 
         private bool _fontRenderingSizeWasReset;
 
-        public ClassificationFormatViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
+        public ClassificationViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
         {
             _classificationName = classification.Name;
-            _isEnabled = classification.IsEnabled;
+            _isClassified = classification.IsClassified;
             _isBold = classification.IsBold;
             _isItalic = classification.IsItalic;
             _isOverline = classification.IsOverline;
@@ -42,12 +42,12 @@ namespace CoCo.UI.ViewModels
 
         public DelegateCommand ResetFontRenderingSize { get; }
 
-        private bool _isEnabled;
+        private bool _isClassified;
 
-        public bool IsChecked
+        public bool IsClassified
         {
-            get => _isEnabled;
-            set => SetProperty(ref _isEnabled, value);
+            get => !_isClassified;
+            set => SetProperty(ref _isClassified, !value);
         }
 
         private bool _isBold;
@@ -129,7 +129,7 @@ namespace CoCo.UI.ViewModels
             IsStrikethrough = IsStrikethrough,
             IsBaseline = IsBaseline,
             FontRenderingSize = _fontRenderingSize,
-            IsEnabled = IsChecked,
+            IsClassified = _isClassified,
 
             ForegroundWasReset = Foreground.ColorWasReset,
             BackgroundWasReset = Background.ColorWasReset,

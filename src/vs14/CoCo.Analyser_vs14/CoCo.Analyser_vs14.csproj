@@ -7,7 +7,7 @@
     <OutputPath>..\..\bin\CoCo.Analyser_vs14\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildProjectDirectory)\..\lib\UseOldSystemCollectionsImmutable.targets"/>
+  <Import Project="$(MSBuildProjectDirectory)\..\lib\UseOldSystemCollectionsImmutable.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' " />
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
@@ -30,6 +30,9 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationsChangedEventArgs.cs" Link="ClassificationsChangedEventArgs.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\IAnalyzingService.cs" Link="IAnalyzingService.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />

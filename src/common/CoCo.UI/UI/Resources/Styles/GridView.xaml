@@ -2,11 +2,10 @@
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-   xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    mc:Ignorable="d">
    <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="Colors.xaml" />
+      <ResourceDictionary Source="..\Colors.xaml" />
    </ResourceDictionary.MergedDictionaries>
 
    <Style x:Key="gridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
@@ -93,63 +92,6 @@
                      <Setter TargetName="headerBorder" Property="Background" Value="{StaticResource SoftYellow}" />
                   </Trigger>
                </ControlTemplate.Triggers>
-            </ControlTemplate>
-         </Setter.Value>
-      </Setter>
-   </Style>
-
-   <Style x:Key="gridViewScrollViewerStyle" TargetType="ScrollViewer">
-      <Setter Property="Template">
-         <Setter.Value>
-            <ControlTemplate TargetType="ScrollViewer">
-               <Grid Background="{TemplateBinding Background}">
-                  <Grid.ColumnDefinitions>
-                     <ColumnDefinition Width="*" />
-                     <ColumnDefinition Width="Auto" />
-                  </Grid.ColumnDefinitions>
-                  <Grid.RowDefinitions>
-                     <RowDefinition Height="*" />
-                     <RowDefinition Height="Auto" />
-                  </Grid.RowDefinitions>
-                  <DockPanel Margin="{TemplateBinding Padding}">
-                     <ScrollViewer
-                        DockPanel.Dock="Top"
-                        Focusable="false"
-                        HorizontalScrollBarVisibility="Hidden"
-                        VerticalScrollBarVisibility="Hidden">
-                        <GridViewHeaderRowPresenter
-                           AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}"
-                           ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}"
-                           ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu, RelativeSource={RelativeSource TemplatedParent}}"
-                           ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}"
-                           ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}"
-                           ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip, RelativeSource={RelativeSource TemplatedParent}}"
-                           Columns="{Binding Path=TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}"
-                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                     </ScrollViewer>
-                     <ScrollContentPresenter
-                        Name="PART_ScrollContentPresenter"
-                        CanContentScroll="True"
-                        CanHorizontallyScroll="False"
-                        CanVerticallyScroll="False"
-                        KeyboardNavigation.DirectionalNavigation="Local" />
-                  </DockPanel>
-                  <ScrollBar
-                     Name="PART_HorizontalScrollBar"
-                     Grid.Row="1"
-                     Maximum="{TemplateBinding ScrollableWidth}"
-                     Orientation="Horizontal"
-                     ViewportSize="{TemplateBinding ViewportWidth}"
-                     Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
-                     Value="{TemplateBinding HorizontalOffset}" />
-                  <ScrollBar
-                     Name="PART_VerticalScrollBar"
-                     Grid.Column="1"
-                     Maximum="{TemplateBinding ScrollableHeight}"
-                     ViewportSize="{TemplateBinding ViewportHeight}"
-                     Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                     Value="{TemplateBinding VerticalOffset}" />
-               </Grid>
             </ControlTemplate>
          </Setter.Value>
       </Setter>

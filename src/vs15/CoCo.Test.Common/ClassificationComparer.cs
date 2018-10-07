@@ -13,19 +13,13 @@ namespace CoCo.Test.Common
 
         public static readonly ClassificationComparer Instance = new ClassificationComparer();
 
-        public bool Equals(SimplifiedClassificationSpan x, SimplifiedClassificationSpan y)
-        {
-            if (x is null ^ y is null) return false;
-            if (x is null) return true;
+        public bool Equals(SimplifiedClassificationSpan x, SimplifiedClassificationSpan y) =>
+            x is null ^ y is null ? false :
+            x is null || x.Span == y.Span && AreClassificationTypeEquals(x.ClassificationType, y.ClassificationType);
 
-            return x.Span == y.Span && AreClassificationTypeEquals(x.ClassificationType, y.ClassificationType);
-        }
-
-        public int GetHashCode(SimplifiedClassificationSpan obj)
-        {
-            if (obj is null) throw new ArgumentNullException(nameof(obj));
-            return obj.ClassificationType.Classification.GetHashCode() ^ obj.Span.GetHashCode();
-        }
+        public int GetHashCode(SimplifiedClassificationSpan obj) => obj is null
+            ? throw new ArgumentNullException(nameof(obj))
+            : obj.ClassificationType.Classification.GetHashCode() ^ obj.Span.GetHashCode();
 
         private static bool AreClassificationTypeEquals(IClassificationType expected, IClassificationType actual)
         {
