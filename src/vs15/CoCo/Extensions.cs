@@ -22,6 +22,7 @@ namespace CoCo
                IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
                IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
                IsClassified = true,
+               ClassifyInXml = true,
            };
 
         /// <summary>

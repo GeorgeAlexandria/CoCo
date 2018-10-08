@@ -12,6 +12,7 @@ namespace CoCo.UI.ViewModels
         {
             _classificationName = classification.Name;
             _isClassified = classification.IsClassified;
+            _classifyInXml = classification.ClassifyInXml;
             _isBold = classification.IsBold;
             _isItalic = classification.IsItalic;
             _isOverline = classification.IsOverline;
@@ -46,8 +47,16 @@ namespace CoCo.UI.ViewModels
 
         public bool IsClassified
         {
-            get => !_isClassified;
-            set => SetProperty(ref _isClassified, !value);
+            get => _isClassified;
+            set => SetProperty(ref _isClassified, value);
+        }
+
+        private bool _classifyInXml;
+
+        public bool ClassifyInXml
+        {
+            get => _classifyInXml;
+            set => SetProperty(ref _classifyInXml, value);
         }
 
         private bool _isBold;
@@ -129,7 +138,9 @@ namespace CoCo.UI.ViewModels
             IsStrikethrough = IsStrikethrough,
             IsBaseline = IsBaseline,
             FontRenderingSize = _fontRenderingSize,
-            IsClassified = _isClassified,
+
+            IsClassified = IsClassified,
+            ClassifyInXml = ClassifyInXml,
 
             ForegroundWasReset = Foreground.ColorWasReset,
             BackgroundWasReset = Background.ColorWasReset,

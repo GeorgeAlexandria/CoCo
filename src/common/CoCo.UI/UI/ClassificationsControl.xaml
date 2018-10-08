@@ -2,6 +2,7 @@
    x:Class="CoCo.UI.ClassificationsControl"
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:converters="clr-namespace:CoCo.UI.Converters"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -96,14 +97,18 @@
                </GroupBox.HeaderTemplate>
                <WrapPanel
                   Width="Auto"
-                  MinHeight="30"
+                  MinHeight="40"
                   MaxWidth="270"
                   Margin="5,0,0,0"
                   HorizontalAlignment="Left"
                   DataContext="{Binding ElementName=listView, Path=SelectedItem}">
                   <CheckBox
                      Content="Disable classification"
-                     IsChecked="{Binding IsClassified}"
+                     IsChecked="{Binding IsClassified, Converter={converters:NegateConverter}}"
+                     Style="{StaticResource checkBoxFlatStyle}" />
+                  <CheckBox
+                     Content="Classify in xml doc comments"
+                     IsChecked="{Binding ClassifyInXml}"
                      Style="{StaticResource checkBoxFlatStyle}" />
                </WrapPanel>
             </GroupBox>

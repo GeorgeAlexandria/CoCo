@@ -41,5 +41,7 @@ namespace CoCo.UI.Data
         public bool FontRenderingSizeWasReset { get; set; }
 
         public bool IsClassified { get; set; }
+
+        public bool ClassifyInXml { get; set; }
     }
 }

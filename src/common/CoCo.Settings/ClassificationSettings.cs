@@ -28,5 +28,7 @@ namespace CoCo.Settings
         public int? FontRenderingSize { get; set; }
 
         public bool? IsClassified { get; set; }
+
+        public bool? ClassifyInXml { get; set; }
     }
 }

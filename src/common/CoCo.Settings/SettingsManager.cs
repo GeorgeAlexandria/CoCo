@@ -180,6 +180,11 @@ namespace CoCo.Settings
             {
                 classification.IsClassified = isClassified;
             }
+            if (jClassification[nameof(ClassificationSettings.ClassifyInXml)] is JValue jClassifyInXml &&
+                jClassifyInXml.Value is bool classifyInXml)
+            {
+                classification.ClassifyInXml = classifyInXml;
+            }
             return true;
         }
 
@@ -238,6 +243,10 @@ namespace CoCo.Settings
             if (classification.IsClassified.HasValue)
             {
                 jClassification.Add(nameof(classification.IsClassified), new JValue(classification.IsClassified.Value));
+            }
+            if (classification.ClassifyInXml.HasValue)
+            {
+                jClassification.Add(nameof(classification.ClassifyInXml), new JValue(classification.ClassifyInXml.Value));
             }
             return jClassification;
         }

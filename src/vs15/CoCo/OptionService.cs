@@ -214,6 +214,8 @@ namespace CoCo
                 defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
 
             classification.IsClassified = classificationSettings.IsClassified ?? true;
+            classification.ClassifyInXml = classificationSettings.ClassifyInXml ?? true;
+
             return classification;
         }
 
@@ -255,6 +257,7 @@ namespace CoCo
                 IsStrikethrough = classification.IsStrikethrough,
                 IsBaseline = classification.IsBaseline,
                 IsClassified = classification.IsClassified,
+                ClassifyInXml = classification.ClassifyInXml,
             };
 
             if (!classification.BackgroundWasReset)
