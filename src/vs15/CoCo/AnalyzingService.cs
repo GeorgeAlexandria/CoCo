@@ -33,7 +33,7 @@ namespace CoCo
                 {
                     if (classificationTypes.TryGetValue(classification.Name, out var type))
                     {
-                        classifications.Add(type, new ClassificationInfo(type, classification.IsClassified));
+                        classifications.Add(type, new ClassificationInfo(type, classification.IsClassified, classification.ClassifyInXml));
                     }
                 }
             }

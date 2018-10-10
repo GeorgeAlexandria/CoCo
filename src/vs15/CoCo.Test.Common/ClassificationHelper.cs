@@ -86,7 +86,7 @@ namespace CoCo.Test.Common
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
             foreach (var item in names)
             {
-                classificationTypes.Add(item, new ClassificationInfo(new ClassificationType(item), true));
+                classificationTypes.Add(item, new ClassificationInfo(new ClassificationType(item), true, true));
             }
 
             return language == ProgrammingLanguage.VisualBasic

@@ -86,19 +86,19 @@ namespace CoCo.Analyser.CSharp
 
                     case SymbolKind.Field:
                         var fieldSymbol = symbol as IFieldSymbol;
-                        var fieldClassification =
+                        var fieldType =
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
                             fieldSymbol.IsConst ? _constantFieldType :
                             _fieldType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldClassification);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldType, node);
                         break;
 
                     case SymbolKind.Property:
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _propertyType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _propertyType, node);
                         break;
 
                     case SymbolKind.Event:
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType, node);
                         break;
 
                     case SymbolKind.Local:
@@ -107,15 +107,11 @@ namespace CoCo.Analyser.CSharp
 
                     case SymbolKind.Namespace:
                         var namesapceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namesapceType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namesapceType, node);
                         break;
 
                     case SymbolKind.Parameter:
-                        // NOTE: Skip argument in summaries
-                        if (node.Parent.Kind() != SyntaxKind.XmlNameAttribute)
-                        {
-                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType);
-                        }
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType, node);
                         break;
 
                     case SymbolKind.Method:
@@ -126,7 +122,7 @@ namespace CoCo.Analyser.CSharp
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType, node);
                         break;
 
                     default:
@@ -137,6 +133,21 @@ namespace CoCo.Analyser.CSharp
             }
 
             return spans;
+        }
+
+        private void AppendClassificationSpan(
+           List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
+        {
+            var info = options[type];
+            if (info.IsClassified && node is null)
+            {
+                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
+            else if (info.IsClassified &&
+                (info.ClassifyInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment()))
+            {
+                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
         }
 
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)

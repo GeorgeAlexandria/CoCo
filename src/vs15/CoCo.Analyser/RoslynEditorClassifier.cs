@@ -73,15 +73,6 @@ namespace CoCo.Analyser
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
 
-        protected void AppendClassificationSpan(
-           List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type)
-        {
-            if (options[type].IsClassified)
-            {
-                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
-            }
-        }
-
         private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
         {
             foreach (var classification in classifications)

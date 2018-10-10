@@ -10,6 +10,23 @@ namespace CoCo.Analyser.CSharp
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
            node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression : node;
 
+        public static bool IsDescendantXmlDocComment(this SyntaxNode node)
+        {
+            bool IsXmlKind(SyntaxKind kind) => kind == SyntaxKind.XmlNameAttribute || kind == SyntaxKind.XmlCrefAttribute;
+
+            var current = node;
+            while (
+                !(current.Parent is null) &&
+                !IsXmlKind(current.Parent.Kind()) &&
+                !(current.Parent is DirectiveTriviaSyntax) &&
+                !(current.Parent is SkippedTokensTriviaSyntax))
+            {
+                current = current.Parent;
+            }
+
+            return !(current.Parent is null || current.Parent is DirectiveTriviaSyntax || current.Parent is SkippedTokensTriviaSyntax);
+        }
+
         public static bool IsAliasNamespace(this SyntaxNode node, ISymbol symbol, SemanticModel semanticModel)
         {
             if (!(node is IdentifierNameSyntax identifierName))
