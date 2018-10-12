@@ -32,6 +32,7 @@
   <ItemGroup>
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationsChangedEventArgs.cs" Link="ClassificationsChangedEventArgs.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationService.cs" Link="ClassificationService.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\IAnalyzingService.cs" Link="IAnalyzingService.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />

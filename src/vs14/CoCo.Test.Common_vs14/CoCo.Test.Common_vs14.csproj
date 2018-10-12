@@ -35,8 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\vs15\CoCo.Test.Common\AssertionHelper.cs" Link="AssertionHelper.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\CompilationUnit.cs" Link="CompilationUnit.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\ProgrammingLanguage.cs" Link="ProgrammingLanguage.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common\TestExecutionContext.cs" Link="TestExecutionContext.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationComparer.cs" Link="ClassificationComparer.cs" />
     <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationHelper.cs" Link="ClassificationHelper.cs" />

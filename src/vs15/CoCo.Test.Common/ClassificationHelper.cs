@@ -30,7 +30,8 @@ namespace CoCo.Test.Common
             return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
         }
 
-        public static List<SimplifiedClassificationSpan> GetClassifications(string path, Project project)
+        public static List<SimplifiedClassificationSpan> GetClassifications(
+            string path, Project project, IReadOnlyList<SimplifiedClassificationInfo> infos = null)
         {
             using (var logger = LogManager.GetLogger("Test execution"))
             {
@@ -73,20 +74,30 @@ namespace CoCo.Test.Common
                     var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
-                    var classifier = GetClassifier(language);
+                    var classifier = GetClassifier(language, infos);
                     actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
         }
 
-        private static RoslynEditorClassifier GetClassifier(ProgrammingLanguage language)
+        private static RoslynEditorClassifier GetClassifier(
+            ProgrammingLanguage language, IReadOnlyList<SimplifiedClassificationInfo> infos)
         {
+            var dictionary = infos is null ? null : infos.ToDictionary(x => x.Name);
             var classificationTypes = new Dictionary<string, ClassificationInfo>(32);
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
-            foreach (var item in names)
+            foreach (var name in names)
             {
-                classificationTypes.Add(item, new ClassificationInfo(new ClassificationType(item), true, true));
+                if (dictionary is null || !dictionary.TryGetValue(name, out var info))
+                {
+                    classificationTypes.Add(name, ClassificationService.GetDefaultInfo(new ClassificationType(name)));
+                }
+                else
+                {
+                    classificationTypes.Add(
+                        name, new ClassificationInfo(new ClassificationType(name), !info.IsDisabled, !info.IsDisabledInXml));
+                }
             }
 
             return language == ProgrammingLanguage.VisualBasic
