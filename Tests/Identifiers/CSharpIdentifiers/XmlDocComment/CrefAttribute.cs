@@ -1,6 +1,6 @@
-﻿namespace CSharpIdentifiers.InsideXml
+﻿namespace CSharpIdentifiers.XmlDocComment
 {
-    internal class SimpleExample
+    internal class CrefAttribute
     {
         /// <summary>
         /// <see cref=" Method"/>

@@ -105,12 +105,14 @@ namespace CoCo.Test.Common
         public static void AssertNotContains(
             this IEnumerable<SimplifiedClassificationSpan> actualSpans, params SimplifiedClassificationSpan[] expectedSpans)
         {
-            var actualtSet = new HashSet<Span>();
+            var actualSet = new HashSet<Span>();
+            if (actualSet.Count == 0) return;
+
             using (var logger = LogManager.GetLogger("Test execution"))
             {
                 foreach (var item in actualSpans)
                 {
-                    if (!actualtSet.Add(item.Span))
+                    if (!actualSet.Add(item.Span))
                     {
                         logger.Warn($"Input collection has the same item {item.Span}");
                     }
@@ -119,9 +121,9 @@ namespace CoCo.Test.Common
             var expectedList = expectedSpans.ToList();
 
             int i = 0;
-            while (i < expectedList.Count && actualtSet.Count > 0)
+            while (i < expectedList.Count && actualSet.Count > 0)
             {
-                if (!actualtSet.Remove(expectedList[i].Span))
+                if (!actualSet.Remove(expectedList[i].Span))
                 {
                     expectedList.RemoveAt(i);
                     continue;

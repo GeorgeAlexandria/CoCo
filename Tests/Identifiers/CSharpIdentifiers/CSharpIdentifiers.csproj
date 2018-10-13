@@ -111,10 +111,19 @@
     <Compile Include="Declarations\Parameters\Variable.cs" />
     <Compile Include="Declarations\Parameters\Optional.cs" />
     <Compile Include="Declarations\Parameters\SimpleParameter.cs" />
-    <Compile Include="XmlDocComment\SimpleExample.cs" />
+    <Compile Include="XmlDocComment\TypeParam.cs" />
+    <Compile Include="XmlDocComment\TypeParamRef.cs" />
+    <Compile Include="XmlDocComment\CrefAttribute.cs" />
     <Compile Include="SimpleExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Declarations\Namespaces\TypeAlias.cs" />
+    <Compile Include="XmlDocComment\Exception.cs" />
+    <Compile Include="XmlDocComment\NameAttribute.cs" />
+    <Compile Include="XmlDocComment\Param.cs" />
+    <Compile Include="XmlDocComment\ParamRef.cs" />
+    <Compile Include="XmlDocComment\Permission.cs" />
+    <Compile Include="XmlDocComment\See.cs" />
+    <Compile Include="XmlDocComment\SeeAlso.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

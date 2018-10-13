@@ -1,4 +1,4 @@
-﻿Public Class SimpleExample
+﻿Public Class CrefAttribute
 
   ''' <summary>
   ''' <see cref="Create"/>
