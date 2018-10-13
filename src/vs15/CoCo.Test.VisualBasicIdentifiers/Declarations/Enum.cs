@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void EnumTest()
         {
-            GetClassifications(@"Declarations\EnumDeclaration.vb").AssertIsEquivalent(
+            GetContext(@"Declarations\EnumDeclaration.vb").GetClassifications().AssertIsEquivalent(
                 VisualBasicNames.EnumFieldName.ClassifyAt(22, 4),
                 VisualBasicNames.EnumFieldName.ClassifyAt(30, 5),
                 VisualBasicNames.EnumFieldName.ClassifyAt(39, 6),

@@ -1,5 +1,4 @@
-﻿using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -10,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void EnumTest()
         {
-            GetClassifications(@"Access\EnumField.cs").AssertContains(
+            GetContext(@"Access\EnumField.cs").GetClassifications().AssertContains(
                 CSharpNames.EnumFieldName.ClassifyAt(152, 9),
                 CSharpNames.EnumFieldName.ClassifyAt(209, 3));
         }

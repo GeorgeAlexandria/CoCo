@@ -9,48 +9,48 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void MethodTest_Sub()
         {
-            GetClassifications(@"Declarations\Methods\SubMethod.vb")
-                .AssertIsEquivalent(VisualBasicNames.SubName.ClassifyAt(39, 6));
+            GetContext(@"Declarations\Methods\SubMethod.vb").GetClassifications().AssertIsEquivalent(
+                VisualBasicNames.SubName.ClassifyAt(39, 6));
         }
 
         [Test]
         public void MethodTest_Function()
         {
-            GetClassifications(@"Declarations\Methods\FunctionMethod.vb")
-                .AssertIsEquivalent(VisualBasicNames.FunctionName.ClassifyAt(49, 6));
+            GetContext(@"Declarations\Methods\FunctionMethod.vb").GetClassifications().AssertIsEquivalent(
+                VisualBasicNames.FunctionName.ClassifyAt(49, 6));
         }
 
         [Test]
         public void MethodTest_Extension()
         {
-            GetClassifications(@"Declarations\Methods\ExtensionMethod.vb")
-                .AssertContains(VisualBasicNames.ExtensionMethodName.ClassifyAt(104, 6));
+            GetContext(@"Declarations\Methods\ExtensionMethod.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ExtensionMethodName.ClassifyAt(104, 6));
         }
 
         [Test]
         public void MethodTest_Constructor()
         {
-            GetClassifications(@"Declarations\Methods\Constructor.vb").AssertIsEmpty();
+            GetContext(@"Declarations\Methods\Constructor.vb").GetClassifications().AssertIsEmpty();
         }
 
         [Test]
         public void MethodTest_SharedConstructor()
         {
-            GetClassifications(@"Declarations\Methods\SharedConstructor.vb").AssertIsEmpty();
+            GetContext(@"Declarations\Methods\SharedConstructor.vb").GetClassifications().AssertIsEmpty();
         }
 
         [Test]
         public void MethodTest_Shared()
         {
-            GetClassifications(@"Declarations\Methods\SharedMethod.vb")
-                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(49, 6));
+            GetContext(@"Declarations\Methods\SharedMethod.vb").GetClassifications().AssertContains(
+                VisualBasicNames.SharedMethodName.ClassifyAt(49, 6));
         }
 
         [Test]
         public void MethodTest_ModuleMethod()
         {
-            GetClassifications(@"Declarations\Methods\ModuleMethod.vb")
-                .AssertContains(VisualBasicNames.SharedMethodName.ClassifyAt(43, 6));
+            GetContext(@"Declarations\Methods\ModuleMethod.vb").GetClassifications().AssertContains(
+                VisualBasicNames.SharedMethodName.ClassifyAt(43, 6));
         }
     }
 }

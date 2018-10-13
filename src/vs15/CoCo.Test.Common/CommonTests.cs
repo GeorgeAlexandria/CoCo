@@ -15,9 +15,6 @@ namespace CoCo.Test.Common
             return MsBuild.MsBuild.GetProject(projectPath);
         }
 
-        protected List<SimplifiedClassificationSpan> GetClassifications(string path) =>
-            ClassificationHelper.GetClassifications(path, ProjectInfo);
-
         protected TestExecutionContext GetContext(string path) => new TestExecutionContext(path, ProjectInfo);
     }
 }

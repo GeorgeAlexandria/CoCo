@@ -9,28 +9,28 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void ParameterTest_Simple()
         {
-            GetClassifications(@"Declarations\Parameters\SimpleParameter.vb")
-                .AssertContains(VisualBasicNames.ParameterName.ClassifyAt(52, 3));
+            GetContext(@"Declarations\Parameters\SimpleParameter.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ParameterName.ClassifyAt(52, 3));
         }
 
         [Test]
         public void ParameterTest_Optional()
         {
-            GetClassifications(@"Declarations\Parameters\OptionalParameter.vb")
-                .AssertContains(VisualBasicNames.ParameterName.ClassifyAt(63, 3));
+            GetContext(@"Declarations\Parameters\OptionalParameter.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ParameterName.ClassifyAt(63, 3));
         }
 
         [Test]
         public void ParameterTest_TypeCharacter()
         {
-            GetClassifications(@"Declarations\Parameters\TypeCharacter.vb")
-                .AssertContains(VisualBasicNames.ParameterName.ClassifyAt(50, 4));
+            GetContext(@"Declarations\Parameters\TypeCharacter.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ParameterName.ClassifyAt(50, 4));
         }
 
         [Test]
         public void ParameterTest_Variable()
         {
-            GetClassifications(@"Declarations\Parameters\Variable.vb").AssertContains(
+            GetContext(@"Declarations\Parameters\Variable.vb").GetClassifications().AssertContains(
                 VisualBasicNames.ParameterName.ClassifyAt(56, 3),
                 VisualBasicNames.ParameterName.ClassifyAt(121, 3));
         }
@@ -38,7 +38,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void ParameterTest_ByValRef()
         {
-            GetClassifications(@"Declarations\Parameters\ByValRef.vb").AssertContains(
+            GetContext(@"Declarations\Parameters\ByValRef.vb").GetClassifications().AssertContains(
                 VisualBasicNames.ParameterName.ClassifyAt(51, 4),
                 VisualBasicNames.ParameterName.ClassifyAt(63, 5));
         }
@@ -46,7 +46,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void ParameterTest_Delegate()
         {
-            GetClassifications(@"Declarations\Parameters\DelegateParameter.vb").AssertContains(
+            GetContext(@"Declarations\Parameters\DelegateParameter.vb").GetClassifications().AssertContains(
                 VisualBasicNames.ParameterName.ClassifyAt(79, 3),
                 VisualBasicNames.ParameterName.ClassifyAt(109, 3),
                 VisualBasicNames.ParameterName.ClassifyAt(172, 3),

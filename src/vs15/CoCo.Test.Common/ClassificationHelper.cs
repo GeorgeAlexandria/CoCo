@@ -21,14 +21,17 @@ namespace CoCo.Test.Common
     {
         private static readonly List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
 
-        public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
-        {
-            if (!CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name))
-            {
-                throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
-            }
-            return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
-        }
+        public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
+
+        public static SimplifiedClassificationInfo Disable(this string name) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationInfo { Name = name, IsDisabled = true };
+
+        public static SimplifiedClassificationInfo DisableInXml(this string name) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationInfo { Name = name, IsDisabledInXml = true };
 
         public static List<SimplifiedClassificationSpan> GetClassifications(
             string path, Project project, IReadOnlyList<SimplifiedClassificationInfo> infos = null)
@@ -168,5 +171,8 @@ namespace CoCo.Test.Common
                 };
             }
         }
+
+        private static bool IsUnknownClassification(string name) =>
+            !CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name);
     }
 }

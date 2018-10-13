@@ -9,14 +9,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Out()
         {
-            GetClassifications(@"Access\Locals\OutVariable.cs")
-                .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(306, 8));
+            GetContext(@"Access\Locals\OutVariable.cs").GetClassifications().AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(306, 8));
         }
 
         [Test]
         public void LocalVariableTest_ValueTuple()
         {
-            GetClassifications(@"Access\Locals\ValueTupleVariable.cs").AssertContains(
+            GetContext(@"Access\Locals\ValueTupleVariable.cs").GetClassifications().AssertContains(
                 CSharpNames.LocalVariableName.ClassifyAt(194, 6),
                 CSharpNames.LocalVariableName.ClassifyAt(209, 6));
         }
@@ -24,7 +24,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Pattern()
         {
-            GetClassifications(@"Access\Locals\PatternVariable.cs").AssertContains(
+            GetContext(@"Access\Locals\PatternVariable.cs").GetClassifications().AssertContains(
                 CSharpNames.LocalVariableName.ClassifyAt(188, 4),
                 CSharpNames.LocalVariableName.ClassifyAt(196, 4));
         }
@@ -32,8 +32,8 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void LocalVariableTest_Dynamic()
         {
-            GetClassifications(@"Access\Locals\DynamicVariable.cs")
-                .AssertContains(CSharpNames.LocalVariableName.ClassifyAt(195, 4));
+            GetContext(@"Access\Locals\DynamicVariable.cs").GetClassifications().AssertContains(
+                CSharpNames.LocalVariableName.ClassifyAt(195, 4));
         }
     }
 }

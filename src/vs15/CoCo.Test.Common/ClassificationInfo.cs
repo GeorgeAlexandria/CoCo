@@ -2,15 +2,6 @@
 
 namespace CoCo.Test.Common
 {
-    public static class SimplifiedClassificationInfoExtensions
-    {
-        public static SimplifiedClassificationInfo Disable(this string name) =>
-            new SimplifiedClassificationInfo { Name = name, IsDisabled = true };
-
-        public static SimplifiedClassificationInfo DisableInXml(this string name) =>
-            new SimplifiedClassificationInfo { Name = name, IsDisabledInXml = true };
-    }
-
     public struct SimplifiedClassificationInfo
     {
         public string Name;

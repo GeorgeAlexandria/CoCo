@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void LocalVariableTest()
         {
-            GetClassifications(@"Declarations\Locals\SimpleVariable.vb").AssertContains(
+            GetContext(@"Declarations\Locals\SimpleVariable.vb").GetClassifications().AssertContains(
                 VisualBasicNames.LocalVariableName.ClassifyAt(62, 3),
                 VisualBasicNames.LocalVariableName.ClassifyAt(79, 5),
                 VisualBasicNames.LocalVariableName.ClassifyAt(108, 9));
@@ -18,28 +18,28 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void LocalVariableTest_Catch()
         {
-            GetClassifications(@"Declarations\Locals\CatchVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(72, 2));
+            GetContext(@"Declarations\Locals\CatchVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(72, 2));
         }
 
         [Test]
         public void LocalVariableTest_Foreach()
         {
-            GetClassifications(@"Declarations\Locals\ForeachVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(70, 3));
+            GetContext(@"Declarations\Locals\ForeachVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(70, 3));
         }
 
         [Test]
         public void LocalVariableTest_For()
         {
-            GetClassifications(@"Declarations\Locals\ForVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(61, 5));
+            GetContext(@"Declarations\Locals\ForVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(61, 5));
         }
 
         [Test]
         public void LocalVariableTest_Range()
         {
-            GetClassifications(@"Declarations\Locals\RangeVariable.vb").AssertContains(
+            GetContext(@"Declarations\Locals\RangeVariable.vb").GetClassifications().AssertContains(
                 VisualBasicNames.RangeVariableName.ClassifyAt(74, 4),
                 VisualBasicNames.RangeVariableName.ClassifyAt(108, 5),
                 VisualBasicNames.RangeVariableName.ClassifyAt(116, 4),
@@ -49,28 +49,28 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void LocalVariableTest_Using()
         {
-            GetClassifications(@"Declarations\Locals\UsingVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(65, 8));
+            GetContext(@"Declarations\Locals\UsingVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(65, 8));
         }
 
         [Test]
         public void LocalVariableTest_With()
         {
-            GetClassifications(@"Declarations\Locals\WithVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(61, 9));
+            GetContext(@"Declarations\Locals\WithVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(61, 9));
         }
 
         [Test]
         public void LocalVariableTest_Function()
         {
-            GetClassifications(@"Declarations\Locals\FunctionVariable.vb")
-                .AssertContains(VisualBasicNames.FunctionVariableName.ClassifyAt(76, 6));
+            GetContext(@"Declarations\Locals\FunctionVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.FunctionVariableName.ClassifyAt(76, 6));
         }
 
         [Test]
         public void LocalVariableTest_Static()
         {
-            GetClassifications(@"Declarations\Locals\StaticVariable.vb").AssertContains(
+            GetContext(@"Declarations\Locals\StaticVariable.vb").GetClassifications().AssertContains(
                 VisualBasicNames.StaticLocalVariableName.ClassifyAt(65, 8),
                 VisualBasicNames.StaticLocalVariableName.ClassifyAt(75, 8));
         }

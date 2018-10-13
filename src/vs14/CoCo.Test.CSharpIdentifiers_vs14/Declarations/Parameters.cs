@@ -9,29 +9,28 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void ParameterTest()
         {
-            GetClassifications(@"Declarations\Parameters\SimpleParameter.cs")
-                .AssertContains(CSharpNames.ParameterName.ClassifyAt(133, 4));
+            GetContext(@"Declarations\Parameters\SimpleParameter.cs").GetClassifications().AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(133, 4));
         }
 
         [Test]
         public void ParameterTest_Optional()
         {
-            GetClassifications(@"Declarations\Parameters\Optional.cs")
-                .AssertContains(CSharpNames.ParameterName.ClassifyAt(126, 4));
+            GetContext(@"Declarations\Parameters\Optional.cs").GetClassifications().AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(126, 4));
         }
 
         [Test]
         public void ParameterTest_Variable()
         {
-            GetClassifications(@"Declarations\Parameters\Variable.cs")
-                .AssertContains(CSharpNames.ParameterName.ClassifyAt(135, 5));
+            GetContext(@"Declarations\Parameters\Variable.cs").GetClassifications().AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(135, 5));
         }
 
         [Test]
         public void ParameterTest_RefOutIn()
         {
-            GetClassifications(@"Declarations\Parameters\RefOutIn.cs")
-                .AssertContains(
+            GetContext(@"Declarations\Parameters\RefOutIn.cs").GetClassifications().AssertContains(
                     CSharpNames.ParameterName.ClassifyAt(130, 4),
                     CSharpNames.ParameterName.ClassifyAt(147, 4),
                     CSharpNames.ParameterName.ClassifyAt(160, 4));
@@ -41,15 +40,15 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void ParameterTest_LambdaParameter()
         {
-            GetClassifications(@"Declarations\Parameters\LambdaParameter.cs")
-                .AssertContains(CSharpNames.ParameterName.ClassifyAt(160, 5));
+            GetContext(@"Declarations\Parameters\LambdaParameter.cs").GetClassifications().AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(160, 5));
         }
 
         [Test]
         public void ParameterTest_DelegateParameter()
         {
-            GetClassifications(@"Declarations\Parameters\DelegateParameter.cs")
-                .AssertContains(CSharpNames.ParameterName.ClassifyAt(175, 5));
+            GetContext(@"Declarations\Parameters\DelegateParameter.cs").GetClassifications().AssertContains(
+                CSharpNames.ParameterName.ClassifyAt(175, 5));
         }
     }
 }

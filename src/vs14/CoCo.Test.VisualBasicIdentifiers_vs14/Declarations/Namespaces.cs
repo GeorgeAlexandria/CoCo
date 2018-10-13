@@ -9,14 +9,14 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest()
         {
-            GetClassifications(@"Declarations\Namespaces\Simple.vb")
-                .AssertIsEquivalent(VisualBasicNames.NamespaceName.ClassifyAt(10, 8));
+            GetContext(@"Declarations\Namespaces\Simple.vb").GetClassifications().AssertIsEquivalent(
+                VisualBasicNames.NamespaceName.ClassifyAt(10, 8));
         }
 
         [Test]
         public void NamespaceTest_Import()
         {
-            GetClassifications(@"Declarations\Namespaces\SimpleImport.vb").AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\SimpleImport.vb").GetClassifications().AssertIsEquivalent(
                 VisualBasicNames.NamespaceName.ClassifyAt(89, 6),
                 VisualBasicNames.NamespaceName.ClassifyAt(105, 6),
                 VisualBasicNames.NamespaceName.ClassifyAt(112, 11),
@@ -26,14 +26,14 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest_StaticType()
         {
-            GetClassifications(@"Declarations\Namespaces\StaticType.vb")
-                .AssertIsEquivalent(VisualBasicNames.NamespaceName.ClassifyAt(8, 6));
+            GetContext(@"Declarations\Namespaces\StaticType.vb").GetClassifications().AssertIsEquivalent(
+                VisualBasicNames.NamespaceName.ClassifyAt(8, 6));
         }
 
         [Test]
         public void NamespaceTest_Alias()
         {
-            GetClassifications(@"Declarations\Namespaces\Alias.vb").AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\Alias.vb").GetClassifications().AssertIsEquivalent(
                 VisualBasicNames.AliasNamespaceName.ClassifyAt(8, 2),
                 VisualBasicNames.NamespaceName.ClassifyAt(13, 6),
                 VisualBasicNames.NamespaceName.ClassifyAt(20, 2));
@@ -42,14 +42,14 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest_TypeAlias()
         {
-            GetClassifications(@"Declarations\Namespaces\TypeAlias.vb")
-                .AssertIsEquivalent(VisualBasicNames.NamespaceName.ClassifyAt(13, 6));
+            GetContext(@"Declarations\Namespaces\TypeAlias.vb").GetClassifications().AssertIsEquivalent(
+                VisualBasicNames.NamespaceName.ClassifyAt(13, 6));
         }
 
         [Test]
         public void NamespaceTest_CustomAlias()
         {
-            GetClassifications(@"Declarations\Namespaces\CustomAlias.vb").AssertContains(
+            GetContext(@"Declarations\Namespaces\CustomAlias.vb").GetClassifications().AssertContains(
                 VisualBasicNames.AliasNamespaceName.ClassifyAt(89, 4),
                 VisualBasicNames.AliasNamespaceName.ClassifyAt(183, 6));
         }

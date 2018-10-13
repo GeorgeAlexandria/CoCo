@@ -1,5 +1,4 @@
-﻿using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -10,16 +9,15 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest_Extension()
         {
-            GetClassifications(@"Access\Methods\ExtensionMethod.cs")
-                .AssertContains(
-                    CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
-                    CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
+            GetContext(@"Access\Methods\ExtensionMethod.cs").GetClassifications().AssertContains(
+                CSharpNames.ExtensionMethodName.ClassifyAt(297, 5),
+                CSharpNames.ExtensionMethodName.ClassifyAt(315, 6));
         }
 
         [Test]
         public void MethodTest_Local()
         {
-            GetClassifications(@"Access\Methods\LocalMethod.cs").AssertContains(
+            GetContext(@"Access\Methods\LocalMethod.cs").GetClassifications().AssertContains(
                 CSharpNames.LocalMethodName.ClassifyAt(226, 10),
                 CSharpNames.LocalMethodName.ClassifyAt(274, 10));
         }
@@ -27,15 +25,15 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MethodTest()
         {
-            GetClassifications(@"Access\Methods\Method.cs")
-                .AssertContains(CSharpNames.MethodName.ClassifyAt(146, 9));
+            GetContext(@"Access\Methods\Method.cs").GetClassifications().AssertContains(
+                CSharpNames.MethodName.ClassifyAt(146, 9));
         }
 
         [Test]
         public void MethodTest_Static()
         {
-            GetClassifications(@"Access\Methods\StaticMethod.cs")
-                .AssertContains(CSharpNames.StaticMethodName.ClassifyAt(165, 9));
+            GetContext(@"Access\Methods\StaticMethod.cs").GetClassifications().AssertContains(
+                CSharpNames.StaticMethodName.ClassifyAt(165, 9));
         }
     }
 }

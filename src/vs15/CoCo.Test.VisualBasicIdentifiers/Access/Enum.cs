@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void EnumTest()
         {
-            GetClassifications(@"Access\EnumAccess.vb").AssertContains(
+            GetContext(@"Access\EnumAccess.vb").GetClassifications().AssertContains(
                 VisualBasicNames.EnumFieldName.ClassifyAt(77, 9),
                 VisualBasicNames.EnumFieldName.ClassifyAt(116, 3));
         }

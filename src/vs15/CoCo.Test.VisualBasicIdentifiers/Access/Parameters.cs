@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void ParameterTest_ByBalRef()
         {
-            GetClassifications(@"Access\Parameters\ByValRef.vb").AssertContains(
+            GetContext(@"Access\Parameters\ByValRef.vb").GetClassifications().AssertContains(
                 VisualBasicNames.ParameterName.ClassifyAt(120, 4),
                 VisualBasicNames.ParameterName.ClassifyAt(127, 4));
         }
@@ -17,7 +17,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void ParameterTest_Function()
         {
-            GetClassifications(@"Access\Parameters\DelegateParameter.vb").AssertContains(
+            GetContext(@"Access\Parameters\DelegateParameter.vb").GetClassifications().AssertContains(
                 VisualBasicNames.ParameterName.ClassifyAt(147, 3),
                 VisualBasicNames.ParameterName.ClassifyAt(201, 3),
                 VisualBasicNames.ParameterName.ClassifyAt(207, 3));
@@ -26,15 +26,15 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void ParameterTest_Optional()
         {
-            GetClassifications(@"Access\Parameters\OptionalParameter.vb")
-                .AssertContains(VisualBasicNames.ParameterName.ClassifyAt(142, 3));
+            GetContext(@"Access\Parameters\OptionalParameter.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ParameterName.ClassifyAt(142, 3));
         }
 
         [Test]
         public void ParameterTest_Variable()
         {
-            GetClassifications(@"Access\Parameters\Variable.vb")
-                .AssertContains(VisualBasicNames.ParameterName.ClassifyAt(131, 3));
+            GetContext(@"Access\Parameters\Variable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.ParameterName.ClassifyAt(131, 3));
         }
     }
 }
