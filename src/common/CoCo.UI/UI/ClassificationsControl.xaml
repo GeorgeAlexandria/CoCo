@@ -97,7 +97,7 @@
                </GroupBox.HeaderTemplate>
                <WrapPanel
                   Width="Auto"
-                  MinHeight="40"
+                  MinHeight="50"
                   MaxWidth="270"
                   Margin="5,0,0,0"
                   HorizontalAlignment="Left"
@@ -106,10 +106,15 @@
                      Content="Disable classification"
                      IsChecked="{Binding IsClassified, Converter={converters:NegateConverter}}"
                      Style="{StaticResource checkBoxFlatStyle}" />
-                  <CheckBox
-                     Content="Classify in xml doc comments"
-                     IsChecked="{Binding ClassifyInXml}"
-                     Style="{StaticResource checkBoxFlatStyle}" />
+                  <CheckBox IsChecked="{Binding ClassifyInXml, Converter={converters:NegateConverter}}" Style="{StaticResource checkBoxFlatStyle}">
+                     <TextBlock
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        LineHeight="13"
+                        LineStackingStrategy="BlockLineHeight"
+                        Text="Disable classification inside xml doc comment"
+                        TextWrapping="Wrap" />
+                  </CheckBox>
                </WrapPanel>
             </GroupBox>
             <GroupBox
