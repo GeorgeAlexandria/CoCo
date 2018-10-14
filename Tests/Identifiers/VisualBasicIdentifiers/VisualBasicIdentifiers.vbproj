@@ -89,6 +89,11 @@
     <Compile Include="Access\Parameters\DelegateParameter.vb" />
     <Compile Include="Access\Parameters\OptionalParameter.vb" />
     <Compile Include="Access\Parameters\Variable.vb" />
+    <Compile Include="AnalyzeOptions\LocalVariable.vb" />
+    <Compile Include="AnalyzeOptions\Member.vb" />
+    <Compile Include="AnalyzeOptions\Method.vb" />
+    <Compile Include="AnalyzeOptions\Namespace.vb" />
+    <Compile Include="AnalyzeOptions\ParameterOption.vb" />
     <Compile Include="Constructions\If.vb" />
     <Compile Include="Constructions\Nameof.vb" />
     <Compile Include="Constructions\Throw.vb" />

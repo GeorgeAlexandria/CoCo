@@ -10,7 +10,9 @@ namespace CoCo.Analyser.VisualBasic
     {
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
             node.IsKind(SyntaxKind.SimpleArgument) ? (node as SimpleArgumentSyntax).GetExpression() :
-            node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name : node;
+            node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name :
+            node.IsKind(SyntaxKind.CrefReference) ? (node as CrefReferenceSyntax).Name :
+            node;
 
         public static bool IsDescendantXmlDocComment(this SyntaxNode node)
         {

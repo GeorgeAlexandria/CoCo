@@ -36,7 +36,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void MethodTest_SharedConstructor()
         {
-            GetContext(@"Declarations\Methods\SharedConstructor.vb").GetClassifications().AssertIsEmpty();
+            GetContext(@"Declarations\Methods\StaticConstructor.vb").GetClassifications().AssertIsEmpty();
         }
 
         [Test]

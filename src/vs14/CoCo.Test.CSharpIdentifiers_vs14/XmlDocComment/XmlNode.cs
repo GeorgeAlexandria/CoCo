@@ -11,7 +11,7 @@ namespace CoCo.Test.CSharpIdentifiers.XmlDocComment
         public void XmlNodeTest_CrefAttribute()
         {
             GetContext(@"XmlDocComment\CrefAttribute.cs").GetClassifications().AssertContains(
-                CSharpNames.MethodName.ClassifyAt(134, 6));
+                CSharpNames.MethodName.ClassifyAt(133, 6));
         }
 
         [Test]

@@ -3,7 +3,7 @@
     internal class CrefAttribute
     {
         /// <summary>
-        /// <see cref=" Method"/>
+        /// <see cref="Method"/>
         /// </summary>
         public void Method() { }
     }

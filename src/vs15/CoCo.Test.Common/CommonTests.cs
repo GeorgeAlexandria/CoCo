@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using CoCo.MsBuild;
+﻿using CoCo.MsBuild;
 using NUnit.Framework;
 
 namespace CoCo.Test.Common

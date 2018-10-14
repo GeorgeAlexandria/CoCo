@@ -48,6 +48,12 @@
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
     <Compile Include="Access\Namespaces\CustomNamespaces.cs" />
+    <Compile Include="AnalyzeOptions\AliasNamespace.cs" />
+    <Compile Include="AnalyzeOptions\LocalVariable.cs" />
+    <Compile Include="AnalyzeOptions\Member.cs" />
+    <Compile Include="AnalyzeOptions\Method.cs" />
+    <Compile Include="AnalyzeOptions\Namespace.cs" />
+    <Compile Include="AnalyzeOptions\Parameter.cs" />
     <Compile Include="Constructions\CatchVariable.cs" />
     <Compile Include="Constructions\Return.cs" />
     <Compile Include="Constructions\Throw.cs" />
