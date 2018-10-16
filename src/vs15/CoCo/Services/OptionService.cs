@@ -8,7 +8,7 @@ using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo
+namespace CoCo.Services
 {
     public static class OptionService
     {

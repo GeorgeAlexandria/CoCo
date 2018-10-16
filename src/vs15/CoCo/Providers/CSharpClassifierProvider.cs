@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
+using CoCo.Services;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 
-namespace CoCo
+namespace CoCo.Providers
 {
     /// <summary>
     /// Classifier provider which adds <see cref="CSharpClassifier"/> to the set of classifiers.

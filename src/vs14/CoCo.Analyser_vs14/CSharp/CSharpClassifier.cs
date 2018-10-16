@@ -57,7 +57,6 @@ namespace CoCo.Analyser.CSharp
             {
                 if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
-                /// NOTE: Some kind of nodes, for example <see cref="ArgumentSyntax"/>, should are handled with a specific way
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
                 {

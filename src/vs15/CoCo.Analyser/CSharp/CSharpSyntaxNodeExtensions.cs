@@ -7,6 +7,10 @@ namespace CoCo.Analyser.CSharp
 {
     public static class CSharpSyntaxNodeExtensions
     {
+        /// <summary>
+        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it, 
+        /// else returns <paramref name="node"/>
+        /// </summary>
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
             node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression :
             node.IsKind(SyntaxKind.NameMemberCref) ? (node as NameMemberCrefSyntax).Name :

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using CoCo.Analyser;
+using CoCo.Providers;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;

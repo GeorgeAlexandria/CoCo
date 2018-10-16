@@ -2,7 +2,7 @@
 
 namespace CoCo.Analyser
 {
-    internal class ClassificationService
+    internal static class ClassificationService
     {
         public static ClassificationInfo GetDefaultInfo(IClassificationType type) => new ClassificationInfo(type, true, true);
     }

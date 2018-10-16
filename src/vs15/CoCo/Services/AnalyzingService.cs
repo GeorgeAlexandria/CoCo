@@ -3,7 +3,7 @@ using CoCo.Analyser;
 using CoCo.UI.Data;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo
+namespace CoCo.Services
 {
     public sealed class AnalyzingService : IAnalyzingService
     {

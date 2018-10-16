@@ -8,6 +8,10 @@ namespace CoCo.Analyser.VisualBasic
 {
     internal static class VisualBasicSyntaxNodeExtensions
     {
+        /// <summary>
+        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it,
+        /// else returns <paramref name="node"/>
+        /// </summary>
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
             node.IsKind(SyntaxKind.SimpleArgument) ? (node as SimpleArgumentSyntax).GetExpression() :
             node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name :
