@@ -12,8 +12,8 @@ namespace CoCo.Test.Common
         {
             Name = name;
             var info = ClassificationService.GetDefaultInfo(new ClassificationType(name));
-            IsDisabled = !info.IsClassified;
-            IsDisabledInXml = !info.ClassifyInXml;
+            IsDisabled = !info.IsDisabled;
+            IsDisabledInXml = !info.IsDisabledInXml;
         }
 
         public SimplifiedClassificationInfo Disable() => new SimplifiedClassificationInfo

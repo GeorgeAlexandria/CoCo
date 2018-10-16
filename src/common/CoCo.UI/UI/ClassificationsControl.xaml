@@ -104,9 +104,9 @@
                   DataContext="{Binding ElementName=listView, Path=SelectedItem}">
                   <CheckBox
                      Content="Disable classification"
-                     IsChecked="{Binding IsClassified, Converter={converters:NegateConverter}}"
+                     IsChecked="{Binding IsDisabled}"
                      Style="{StaticResource checkBoxFlatStyle}" />
-                  <CheckBox IsChecked="{Binding ClassifyInXml, Converter={converters:NegateConverter}}" Style="{StaticResource checkBoxFlatStyle}">
+                  <CheckBox IsChecked="{Binding IsDisabledInXml}" Style="{StaticResource checkBoxFlatStyle}">
                      <TextBlock
                         VerticalAlignment="Bottom"
                         Background="Transparent"

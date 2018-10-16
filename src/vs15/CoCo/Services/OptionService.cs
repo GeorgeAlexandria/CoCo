@@ -213,8 +213,8 @@ namespace CoCo.Services
             classification.IsBaseline = classificationSettings.IsBaseline ??
                 defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
 
-            classification.IsClassified = classificationSettings.IsClassified ?? true;
-            classification.ClassifyInXml = classificationSettings.ClassifyInXml ?? true;
+            classification.IsDisabled = classificationSettings.IsDisabled ?? false;
+            classification.IsDisabledInXml = classificationSettings.IsDisabledInXml ?? false;
 
             return classification;
         }
@@ -256,8 +256,8 @@ namespace CoCo.Services
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,
                 IsBaseline = classification.IsBaseline,
-                IsClassified = classification.IsClassified,
-                ClassifyInXml = classification.ClassifyInXml,
+                IsDisabled = classification.IsDisabled,
+                IsDisabledInXml = classification.IsDisabledInXml,
             };
 
             if (!classification.BackgroundWasReset)

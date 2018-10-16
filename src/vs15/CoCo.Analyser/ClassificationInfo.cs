@@ -4,17 +4,17 @@ namespace CoCo.Analyser
 {
     public struct ClassificationInfo
     {
-        public ClassificationInfo(IClassificationType classificationType, bool isClassified, bool classifyInXml)
+        public ClassificationInfo(IClassificationType classificationType, bool isDisabled, bool isDisabledInXml)
         {
             ClassificationType = classificationType;
-            IsClassified = isClassified;
-            ClassifyInXml = classifyInXml;
+            IsDisabled = isDisabled;
+            IsDisabledInXml = isDisabledInXml;
         }
 
         public IClassificationType ClassificationType { get; }
 
-        public bool IsClassified { get; }
+        public bool IsDisabled { get; }
 
-        public bool ClassifyInXml { get; }
+        public bool IsDisabledInXml { get; }
     }
 }

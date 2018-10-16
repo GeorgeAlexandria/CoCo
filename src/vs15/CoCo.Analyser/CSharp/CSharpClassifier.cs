@@ -141,12 +141,9 @@ namespace CoCo.Analyser.CSharp
             TextSpan span, IClassificationType type, SyntaxNode node = null)
         {
             var info = options[type];
-            if (info.IsClassified && node is null)
-            {
-                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
-            }
-            else if (info.IsClassified &&
-                (info.ClassifyInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment()))
+            if (info.IsDisabled) return;
+
+            if (node is null || !info.IsDisabledInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment())
             {
                 spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
             }

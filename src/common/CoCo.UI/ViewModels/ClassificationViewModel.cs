@@ -11,8 +11,8 @@ namespace CoCo.UI.ViewModels
         public ClassificationViewModel(Classification classification, IResetValuesProvider resetValuesProvider)
         {
             _classificationName = classification.Name;
-            _isClassified = classification.IsClassified;
-            _classifyInXml = classification.ClassifyInXml;
+            _isDisabled = classification.IsDisabled;
+            _isDisabledInXml = classification.IsDisabledInXml;
             _isBold = classification.IsBold;
             _isItalic = classification.IsItalic;
             _isOverline = classification.IsOverline;
@@ -43,20 +43,20 @@ namespace CoCo.UI.ViewModels
 
         public DelegateCommand ResetFontRenderingSize { get; }
 
-        private bool _isClassified;
+        private bool _isDisabled;
 
-        public bool IsClassified
+        public bool IsDisabled
         {
-            get => _isClassified;
-            set => SetProperty(ref _isClassified, value);
+            get => _isDisabled;
+            set => SetProperty(ref _isDisabled, value);
         }
 
-        private bool _classifyInXml;
+        private bool _isDisabledInXml;
 
-        public bool ClassifyInXml
+        public bool IsDisabledInXml
         {
-            get => _classifyInXml;
-            set => SetProperty(ref _classifyInXml, value);
+            get => _isDisabledInXml;
+            set => SetProperty(ref _isDisabledInXml, value);
         }
 
         private bool _isBold;
@@ -139,8 +139,8 @@ namespace CoCo.UI.ViewModels
             IsBaseline = IsBaseline,
             FontRenderingSize = _fontRenderingSize,
 
-            IsClassified = IsClassified,
-            ClassifyInXml = ClassifyInXml,
+            IsDisabled = IsDisabled,
+            IsDisabledInXml = IsDisabledInXml,
 
             ForegroundWasReset = Foreground.ColorWasReset,
             BackgroundWasReset = Background.ColorWasReset,
