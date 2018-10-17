@@ -40,6 +40,8 @@ namespace CoCo.UI.Data
 
         public bool FontRenderingSizeWasReset { get; set; }
 
-        public bool IsClassified { get; set; }
+        public bool IsDisabled { get; set; }
+
+        public bool IsDisabledInXml { get; set; }
     }
 }

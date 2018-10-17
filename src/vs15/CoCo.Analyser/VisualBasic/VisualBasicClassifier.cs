@@ -81,7 +81,7 @@ namespace CoCo.Analyser.VisualBasic
                             fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
                             fieldSymbol.IsConst ? _constantFieldType :
                             _fieldType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, fieldType, node);
                         break;
 
                     case SymbolKind.RangeVariable:
@@ -104,26 +104,26 @@ namespace CoCo.Analyser.VisualBasic
                             methodSymbol.IsShared() || methodSymbol.ContainingType?.TypeKind == TypeKind.Module ? _sharedMethodType :
                             methodSymbol.ReturnType.SpecialType == SpecialType.System_Void ? _subType :
                             _functionType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType, node);
                         break;
 
                     case SymbolKind.Parameter:
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _parameterType, node);
                         break;
 
                     case SymbolKind.Property:
                         var propertySymbol = symbol as IPropertySymbol;
                         var propertyType = propertySymbol.IsWithEvents ? _withEventsPropertyType : _propertyType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, propertyType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, propertyType, node);
                         break;
 
                     case SymbolKind.Namespace:
                         var namespaceType = node.IsAliasNamespace(symbol, semanticModel) ? _aliasNamespaceType : _namespaceType;
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namespaceType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, namespaceType, node);
                         break;
 
                     case SymbolKind.Event:
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType);
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType, node);
                         break;
 
                     default:
@@ -134,6 +134,18 @@ namespace CoCo.Analyser.VisualBasic
             }
 
             return spans;
+        }
+
+        private void AppendClassificationSpan(
+           List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
+        {
+            var info = options[type];
+            if (info.IsDisabled) return;
+
+            if (node is null || !info.IsDisabledInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment())
+            {
+                spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
         }
 
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)

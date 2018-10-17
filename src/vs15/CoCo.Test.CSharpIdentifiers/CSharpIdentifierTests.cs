@@ -9,8 +9,6 @@ namespace CoCo.Test.CSharpIdentifiers
 
         private static readonly ProjectInfo _projectInfo;
 
-        protected override string ProjectPath => _projectPath;
-
         protected override ProjectInfo ProjectInfo => _projectInfo;
 
         // NOTE: workaround to initialize project only once for all of instance a derived classes

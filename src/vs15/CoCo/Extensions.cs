@@ -21,7 +21,8 @@ namespace CoCo
                IsUnderline = formatting.TextDecorations.Contains(TextDecorations.Underline[0]),
                IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
                IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
-               IsClassified = true,
+               IsDisabled = false,
+               IsDisabledInXml = false,
            };
 
         /// <summary>

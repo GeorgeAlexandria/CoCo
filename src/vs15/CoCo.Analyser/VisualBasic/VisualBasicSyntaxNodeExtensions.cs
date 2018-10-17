@@ -8,9 +8,32 @@ namespace CoCo.Analyser.VisualBasic
 {
     internal static class VisualBasicSyntaxNodeExtensions
     {
+        /// <summary>
+        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it,
+        /// else returns <paramref name="node"/>
+        /// </summary>
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
             node.IsKind(SyntaxKind.SimpleArgument) ? (node as SimpleArgumentSyntax).GetExpression() :
-            node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name : node;
+            node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name :
+            node.IsKind(SyntaxKind.CrefReference) ? (node as CrefReferenceSyntax).Name :
+            node;
+
+        public static bool IsDescendantXmlDocComment(this SyntaxNode node)
+        {
+            bool IsXmlKind(SyntaxKind kind) => kind == SyntaxKind.XmlNameAttribute || kind == SyntaxKind.XmlCrefAttribute;
+
+            var current = node;
+            while (
+                !(current.Parent is null) &&
+                !IsXmlKind(current.Parent.Kind()) &&
+                !(current.Parent is DirectiveTriviaSyntax) &&
+                !(current.Parent is SkippedTokensTriviaSyntax))
+            {
+                current = current.Parent;
+            }
+
+            return !(current.Parent is null || current.Parent is DirectiveTriviaSyntax || current.Parent is SkippedTokensTriviaSyntax);
+        }
 
         public static bool IsAliasNamespace(this SyntaxNode node, ISymbol symbol, SemanticModel semanticModel)
         {

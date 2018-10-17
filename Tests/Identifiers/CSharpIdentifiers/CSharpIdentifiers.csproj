@@ -48,6 +48,12 @@
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
     <Compile Include="Access\Namespaces\CustomNamespaces.cs" />
+    <Compile Include="AnalyzeOptions\AliasNamespace.cs" />
+    <Compile Include="AnalyzeOptions\LocalVariable.cs" />
+    <Compile Include="AnalyzeOptions\Member.cs" />
+    <Compile Include="AnalyzeOptions\Method.cs" />
+    <Compile Include="AnalyzeOptions\Namespace.cs" />
+    <Compile Include="AnalyzeOptions\Parameter.cs" />
     <Compile Include="Constructions\CatchVariable.cs" />
     <Compile Include="Constructions\Return.cs" />
     <Compile Include="Constructions\Throw.cs" />
@@ -111,9 +117,19 @@
     <Compile Include="Declarations\Parameters\Variable.cs" />
     <Compile Include="Declarations\Parameters\Optional.cs" />
     <Compile Include="Declarations\Parameters\SimpleParameter.cs" />
+    <Compile Include="XmlDocComment\TypeParam.cs" />
+    <Compile Include="XmlDocComment\TypeParamRef.cs" />
+    <Compile Include="XmlDocComment\CrefAttribute.cs" />
     <Compile Include="SimpleExample.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Declarations\Namespaces\TypeAlias.cs" />
+    <Compile Include="XmlDocComment\Exception.cs" />
+    <Compile Include="XmlDocComment\NameAttribute.cs" />
+    <Compile Include="XmlDocComment\Param.cs" />
+    <Compile Include="XmlDocComment\ParamRef.cs" />
+    <Compile Include="XmlDocComment\Permission.cs" />
+    <Compile Include="XmlDocComment\See.cs" />
+    <Compile Include="XmlDocComment\SeeAlso.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

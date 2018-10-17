@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using CoCo.Providers;
+using CoCo.Services;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.UI.Data;
@@ -13,7 +15,7 @@ namespace CoCo
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
     [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
-    [Guid("b933474d-306e-434f-952d-a820c849ed07")]
+    [Guid(Guids.Package)]
     public sealed class VsPackage : Package
     {
         private static OptionViewModel _optionViewModel;

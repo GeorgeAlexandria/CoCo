@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         [Test]
         public void ConstrcutionTest_If()
         {
-            GetClassifications(@"Constructions\If.vb").AssertContains(
+            GetContext(@"Constructions\If.vb").GetClassifications().AssertContains(
                 VisualBasicNames.LocalVariableName.ClassifyAt(51, 8),
                 VisualBasicNames.LocalVariableName.ClassifyAt(99, 8),
                 VisualBasicNames.LocalVariableName.ClassifyAt(145, 8),
@@ -20,7 +20,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         [Test]
         public void ConstrcutionTest_Nameof()
         {
-            GetClassifications(@"Constructions\Nameof.vb").AssertContains(
+            GetContext(@"Constructions\Nameof.vb").GetClassifications().AssertContains(
                 VisualBasicNames.SubName.ClassifyAt(65, 6),
                 VisualBasicNames.LocalVariableName.ClassifyAt(99, 6));
         }
@@ -28,14 +28,14 @@ namespace CoCo.Test.VisualBasicIdentifiers
         [Test]
         public void ConstrcutionTest_Throw()
         {
-            GetClassifications(@"Constructions\Throw.vb").
-                AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(101, 8));
+            GetContext(@"Constructions\Throw.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(101, 8));
         }
 
         [Test]
         public void ConstrcutionTest_Using()
         {
-            GetClassifications(@"Constructions\Using.vb").AssertContains(
+            GetContext(@"Constructions\Using.vb").GetClassifications().AssertContains(
                 VisualBasicNames.LocalVariableName.ClassifyAt(57, 8),
                 VisualBasicNames.LocalVariableName.ClassifyAt(96, 6));
         }
@@ -43,7 +43,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         [Test]
         public void ConstrcutionTest_With()
         {
-            GetClassifications(@"Constructions\With.vb").AssertContains(
+            GetContext(@"Constructions\With.vb").GetClassifications().AssertContains(
                 VisualBasicNames.LocalVariableName.ClassifyAt(121, 8),
                 VisualBasicNames.LocalVariableName.ClassifyAt(175, 5),
                 VisualBasicNames.FieldName.ClassifyAt(254, 5));

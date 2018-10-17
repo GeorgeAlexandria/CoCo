@@ -7,8 +7,31 @@ namespace CoCo.Analyser.CSharp
 {
     public static class CSharpSyntaxNodeExtensions
     {
+        /// <summary>
+        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it, 
+        /// else returns <paramref name="node"/>
+        /// </summary>
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
-           node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression : node;
+            node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression :
+            node.IsKind(SyntaxKind.NameMemberCref) ? (node as NameMemberCrefSyntax).Name :
+            node;
+
+        public static bool IsDescendantXmlDocComment(this SyntaxNode node)
+        {
+            bool IsXmlKind(SyntaxKind kind) => kind == SyntaxKind.XmlNameAttribute || kind == SyntaxKind.XmlCrefAttribute;
+
+            var current = node;
+            while (
+                !(current.Parent is null) &&
+                !IsXmlKind(current.Parent.Kind()) &&
+                !(current.Parent is DirectiveTriviaSyntax) &&
+                !(current.Parent is SkippedTokensTriviaSyntax))
+            {
+                current = current.Parent;
+            }
+
+            return !(current.Parent is null || current.Parent is DirectiveTriviaSyntax || current.Parent is SkippedTokensTriviaSyntax);
+        }
 
         public static bool IsAliasNamespace(this SyntaxNode node, ISymbol symbol, SemanticModel semanticModel)
         {
@@ -33,6 +56,11 @@ namespace CoCo.Analyser.CSharp
             {
                 case QualifiedNameSyntax qualifiedName when qualifiedName.Left != identifierName: return false;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
+
+                // NOTE: handle in a xml doc comments, because 
+                // cref="A.B.C.D" => (QualifiedCref).(NameMemberCref) => (QualifiedName).(Name) => (A.B.C).(D)
+                case NameMemberCrefSyntax nameCref: return false;
+                case QualifiedCrefSyntax qualifiedCref when !(qualifiedCref.Container is IdentifierNameSyntax): return false;
             }
 
             // NOTE: collect all namespaces which members are reachibille from the current context

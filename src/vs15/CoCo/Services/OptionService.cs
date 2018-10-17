@@ -8,7 +8,7 @@ using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo
+namespace CoCo.Services
 {
     public static class OptionService
     {
@@ -213,7 +213,9 @@ namespace CoCo
             classification.IsBaseline = classificationSettings.IsBaseline ??
                 defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
 
-            classification.IsClassified = classificationSettings.IsClassified ?? true;
+            classification.IsDisabled = classificationSettings.IsDisabled ?? false;
+            classification.IsDisabledInXml = classificationSettings.IsDisabledInXml ?? false;
+
             return classification;
         }
 
@@ -254,7 +256,8 @@ namespace CoCo
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,
                 IsBaseline = classification.IsBaseline,
-                IsClassified = classification.IsClassified,
+                IsDisabled = classification.IsDisabled,
+                IsDisabledInXml = classification.IsDisabledInXml,
             };
 
             if (!classification.BackgroundWasReset)

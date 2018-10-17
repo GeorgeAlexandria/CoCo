@@ -6,7 +6,7 @@ using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo
+namespace CoCo.Services
 {
     public static class PresetService
     {
@@ -44,7 +44,6 @@ namespace CoCo
                         CreateClassification(CSharpNames.ExtensionMethodName, 233, 122, 0),
                         CreateClassification(CSharpNames.FieldName, 255, 157, 255),
                         CreateClassification(CSharpNames.LabelName, 120, 20, 0),
-                        CreateClassification(CSharpNames.LocalMethodName, 187, 20, 0),
                         CreateClassification(CSharpNames.LocalVariableName, 128, 128, 0),
                         CreateClassification(CSharpNames.MethodName, 187, 54, 4),
                         CreateClassification(CSharpNames.NamespaceName, 220, 220, 220),
@@ -68,7 +67,6 @@ namespace CoCo
                         CreateClassification(CSharpNames.ExtensionMethodName, 224, 118, 0),
                         CreateClassification(CSharpNames.FieldName, 174, 0, 174),
                         CreateClassification(CSharpNames.LabelName, 90, 10, 10),
-                        CreateClassification(CSharpNames.LocalMethodName, 150, 10, 10),
                         CreateClassification(CSharpNames.LocalVariableName, 128, 128, 0),
                         CreateClassification(CSharpNames.MethodName, 187, 0, 0),
                         CreateClassification(CSharpNames.NamespaceName, 0, 213, 0),

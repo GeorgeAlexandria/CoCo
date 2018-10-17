@@ -9,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MemberTest_Event()
         {
-            GetClassifications(@"Access\Members\Event.cs").AssertContains(
+            GetContext(@"Access\Members\Event.cs").GetClassifications().AssertContains(
                 CSharpNames.EventName.ClassifyAt(195, 7),
                 CSharpNames.EventName.ClassifyAt(234, 7));
         }
@@ -17,7 +17,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MemberTest_Field()
         {
-            GetClassifications(@"Access\Members\Field.cs").AssertContains(
+            GetContext(@"Access\Members\Field.cs").GetClassifications().AssertContains(
                 CSharpNames.FieldName.ClassifyAt(171, 5),
                 CSharpNames.FieldName.ClassifyAt(215, 5),
                 CSharpNames.FieldName.ClassifyAt(270, 5));
@@ -26,7 +26,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MemberTest_Property()
         {
-            GetClassifications(@"Access\Members\Property.cs").AssertContains(
+            GetContext(@"Access\Members\Property.cs").GetClassifications().AssertContains(
                 CSharpNames.PropertyName.ClassifyAt(204, 5),
                 CSharpNames.PropertyName.ClassifyAt(249, 5),
                 CSharpNames.PropertyName.ClassifyAt(298, 5));
@@ -35,29 +35,29 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void MemberTest_ConstantMember()
         {
-            GetClassifications(@"Access\Members\ConstantMember.cs")
-                .AssertContains(CSharpNames.ConstantFieldName.ClassifyAt(190, 8));
+            GetContext(@"Access\Members\ConstantMember.cs").GetClassifications().AssertContains(
+                CSharpNames.ConstantFieldName.ClassifyAt(190, 8));
         }
 
         [Test]
         public void MemberTest_TypeEvent()
         {
-            GetClassifications(@"Access\Members\TypeEvent.cs")
-                .AssertContains(CSharpNames.EventName.ClassifyAt(250, 7));
+            GetContext(@"Access\Members\TypeEvent.cs").GetClassifications().AssertContains(
+                CSharpNames.EventName.ClassifyAt(250, 7));
         }
 
         [Test]
         public void MemberTest_TypeField()
         {
-            GetClassifications(@"Access\Members\TypeField.cs")
-                .AssertContains(CSharpNames.FieldName.ClassifyAt(186, 13));
+            GetContext(@"Access\Members\TypeField.cs").GetClassifications().AssertContains(
+                CSharpNames.FieldName.ClassifyAt(186, 13));
         }
 
         [Test]
         public void MemberTest_TypeProperty()
         {
-            GetClassifications(@"Access\Members\TypeProperty.cs")
-                .AssertContains(CSharpNames.PropertyName.ClassifyAt(182, 15));
+            GetContext(@"Access\Members\TypeProperty.cs").GetClassifications().AssertContains(
+                CSharpNames.PropertyName.ClassifyAt(182, 15));
         }
     }
 }

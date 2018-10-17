@@ -9,7 +9,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void NamespaceTest()
         {
-            GetClassifications(@"Access\Namespaces\Namespace.vb").AssertContains(
+            GetContext(@"Access\Namespaces\Namespace.vb").GetClassifications().AssertContains(
                 VisualBasicNames.NamespaceName.ClassifyAt(69, 6),
                 VisualBasicNames.NamespaceName.ClassifyAt(76, 2));
         }
@@ -17,7 +17,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void NamespaceTest_Alias()
         {
-            GetClassifications(@"Access\Namespaces\AliasNamespace.vb").AssertContains(
+            GetContext(@"Access\Namespaces\AliasNamespace.vb").GetClassifications().AssertContains(
                 VisualBasicNames.AliasNamespaceName.ClassifyAt(293, 7),
                 VisualBasicNames.AliasNamespaceName.ClassifyAt(341, 11),
                 VisualBasicNames.NamespaceName.ClassifyAt(353, 7),
@@ -28,7 +28,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void NamespaceTest_Custom()
         {
-            GetClassifications(@"Access\Namespaces\CustomNamespace.vb").AssertContains(
+            GetContext(@"Access\Namespaces\CustomNamespace.vb").GetClassifications().AssertContains(
                 VisualBasicNames.NamespaceName.ClassifyAt(236, 22),
                 VisualBasicNames.NamespaceName.ClassifyAt(259, 6),
                 VisualBasicNames.NamespaceName.ClassifyAt(266, 10),

@@ -1,5 +1,4 @@
-﻿using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -10,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamespaceTest()
         {
-            GetClassifications(@"Access\Namespaces\ByNamespace.cs").AssertContains(
+            GetContext(@"Access\Namespaces\ByNamespace.cs").GetClassifications().AssertContains(
                 CSharpNames.NamespaceName.ClassifyAt(143, 6),
                 CSharpNames.NamespaceName.ClassifyAt(150, 11),
                 CSharpNames.NamespaceName.ClassifyAt(162, 7),
@@ -21,14 +20,14 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamespaceTest_GlobalNotExists()
         {
-            GetClassifications(@"Access\Namespaces\ByNamespace.cs")
-                .AssertNotContains(CSharpNames.NamespaceName.ClassifyAt(245, 6));
+            GetContext(@"Access\Namespaces\ByNamespace.cs").GetClassifications().AssertNotContains(
+                CSharpNames.NamespaceName.ClassifyAt(245, 6));
         }
 
         [Test]
         public void NamesapceTest_Alias()
         {
-            GetClassifications(@"Access\Namespaces\ByNamespaceAlias.cs").AssertContains(
+            GetContext(@"Access\Namespaces\ByNamespaceAlias.cs").GetClassifications().AssertContains(
                 CSharpNames.AliasNamespaceName.ClassifyAt(382, 8),
                 CSharpNames.AliasNamespaceName.ClassifyAt(433, 11),
                 CSharpNames.AliasNamespaceName.ClassifyAt(495, 3),
@@ -38,7 +37,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         [Test]
         public void NamesapceTest_Custom()
         {
-            GetClassifications(@"Access\Namespaces\CustomNamespaces.cs").AssertContains(
+            GetContext(@"Access\Namespaces\CustomNamespaces.cs").GetClassifications().AssertContains(
                 CSharpNames.NamespaceName.ClassifyAt(161, 17),
                 CSharpNames.NamespaceName.ClassifyAt(179, 6),
                 CSharpNames.NamespaceName.ClassifyAt(186, 10),

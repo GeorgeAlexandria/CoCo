@@ -21,16 +21,20 @@ namespace CoCo.Test.Common
     {
         private static readonly List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
 
-        public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length)
-        {
-            if (!CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name))
-            {
-                throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
-            }
-            return new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
-        }
+        public static SimplifiedClassificationSpan ClassifyAt(this string name, int start, int length) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
 
-        public static List<SimplifiedClassificationSpan> GetClassifications(string path, Project project)
+        public static SimplifiedClassificationInfo Disable(this string name) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationInfo { Name = name, IsDisabled = true };
+
+        public static SimplifiedClassificationInfo DisableInXml(this string name) => IsUnknownClassification(name)
+            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
+            : new SimplifiedClassificationInfo { Name = name, IsDisabledInXml = true };
+
+        public static List<SimplifiedClassificationSpan> GetClassifications(
+            string path, Project project, IReadOnlyList<SimplifiedClassificationInfo> infos = null)
         {
             using (var logger = LogManager.GetLogger("Test execution"))
             {
@@ -73,20 +77,30 @@ namespace CoCo.Test.Common
                     var newProject = workspace.AddProject(project.ProjectName, LanguageNames.CSharp);
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
-                    var classifier = GetClassifier(language);
+                    var classifier = GetClassifier(language, infos);
                     actualSpans = classifier.GetClassificationSpans(workspace, semanticModel, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
         }
 
-        private static RoslynEditorClassifier GetClassifier(ProgrammingLanguage language)
+        private static RoslynEditorClassifier GetClassifier(
+            ProgrammingLanguage language, IReadOnlyList<SimplifiedClassificationInfo> infos)
         {
+            var dictionary = infos is null ? null : infos.ToDictionary(x => x.Name);
             var classificationTypes = new Dictionary<string, ClassificationInfo>(32);
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
-            foreach (var item in names)
+            foreach (var name in names)
             {
-                classificationTypes.Add(item, new ClassificationInfo(new ClassificationType(item), true));
+                if (dictionary is null || !dictionary.TryGetValue(name, out var info))
+                {
+                    classificationTypes.Add(name, ClassificationService.GetDefaultInfo(new ClassificationType(name)));
+                }
+                else
+                {
+                    classificationTypes.Add(
+                        name, new ClassificationInfo(new ClassificationType(name), !info.IsDisabled, !info.IsDisabledInXml));
+                }
             }
 
             return language == ProgrammingLanguage.VisualBasic
@@ -157,5 +171,8 @@ namespace CoCo.Test.Common
                 };
             }
         }
+
+        private static bool IsUnknownClassification(string name) =>
+            !CSharpNames.All.Contains(name) && !VisualBasicNames.All.Contains(name);
     }
 }

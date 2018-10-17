@@ -10,7 +10,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         public void CommonTest()
         {
             // NOTE: just are checking that a some random identifiers are classified
-            GetClassifications(@"Example.vb").AssertContains(
+            GetContext(@"Example.vb").GetClassifications().AssertContains(
                 VisualBasicNames.NamespaceName.ClassifyAt(10, 11),
                 VisualBasicNames.PropertyName.ClassifyAt(159, 6),
                 VisualBasicNames.ParameterName.ClassifyAt(337, 6),

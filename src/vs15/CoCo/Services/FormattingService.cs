@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
+using CoCo.Providers;
 using CoCo.UI.Data;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo
+namespace CoCo.Services
 {
     public static class FormattingService
     {

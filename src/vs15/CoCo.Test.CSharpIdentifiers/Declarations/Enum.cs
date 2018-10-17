@@ -1,5 +1,4 @@
-﻿using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -10,7 +9,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void EnumTest()
         {
-            GetClassifications(@"Declarations\EnumDeclaration.cs").AssertContains(
+            GetContext(@"Declarations\EnumDeclaration.cs").GetClassifications().AssertContains(
                 CSharpNames.EnumFieldName.ClassifyAt(84, 4),
                 CSharpNames.EnumFieldName.ClassifyAt(99, 5),
                 CSharpNames.EnumFieldName.ClassifyAt(115, 6),

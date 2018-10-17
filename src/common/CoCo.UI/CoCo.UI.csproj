@@ -62,6 +62,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Update="UI\Resources\Styles\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="UI\Resources\Styles\GridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="UI\Resources\Styles\ItemsControls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="UI\Resources\Templates\Buttons.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

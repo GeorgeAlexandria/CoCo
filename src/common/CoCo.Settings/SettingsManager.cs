@@ -175,10 +175,15 @@ namespace CoCo.Settings
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
-            if (jClassification[nameof(ClassificationSettings.IsClassified)] is JValue jClassified &&
-                jClassified.Value is bool isClassified)
+            if (jClassification[nameof(ClassificationSettings.IsDisabled)] is JValue jDisabled &&
+                jDisabled.Value is bool isDisabled)
             {
-                classification.IsClassified = isClassified;
+                classification.IsDisabled = isDisabled;
+            }
+            if (jClassification[nameof(ClassificationSettings.IsDisabledInXml)] is JValue jDisabledInXml &&
+                jDisabledInXml.Value is bool isDisabledInXml)
+            {
+                classification.IsDisabledInXml = isDisabledInXml;
             }
             return true;
         }
@@ -235,9 +240,13 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value));
             }
-            if (classification.IsClassified.HasValue)
+            if (classification.IsDisabled.HasValue)
             {
-                jClassification.Add(nameof(classification.IsClassified), new JValue(classification.IsClassified.Value));
+                jClassification.Add(nameof(classification.IsDisabled), new JValue(classification.IsDisabled.Value));
+            }
+            if (classification.IsDisabledInXml.HasValue)
+            {
+                jClassification.Add(nameof(classification.IsDisabledInXml), new JValue(classification.IsDisabledInXml.Value));
             }
             return jClassification;
         }

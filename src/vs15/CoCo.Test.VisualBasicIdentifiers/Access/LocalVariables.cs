@@ -9,21 +9,21 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void LocalVariableTest_Function()
         {
-            GetClassifications(@"Access\Locals\FunctionVariable.vb")
-                .AssertContains(VisualBasicNames.FunctionVariableName.ClassifyAt(117, 6));
+            GetContext(@"Access\Locals\FunctionVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.FunctionVariableName.ClassifyAt(117, 6));
         }
 
         [Test]
         public void LocalVariableTest()
         {
-            GetClassifications(@"Access\Locals\SimpleVariable.vb")
-                .AssertContains(VisualBasicNames.LocalVariableName.ClassifyAt(102, 4));
+            GetContext(@"Access\Locals\SimpleVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.LocalVariableName.ClassifyAt(102, 4));
         }
 
         [Test]
         public void LocalVariableTest_ValutTuple()
         {
-            GetClassifications(@"Access\Locals\ValueTupleVariable.vb").AssertContains(
+            GetContext(@"Access\Locals\ValueTupleVariable.vb").GetClassifications().AssertContains(
                 VisualBasicNames.LocalVariableName.ClassifyAt(137, 3),
                 VisualBasicNames.LocalVariableName.ClassifyAt(149, 3));
         }
@@ -31,8 +31,8 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void LocalVariableTest_Static()
         {
-            GetClassifications(@"Access\Locals\StaticVariable.vb")
-                .AssertContains(VisualBasicNames.StaticLocalVariableName.ClassifyAt(159, 8));
+            GetContext(@"Access\Locals\StaticVariable.vb").GetClassifications().AssertContains(
+                VisualBasicNames.StaticLocalVariableName.ClassifyAt(159, 8));
         }
     }
 }

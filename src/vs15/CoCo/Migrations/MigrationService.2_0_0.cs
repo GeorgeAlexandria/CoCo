@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Xml;
 using System.Xml.XPath;
 using CoCo.Analyser;
+using CoCo.Providers;
 using CoCo.Settings;
 using CoCo.Utils;
 

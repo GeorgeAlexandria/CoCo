@@ -89,6 +89,11 @@
     <Compile Include="Access\Parameters\DelegateParameter.vb" />
     <Compile Include="Access\Parameters\OptionalParameter.vb" />
     <Compile Include="Access\Parameters\Variable.vb" />
+    <Compile Include="AnalyzeOptions\LocalVariable.vb" />
+    <Compile Include="AnalyzeOptions\Member.vb" />
+    <Compile Include="AnalyzeOptions\Method.vb" />
+    <Compile Include="AnalyzeOptions\Namespace.vb" />
+    <Compile Include="AnalyzeOptions\ParameterOption.vb" />
     <Compile Include="Constructions\If.vb" />
     <Compile Include="Constructions\Nameof.vb" />
     <Compile Include="Constructions\Throw.vb" />
@@ -152,6 +157,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="XmlDocComment\CrefAttribute.vb" />
+    <Compile Include="XmlDocComment\Exception.vb" />
+    <Compile Include="XmlDocComment\NameAttribute.vb" />
+    <Compile Include="XmlDocComment\Param.vb" />
+    <Compile Include="XmlDocComment\ParamRef.vb" />
+    <Compile Include="XmlDocComment\Permission.vb" />
+    <Compile Include="XmlDocComment\See.vb" />
+    <Compile Include="XmlDocComment\SeeAlso.vb" />
+    <Compile Include="XmlDocComment\TypeParam.vb" />
+    <Compile Include="XmlDocComment\TypeParamRef.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">
