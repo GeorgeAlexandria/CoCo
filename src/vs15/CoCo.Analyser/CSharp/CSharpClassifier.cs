@@ -32,6 +32,12 @@ namespace CoCo.Analyser.CSharp
         private IClassificationType _localMethodType;
         private IClassificationType _constantFieldType;
         private IClassificationType _destructorType;
+        private IClassificationType _typeParameterType;
+        private IClassificationType _classType;
+        private IClassificationType _structureType;
+        private IClassificationType _interfaceType;
+        private IClassificationType _enumType;
+        private IClassificationType _delegateType;
 
         internal CSharpClassifier(
             IReadOnlyDictionary<string, ClassificationInfo> classifications,
@@ -62,10 +68,19 @@ namespace CoCo.Analyser.CSharp
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
                 {
                     // NOTE: handle alias in using directive
-                    if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax)
+                    if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax usingSyntax)
                     {
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _aliasNamespaceType);
-                        continue;
+                        var aliasNameSymbol = semanticModel.GetSymbolInfo(usingSyntax.Name).Symbol;
+                        var aliasType =
+                            aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
+                            aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
+                            null;
+
+                        if (!(aliasType is null))
+                        {
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, aliasType);
+                            continue;
+                        }
                     }
 
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", item.TextSpan.Start, item.TextSpan.End);
@@ -126,6 +141,19 @@ namespace CoCo.Analyser.CSharp
                         AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, methodType, node);
                         break;
 
+                    case SymbolKind.TypeParameter:
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _typeParameterType, node);
+                        break;
+
+                    case SymbolKind.NamedType:
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        var type = GetTypeClassification(typeSymbol);
+                        if (!(type is null))
+                        {
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, type, node);
+                        }
+                        break;
+
                     default:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         Log.Debug("Node is: {0}", node);
@@ -135,6 +163,14 @@ namespace CoCo.Analyser.CSharp
 
             return spans;
         }
+
+        private IClassificationType GetTypeClassification(INamedTypeSymbol typeSymbol) =>
+            typeSymbol.TypeKind == TypeKind.Class ? _classType :
+            typeSymbol.TypeKind == TypeKind.Struct ? _structureType :
+            typeSymbol.TypeKind == TypeKind.Interface ? _interfaceType :
+            typeSymbol.TypeKind == TypeKind.Enum ? _enumType :
+            typeSymbol.TypeKind == TypeKind.Delegate ? _delegateType :
+            null;
 
         private void AppendClassificationSpan(
            List<ClassificationSpan> spans, ITextSnapshot snapshot,
@@ -177,6 +213,12 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.LocalMethodName, ref _localMethodType);
             InitializeClassification(CSharpNames.ConstantFieldName, ref _constantFieldType);
             InitializeClassification(CSharpNames.DestructorName, ref _destructorType);
+            InitializeClassification(CSharpNames.TypeParameterName, ref _typeParameterType);
+            InitializeClassification(CSharpNames.ClassName, ref _classType);
+            InitializeClassification(CSharpNames.StructureName, ref _structureType);
+            InitializeClassification(CSharpNames.InterfaceName, ref _interfaceType);
+            InitializeClassification(CSharpNames.EnumName, ref _enumType);
+            InitializeClassification(CSharpNames.DelegateName, ref _delegateType);
 
             base.classifications = builder.ToImmutable();
         }

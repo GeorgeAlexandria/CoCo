@@ -29,7 +29,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_TypeAlias()
         {
-            GetContext(@"Declarations\Namespaces\TypeAlias.cs").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\TypeAlias.cs").GetClassifications().AssertContains(
                 CSharpNames.NamespaceName.ClassifyAt(67, 6),
                 CSharpNames.NamespaceName.ClassifyAt(74, 11),
                 CSharpNames.NamespaceName.ClassifyAt(86, 7));
@@ -38,7 +38,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         [Test]
         public void NamespaceTest_StaticType()
         {
-            GetContext(@"Declarations\Namespaces\StaticType.cs").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\StaticType.cs").GetClassifications().AssertContains(
                 CSharpNames.NamespaceName.ClassifyAt(13, 6),
                 CSharpNames.NamespaceName.ClassifyAt(20, 9));
         }
