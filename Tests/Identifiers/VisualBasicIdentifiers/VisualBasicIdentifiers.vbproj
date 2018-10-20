@@ -89,6 +89,13 @@
     <Compile Include="Access\Parameters\DelegateParameter.vb" />
     <Compile Include="Access\Parameters\OptionalParameter.vb" />
     <Compile Include="Access\Parameters\Variable.vb" />
+    <Compile Include="Access\Types\ClassType.vb" />
+    <Compile Include="Access\Types\DelegateType.vb" />
+    <Compile Include="Access\Types\EnumType.vb" />
+    <Compile Include="Access\Types\InterfaceType.vb" />
+    <Compile Include="Access\Types\ModuleType.vb" />
+    <Compile Include="Access\Types\StructureType.vb" />
+    <Compile Include="Access\Types\TypeParameter.vb" />
     <Compile Include="AnalyzeOptions\LocalVariable.vb" />
     <Compile Include="AnalyzeOptions\Member.vb" />
     <Compile Include="AnalyzeOptions\Method.vb" />
@@ -141,6 +148,13 @@
     <Compile Include="Declarations\Parameters\SimpleParameter.vb" />
     <Compile Include="Declarations\Parameters\TypeCharacter.vb" />
     <Compile Include="Declarations\Parameters\Variable.vb" />
+    <Compile Include="Declarations\Types\ClassType.vb" />
+    <Compile Include="Declarations\Types\DelegateType.vb" />
+    <Compile Include="Declarations\Types\EnumType.vb" />
+    <Compile Include="Declarations\Types\InterfaceType.vb" />
+    <Compile Include="Declarations\Types\ModuleType.vb" />
+    <Compile Include="Declarations\Types\StructureType.vb" />
+    <Compile Include="Declarations\Types\TypeParameter.vb" />
     <Compile Include="Example.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

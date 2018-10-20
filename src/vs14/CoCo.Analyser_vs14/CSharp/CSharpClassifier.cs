@@ -144,8 +144,7 @@ namespace CoCo.Analyser.CSharp
                         break;
 
                     case SymbolKind.NamedType:
-                        var typeSymbol = symbol as INamedTypeSymbol;
-                        var type = GetTypeClassification(typeSymbol);
+                        var type = GetTypeClassification(symbol as INamedTypeSymbol);
                         if (!(type is null))
                         {
                             AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, type, node);

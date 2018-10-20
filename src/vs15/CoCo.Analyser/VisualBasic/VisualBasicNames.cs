@@ -21,6 +21,13 @@ namespace CoCo.Analyser.VisualBasic
         public const string AliasNamespaceName = "CoCo visual basic alias namespace name";
         public const string StaticLocalVariableName = "CoCo visual basic static local variable name";
         public const string EventName = "CoCo visual basic event name";
+        public const string ClassName = "CoCo visual basic class name";
+        public const string StructureName = "CoCo visual basic structure name";
+        public const string ModuleName = "CoCo visual basic module name";
+        public const string InterfaceName = "CoCo visual basic interface name";
+        public const string DelegateName = "CoCo visual basic delegate name";
+        public const string EnumName = "CoCo visual basic enum name";
+        public const string TypeParameterName = "CoCo visual basic type parameter name";
 
         private static ImmutableArray<string> _all;
 
@@ -48,6 +55,13 @@ namespace CoCo.Analyser.VisualBasic
                 builder.Add(AliasNamespaceName);
                 builder.Add(StaticLocalVariableName);
                 builder.Add(EventName);
+                builder.Add(ClassName);
+                builder.Add(StructureName);
+                builder.Add(ModuleName);
+                builder.Add(InterfaceName);
+                builder.Add(DelegateName);
+                builder.Add(EnumName);
+                builder.Add(TypeParameterName);
 
                 return _all = builder.ToImmutable();
             }

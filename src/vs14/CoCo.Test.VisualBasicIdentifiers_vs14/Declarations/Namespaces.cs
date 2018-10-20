@@ -26,7 +26,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest_StaticType()
         {
-            GetContext(@"Declarations\Namespaces\StaticType.vb").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\StaticType.vb").GetClassifications().AssertContains(
                 VisualBasicNames.NamespaceName.ClassifyAt(8, 6));
         }
 
@@ -42,7 +42,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void NamespaceTest_TypeAlias()
         {
-            GetContext(@"Declarations\Namespaces\TypeAlias.vb").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Namespaces\TypeAlias.vb").GetClassifications().AssertContains(
                 VisualBasicNames.NamespaceName.ClassifyAt(13, 6));
         }
 

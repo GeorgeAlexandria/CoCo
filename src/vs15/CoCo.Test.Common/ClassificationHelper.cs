@@ -99,7 +99,7 @@ namespace CoCo.Test.Common
                 else
                 {
                     classificationTypes.Add(
-                        name, new ClassificationInfo(new ClassificationType(name), !info.IsDisabled, !info.IsDisabledInXml));
+                        name, new ClassificationInfo(new ClassificationType(name), info.IsDisabled, info.IsDisabledInXml));
                 }
             }
 
