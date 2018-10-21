@@ -9,11 +9,11 @@ namespace CoCo.Analyser
     public class ClassificationsChangedEventArgs : EventArgs
     {
         public ClassificationsChangedEventArgs(
-            IReadOnlyDictionary<IClassificationType, ClassificationInfo> changedClassifications)
+            IReadOnlyDictionary<IClassificationType, ClassificationOption> changedClassifications)
         {
             ChangedClassifications = changedClassifications;
         }
 
-        public IReadOnlyDictionary<IClassificationType, ClassificationInfo> ChangedClassifications;
+        public IReadOnlyDictionary<IClassificationType, ClassificationOption> ChangedClassifications;
     }
 }

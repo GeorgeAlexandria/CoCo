@@ -71,7 +71,7 @@ namespace CoCo.Providers
             {
                 if (_classificationsInfo.ContainsKey(classificationType.Classification))
                 {
-                    _classificationsInfo[classificationType.Classification] = info;
+                    _classificationsInfo[classificationType.Classification] = new ClassificationInfo(classificationType, info);
                 }
             }
         }

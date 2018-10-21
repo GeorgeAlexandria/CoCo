@@ -192,7 +192,7 @@ namespace CoCo.Analyser.VisualBasic
             {
                 var info = classifications[name];
                 type = info.ClassificationType;
-                options[type] = info;
+                options[type] = info.Option;
                 builder.Add(type);
             }
 

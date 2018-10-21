@@ -9,50 +9,64 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         [Test]
         public void TypeParameterTest()
         {
-            GetContext(@"Access\Types\TypeParameter.vb").GetClassifications().AssertContains(
-                VisualBasicNames.TypeParameterName.ClassifyAt(87, 6));
+            GetContext(@"Access\Types\TypeParameter.vb")
+                .AddInfo(VisualBasicNames.TypeParameterName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.TypeParameterName.ClassifyAt(87, 6));
         }
 
         [Test]
         public void ClassTest()
         {
-            GetContext(@"Access\Types\ClassType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.ClassName.ClassifyAt(74, 9));
+            GetContext(@"Access\Types\ClassType.vb")
+                .AddInfo(VisualBasicNames.ClassName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.ClassName.ClassifyAt(74, 9));
         }
 
         [Test]
         public void StructureTest()
         {
-            GetContext(@"Access\Types\StructureType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.StructureName.ClassifyAt(102, 13));
+            GetContext(@"Access\Types\StructureType.vb")
+                .AddInfo(VisualBasicNames.StructureName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.StructureName.ClassifyAt(102, 13));
         }
 
         [Test]
         public void ModuleTest()
         {
-            GetContext(@"Access\Types\ModuleType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.ModuleName.ClassifyAt(121, 10));
+            GetContext(@"Access\Types\ModuleType.vb")
+                .AddInfo(VisualBasicNames.ModuleName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.ModuleName.ClassifyAt(121, 10));
         }
 
         [Test]
         public void InterfaceTest()
         {
-            GetContext(@"Access\Types\InterfaceType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.InterfaceName.ClassifyAt(138, 14));
+            GetContext(@"Access\Types\InterfaceType.vb")
+                .AddInfo(VisualBasicNames.InterfaceName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.InterfaceName.ClassifyAt(138, 14));
         }
 
         [Test]
         public void EnumTest()
         {
-            GetContext(@"Access\Types\EnumType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.EnumName.ClassifyAt(122, 6));
+            GetContext(@"Access\Types\EnumType.vb")
+                .AddInfo(VisualBasicNames.EnumName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.EnumName.ClassifyAt(122, 6));
         }
 
         [Test]
         public void DelegateTest()
         {
-            GetContext(@"Access\Types\DelegateType.vb").GetClassifications().AssertContains(
-                VisualBasicNames.DelegateName.ClassifyAt(113, 6));
+            GetContext(@"Access\Types\DelegateType.vb")
+                .AddInfo(VisualBasicNames.DelegateName.Enable())
+                .GetClassifications().AssertContains(
+                    VisualBasicNames.DelegateName.ClassifyAt(113, 6));
         }
     }
 }

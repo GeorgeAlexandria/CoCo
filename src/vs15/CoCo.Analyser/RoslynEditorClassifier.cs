@@ -19,8 +19,8 @@ namespace CoCo.Analyser
 
         private SemanticModel _semanticModel;
 
-        protected readonly Dictionary<IClassificationType, ClassificationInfo> options =
-            new Dictionary<IClassificationType, ClassificationInfo>();
+        protected readonly Dictionary<IClassificationType, ClassificationOption> options =
+            new Dictionary<IClassificationType, ClassificationOption>();
 
         protected ImmutableArray<IClassificationType> classifications;
 

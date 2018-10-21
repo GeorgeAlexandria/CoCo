@@ -26,14 +26,14 @@ namespace CoCo.Services
                 }
             }
 
-            var classifications = new Dictionary<IClassificationType, ClassificationInfo>(classificationTypes.Count);
+            var classifications = new Dictionary<IClassificationType, ClassificationOption>(classificationTypes.Count);
             foreach (var language in option.Languages)
             {
                 foreach (var classification in language.Classifications)
                 {
                     if (classificationTypes.TryGetValue(classification.Name, out var type))
                     {
-                        classifications.Add(type, new ClassificationInfo(type, classification.IsDisabled, classification.IsDisabledInXml));
+                        classifications.Add(type, new ClassificationOption(classification.IsDisabled, classification.IsDisabledInXml));
                     }
                 }
             }

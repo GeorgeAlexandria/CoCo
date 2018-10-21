@@ -25,13 +25,26 @@ namespace CoCo.Test.Common
             ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
             : new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
 
-        public static SimplifiedClassificationInfo Disable(this string name) => IsUnknownClassification(name)
-            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
-            : new SimplifiedClassificationInfo { Name = name, IsDisabled = true };
+        public static SimplifiedClassificationInfo Enable(this string name)
+        {
+            if (IsUnknownClassification(name)) throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
+            SimplifiedClassificationInfo info = name;
+            return info.Enable();
+        }
 
-        public static SimplifiedClassificationInfo DisableInXml(this string name) => IsUnknownClassification(name)
-            ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
-            : new SimplifiedClassificationInfo { Name = name, IsDisabledInXml = true };
+        public static SimplifiedClassificationInfo Disable(this string name)
+        {
+            if (IsUnknownClassification(name)) throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
+            SimplifiedClassificationInfo info = name;
+            return info.Disable();
+        }
+
+        public static SimplifiedClassificationInfo DisableInXml(this string name)
+        {
+            if (IsUnknownClassification(name)) throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
+            SimplifiedClassificationInfo info = name;
+            return info.DisableInXml();
+        }
 
         public static List<SimplifiedClassificationSpan> GetClassifications(
             string path, Project project, IReadOnlyList<SimplifiedClassificationInfo> infos = null)
@@ -92,15 +105,10 @@ namespace CoCo.Test.Common
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
             foreach (var name in names)
             {
-                if (dictionary is null || !dictionary.TryGetValue(name, out var info))
-                {
-                    classificationTypes.Add(name, ClassificationService.GetDefaultInfo(new ClassificationType(name)));
-                }
-                else
-                {
-                    classificationTypes.Add(
-                        name, new ClassificationInfo(new ClassificationType(name), info.IsDisabled, info.IsDisabledInXml));
-                }
+                var option = dictionary is null || !dictionary.TryGetValue(name, out var simplifiedInfo)
+                    ? ClassificationService.GetDefaultInfo(name)
+                    : simplifiedInfo;
+                classificationTypes.Add(name, new ClassificationInfo(new ClassificationType(name), option));
             }
 
             return language == ProgrammingLanguage.VisualBasic
