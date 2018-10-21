@@ -11,7 +11,7 @@ namespace CoCo.Test.Common
         private SimplifiedClassificationInfo(string name)
         {
             Name = name;
-            var info = ClassificationService.GetDefaultInfo(name);
+            var info = ClassificationService.GetDefaultOption(name);
             IsDisabled = info.IsDisabled;
             IsDisabledInXml = info.IsDisabledInXml;
         }

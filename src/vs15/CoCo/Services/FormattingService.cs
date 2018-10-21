@@ -11,17 +11,33 @@ namespace CoCo.Services
 {
     public static class FormattingService
     {
-        public static TextFormattingRunProperties GetDefaultFormatting()
+        public static TextFormattingRunProperties GetDefaultFormatting(string classificationName)
         {
             var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
-            return GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
+            if (ClassificationManager.Instance.TryGetDefaultNonIdentifierClassification(
+                classificationName, out var defaultClassification))
+            {
+                return GetDefaultFormatting(classificationFormatMap, defaultClassification);
+            }
+            return GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultIdentifierClassification);
+        }
+
+        public static TextFormattingRunProperties GetDefaultIdentifierFormatting()
+        {
+            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            return GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultIdentifierClassification);
+        }
+
+        public static TextFormattingRunProperties GetDefaultFormatting(IClassificationType classification)
+        {
+            var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+            return GetDefaultFormatting(classificationFormatMap, classification);
         }
 
         public static void SetFormattingOptions(Option option)
         {
             var classificationTypes = ClassificationManager.Instance.GetClassifications();
             var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
-            var defaultFormatting = GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultClassification);
 
             var classificationsMap = new Dictionary<string, IClassificationType>(23);
             foreach (var classifications in classificationTypes.Values)
@@ -32,6 +48,9 @@ namespace CoCo.Services
                 }
             }
 
+            var defaultIdentifierFormatting =
+                GetDefaultFormatting(classificationFormatMap, ClassificationManager.Instance.DefaultIdentifierClassification);
+
             foreach (var language in option.Languages)
             {
                 // TODO: do need to write in a log if the classification after preparing still not exists?
@@ -40,6 +59,13 @@ namespace CoCo.Services
                 {
                     if (classificationsMap.TryGetValue(classification.Name, out var classificationType))
                     {
+                        var defaultFormatting = defaultIdentifierFormatting;
+                        if (ClassificationManager.Instance.TryGetDefaultNonIdentifierClassification(
+                            classification.Name, out var defaultClassification))
+                        {
+                            defaultFormatting = GetDefaultFormatting(classificationFormatMap, defaultClassification);
+                        }
+
                         var formatting = classificationFormatMap.GetExplicitTextProperties(classificationType);
                         formatting = Apply(formatting, classification, defaultFormatting);
                         classificationFormatMap.SetExplicitTextProperties(classificationType, formatting);

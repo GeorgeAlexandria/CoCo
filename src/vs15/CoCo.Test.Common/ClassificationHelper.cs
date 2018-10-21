@@ -106,7 +106,7 @@ namespace CoCo.Test.Common
             foreach (var name in names)
             {
                 var option = dictionary is null || !dictionary.TryGetValue(name, out var simplifiedInfo)
-                    ? ClassificationService.GetDefaultInfo(name)
+                    ? ClassificationService.GetDefaultOption(name)
                     : simplifiedInfo;
                 classificationTypes.Add(name, new ClassificationInfo(new ClassificationType(name), option));
             }

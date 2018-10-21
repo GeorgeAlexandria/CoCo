@@ -25,9 +25,9 @@ namespace CoCo.Analyser
             VisualBasicNames.TypeParameterName
         };
 
-        public static ClassificationOption GetDefaultInfo(IClassificationType type) => GetDefaultInfo(type.Classification);
+        public static ClassificationOption GetDefaultInfo(IClassificationType type) => GetDefaultOption(type.Classification);
 
-        public static ClassificationOption GetDefaultInfo(string name) => _disabledClassifications.Contains(name)
+        public static ClassificationOption GetDefaultOption(string name) => _disabledClassifications.Contains(name)
             ? new ClassificationOption(true, true)
             : new ClassificationOption(false, false);
     }

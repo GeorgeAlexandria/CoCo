@@ -10,10 +10,10 @@ namespace CoCo.UI.ViewModels
     /// </remarks>
     public interface IResetValuesProvider
     {
-        Color Foreground { get; }
+        Color GetForeground(string name);
 
-        Color Background { get; }
+        Color GetBackground(string name);
 
-        int FontRenderingSize { get; }
+        int GetFontRenderingSize(string name);
     }
 }

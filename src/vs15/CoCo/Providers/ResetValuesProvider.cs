@@ -14,10 +14,10 @@ namespace CoCo.Providers
 
         public static ResetValuesProvider Instance => _instance ?? (_instance = new ResetValuesProvider());
 
-        public Color Foreground => FormattingService.GetDefaultFormatting().ForegroundBrush.GetColor();
+        public Color GetForeground(string name) => FormattingService.GetDefaultFormatting(name).ForegroundBrush.GetColor();
 
-        public Color Background => FormattingService.GetDefaultFormatting().BackgroundBrush.GetColor();
+        public Color GetBackground(string name) => FormattingService.GetDefaultFormatting(name).BackgroundBrush.GetColor();
 
-        public int FontRenderingSize => (int)FormattingService.GetDefaultFormatting().FontRenderingEmSize;
+        public int GetFontRenderingSize(string name) => (int)FormattingService.GetDefaultFormatting(name).FontRenderingEmSize;
     }
 }

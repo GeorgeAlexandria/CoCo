@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using CoCo.Analyser;
 using CoCo.Settings;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -12,18 +13,22 @@ namespace CoCo
         /// which doesn't set the default values for properties that can be reset
         /// </summary>
         public static ClassificationSettings ToDefaultSettings(
-           this TextFormattingRunProperties formatting, string classificationName) => new ClassificationSettings
-           {
-               Name = classificationName,
-               IsBold = formatting.Bold,
-               IsItalic = formatting.Italic,
-               IsOverline = formatting.TextDecorations.Contains(TextDecorations.OverLine[0]),
-               IsUnderline = formatting.TextDecorations.Contains(TextDecorations.Underline[0]),
-               IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
-               IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
-               IsDisabled = false,
-               IsDisabledInXml = false,
-           };
+           this TextFormattingRunProperties formatting, string classificationName)
+        {
+            var defaultOption = ClassificationService.GetDefaultOption(classificationName);
+            return new ClassificationSettings
+            {
+                Name = classificationName,
+                IsBold = formatting.Bold,
+                IsItalic = formatting.Italic,
+                IsOverline = formatting.TextDecorations.Contains(TextDecorations.OverLine[0]),
+                IsUnderline = formatting.TextDecorations.Contains(TextDecorations.Underline[0]),
+                IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
+                IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
+                IsDisabled = defaultOption.IsDisabled,
+                IsDisabledInXml = defaultOption.IsDisabledInXml,
+            };
+        }
 
         /// <summary>
         /// Gets <see cref="SolidColorBrush.Color"/> if <paramref name="brush"/> is <see cref="SolidColorBrush"/>

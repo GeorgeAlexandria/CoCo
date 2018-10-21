@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using CoCo.Analyser;
+using CoCo.Analyser.CSharp;
+using CoCo.Analyser.VisualBasic;
 using CoCo.Providers;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Language.StandardClassification;
@@ -10,18 +12,49 @@ namespace CoCo
 {
     public sealed class ClassificationManager
     {
+        private static readonly IReadOnlyDictionary<string, string> _nonIdentifierClassifications = new Dictionary<string, string>
+        {
+            [CSharpNames.ClassName] = "class name",
+            [CSharpNames.StructureName] = "struct name",
+            [CSharpNames.InterfaceName] = "interface name",
+            [CSharpNames.EnumName] = "enum name",
+            [CSharpNames.DelegateName] = "delegate name",
+            [CSharpNames.TypeParameterName] = "type parameter name",
+
+            [VisualBasicNames.ClassName] = "class name",
+            [VisualBasicNames.StructureName] = "struct name",
+            [VisualBasicNames.InterfaceName] = "interface name",
+            [VisualBasicNames.EnumName] = "enum name",
+            [VisualBasicNames.DelegateName] = "delegate name",
+            [VisualBasicNames.TypeParameterName] = "type parameter name",
+            [VisualBasicNames.ModuleName] = "module name",
+        };
+
         private static Dictionary<string, ICollection<IClassificationType>> _classifications;
 
         private ClassificationManager()
         {
         }
 
-        private static ClassificationManager _instance;
+        public static ClassificationManager Instance { get; } = new ClassificationManager();
 
-        public static ClassificationManager Instance => _instance ?? (_instance = new ClassificationManager());
-
-        public IClassificationType DefaultClassification =>
+        public IClassificationType DefaultIdentifierClassification =>
             ServicesProvider.Instance.RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
+
+        /// <summary>
+        /// Try to retreive a default classification for <paramref name="name"/> if it isn't <see cref="PredefinedClassificationTypeNames.Identifier"/>
+        /// </summary>
+        public bool TryGetDefaultNonIdentifierClassification(string name, out IClassificationType classification)
+        {
+            if (_nonIdentifierClassifications.TryGetValue(name, out var classificationName))
+            {
+                classification = ServicesProvider.Instance.RegistryService.GetClassificationType(classificationName);
+                return !(classification is null);
+            }
+
+            classification = null;
+            return false;
+        }
 
         /// <returns>
         /// Classifications are grouped by language

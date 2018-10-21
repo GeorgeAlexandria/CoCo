@@ -4,7 +4,6 @@ using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
-using Microsoft.VisualStudio.Text.Formatting;
 
 namespace CoCo.Services
 {
@@ -15,18 +14,26 @@ namespace CoCo.Services
         /// <summary>
         /// Returns the default CoCo settings that are grouped by languages
         /// </summary>
-        public static IReadOnlyDictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
+        public static IReadOnlyDictionary<string, List<PresetSettings>> GetDefaultPresets()
         {
+            if (!(_defaultPresets is null)) return _defaultPresets;
+
+            _defaultPresets = new Dictionary<string, List<PresetSettings>>();
+
+            var defaulltIdentifierFormatting = FormattingService.GetDefaultIdentifierFormatting();
+
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
+                var defaultFormatting = defaulltIdentifierFormatting;
+                if (ClassificationManager.Instance.TryGetDefaultNonIdentifierClassification(name, out var defaultClassification))
+                {
+                    defaultFormatting = FormattingService.GetDefaultFormatting(defaultClassification);
+                }
+
                 var classification = defaultFormatting.ToDefaultSettings(name);
                 classification.Foreground = Color.FromRgb(r, g, b);
                 return classification;
             }
-
-            if (!(_defaultPresets is null)) return _defaultPresets;
-
-            _defaultPresets = new Dictionary<string, List<PresetSettings>>();
 
             var presets = new List<PresetSettings>
             {
