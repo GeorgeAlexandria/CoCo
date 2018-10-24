@@ -32,19 +32,13 @@ namespace CoCo
 
         private static Dictionary<string, ICollection<IClassificationType>> _classifications;
 
-        private ClassificationManager()
-        {
-        }
-
-        public static ClassificationManager Instance { get; } = new ClassificationManager();
-
-        public IClassificationType DefaultIdentifierClassification =>
+        public static IClassificationType DefaultIdentifierClassification =>
             ServicesProvider.Instance.RegistryService.GetClassificationType(PredefinedClassificationTypeNames.Identifier);
 
         /// <summary>
         /// Try to retreive a default classification for <paramref name="name"/> if it isn't <see cref="PredefinedClassificationTypeNames.Identifier"/>
         /// </summary>
-        public bool TryGetDefaultNonIdentifierClassification(string name, out IClassificationType classification)
+        public static bool TryGetDefaultNonIdentifierClassification(string name, out IClassificationType classification)
         {
             if (_nonIdentifierClassifications.TryGetValue(name, out var classificationName))
             {
@@ -59,7 +53,7 @@ namespace CoCo
         /// <returns>
         /// Classifications are grouped by language
         /// </returns>
-        public IReadOnlyDictionary<string, ICollection<IClassificationType>> GetClassifications()
+        public static IReadOnlyDictionary<string, ICollection<IClassificationType>> GetClassifications()
         {
             if (_classifications != null) return _classifications;
 

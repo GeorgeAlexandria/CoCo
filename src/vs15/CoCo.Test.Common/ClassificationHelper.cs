@@ -100,7 +100,7 @@ namespace CoCo.Test.Common
         private static RoslynEditorClassifier GetClassifier(
             ProgrammingLanguage language, IReadOnlyList<SimplifiedClassificationInfo> infos)
         {
-            var dictionary = infos is null ? null : infos.ToDictionary(x => x.Name);
+            var dictionary = infos?.ToDictionary(x => x.Name);
             var classificationTypes = new Dictionary<string, ClassificationInfo>(32);
             var names = language == ProgrammingLanguage.VisualBasic ? VisualBasicNames.All : CSharpNames.All;
             foreach (var name in names)
@@ -167,7 +167,7 @@ namespace CoCo.Test.Common
                     optionExplicit: project.OptionExplicit,
                     optionInfer: project.OptionInfer,
                     optionStrict: project.OptionStrict ? OptionStrict.On : OptionStrict.Off);
-                return new CompilationUnit[2]
+                return new CompilationUnit[]
                 {
                     CSharpCompilation.Create($"{project.ProjectName}_{LanguageNames.CSharp}")
                         .AddSyntaxTrees(csharpTrees)

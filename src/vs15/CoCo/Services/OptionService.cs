@@ -64,7 +64,7 @@ namespace CoCo.Services
         /// </summary>
         public static Option ToOption(Settings.Settings settings)
         {
-            var classificationTypes = ClassificationManager.Instance.GetClassifications();
+            var classificationTypes = ClassificationManager.GetClassifications();
             var defaultPresets = PresetService.GetDefaultPresets();
 
             var option = new Option();
@@ -138,7 +138,7 @@ namespace CoCo.Services
             foreach (var (name, displayName) in classificationNames)
             {
                 var defaultFormatting = defaultIdentifierFormatting;
-                if (ClassificationManager.Instance.TryGetDefaultNonIdentifierClassification(name, out var classification))
+                if (ClassificationManager.TryGetDefaultNonIdentifierClassification(name, out var classification))
                 {
                     defaultFormatting = FormattingService.GetDefaultFormatting(classification);
                 }

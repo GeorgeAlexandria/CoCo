@@ -25,7 +25,7 @@ namespace CoCo.Services
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
                 var defaultFormatting = defaulltIdentifierFormatting;
-                if (ClassificationManager.Instance.TryGetDefaultNonIdentifierClassification(name, out var defaultClassification))
+                if (ClassificationManager.TryGetDefaultNonIdentifierClassification(name, out var defaultClassification))
                 {
                     defaultFormatting = FormattingService.GetDefaultFormatting(defaultClassification);
                 }

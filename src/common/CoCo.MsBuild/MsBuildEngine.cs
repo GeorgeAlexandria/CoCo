@@ -108,13 +108,14 @@ namespace CoCo.MsBuild
             for (int i = 0; i < projectFileNames.Length; ++i)
             {
                 var projectGlobalProperties = globalProperties[i];
-                var properties = new Dictionary<string, string>(projectGlobalProperties.Count);
+                Dictionary<string, string> properties = null;
                 if (projectGlobalProperties != null)
                 {
+                    properties = new Dictionary<string, string>(projectGlobalProperties.Count);
                     var removeProjectProperties = removeGlobalProperties[i];
                     foreach (DictionaryEntry item in projectGlobalProperties)
                     {
-                        if (item.Key is string key && (removeGlobalProperties == null || !removeProjectProperties.Contains(key)))
+                        if (item.Key is string key && (removeProjectProperties is null || !removeProjectProperties.Contains(key)))
                         {
                             properties.Add(key, item.Value as string);
                         }
@@ -131,15 +132,15 @@ namespace CoCo.MsBuild
                     }
                 }
 
-                var project = new Project(projectFileNames[i], properties, existingToolsVersion);
-                var result = project.CreateProjectInstance().Build(targetNames, new ILogger[0], out var targetOuputs);
+                var project = new Project(projectFileNames[i], properties ?? new Dictionary<string, string>(), existingToolsVersion);
+                var result = project.CreateProjectInstance().Build(targetNames, new ILogger[0], out var targetOutputs);
                 if (!result) _logger.Error("{0} project was failed to build", projectFileNames[i]);
                 allSuccess &= result;
 
                 if (returnTargetOutputs)
                 {
-                    var projectTargetOutputs = new Dictionary<string, ITaskItem[]>(targetOuputs.Count);
-                    foreach (var item in targetOuputs)
+                    var projectTargetOutputs = new Dictionary<string, ITaskItem[]>(targetOutputs.Count);
+                    foreach (var item in targetOutputs)
                     {
                         projectTargetOutputs.Add(item.Key, item.Value.Items);
                     }

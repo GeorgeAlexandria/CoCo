@@ -18,7 +18,7 @@ namespace CoCo.Services
         public static void SetAnalyzingOptions(Option option)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
-            foreach (var languageClassifications in ClassificationManager.Instance.GetClassifications().Values)
+            foreach (var languageClassifications in ClassificationManager.GetClassifications().Values)
             {
                 foreach (var classification in languageClassifications)
                 {
