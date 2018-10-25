@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using CoCo.Analyser;
 using CoCo.Settings;
@@ -32,15 +31,15 @@ namespace CoCo.Services
             {
                 var classificationsSettings = ToSettings(language.Classifications);
 
-                if (!PresetService.GetDefaultPresetsNames().TryGetValue(language.Name, out var defaultPresets))
+                if (!PresetService.GetDefaultPresets().TryGetValue(language.Name, out var defaultPresets))
                 {
-                    defaultPresets = new HashSet<string>();
+                    defaultPresets = null;
                 }
 
                 var presetsSettings = new List<PresetSettings>(language.Presets.Count);
                 foreach (var preset in language.Presets)
                 {
-                    if (defaultPresets.Contains(preset.Name)) continue;
+                    if (!(defaultPresets is null) && defaultPresets.ContainsKey(preset.Name)) continue;
 
                     presetsSettings.Add(new PresetSettings
                     {
@@ -64,11 +63,10 @@ namespace CoCo.Services
         /// </summary>
         public static Option ToOption(Settings.Settings settings)
         {
-            var classificationTypes = ClassificationManager.GetClassifications();
             var defaultPresets = PresetService.GetDefaultPresets();
 
             var option = new Option();
-            foreach (var (languageName, classifications) in classificationTypes)
+            foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
                 var language = new Language(languageName);
                 var languageClassifications = new List<(string, string)>(17);
@@ -79,9 +77,8 @@ namespace CoCo.Services
 
                 if (!defaultPresets.TryGetValue(language.Name, out var defaultLanguagePresets))
                 {
-                    defaultLanguagePresets = new List<PresetSettings>();
+                    defaultLanguagePresets = null;
                 }
-                var presetNames = defaultLanguagePresets.ToHashSet(x => x.Name);
 
                 var isLanguageExists = false;
                 foreach (var languageSettings in settings.Languages)
@@ -95,7 +92,7 @@ namespace CoCo.Services
                         foreach (var presetSettings in languageSettings.Presets)
                         {
                             // NOTE: skip CoCo default presets, they will be added below
-                            if (presetNames.Contains(presetSettings.Name)) continue;
+                            if (!(defaultLanguagePresets is null) && defaultLanguagePresets.ContainsKey(presetSettings.Name)) continue;
 
                             var preset = new Preset(presetSettings.Name);
                             FillClassifications(languageClassifications, presetSettings.Classifications, preset.Classifications);
@@ -106,7 +103,7 @@ namespace CoCo.Services
                 }
 
                 // NOTE: add CoCo default presets
-                foreach (var defaultPreset in defaultLanguagePresets)
+                foreach (var defaultPreset in defaultLanguagePresets.Values)
                 {
                     var preset = new Preset(defaultPreset.Name);
                     FillClassifications(languageClassifications, defaultPreset.Classifications, preset.Classifications);
