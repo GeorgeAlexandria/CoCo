@@ -9,7 +9,8 @@ namespace CoCo.UI.ViewModels
     /// </summary>
     public class ClassificationColorViewModel : BaseViewModel
     {
-        public ClassificationColorViewModel(Color classificationColor, bool colorWasReset, IResetValuesProvider resetValuesProvider)
+        public ClassificationColorViewModel(
+            string classificationName, Color classificationColor, bool colorWasReset, IResetValuesProvider resetValuesProvider)
         {
             _color = classificationColor;
             _colorText = _color.ToString();
@@ -25,7 +26,7 @@ namespace CoCo.UI.ViewModels
             });
             ResetColor = new DelegateCommand(() =>
             {
-                Color = resetValuesProvider.Foreground;
+                Color = resetValuesProvider.GetForeground(classificationName);
                 ColorWasReset = true;
             });
 

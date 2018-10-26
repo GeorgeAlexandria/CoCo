@@ -18,7 +18,7 @@ namespace CoCo.Services
         public static void SetAnalyzingOptions(Option option)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
-            foreach (var languageClassifications in ClassificationManager.Instance.GetClassifications().Values)
+            foreach (var languageClassifications in ClassificationManager.GetClassifications().Values)
             {
                 foreach (var classification in languageClassifications)
                 {
@@ -26,14 +26,14 @@ namespace CoCo.Services
                 }
             }
 
-            var classifications = new Dictionary<IClassificationType, ClassificationInfo>(classificationTypes.Count);
+            var classifications = new Dictionary<IClassificationType, ClassificationOption>(classificationTypes.Count);
             foreach (var language in option.Languages)
             {
                 foreach (var classification in language.Classifications)
                 {
                     if (classificationTypes.TryGetValue(classification.Name, out var type))
                     {
-                        classifications.Add(type, new ClassificationInfo(type, classification.IsDisabled, classification.IsDisabledInXml));
+                        classifications.Add(type, new ClassificationOption(classification.IsDisabled, classification.IsDisabledInXml));
                     }
                 }
             }

@@ -30,6 +30,13 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _aliasNamespaceType;
         private IClassificationType _staticLocalVariableType;
         private IClassificationType _eventType;
+        private IClassificationType _classType;
+        private IClassificationType _structureType;
+        private IClassificationType _moduleType;
+        private IClassificationType _interfaceType;
+        private IClassificationType _delegateType;
+        private IClassificationType _enumType;
+        private IClassificationType _typeParameterType;
 
         internal VisualBasicClassifier(
             IReadOnlyDictionary<string, ClassificationInfo> classifications,
@@ -60,10 +67,19 @@ namespace CoCo.Analyser.VisualBasic
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
                 {
                     // NOTE: handle alias in imports directive
-                    if (node is ImportAliasClauseSyntax aliasSyntax)
+                    if (node is ImportAliasClauseSyntax && node.Parent is SimpleImportsClauseSyntax importSyntax)
                     {
-                        AppendClassificationSpan(spans, span.Snapshot, aliasSyntax.Identifier.Span, _aliasNamespaceType);
-                        continue;
+                        var aliasNameSymbol = semanticModel.GetSymbolInfo(importSyntax.Name).Symbol;
+                        var aliasType =
+                            aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
+                            aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
+                            null;
+
+                        if (!(aliasType is null))
+                        {
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, aliasType);
+                            continue;
+                        }
                     }
 
                     Log.Debug("Nothing is found. Span start at {0} and end at {1}", item.TextSpan.Start, item.TextSpan.End);
@@ -126,6 +142,18 @@ namespace CoCo.Analyser.VisualBasic
                         AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _eventType, node);
                         break;
 
+                    case SymbolKind.TypeParameter:
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _typeParameterType, node);
+                        break;
+
+                    case SymbolKind.NamedType:
+                        var type = GetTypeClassification(symbol as INamedTypeSymbol);
+                        if (!(type is null))
+                        {
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, type, node);
+                        }
+                        break;
+
                     default:
                         Log.Debug("Symbol kind={0} was on position [{1}..{2}]", symbol.Kind, item.TextSpan.Start, item.TextSpan.End);
                         Log.Debug("Node is: {0}", node);
@@ -135,6 +163,15 @@ namespace CoCo.Analyser.VisualBasic
 
             return spans;
         }
+
+        private IClassificationType GetTypeClassification(INamedTypeSymbol typeSymbol) =>
+           typeSymbol.TypeKind == TypeKind.Class ? _classType :
+           typeSymbol.TypeKind == TypeKind.Struct ? _structureType :
+           typeSymbol.TypeKind == TypeKind.Module ? _moduleType :
+           typeSymbol.TypeKind == TypeKind.Interface ? _interfaceType :
+           typeSymbol.TypeKind == TypeKind.Enum ? _enumType :
+           typeSymbol.TypeKind == TypeKind.Delegate ? _delegateType :
+           null;
 
         private void AppendClassificationSpan(
            List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
@@ -155,7 +192,7 @@ namespace CoCo.Analyser.VisualBasic
             {
                 var info = classifications[name];
                 type = info.ClassificationType;
-                options[type] = info;
+                options[type] = info.Option;
                 builder.Add(type);
             }
 
@@ -176,6 +213,13 @@ namespace CoCo.Analyser.VisualBasic
             InitializeClassification(VisualBasicNames.AliasNamespaceName, ref _aliasNamespaceType);
             InitializeClassification(VisualBasicNames.StaticLocalVariableName, ref _staticLocalVariableType);
             InitializeClassification(VisualBasicNames.EventName, ref _eventType);
+            InitializeClassification(VisualBasicNames.ClassName, ref _classType);
+            InitializeClassification(VisualBasicNames.StructureName, ref _structureType);
+            InitializeClassification(VisualBasicNames.ModuleName, ref _moduleType);
+            InitializeClassification(VisualBasicNames.InterfaceName, ref _interfaceType);
+            InitializeClassification(VisualBasicNames.DelegateName, ref _delegateType);
+            InitializeClassification(VisualBasicNames.EnumName, ref _enumType);
+            InitializeClassification(VisualBasicNames.TypeParameterName, ref _typeParameterType);
 
             base.classifications = builder.ToImmutable();
         }

@@ -20,6 +20,12 @@ namespace CoCo.Analyser.CSharp
         public const string LabelName = "CoCo csharp label name";
         public const string ConstantFieldName = "CoCo csharp constant field name";
         public const string DestructorName = "CoCo csharp destructor method name";
+        public const string TypeParameterName = "CoCo csharp type parameter name";
+        public const string ClassName = "CoCo csharp class name";
+        public const string StructureName = "CoCo csharp structure name";
+        public const string EnumName = "CoCo csharp enum name";
+        public const string InterfaceName = "CoCo csharp interface name";
+        public const string DelegateName = "CoCo csharp delegate name";
 
         private static ImmutableArray<string> _all;
 
@@ -46,6 +52,12 @@ namespace CoCo.Analyser.CSharp
                 builder.Add(LabelName);
                 builder.Add(ConstantFieldName);
                 builder.Add(DestructorName);
+                builder.Add(TypeParameterName);
+                builder.Add(ClassName);
+                builder.Add(StructureName);
+                builder.Add(InterfaceName);
+                builder.Add(EnumName);
+                builder.Add(DelegateName);
                 return _all = builder.ToImmutable();
             }
         }

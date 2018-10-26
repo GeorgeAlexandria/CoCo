@@ -22,9 +22,9 @@ namespace CoCo.UI.ViewModels
             _fontRenderingSize = classification.FontRenderingSize;
 
             Foreground = new ClassificationColorViewModel(
-                classification.Foreground, classification.ForegroundWasReset, resetValuesProvider);
+                _classificationName, classification.Foreground, classification.ForegroundWasReset, resetValuesProvider);
             Background = new ClassificationColorViewModel(
-                classification.Background, classification.BackgroundWasReset, resetValuesProvider);
+                _classificationName, classification.Background, classification.BackgroundWasReset, resetValuesProvider);
 
             _fontRenderingSizeWasReset = classification.FontRenderingSizeWasReset;
 
@@ -32,7 +32,7 @@ namespace CoCo.UI.ViewModels
 
             ResetFontRenderingSize = new DelegateCommand(() =>
             {
-                SetProperty(ref _fontRenderingSize, resetValuesProvider.FontRenderingSize, nameof(Size));
+                SetProperty(ref _fontRenderingSize, resetValuesProvider.GetFontRenderingSize(_classificationName), nameof(Size));
                 _fontRenderingSizeWasReset = true;
             });
         }

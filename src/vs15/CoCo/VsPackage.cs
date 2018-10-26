@@ -12,11 +12,11 @@ using Microsoft.VisualStudio.Shell;
 
 namespace CoCo
 {
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
     [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
     [Guid(Guids.Package)]
-    public sealed class VsPackage : Package
+    public sealed class VsPackage : AsyncPackage
     {
         private static OptionViewModel _optionViewModel;
 

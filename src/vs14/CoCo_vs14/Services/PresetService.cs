@@ -4,56 +4,59 @@ using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
-using Microsoft.VisualStudio.Text.Formatting;
 
 namespace CoCo.Services
 {
     public static class PresetService
     {
-        private static Dictionary<string, List<PresetSettings>> _defaultPresets;
+        private static Dictionary<string, IReadOnlyDictionary<string, PresetSettings>> _defaultPresets;
 
         /// <summary>
         /// Returns the default CoCo settings that are grouped by languages
         /// </summary>
-        public static IReadOnlyDictionary<string, List<PresetSettings>> GetDefaultPresets(TextFormattingRunProperties defaultFormatting)
+        public static IReadOnlyDictionary<string, IReadOnlyDictionary<string, PresetSettings>> GetDefaultPresets()
         {
+            if (!(_defaultPresets is null)) return _defaultPresets;
+
+            _defaultPresets = new Dictionary<string, IReadOnlyDictionary<string, PresetSettings>>();
+
+            var defaulltIdentifierFormatting = FormattingService.GetDefaultIdentifierFormatting();
+
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
+                var defaultFormatting = defaulltIdentifierFormatting;
+                if (ClassificationManager.TryGetDefaultNonIdentifierClassification(name, out var defaultClassification))
+                {
+                    defaultFormatting = FormattingService.GetDefaultFormatting(defaultClassification);
+                }
+
                 var classification = defaultFormatting.ToDefaultSettings(name);
                 classification.Foreground = Color.FromRgb(r, g, b);
                 return classification;
             }
 
-            if (!(_defaultPresets is null)) return _defaultPresets;
-
-            _defaultPresets = new Dictionary<string, List<PresetSettings>>();
-
-            var presets = new List<PresetSettings>
+            var presets = new Dictionary<string, PresetSettings>
             {
-                new PresetSettings
+                ["CoCo light|blue theme"] = new PresetSettings
                 {
                     Name = "CoCo light|blue theme",
                     Classifications = new List<ClassificationSettings>
                     {
-                        CreateClassification(CSharpNames.AliasNamespaceName, 220, 220, 220),
                         CreateClassification(CSharpNames.ConstantFieldName, 255, 157, 255),
-                        CreateClassification(CSharpNames.ConstructorName, 220, 220, 220),
-                        CreateClassification(CSharpNames.DestructorName, 220, 220, 220),
                         CreateClassification(CSharpNames.EnumFieldName, 0, 193, 193),
-                        CreateClassification(CSharpNames.EventName, 220, 220, 220),
                         CreateClassification(CSharpNames.ExtensionMethodName, 233, 122, 0),
                         CreateClassification(CSharpNames.FieldName, 255, 157, 255),
                         CreateClassification(CSharpNames.LabelName, 120, 20, 0),
                         CreateClassification(CSharpNames.LocalVariableName, 128, 128, 0),
                         CreateClassification(CSharpNames.MethodName, 187, 54, 4),
-                        CreateClassification(CSharpNames.NamespaceName, 220, 220, 220),
                         CreateClassification(CSharpNames.ParameterName, 128, 128, 128),
                         CreateClassification(CSharpNames.PropertyName, 255, 0, 255),
                         CreateClassification(CSharpNames.RangeVariableName, 128, 128, 0),
                         CreateClassification(CSharpNames.StaticMethodName, 154, 82, 0)
                     }
                 },
-                new PresetSettings
+
+                ["CoCo dark theme"] = new PresetSettings
                 {
                     Name = "CoCo dark theme",
                     Classifications = new List<ClassificationSettings>
@@ -79,23 +82,20 @@ namespace CoCo.Services
             };
             _defaultPresets[Languages.CSharp] = presets;
 
-            presets = new List<PresetSettings>
+            presets = new Dictionary<string, PresetSettings>
             {
-                new PresetSettings
+                ["CoCo light|blue theme"] = new PresetSettings
                 {
                     Name = "CoCo light|blue theme",
                     Classifications = new List<ClassificationSettings>
                     {
-                        CreateClassification(VisualBasicNames.AliasNamespaceName, 220, 220, 220),
                         CreateClassification(VisualBasicNames.ConstantFieldName, 255, 157, 255),
                         CreateClassification(VisualBasicNames.EnumFieldName, 0, 193, 193),
-                        CreateClassification(VisualBasicNames.EventName, 220, 220, 220),
                         CreateClassification(VisualBasicNames.ExtensionMethodName, 233, 122, 0),
                         CreateClassification(VisualBasicNames.FieldName, 255, 157, 255),
                         CreateClassification(VisualBasicNames.FunctionName, 187, 54, 4),
                         CreateClassification(VisualBasicNames.FunctionVariableName, 128, 64, 0),
                         CreateClassification(VisualBasicNames.LocalVariableName, 128, 128, 0),
-                        CreateClassification(VisualBasicNames.NamespaceName, 220, 220, 220),
                         CreateClassification(VisualBasicNames.ParameterName, 128, 128, 128),
                         CreateClassification(VisualBasicNames.PropertyName, 255, 0, 255),
                         CreateClassification(VisualBasicNames.RangeVariableName, 128, 128, 0),
@@ -105,7 +105,8 @@ namespace CoCo.Services
                         CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128)
                     }
                 },
-                new PresetSettings
+
+                ["CoCo dark theme"] = new PresetSettings
                 {
                     Name = "CoCo dark theme",
                     Classifications = new List<ClassificationSettings>
@@ -133,17 +134,6 @@ namespace CoCo.Services
             _defaultPresets[Languages.VisualBasic] = presets;
 
             return _defaultPresets;
-        }
-
-        public static IReadOnlyDictionary<string, ISet<string>> GetDefaultPresetsNames()
-        {
-            var presets = new HashSet<string> { "CoCo light|blue theme", "CoCo dark theme" };
-
-            return new Dictionary<string, ISet<string>>
-            {
-                [Languages.CSharp] = presets,
-                [Languages.VisualBasic] = presets,
-            };
         }
     }
 }

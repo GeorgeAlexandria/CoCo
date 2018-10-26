@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using CoCo.Analyser;
 using CoCo.Settings;
@@ -32,15 +31,15 @@ namespace CoCo.Services
             {
                 var classificationsSettings = ToSettings(language.Classifications);
 
-                if (!PresetService.GetDefaultPresetsNames().TryGetValue(language.Name, out var defaultPresets))
+                if (!PresetService.GetDefaultPresets().TryGetValue(language.Name, out var defaultPresets))
                 {
-                    defaultPresets = new HashSet<string>();
+                    defaultPresets = null;
                 }
 
                 var presetsSettings = new List<PresetSettings>(language.Presets.Count);
                 foreach (var preset in language.Presets)
                 {
-                    if (defaultPresets.Contains(preset.Name)) continue;
+                    if (!(defaultPresets is null) && defaultPresets.ContainsKey(preset.Name)) continue;
 
                     presetsSettings.Add(new PresetSettings
                     {
@@ -64,13 +63,10 @@ namespace CoCo.Services
         /// </summary>
         public static Option ToOption(Settings.Settings settings)
         {
-            var classificationTypes = ClassificationManager.Instance.GetClassifications();
-            var defaultFormatting = FormattingService.GetDefaultFormatting();
-
-            var defaultPresets = PresetService.GetDefaultPresets(defaultFormatting);
+            var defaultPresets = PresetService.GetDefaultPresets();
 
             var option = new Option();
-            foreach (var (languageName, classifications) in classificationTypes)
+            foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
                 var language = new Language(languageName);
                 var languageClassifications = new List<(string, string)>(17);
@@ -81,9 +77,8 @@ namespace CoCo.Services
 
                 if (!defaultPresets.TryGetValue(language.Name, out var defaultLanguagePresets))
                 {
-                    defaultLanguagePresets = new List<PresetSettings>();
+                    defaultLanguagePresets = null;
                 }
-                var presetNames = defaultLanguagePresets.ToHashSet(x => x.Name);
 
                 var isLanguageExists = false;
                 foreach (var languageSettings in settings.Languages)
@@ -92,17 +87,15 @@ namespace CoCo.Services
                     if (languageSettings.Name.Equals(language.Name))
                     {
                         isLanguageExists = true;
-                        FillClassifications(
-                            languageClassifications, languageSettings.CurrentClassifications, language.Classifications, defaultFormatting);
+                        FillClassifications(languageClassifications, languageSettings.CurrentClassifications, language.Classifications);
 
                         foreach (var presetSettings in languageSettings.Presets)
                         {
                             // NOTE: skip CoCo default presets, they will be added below
-                            if (presetNames.Contains(presetSettings.Name)) continue;
+                            if (!(defaultLanguagePresets is null) && defaultLanguagePresets.ContainsKey(presetSettings.Name)) continue;
 
                             var preset = new Preset(presetSettings.Name);
-                            FillClassifications(
-                                languageClassifications, presetSettings.Classifications, preset.Classifications, defaultFormatting);
+                            FillClassifications(languageClassifications, presetSettings.Classifications, preset.Classifications);
                             language.Presets.Add(preset);
                         }
                         break;
@@ -110,18 +103,16 @@ namespace CoCo.Services
                 }
 
                 // NOTE: add CoCo default presets
-                foreach (var defaultPreset in defaultLanguagePresets)
+                foreach (var defaultPreset in defaultLanguagePresets.Values)
                 {
                     var preset = new Preset(defaultPreset.Name);
-                    FillClassifications(
-                        languageClassifications, defaultPreset.Classifications, preset.Classifications, defaultFormatting);
+                    FillClassifications(languageClassifications, defaultPreset.Classifications, preset.Classifications);
                     language.Presets.Add(preset);
                 }
                 // NOTE: add default classifications
                 if (!isLanguageExists)
                 {
-                    FillClassifications(
-                        languageClassifications, Array.Empty<ClassificationSettings>(), language.Classifications, defaultFormatting);
+                    FillClassifications(languageClassifications, Array.Empty<ClassificationSettings>(), language.Classifications);
                 }
                 option.Languages.Add(language);
             }
@@ -132,17 +123,23 @@ namespace CoCo.Services
         /// <summary>
         /// Converts an existing <paramref name="classificationsSettings"/> to <see cref="Classification"/> and appends them to
         /// <paramref name="classifications"/>, also create <see cref="Classification"/> from non existing classifications in
-        /// <paramref name="classificationsSettings"/> set the default values of fields using <paramref name="defaultFormatting"/>
+        /// <paramref name="classificationsSettings"/> set the default values of fields
         /// </summary>
         /// <param name="classificationNames">string * string -> name * display name</param>
         private static void FillClassifications(
             IEnumerable<(string, string)> classificationNames,
             ICollection<ClassificationSettings> classificationsSettings,
-            ICollection<Classification> classifications,
-            TextFormattingRunProperties defaultFormatting)
+            ICollection<Classification> classifications)
         {
+            var defaultIdentifierFormatting = FormattingService.GetDefaultIdentifierFormatting();
             foreach (var (name, displayName) in classificationNames)
             {
+                var defaultFormatting = defaultIdentifierFormatting;
+                if (ClassificationManager.TryGetDefaultNonIdentifierClassification(name, out var classification))
+                {
+                    defaultFormatting = FormattingService.GetDefaultFormatting(classification);
+                }
+
                 var isClassificationExists = false;
                 foreach (var classificationSettings in classificationsSettings)
                 {
@@ -213,8 +210,10 @@ namespace CoCo.Services
             classification.IsBaseline = classificationSettings.IsBaseline ??
                 defaultFormatting.TextDecorations.Contains(TextDecorations.Baseline[0]);
 
-            classification.IsDisabled = classificationSettings.IsDisabled ?? false;
-            classification.IsDisabledInXml = classificationSettings.IsDisabledInXml ?? false;
+            var defaultOption = ClassificationService.GetDefaultOption(classification.Name);
+
+            classification.IsDisabled = classificationSettings.IsDisabled ?? defaultOption.IsDisabled;
+            classification.IsDisabledInXml = classificationSettings.IsDisabledInXml ?? defaultOption.IsDisabledInXml;
 
             return classification;
         }

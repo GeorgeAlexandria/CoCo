@@ -48,6 +48,12 @@
     <Compile Include="Access\Methods\Method.cs" />
     <Compile Include="Access\Methods\StaticMethod.cs" />
     <Compile Include="Access\Namespaces\CustomNamespaces.cs" />
+    <Compile Include="Access\Types\ClassType.cs" />
+    <Compile Include="Access\Types\DelegateType.cs" />
+    <Compile Include="Access\Types\EnumType.cs" />
+    <Compile Include="Access\Types\InterfaceType.cs" />
+    <Compile Include="Access\Types\StructureType.cs" />
+    <Compile Include="Access\Types\TypeParameter.cs" />
     <Compile Include="AnalyzeOptions\AliasNamespace.cs" />
     <Compile Include="AnalyzeOptions\LocalVariable.cs" />
     <Compile Include="AnalyzeOptions\Member.cs" />
@@ -117,6 +123,12 @@
     <Compile Include="Declarations\Parameters\Variable.cs" />
     <Compile Include="Declarations\Parameters\Optional.cs" />
     <Compile Include="Declarations\Parameters\SimpleParameter.cs" />
+    <Compile Include="Declarations\Types\ClassType.cs" />
+    <Compile Include="Declarations\Types\DelegateType.cs" />
+    <Compile Include="Declarations\Types\EnumType.cs" />
+    <Compile Include="Declarations\Types\InterfaceType.cs" />
+    <Compile Include="Declarations\Types\StructureType.cs" />
+    <Compile Include="Declarations\Types\TypeParameter.cs" />
     <Compile Include="XmlDocComment\TypeParam.cs" />
     <Compile Include="XmlDocComment\TypeParamRef.cs" />
     <Compile Include="XmlDocComment\CrefAttribute.cs" />

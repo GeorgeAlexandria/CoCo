@@ -9,14 +9,14 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void MethodTest_Sub()
         {
-            GetContext(@"Declarations\Methods\SubMethod.vb").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Methods\SubMethod.vb").GetClassifications().AssertContains(
                 VisualBasicNames.SubName.ClassifyAt(39, 6));
         }
 
         [Test]
         public void MethodTest_Function()
         {
-            GetContext(@"Declarations\Methods\FunctionMethod.vb").GetClassifications().AssertIsEquivalent(
+            GetContext(@"Declarations\Methods\FunctionMethod.vb").GetClassifications().AssertContains(
                 VisualBasicNames.FunctionName.ClassifyAt(49, 6));
         }
 
@@ -30,13 +30,17 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         [Test]
         public void MethodTest_Constructor()
         {
-            GetContext(@"Declarations\Methods\Constructor.vb").GetClassifications().AssertIsEmpty();
+            GetContext(@"Declarations\Methods\Constructor.vb")
+                .AddInfo(VisualBasicNames.ClassName.Disable())
+                .GetClassifications().AssertIsEmpty();
         }
 
         [Test]
         public void MethodTest_SharedConstructor()
         {
-            GetContext(@"Declarations\Methods\StaticConstructor.vb").GetClassifications().AssertIsEmpty();
+            GetContext(@"Declarations\Methods\StaticConstructor.vb")
+                .AddInfo(VisualBasicNames.ClassName.Disable())
+                .GetClassifications().AssertIsEmpty();
         }
 
         [Test]

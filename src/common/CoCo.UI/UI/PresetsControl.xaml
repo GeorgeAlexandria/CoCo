@@ -67,7 +67,6 @@
                      Margin="8,0,8,0"
                      Command="{Binding ApplyPreset}"
                      CommandParameter="{Binding}"
-                     Foreground="#5e5e5a"
                      Style="{StaticResource commonButtonStyle}"
                      Template="{StaticResource ApplyPresetButton}" />
                   <Button
