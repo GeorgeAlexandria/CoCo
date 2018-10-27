@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.3.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.3.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.4.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.4.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (VS14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (VS15) extension that is analyzing C#, VB\.Net source codes to colorize 
@@ -19,6 +19,8 @@ Extension supports the following elements:
 * Properties
 * Instance, enum and constant fields
 * Labels
+* Class, structure and interface types
+* Enum, delegate and type parameter types
 
 #### VisualBasic
 
@@ -31,12 +33,19 @@ Extension supports the following elements:
 * Events
 * Properties and "WithEvents" fields
 * Instance, enum and constant fields
+* Class, structure and module types
+* Enum and delegate types
+* Interface and type parameter types
 
-and supports the following decorations:
+supports the following decorations:
 * Changing foreground and background
 * Using bold and italic font
 * Changing font rendering size
 * Using overline, underline, strikethrough and baseline font
+
+and supports the following analyze options:
+* Disable classification a current item
+* Disable classification a current item inside a xml doc comments
 
 ## Examples
 
@@ -50,10 +59,12 @@ The following screenshots show a different applying decorations and colors to th
 
 
 ## How to use 
-Use **CoCo/Classifications** option page in the Visual Studio options to change colors of items or to apply decorations:
+Use **CoCo/Classifications** option page in the Visual Studio options to change decorations of items or their analyze options:
 
-![](https://user-images.githubusercontent.com/13402478/44617730-efeeac80-a870-11e8-8364-a697b747b9d5.png)
+![](https://user-images.githubusercontent.com/13402478/47605876-e4586700-da14-11e8-8faa-d0841f9ac6c6.png)
 
+
+You can disable classification of the chosen item in the **Analyze settings** sections to allow the other similar extensions or Visual Studio classify this item.
 
 Also you can use **CoCo/Presets** option page to save your current settings as preset and to apply or delete existing presets:
 
