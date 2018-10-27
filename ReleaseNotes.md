@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.4.0
+
+**2018-10-27**
+
+ - [x] Release issue [#24](https://github.com/GeorgeAlexandria/CoCo/issues/24) – Append supporting **C#** and **VisualBasic** types classifications. For more information on supporting types, visit the [home page](https://github.com/GeorgeAlexandria/CoCo)
+ - [x] Release issue [#43](https://github.com/GeorgeAlexandria/CoCo/issues/43) – Allow to disable item classification
+ - [x] Release issue [#42](https://github.com/GeorgeAlexandria/CoCo/issues/42) – Allow to disable item classification inside a xml doc comment
+
 ## 2.3.0
 
 **2018-09-27**
