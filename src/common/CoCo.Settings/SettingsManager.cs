@@ -145,10 +145,10 @@ namespace CoCo.Settings
             {
                 classification.IsBold = isBold;
             }
-            if (jClassification[nameof(ClassificationSettings.IsItalic)] is JValue jItalic &&
-                jItalic.Value is bool isItalic)
+            if (jClassification[nameof(ClassificationSettings.FontStyle)] is JValue jFontStyle &&
+                jFontStyle.Value is string fontStyle)
             {
-                classification.IsItalic = isItalic;
+                classification.FontStyle = fontStyle;
             }
             if (jClassification[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
                 jOverline.Value is bool isOverline)
@@ -216,9 +216,9 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.IsBold), new JValue(classification.IsBold.Value));
             }
-            if (classification.IsItalic.HasValue)
+            if (!(classification.FontStyle is null))
             {
-                jClassification.Add(nameof(classification.IsItalic), new JValue(classification.IsItalic.Value));
+                jClassification.Add(nameof(classification.FontStyle), new JValue(classification.FontStyle));
             }
             if (classification.IsOverline.HasValue)
             {

@@ -80,10 +80,28 @@ namespace CoCo.Services
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
 
-            if (formatting.Italic != classification.IsItalic)
+            if (formatting.TypefaceEmpty)
             {
-                formatting = formatting.SetItalic(classification.IsItalic);
+                switch (classification.FontStyle.Name)
+                {
+                    case "Italic" when !formatting.Italic:
+                        formatting = formatting.SetItalic(true);
+                        break;
+
+                    case "Normal" when formatting.Italic:
+                        formatting = formatting.SetItalic(false);
+                        break;
+
+                    default:
+                        formatting = ApplyFontStyle(formatting, defaultFormatting.Typeface, classification.FontStyle.Style);
+                        break;
+                }
             }
+            else if (!formatting.Typeface.Style.Equals(classification.FontStyle.Style))
+            {
+                formatting = ApplyFontStyle(formatting, formatting.Typeface, classification.FontStyle.Style);
+            }
+
             if (formatting.Bold != classification.IsBold)
             {
                 formatting = formatting.SetBold(classification.IsBold);
@@ -162,6 +180,21 @@ namespace CoCo.Services
             return formatting;
         }
 
+        /// <summary>
+        /// Apply <paramref name="style"/> to <paramref name="formatting"/> and set other <see cref="Typeface"/> properties
+        /// from <paramref name="face"/>
+        /// </summary>
+        private static TextFormattingRunProperties ApplyFontStyle(
+            TextFormattingRunProperties formatting, Typeface face, System.Windows.FontStyle style)
+        {
+            if (!formatting.ItalicEmpty)
+            {
+                formatting = formatting.ClearItalic();
+            }
+
+            return formatting.SetTypeface(new Typeface(face.FontFamily, style, face.Weight, face.Stretch));
+        }
+
         private static TextFormattingRunProperties GetDefaultFormatting(
             IClassificationFormatMap classificationFormatMap,
             IClassificationType defaultClassification)
@@ -183,6 +216,12 @@ namespace CoCo.Services
                 // NOTE: Foreground always is set, just look at
                 // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
                 defaultFormatting = defaultFormatting.SetForegroundBrush(classificationFormatMap.DefaultTextProperties.ForegroundBrush);
+            }
+            if (defaultFormatting.TypefaceEmpty)
+            {
+                // NOTE: Typeface always is set, just look at
+                // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
+                defaultFormatting = defaultFormatting.SetTypeface(classificationFormatMap.DefaultTextProperties.Typeface);
             }
             return defaultFormatting;
         }

@@ -31,8 +31,8 @@
          <Label
             Margin="5,0,0,5"
             Content="Language:"
-            Style="{StaticResource labelStyle}"
-            TextBlock.FontSize="14" />
+            FontSize="14"
+            Style="{StaticResource labelStyle}" />
          <ComboBox
             Width="100"
             Margin="5,0,0,5"
@@ -256,19 +256,31 @@
                         Style="{StaticResource commonButtonStyle}"
                         Template="{StaticResource ResetButton}" />
                   </StackPanel>
+                  <StackPanel
+                     Grid.Row="0"
+                     Width="Auto"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding FontStylesContainer}"
+                     Orientation="Horizontal">
+                     <Label
+                        Content="Font style:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <ComboBox
+                        Width="80"
+                        Margin="5,0,0,5"
+                        ItemsSource="{Binding FontStyles}"
+                        SelectedItem="{Binding SelectedFontStyle}"
+                        Style="{StaticResource comboBoxFlatStyle}" />
+                  </StackPanel>
                   <WrapPanel
                      Width="Auto"
                      MaxWidth="270"
-                     Margin="5,0,0,0"
+                     Margin="5,2,0,0"
                      HorizontalAlignment="Left">
                      <CheckBox
                         Content="Bold"
                         IsChecked="{Binding IsBold}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox
-                        Margin="10,0,0,0"
-                        Content="Italic"
-                        IsChecked="{Binding IsItalic}"
                         Style="{StaticResource checkBoxFlatStyle}" />
                      <CheckBox
                         Margin="10,0,0,0"

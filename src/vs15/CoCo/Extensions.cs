@@ -2,6 +2,7 @@
 using System.Windows.Media;
 using CoCo.Analyser;
 using CoCo.Settings;
+using CoCo.UI;
 using Microsoft.VisualStudio.Text.Formatting;
 
 namespace CoCo
@@ -20,7 +21,7 @@ namespace CoCo
             {
                 Name = classificationName,
                 IsBold = formatting.Bold,
-                IsItalic = formatting.Italic,
+                FontStyle = formatting.GetFontStyleName(),
                 IsOverline = formatting.TextDecorations.Contains(TextDecorations.OverLine[0]),
                 IsUnderline = formatting.TextDecorations.Contains(TextDecorations.Underline[0]),
                 IsStrikethrough = formatting.TextDecorations.Contains(TextDecorations.Strikethrough[0]),
@@ -28,6 +29,16 @@ namespace CoCo
                 IsDisabled = defaultOption.IsDisabled,
                 IsDisabledInXml = defaultOption.IsDisabledInXml,
             };
+        }
+
+        /// <summary>
+        /// Returns the relevant font style name for <paramref name="formatting"/> if it exists or the fallback name
+        /// </summary>
+        public static string GetFontStyleName(this TextFormattingRunProperties formatting)
+        {
+            if (formatting.Italic) return "Italic";
+            var styleName = formatting.Typeface.Style.ToString();
+            return FontStyleService.SupportedFontStyles.ContainsKey(styleName) ? styleName : "Normal";
         }
 
         /// <summary>
