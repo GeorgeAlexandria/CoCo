@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
 using CoCo.Settings;
+using CoCo.UI;
 using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
+using CoCoFontStyle = CoCo.UI.Data.FontStyle;
 
 namespace CoCo.Services
 {
@@ -199,7 +201,17 @@ namespace CoCo.Services
             }
 
             classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
-            classification.IsItalic = classificationSettings.IsItalic ?? defaultFormatting.Italic;
+
+            if (classificationSettings.FontStyle is null ||
+                !FontStyleService.SupportedFontStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+            {
+                var fontStyleName = defaultFormatting.GetFontStyleName();
+                classification.FontStyle = new CoCoFontStyle(fontStyleName, FontStyleService.SupportedFontStyles[fontStyleName]);
+            }
+            else
+            {
+                classification.FontStyle = new CoCoFontStyle(classificationSettings.FontStyle, fontStyle);
+            }
 
             classification.IsOverline = classificationSettings.IsOverline ??
                 defaultFormatting.TextDecorations.Contains(TextDecorations.OverLine[0]);
@@ -250,7 +262,7 @@ namespace CoCo.Services
             {
                 Name = classification.Name,
                 IsBold = classification.IsBold,
-                IsItalic = classification.IsItalic,
+                FontStyle = classification.FontStyle.Name,
                 IsOverline = classification.IsOverline,
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,

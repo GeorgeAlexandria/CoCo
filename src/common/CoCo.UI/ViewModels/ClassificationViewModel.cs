@@ -14,12 +14,13 @@ namespace CoCo.UI.ViewModels
             _isDisabled = classification.IsDisabled;
             _isDisabledInXml = classification.IsDisabledInXml;
             _isBold = classification.IsBold;
-            _isItalic = classification.IsItalic;
             _isOverline = classification.IsOverline;
             _isUnderline = classification.IsUnderline;
             _isStrikethrough = classification.IsStrikethrough;
             _isBaseLine = classification.IsBaseline;
             _fontRenderingSize = classification.FontRenderingSize;
+
+            FontStylesContainer = new FontStylesViewModel(classification.FontStyle.Name);
 
             Foreground = new ClassificationColorViewModel(
                 _classificationName, classification.Foreground, classification.ForegroundWasReset, resetValuesProvider);
@@ -36,6 +37,8 @@ namespace CoCo.UI.ViewModels
                 _fontRenderingSizeWasReset = true;
             });
         }
+
+        public FontStylesViewModel FontStylesContainer { get; }
 
         public ClassificationColorViewModel Foreground { get; set; }
 
@@ -65,14 +68,6 @@ namespace CoCo.UI.ViewModels
         {
             get => _isBold;
             set => SetProperty(ref _isBold, value);
-        }
-
-        private bool _isItalic;
-
-        public bool IsItalic
-        {
-            get => _isItalic;
-            set => SetProperty(ref _isItalic, value);
         }
 
         private bool _isOverline;
@@ -132,7 +127,7 @@ namespace CoCo.UI.ViewModels
             Background = Background.Color,
             Foreground = Foreground.Color,
             IsBold = IsBold,
-            IsItalic = IsItalic,
+            FontStyle = FontStylesContainer.FontStyle,
             IsOverline = IsOverline,
             IsUnderline = IsUnderline,
             IsStrikethrough = IsStrikethrough,

@@ -16,7 +16,7 @@ namespace CoCo
     /// <summary>
     /// Service that migrates existing options to a new versions
     /// </summary>
-    public static partial class MigrationService
+    public partial class MigrationService
     {
         /// <summary>
         /// VS seaves the default background as #FF010000 for light and dark theme.

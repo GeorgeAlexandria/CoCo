@@ -2,63 +2,53 @@
 using System.Linq;
 using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
+using CoCo.Settings;
+using CoCo.UI;
 using CoCo.Utils;
 
 namespace CoCo
 {
-    public static partial class MigrationService
+    public sealed partial class MigrationService : IMigrationService
     {
-        /// <summary>
-        /// Migrates the csharp classifications that look like "CoCo some name" to "CoCo csharp some name"
-        /// </summary>
-        public static Settings.Settings MigrateSettingsTo_2_3_0(Settings.Settings settings)
+        private MigrationService()
         {
-            ICollection<Settings.ClassificationSettings> MigrateClassifications(
-                ICollection<Settings.ClassificationSettings> classificationSettings)
-            {
-                var classifications = new Dictionary<string, Settings.ClassificationSettings>();
-                foreach (var item in classificationSettings)
-                {
-                    classifications[item.Name] = item;
-                }
+        }
 
-                foreach (var name in CSharpNames.All)
-                {
-                    var oldName = name.Length < 13 ? name : name.Remove(5, 7);
-                    if (!classifications.ContainsKey(name) &&
-                        classifications.TryGetValue(oldName, out var classification))
-                    {
-                        classification.Name = name;
-                        classifications[oldName] = classification;
-                    }
-                }
-                return classifications.Values.ToList();
+        public static MigrationService Instance = new MigrationService();
+
+        public void MigrateClassification(IReadOnlyDictionary<string, object> properties, ref ClassificationSettings classification)
+        {
+            //NOTE: -> 2.5.0: Migrates a font style
+            if (classification.FontStyle is null && properties.TryGetValue("IsItalic", out var value) && value is bool isItalic)
+            {
+                classification.FontStyle = isItalic ? FontStyleService.Italic : FontStyleService.Normal;
+            }
+        }
+
+        public ICollection<ClassificationSettings> MigrateClassifications(
+            string language, ICollection<ClassificationSettings> classificationSettings)
+        {
+            if (!language.EqualsNoCase(Languages.CSharp)) return classificationSettings;
+
+            // NOTE: -> 2.3.0: Migrates a csharp classifications name from "CoCo {some name}" to "CoCo csharp {some name}"
+
+            var classifications = new Dictionary<string, ClassificationSettings>();
+            foreach (var item in classificationSettings)
+            {
+                classifications[item.Name] = item;
             }
 
-            var languages = new List<Settings.LanguageSettings>(settings.Languages.Count);
-            foreach (var languageSettings in settings.Languages)
+            foreach (var name in CSharpNames.All)
             {
-                if (!languageSettings.Name.EqualsNoCase(Languages.CSharp))
+                var oldName = name.Length < 13 ? name : name.Remove(5, 7);
+                if (!classifications.ContainsKey(name) &&
+                    classifications.TryGetValue(oldName, out var classification))
                 {
-                    languages.Add(languageSettings);
-                    continue;
+                    classification.Name = name;
+                    classifications[oldName] = classification;
                 }
-
-                var language = languageSettings;
-                language.CurrentClassifications = MigrateClassifications(language.CurrentClassifications);
-
-                var presets = new List<Settings.PresetSettings>(language.Presets.Count);
-                foreach (var presetSettings in language.Presets)
-                {
-                    var preset = presetSettings;
-                    preset.Classifications = MigrateClassifications(preset.Classifications);
-                    presets.Add(preset);
-                }
-                language.Presets = presets;
-
-                languages.Add(language);
             }
-            return new Settings.Settings { Languages = languages };
+            return classifications.Values.ToList();
         }
     }
 }

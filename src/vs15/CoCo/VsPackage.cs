@@ -50,8 +50,7 @@ namespace CoCo
         private static Option Receive()
         {
             MigrationService.MigrateSettingsTo_2_0_0();
-            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
-            settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
+            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
             var option = OptionService.ToOption(settings);
             FormattingService.SetFormattingOptions(option);
             return option;

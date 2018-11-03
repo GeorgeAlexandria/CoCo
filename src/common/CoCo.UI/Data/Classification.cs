@@ -4,7 +4,7 @@ using System.Windows.Media;
 namespace CoCo.UI.Data
 {
     [DebuggerDisplay("{Name}")]
-    public class Classification
+    public sealed class Classification
     {
         public Classification(string name, string displayName)
         {
@@ -18,7 +18,7 @@ namespace CoCo.UI.Data
 
         public bool IsBold { get; set; }
 
-        public bool IsItalic { get; set; }
+        public FontStyle FontStyle { get; set; }
 
         public bool IsOverline { get; set; }
 

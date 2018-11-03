@@ -8,10 +8,12 @@ using Newtonsoft.Json.Linq;
 namespace CoCo.Settings
 {
     /// <summary>
-    /// Is responsible at loading and saving settings
+    /// Is responsible to loading and saving settings
     /// </summary>
     public static class SettingsManager
     {
+        private static readonly IReadOnlyDictionary<string, object> _emptyProperties = new Dictionary<string, object>();
+
         private const string CurrentClassificationsName = "current";
 
         public static void SaveSettings(Settings settings, string path)
@@ -52,7 +54,7 @@ namespace CoCo.Settings
             }
         }
 
-        public static Settings LoadSettings(string path)
+        public static Settings LoadSettings(string path, IMigrationService service = null)
         {
             if (!File.Exists(path))
             {
@@ -92,23 +94,32 @@ namespace CoCo.Settings
                     {
                         foreach (var item in jClassifications)
                         {
-                            if (item is JObject jClassification && TryParseClassification(jClassification, out var classification))
+                            if (item is JObject jClassification &&
+                                TryParseClassification(jClassification, out var classification, out var properties))
                             {
+                                if (!(service is null))
+                                {
+                                    service.MigrateClassification(properties, ref classification);
+                                }
                                 classifications.Add(classification);
                             }
                         }
                     }
 
+                    var migratedClassifications = service is null
+                        ? classifications
+                        : service.MigrateClassifications(language.Name, classifications);
+
                     if (presetName == CurrentClassificationsName)
                     {
-                        language.CurrentClassifications = classifications;
+                        language.CurrentClassifications = migratedClassifications;
                     }
                     else
                     {
                         language.Presets.Add(new PresetSettings
                         {
                             Name = presetName,
-                            Classifications = classifications
+                            Classifications = migratedClassifications
                         });
                     }
                 }
@@ -118,73 +129,84 @@ namespace CoCo.Settings
             return new Settings { Languages = languages };
         }
 
-        private static bool TryParseClassification(JObject jClassification, out ClassificationSettings classification)
+        private static bool TryParseClassification(
+            JObject jObject, out ClassificationSettings classification, out IReadOnlyDictionary<string, object> properties)
         {
-            if (!(jClassification[nameof(ClassificationSettings.Name)] is JValue jValue) ||
-                !(jValue.Value is string name))
+            if (!(jObject[nameof(ClassificationSettings.Name)] is JValue jValue) || !(jValue.Value is string name))
             {
                 classification = default;
+                properties = _emptyProperties;
                 return false;
             }
 
             classification = new ClassificationSettings { Name = name };
 
-            Color color;
-            if (jClassification[nameof(ClassificationSettings.Background)] is JValue jBackground &&
-                jBackground.Value is string background && TryParseColor(background, out color))
+            if (jObject[nameof(ClassificationSettings.Background)] is JValue jBackground &&
+                jBackground.Value is string background && TryParseColor(background, out Color color))
             {
                 classification.Background = color;
             }
-            if (jClassification[nameof(ClassificationSettings.Foreground)] is JValue jForeground &&
+            if (jObject[nameof(ClassificationSettings.Foreground)] is JValue jForeground &&
                 jForeground.Value is string foreground && TryParseColor(foreground, out color))
             {
                 classification.Foreground = color;
             }
-            if (jClassification[nameof(ClassificationSettings.IsBold)] is JValue jBold &&
+            if (jObject[nameof(ClassificationSettings.IsBold)] is JValue jBold &&
                 jBold.Value is bool isBold)
             {
                 classification.IsBold = isBold;
             }
-            if (jClassification[nameof(ClassificationSettings.IsItalic)] is JValue jItalic &&
-                jItalic.Value is bool isItalic)
+            if (jObject[nameof(ClassificationSettings.FontStyle)] is JValue jFontStyle &&
+                jFontStyle.Value is string fontStyle)
             {
-                classification.IsItalic = isItalic;
+                classification.FontStyle = fontStyle;
             }
-            if (jClassification[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
+            if (jObject[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
                 jOverline.Value is bool isOverline)
             {
                 classification.IsOverline = isOverline;
             }
-            if (jClassification[nameof(ClassificationSettings.IsUnderline)] is JValue jUnderline &&
+            if (jObject[nameof(ClassificationSettings.IsUnderline)] is JValue jUnderline &&
                 jUnderline.Value is bool isUnderline)
             {
                 classification.IsUnderline = isUnderline;
             }
-            if (jClassification[nameof(ClassificationSettings.IsStrikethrough)] is JValue jStrikethrough &&
+            if (jObject[nameof(ClassificationSettings.IsStrikethrough)] is JValue jStrikethrough &&
                 jStrikethrough.Value is bool isStrikethrough)
             {
                 classification.IsStrikethrough = isStrikethrough;
             }
-            if (jClassification[nameof(ClassificationSettings.IsBaseline)] is JValue jBaseline &&
+            if (jObject[nameof(ClassificationSettings.IsBaseline)] is JValue jBaseline &&
                 jBaseline.Value is bool isBaseline)
             {
                 classification.IsBaseline = isBaseline;
             }
-            if (jClassification[nameof(ClassificationSettings.FontRenderingSize)] is JValue jRenderingSize &&
+            if (jObject[nameof(ClassificationSettings.FontRenderingSize)] is JValue jRenderingSize &&
                 jRenderingSize.Value is long renderingSize && renderingSize < 512)
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
-            if (jClassification[nameof(ClassificationSettings.IsDisabled)] is JValue jDisabled &&
+            if (jObject[nameof(ClassificationSettings.IsDisabled)] is JValue jDisabled &&
                 jDisabled.Value is bool isDisabled)
             {
                 classification.IsDisabled = isDisabled;
             }
-            if (jClassification[nameof(ClassificationSettings.IsDisabledInXml)] is JValue jDisabledInXml &&
+            if (jObject[nameof(ClassificationSettings.IsDisabledInXml)] is JValue jDisabledInXml &&
                 jDisabledInXml.Value is bool isDisabledInXml)
             {
                 classification.IsDisabledInXml = isDisabledInXml;
             }
+
+            var classificationProperties = new Dictionary<string, object>(jObject.Count);
+            foreach (var (propertyName, value) in jObject)
+            {
+                if (value is JValue jProperty)
+                {
+                    classificationProperties.Add(propertyName, jProperty.Value);
+                }
+            }
+
+            properties = classificationProperties;
             return true;
         }
 
@@ -216,9 +238,9 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.IsBold), new JValue(classification.IsBold.Value));
             }
-            if (classification.IsItalic.HasValue)
+            if (!(classification.FontStyle is null))
             {
-                jClassification.Add(nameof(classification.IsItalic), new JValue(classification.IsItalic.Value));
+                jClassification.Add(nameof(classification.FontStyle), new JValue(classification.FontStyle));
             }
             if (classification.IsOverline.HasValue)
             {

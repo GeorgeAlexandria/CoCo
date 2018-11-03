@@ -11,7 +11,7 @@ namespace CoCo.Settings
 
         public bool? IsBold { get; set; }
 
-        public bool? IsItalic { get; set; }
+        public string FontStyle { get; set; }
 
         public bool? IsOverline { get; set; }
 

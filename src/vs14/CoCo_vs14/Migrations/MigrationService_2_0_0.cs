@@ -14,7 +14,7 @@ using CoCo.Utils;
 
 namespace CoCo
 {
-    public static partial class MigrationService
+    public partial class MigrationService
     {
         /// <summary>
         /// VS seaves the default background as #FF010000 for light and dark theme.
