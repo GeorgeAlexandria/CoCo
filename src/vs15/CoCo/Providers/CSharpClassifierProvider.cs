@@ -53,8 +53,7 @@ namespace CoCo.Providers
             MigrationService.MigrateSettingsTo_2_0_0();
             if (!_wasSettingsSet)
             {
-                var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile);
-                settings = MigrationService.MigrateSettingsTo_2_3_0(settings);
+                var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
                 var option = OptionService.ToOption(settings);
                 FormattingService.SetFormattingOptions(option);
                 AnalyzingService.SetAnalyzingOptions(option);

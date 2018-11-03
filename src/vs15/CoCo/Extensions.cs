@@ -36,9 +36,11 @@ namespace CoCo
         /// </summary>
         public static string GetFontStyleName(this TextFormattingRunProperties formatting)
         {
-            if (formatting.Italic) return "Italic";
+            if (formatting.Italic) return FontStyleService.Italic;
+            if (formatting.TypefaceEmpty) return FontStyleService.Normal;
+
             var styleName = formatting.Typeface.Style.ToString();
-            return FontStyleService.SupportedFontStyles.ContainsKey(styleName) ? styleName : "Normal";
+            return FontStyleService.SupportedFontStyles.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
         }
 
         /// <summary>

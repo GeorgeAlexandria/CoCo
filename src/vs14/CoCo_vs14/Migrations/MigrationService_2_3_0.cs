@@ -2,76 +2,68 @@
 using System.Linq;
 using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
+using CoCo.Settings;
+using CoCo.UI;
 using CoCo.Utils;
 
 namespace CoCo
 {
-    public static partial class MigrationService
+    public sealed partial class MigrationService : IMigrationService
     {
-        /// <summary>
-        /// Migrates the csharp classifications that look like "Some name" to "CoCo csharp some name"
-        /// </summary>
-        public static Settings.Settings MigrateSettingsTo_2_3_0(Settings.Settings settings)
+        private MigrationService()
         {
-            ICollection<Settings.ClassificationSettings> MigrateClassifications(
-                ICollection<Settings.ClassificationSettings> classificationSettings)
+        }
+
+        public static MigrationService Instance = new MigrationService();
+
+        public void MigrateClassification(IReadOnlyDictionary<string, object> properties, ref ClassificationSettings classification)
+        {
+            //NOTE: -> 2.5.0: Migrates a font style
+            if (string.IsNullOrWhiteSpace(classification.FontStyle) &&
+                properties.TryGetValue("IsItalic", out var value) && 
+                value is bool isItalic)
             {
-                string PatchName(string name)
-                {
-                    if (name.Length < 13) return name;
+                classification.FontStyle = isItalic ? FontStyleService.Italic : FontStyleService.Normal;
+            }
+        }
 
-                    var builder = StringBuilderCache.Acquire();
-                    builder.Append(char.ToUpper(name[12]));
-                    for (int i = 13; i < name.Length; ++i)
-                    {
-                        builder.Append(name[i]);
-                    }
-                    return StringBuilderCache.Release(builder);
-                }
+        public ICollection<ClassificationSettings> MigrateClassifications(
+            string language, ICollection<ClassificationSettings> classificationSettings)
+        {
+            if (!language.EqualsNoCase(Languages.CSharp)) return classificationSettings;
 
-                var classifications = new Dictionary<string, Settings.ClassificationSettings>();
-                foreach (var item in classificationSettings)
-                {
-                    classifications[item.Name] = item;
-                }
+            // NOTE: -> 2.3.0: Migrates a csharp classifications name from "{Some name}" to "CoCo csharp {some name}"
 
-                foreach (var name in CSharpNames.All)
+            string PatchName(string name)
+            {
+                if (name.Length < 13) return name;
+
+                var builder = StringBuilderCache.Acquire();
+                builder.Append(char.ToUpper(name[12]));
+                for (int i = 13; i < name.Length; ++i)
                 {
-                    var oldName = PatchName(name);
-                    if (!classifications.ContainsKey(name) &&
-                        classifications.TryGetValue(oldName, out var classification))
-                    {
-                        classification.Name = name;
-                        classifications[oldName] = classification;
-                    }
+                    builder.Append(name[i]);
                 }
-                return classifications.Values.ToList();
+                return StringBuilderCache.Release(builder);
             }
 
-            var languages = new List<Settings.LanguageSettings>(settings.Languages.Count);
-            foreach (var languageSettings in settings.Languages)
+            var classifications = new Dictionary<string, Settings.ClassificationSettings>();
+            foreach (var item in classificationSettings)
             {
-                if (!languageSettings.Name.EqualsNoCase(Languages.CSharp))
-                {
-                    languages.Add(languageSettings);
-                    continue;
-                }
-
-                var language = languageSettings;
-                language.CurrentClassifications = MigrateClassifications(language.CurrentClassifications);
-
-                var presets = new List<Settings.PresetSettings>(language.Presets.Count);
-                foreach (var presetSettings in language.Presets)
-                {
-                    var preset = presetSettings;
-                    preset.Classifications = MigrateClassifications(preset.Classifications);
-                    presets.Add(preset);
-                }
-                language.Presets = presets;
-
-                languages.Add(language);
+                classifications[item.Name] = item;
             }
-            return new Settings.Settings { Languages = languages };
+
+            foreach (var name in CSharpNames.All)
+            {
+                var oldName = PatchName(name);
+                if (!classifications.ContainsKey(name) &&
+                    classifications.TryGetValue(oldName, out var classification))
+                {
+                    classification.Name = name;
+                    classifications[oldName] = classification;
+                }
+            }
+            return classifications.Values.ToList();
         }
     }
 }

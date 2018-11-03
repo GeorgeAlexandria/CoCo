@@ -64,7 +64,7 @@
     <Compile Include="Providers\ServicesProvider.cs" />
     <Compile Include="Providers\VisualBasicClassifierProvider.cs" />
     <Compile Include="VsPackage.cs" />
-    <Compile Include="Migrations\MigrationService.2_0_0.cs" />
+    <Compile Include="Migrations\MigrationService_2_0_0.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

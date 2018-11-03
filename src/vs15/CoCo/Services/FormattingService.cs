@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using CoCo.Providers;
+using CoCo.UI;
 using CoCo.UI.Data;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -84,11 +85,11 @@ namespace CoCo.Services
             {
                 switch (classification.FontStyle.Name)
                 {
-                    case "Italic" when !formatting.Italic:
+                    case FontStyleService.Italic when !formatting.Italic:
                         formatting = formatting.SetItalic(true);
                         break;
 
-                    case "Normal" when formatting.Italic:
+                    case FontStyleService.Normal when formatting.Italic:
                         formatting = formatting.SetItalic(false);
                         break;
 
@@ -211,16 +212,16 @@ namespace CoCo.Services
                     defaultFormatting = defaultFormatting.SetBackgroundBrush(classificationFormatMap.DefaultTextProperties.BackgroundBrush);
                 }
             }
+
+            // NOTE: Foreground and typeface always are set, just look at
+            // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
+
             if (defaultFormatting.ForegroundBrushEmpty)
             {
-                // NOTE: Foreground always is set, just look at
-                // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
                 defaultFormatting = defaultFormatting.SetForegroundBrush(classificationFormatMap.DefaultTextProperties.ForegroundBrush);
             }
             if (defaultFormatting.TypefaceEmpty)
             {
-                // NOTE: Typeface always is set, just look at
-                // https://docs.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.text.classification.iclassificationformatmap.defaulttextproperties?view=visualstudiosdk-2017#remarks
                 defaultFormatting = defaultFormatting.SetTypeface(classificationFormatMap.DefaultTextProperties.Typeface);
             }
             return defaultFormatting;
