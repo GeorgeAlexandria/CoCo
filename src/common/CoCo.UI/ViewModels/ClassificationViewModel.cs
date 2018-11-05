@@ -23,6 +23,8 @@ namespace CoCo.UI.ViewModels
             FontStylesContainer = new FontStylesViewModel(classification.FontStyle);
             FontFamiliesContainer = new FontFamiliesViewModel(classification.FontFamily);
 
+            FontFamiliesContainer.PropertyChanged += FontStylesContainer.OnSelectedFontFamilyChanged;
+
             Foreground = new ClassificationColorViewModel(
                 _classificationName, classification.Foreground, classification.ForegroundWasReset, resetValuesProvider);
             Background = new ClassificationColorViewModel(
