@@ -151,6 +151,11 @@ namespace CoCo.Settings
             {
                 classification.Foreground = color;
             }
+            if (jObject[nameof(ClassificationSettings.FontFamily)] is JValue jFontFamily &&
+                jFontFamily.Value is string fontFamily)
+            {
+                classification.FontFamily = fontFamily;
+            }
             if (jObject[nameof(ClassificationSettings.IsBold)] is JValue jBold &&
                 jBold.Value is bool isBold)
             {
@@ -234,11 +239,15 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.Foreground), new JValue(classification.Foreground.Value.ToString()));
             }
+            if (!string.IsNullOrWhiteSpace(classification.FontFamily))
+            {
+                jClassification.Add(nameof(classification.FontFamily), new JValue(classification.FontFamily));
+            }
             if (classification.IsBold.HasValue)
             {
                 jClassification.Add(nameof(classification.IsBold), new JValue(classification.IsBold.Value));
             }
-            if (!(classification.FontStyle is null))
+            if (!string.IsNullOrWhiteSpace(classification.FontStyle))
             {
                 jClassification.Add(nameof(classification.FontStyle), new JValue(classification.FontStyle));
             }

@@ -9,6 +9,8 @@ namespace CoCo.Settings
     {
         public string Name { get; set; }
 
+        public string FontFamily { get; set; }
+
         public bool? IsBold { get; set; }
 
         public string FontStyle { get; set; }

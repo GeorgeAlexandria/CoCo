@@ -12,6 +12,15 @@ namespace CoCo.Services
 {
     public static class FormattingService
     {
+        [Flags]
+        private enum TypeFaces
+        {
+            None = 0,
+            Style = 1 << 0,
+            Family = 1 << 1,
+            All = Style | Family ,
+        }
+
         public static TextFormattingRunProperties GetDefaultFormatting(string classificationName)
         {
             var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
@@ -81,27 +90,7 @@ namespace CoCo.Services
         {
             // NOTE: avoid creating a new instance for fields that weren't changed
 
-            if (formatting.TypefaceEmpty)
-            {
-                switch (classification.FontStyle.Name)
-                {
-                    case FontStyleService.Italic when !formatting.Italic:
-                        formatting = formatting.SetItalic(true);
-                        break;
-
-                    case FontStyleService.Normal when formatting.Italic:
-                        formatting = formatting.SetItalic(false);
-                        break;
-
-                    default:
-                        formatting = ApplyFontStyle(formatting, defaultFormatting.Typeface, classification.FontStyle.Style);
-                        break;
-                }
-            }
-            else if (!formatting.Typeface.Style.Equals(classification.FontStyle.Style))
-            {
-                formatting = ApplyFontStyle(formatting, formatting.Typeface, classification.FontStyle.Style);
-            }
+            formatting = ApplyTypeFace(formatting, classification, defaultFormatting);
 
             if (formatting.Bold != classification.IsBold)
             {
@@ -156,6 +145,58 @@ namespace CoCo.Services
         }
 
         /// <summary>
+        /// Apply <see cref="Typeface"/> that build from <paramref name="classification"/> using
+        /// <paramref name="defaultFormatting"/> as fallback values
+        /// </summary>
+        private static TextFormattingRunProperties ApplyTypeFace(
+            TextFormattingRunProperties formatting, Classification classification, TextFormattingRunProperties defaultFormatting)
+        {
+            TextFormattingRunProperties ApplyTypeFace(TypeFaces mask, Typeface fallbackFace)
+            {
+                if (mask.Is(TypeFaces.Style) && !formatting.ItalicEmpty)
+                {
+                    formatting = formatting.ClearItalic();
+                }
+
+                return formatting.SetTypeface(new Typeface(
+                    mask.Is(TypeFaces.Family) ? FontFamilyService.SupportedFamilies[classification.FontFamily] : fallbackFace.FontFamily,
+                    mask.Is(TypeFaces.Style) ? FontStyleService.SupportedFontStyles[classification.FontStyle] : fallbackFace.Style,
+                    fallbackFace.Weight,
+                    fallbackFace.Stretch));
+            }
+
+            if (formatting.TypefaceEmpty)
+            {
+                var faces = TypeFaces.Family;
+                switch (classification.FontStyle)
+                {
+                    case FontStyleService.Italic when !formatting.Italic:
+                        formatting = formatting.SetItalic(true);
+                        break;
+
+                    case FontStyleService.Normal when formatting.Italic:
+                        formatting = formatting.SetItalic(false);
+                        break;
+
+                    default:
+                        faces |= TypeFaces.Style;
+                        break;
+                }
+                formatting = ApplyTypeFace(faces, defaultFormatting.Typeface);
+            }
+            else
+            {
+                var typeFace = formatting.Typeface;
+                if (!typeFace.Style.Equals(FontStyleService.SupportedFontStyles[classification.FontStyle]) ||
+                    !typeFace.FontFamily.Source.Equals(classification.FontFamily))
+                {
+                    formatting = ApplyTypeFace(TypeFaces.All, typeFace);
+                }
+            }
+            return formatting;
+        }
+
+        /// <summary>
         /// Try to add or remove <paramref name="decoration"/> to the <paramref name="formatting"/> using <paramref name="needToAddDecoration"/>
         /// </summary>
         /// <param name="formatting"></param>
@@ -179,21 +220,6 @@ namespace CoCo.Services
                 return formatting.SetTextDecorations(clone);
             }
             return formatting;
-        }
-
-        /// <summary>
-        /// Apply <paramref name="style"/> to <paramref name="formatting"/> and set other <see cref="Typeface"/> properties
-        /// from <paramref name="face"/>
-        /// </summary>
-        private static TextFormattingRunProperties ApplyFontStyle(
-            TextFormattingRunProperties formatting, Typeface face, System.Windows.FontStyle style)
-        {
-            if (!formatting.ItalicEmpty)
-            {
-                formatting = formatting.ClearItalic();
-            }
-
-            return formatting.SetTypeface(new Typeface(face.FontFamily, style, face.Weight, face.Stretch));
         }
 
         private static TextFormattingRunProperties GetDefaultFormatting(
@@ -226,5 +252,7 @@ namespace CoCo.Services
             }
             return defaultFormatting;
         }
+
+        private static bool Is(this TypeFaces face, TypeFaces flag) => (face & flag) != 0;
     }
 }

@@ -16,9 +16,11 @@ namespace CoCo.UI.Data
 
         public string DisplayName { get; }
 
+        public string FontFamily { get; set; }
+
         public bool IsBold { get; set; }
 
-        public FontStyle FontStyle { get; set; }
+        public string FontStyle { get; set; }
 
         public bool IsOverline { get; set; }
 

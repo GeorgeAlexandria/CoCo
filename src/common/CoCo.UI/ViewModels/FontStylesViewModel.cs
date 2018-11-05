@@ -5,30 +5,27 @@ namespace CoCo.UI.ViewModels
 {
     public class FontStylesViewModel : BaseViewModel
     {
-        public FontStylesViewModel(string fontStyle)
+        public FontStylesViewModel(string selectedStyle)
         {
-            _selectedFontStyle = fontStyle;
-            FontStyles = CollectionViewSource.GetDefaultView(FontStyleService.SupportedFontStyles.Keys);
+            _selectedStyle = selectedStyle;
+            Styles = CollectionViewSource.GetDefaultView(FontStyleService.SupportedFontStyles.Keys);
         }
 
-        public ICollectionView FontStyles { get; }
+        public ICollectionView Styles { get; }
 
-        private string _selectedFontStyle;
+        private string _selectedStyle;
 
-        public string SelectedFontStyle
+        public string SelectedStyle
         {
             get
             {
-                if (_selectedFontStyle == null && FontStyles.MoveCurrentToFirst())
+                if (_selectedStyle == null && Styles.MoveCurrentToFirst())
                 {
-                    SelectedFontStyle = (string)FontStyles.CurrentItem;
+                    SelectedStyle = (string)Styles.CurrentItem;
                 }
-                return _selectedFontStyle;
+                return _selectedStyle;
             }
-            set => SetProperty(ref _selectedFontStyle, value);
+            set => SetProperty(ref _selectedStyle, value);
         }
-
-        internal Data.FontStyle FontStyle =>
-            new Data.FontStyle(_selectedFontStyle, FontStyleService.SupportedFontStyles[_selectedFontStyle]);
     }
 }
