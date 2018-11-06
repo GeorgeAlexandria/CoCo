@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using CoCo.Analyser;
 using CoCo.Settings;
@@ -20,6 +21,7 @@ namespace CoCo
             return new ClassificationSettings
             {
                 Name = classificationName,
+                FontFamily = formatting.GetFontFamily(),
                 IsBold = formatting.Bold,
                 FontStyle = formatting.GetFontStyleName(),
                 IsOverline = formatting.TextDecorations.Contains(TextDecorations.OverLine[0]),
@@ -41,6 +43,24 @@ namespace CoCo
 
             var styleName = formatting.Typeface.Style.ToString();
             return FontStyleService.SupportedFontStyles.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
+        }
+
+        /// <summary>
+        /// Returns the relevant font family name for <paramref name="formatting"/> if if exists or the fallback name
+        /// </summary>
+        public static string GetFontFamily(this TextFormattingRunProperties formatting)
+        {
+            string source = null;
+            if (!formatting.TypefaceEmpty)
+            {
+                source = formatting.Typeface.FontFamily.Source;
+                if (FontFamilyService.SupportedFamilies.ContainsKey(source)) return source;
+            }
+
+            source = "Consolas";
+            return FontFamilyService.SupportedFamilies.ContainsKey(source)
+                ? source
+                : FontFamilyService.SupportedFamilies.Keys.First();
         }
 
         /// <summary>

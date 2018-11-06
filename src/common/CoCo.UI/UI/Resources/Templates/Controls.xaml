@@ -95,7 +95,7 @@
       </Grid>
    </ControlTemplate>
 
-   <ControlTemplate x:Key="scrollViewerTemplate" TargetType="ScrollViewer">
+   <ControlTemplate x:Key="lvScrollViewerTemplate" TargetType="ScrollViewer">
       <Grid Background="{TemplateBinding Background}">
          <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -128,6 +128,40 @@
                CanVerticallyScroll="False"
                KeyboardNavigation.DirectionalNavigation="Local" />
          </DockPanel>
+         <ScrollBar
+            Name="PART_HorizontalScrollBar"
+            Grid.Row="1"
+            Maximum="{TemplateBinding ScrollableWidth}"
+            Orientation="Horizontal"
+            ViewportSize="{TemplateBinding ViewportWidth}"
+            Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"
+            Value="{TemplateBinding HorizontalOffset}" />
+         <ScrollBar
+            Name="PART_VerticalScrollBar"
+            Grid.Column="1"
+            Maximum="{TemplateBinding ScrollableHeight}"
+            ViewportSize="{TemplateBinding ViewportHeight}"
+            Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+            Value="{TemplateBinding VerticalOffset}" />
+      </Grid>
+   </ControlTemplate>
+
+   <ControlTemplate x:Key="scrollViewerTemplate" TargetType="ScrollViewer">
+      <Grid Background="{TemplateBinding Background}">
+         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+         </Grid.ColumnDefinitions>
+         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+         </Grid.RowDefinitions>
+         <ScrollContentPresenter
+            Name="PART_ScrollContentPresenter"
+            CanContentScroll="True"
+            CanHorizontallyScroll="False"
+            CanVerticallyScroll="False"
+            KeyboardNavigation.DirectionalNavigation="Local" />
          <ScrollBar
             Name="PART_HorizontalScrollBar"
             Grid.Row="1"

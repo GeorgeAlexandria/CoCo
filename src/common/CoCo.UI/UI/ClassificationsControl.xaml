@@ -131,178 +131,203 @@
                         Text="Decoration settings" />
                   </DataTemplate>
                </GroupBox.HeaderTemplate>
-               <StackPanel DataContext="{Binding ElementName=listView, Path=SelectedItem}">
-                  <StackPanel
-                     Width="Auto"
-                     Margin="0,0,0,4"
-                     HorizontalAlignment="Left"
-                     Orientation="Horizontal">
-                     <Label
-                        Width="98"
-                        Content="Rendering Size:"
-                        FontSize="12"
-                        Style="{StaticResource labelStyle}" />
-                     <TextBox
-                        Width="50"
-                        HorizontalAlignment="Left"
-                        VerticalContentAlignment="Center"
-                        MaxLength="3"
-                        Style="{StaticResource textBoxFlatStyle}"
-                        Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
-                        TextAlignment="Left" />
-                     <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding ResetFontRenderingSize}"
-                        Style="{StaticResource commonButtonStyle}"
-                        Template="{StaticResource ResetButton}" />
-                  </StackPanel>
-                  <StackPanel
-                     Width="Auto"
-                     Margin="0,0,0,4"
-                     HorizontalAlignment="Left"
-                     DataContext="{Binding Foreground}"
-                     Orientation="Horizontal">
-                     <Label
-                        Width="78"
-                        Content="Foreground:"
-                        FontSize="12"
-                        Style="{StaticResource labelStyle}" />
-                     <Border
-                        Width="110"
-                        HorizontalAlignment="Left"
-                        BorderBrush="{StaticResource SoftBlue}"
-                        BorderThickness="1,1,1,1">
-                        <StackPanel Background="White" Orientation="Horizontal">
-                           <Border
-                              Width="20"
-                              Height="12"
-                              Margin="5,0,0,0"
-                              BorderBrush="{StaticResource SoftBlue}"
-                              BorderThickness="1.2">
-                              <Rectangle>
-                                 <Rectangle.Fill>
-                                    <SolidColorBrush Color="{Binding Color}" />
-                                 </Rectangle.Fill>
-                              </Rectangle>
-                           </Border>
-                           <TextBox
-                              Margin="5,0,0,0"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch"
-                              VerticalContentAlignment="Center"
-                              local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
-                              BorderThickness="0"
-                              Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                     </Border>
-                     <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding CustomizeColor}"
-                        Style="{StaticResource commonButtonStyle}"
-                        Template="{StaticResource CustomizeButton}" />
-                     <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding ResetColor}"
-                        Style="{StaticResource commonButtonStyle}"
-                        Template="{StaticResource ResetButton}" />
-                  </StackPanel>
-                  <StackPanel
-                     Width="Auto"
-                     Margin="0,0,0,4"
-                     HorizontalAlignment="Left"
-                     DataContext="{Binding Background}"
-                     Orientation="Horizontal">
-                     <Label
-                        Width="78"
-                        Content="Background:"
-                        FontSize="12"
-                        Style="{StaticResource labelStyle}" />
-                     <Border
-                        Width="110"
-                        HorizontalAlignment="Left"
-                        BorderBrush="{StaticResource SoftBlue}"
-                        BorderThickness="1,1,1,1">
-                        <StackPanel Background="White" Orientation="Horizontal">
-                           <Border
-                              Width="20"
-                              Height="12"
-                              Margin="5,0,0,0"
-                              BorderBrush="{StaticResource SoftBlue}"
-                              BorderThickness="1.2">
-                              <Rectangle>
-                                 <Rectangle.Fill>
-                                    <SolidColorBrush Color="{Binding Color}" />
-                                 </Rectangle.Fill>
-                              </Rectangle>
-                           </Border>
-                           <TextBox
-                              Margin="5,0,0,0"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch"
-                              VerticalContentAlignment="Center"
-                              local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
-                              BorderThickness="0"
-                              Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
-                        </StackPanel>
-                     </Border>
-                     <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding CustomizeColor}"
-                        Style="{StaticResource commonButtonStyle}"
-                        Template="{StaticResource CustomizeButton}" />
-                     <Button
-                        Margin="8,0,0,0"
-                        Command="{Binding ResetColor}"
-                        Style="{StaticResource commonButtonStyle}"
-                        Template="{StaticResource ResetButton}" />
-                  </StackPanel>
-                  <StackPanel
-                     Grid.Row="0"
-                     Width="Auto"
-                     HorizontalAlignment="Left"
-                     DataContext="{Binding FontStylesContainer}"
-                     Orientation="Horizontal">
-                     <Label
-                        Content="Font style:"
-                        FontSize="12"
-                        Style="{StaticResource labelStyle}" />
-                     <ComboBox
-                        Width="80"
-                        Margin="5,0,0,5"
-                        ItemsSource="{Binding FontStyles}"
-                        SelectedItem="{Binding SelectedFontStyle}"
-                        Style="{StaticResource comboBoxFlatStyle}" />
-                  </StackPanel>
+               <ScrollViewer Height="200" Template="{StaticResource scrollViewerTemplate}">
                   <WrapPanel
-                     Width="Auto"
-                     MaxWidth="270"
-                     Margin="5,2,0,0"
-                     HorizontalAlignment="Left">
-                     <CheckBox
-                        Content="Bold"
-                        IsChecked="{Binding IsBold}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox
-                        Margin="10,0,0,0"
-                        Content="Overline"
-                        IsChecked="{Binding IsOverline}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox
-                        Margin="10,0,0,0"
-                        Content="Underline"
-                        IsChecked="{Binding IsUnderline}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox
-                        Content="Strikethrough"
-                        IsChecked="{Binding IsStrikethrough}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox
-                        Margin="10,0,0,0"
-                        Content="Baseline"
-                        IsChecked="{Binding IsBaseline}"
-                        Style="{StaticResource checkBoxFlatStyle}" />
+                     Width="250"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+                     <StackPanel
+                        Grid.Row="0"
+                        Width="Auto"
+                        Height="26"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        DataContext="{Binding FontFamiliesContainer}"
+                        Orientation="Horizontal">
+                        <Label
+                           Content="Font family:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <ComboBox
+                           Width="150"
+                           ItemsSource="{Binding Families}"
+                           SelectedItem="{Binding SelectedFamily}"
+                           Style="{StaticResource comboBoxFlatStyle}" />
+                     </StackPanel>
+                     <StackPanel
+                        Width="Auto"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <Label
+                           Width="98"
+                           Content="Rendering Size:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <TextBox
+                           Width="50"
+                           HorizontalAlignment="Left"
+                           VerticalContentAlignment="Center"
+                           MaxLength="3"
+                           Style="{StaticResource textBoxFlatStyle}"
+                           Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
+                           TextAlignment="Left" />
+                        <Button
+                           Margin="8,0,0,0"
+                           Command="{Binding ResetFontRenderingSize}"
+                           Style="{StaticResource commonButtonStyle}"
+                           Template="{StaticResource ResetButton}" />
+                     </StackPanel>
+                     <StackPanel
+                        Width="Auto"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        DataContext="{Binding Foreground}"
+                        Orientation="Horizontal">
+                        <Label
+                           Width="78"
+                           Content="Foreground:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <Border
+                           Width="110"
+                           HorizontalAlignment="Left"
+                           BorderBrush="{StaticResource SoftBlue}"
+                           BorderThickness="1,1,1,1">
+                           <StackPanel Background="White" Orientation="Horizontal">
+                              <Border
+                                 Width="20"
+                                 Height="12"
+                                 Margin="5,0,0,0"
+                                 BorderBrush="{StaticResource SoftBlue}"
+                                 BorderThickness="1.2">
+                                 <Rectangle>
+                                    <Rectangle.Fill>
+                                       <SolidColorBrush Color="{Binding Color}" />
+                                    </Rectangle.Fill>
+                                 </Rectangle>
+                              </Border>
+                              <TextBox
+                                 Margin="5,0,0,0"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
+                                 BorderThickness="0"
+                                 Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
+                           </StackPanel>
+                        </Border>
+                        <Button
+                           Margin="8,0,0,0"
+                           Command="{Binding CustomizeColor}"
+                           Style="{StaticResource commonButtonStyle}"
+                           Template="{StaticResource CustomizeButton}" />
+                        <Button
+                           Margin="8,0,0,0"
+                           Command="{Binding ResetColor}"
+                           Style="{StaticResource commonButtonStyle}"
+                           Template="{StaticResource ResetButton}" />
+                     </StackPanel>
+                     <StackPanel
+                        Width="Auto"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        DataContext="{Binding Background}"
+                        Orientation="Horizontal">
+                        <Label
+                           Width="78"
+                           Content="Background:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <Border
+                           Width="110"
+                           HorizontalAlignment="Left"
+                           BorderBrush="{StaticResource SoftBlue}"
+                           BorderThickness="1,1,1,1">
+                           <StackPanel Background="White" Orientation="Horizontal">
+                              <Border
+                                 Width="20"
+                                 Height="12"
+                                 Margin="5,0,0,0"
+                                 BorderBrush="{StaticResource SoftBlue}"
+                                 BorderThickness="1.2">
+                                 <Rectangle>
+                                    <Rectangle.Fill>
+                                       <SolidColorBrush Color="{Binding Color}" />
+                                    </Rectangle.Fill>
+                                 </Rectangle>
+                              </Border>
+                              <TextBox
+                                 Margin="5,0,0,0"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 VerticalContentAlignment="Center"
+                                 local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
+                                 BorderThickness="0"
+                                 Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
+                           </StackPanel>
+                        </Border>
+                        <Button
+                           Margin="8,0,0,0"
+                           Command="{Binding CustomizeColor}"
+                           Style="{StaticResource commonButtonStyle}"
+                           Template="{StaticResource CustomizeButton}" />
+                        <Button
+                           Margin="8,0,0,0"
+                           Command="{Binding ResetColor}"
+                           Style="{StaticResource commonButtonStyle}"
+                           Template="{StaticResource ResetButton}" />
+                     </StackPanel>
+                     <StackPanel
+                        Grid.Row="0"
+                        Width="Auto"
+                        Height="26"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        DataContext="{Binding FontStylesContainer}"
+                        Orientation="Horizontal">
+                        <Label
+                           Content="Font style:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <ComboBox
+                           Width="80"
+                           ItemsSource="{Binding Styles}"
+                           SelectedItem="{Binding SelectedStyle}"
+                           Style="{StaticResource comboBoxFlatStyle}" />
+                     </StackPanel>
+                     <WrapPanel
+                        Width="Auto"
+                        MaxWidth="270"
+                        Margin="0,2,0,0"
+                        HorizontalAlignment="Left">
+                        <CheckBox
+                           Content="Bold"
+                           IsChecked="{Binding IsBold}"
+                           Style="{StaticResource checkBoxFlatStyle}" />
+                        <CheckBox
+                           Margin="10,0,0,0"
+                           Content="Overline"
+                           IsChecked="{Binding IsOverline}"
+                           Style="{StaticResource checkBoxFlatStyle}" />
+                        <CheckBox
+                           Margin="10,0,0,0"
+                           Content="Underline"
+                           IsChecked="{Binding IsUnderline}"
+                           Style="{StaticResource checkBoxFlatStyle}" />
+                        <CheckBox
+                           Margin="0,0,10,0"
+                           Content="Strikethrough"
+                           IsChecked="{Binding IsStrikethrough}"
+                           Style="{StaticResource checkBoxFlatStyle}" />
+                        <CheckBox
+                           Margin="10,0,0,0"
+                           Content="Baseline"
+                           IsChecked="{Binding IsBaseline}"
+                           Style="{StaticResource checkBoxFlatStyle}" />
+                     </WrapPanel>
                   </WrapPanel>
-               </StackPanel>
+               </ScrollViewer>
             </GroupBox>
          </Grid>
       </Grid>

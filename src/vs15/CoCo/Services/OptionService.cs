@@ -7,7 +7,6 @@ using CoCo.UI;
 using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
-using CoCoFontStyle = CoCo.UI.Data.FontStyle;
 
 namespace CoCo.Services
 {
@@ -200,17 +199,26 @@ namespace CoCo.Services
                 classification.FontRenderingSize = classificationSettings.FontRenderingSize.Value;
             }
 
-            classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
-
-            if (classificationSettings.FontStyle is null ||
-                !FontStyleService.SupportedFontStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+            if (string.IsNullOrWhiteSpace(classificationSettings.FontFamily) ||
+                !FontFamilyService.SupportedFamilies.ContainsKey(classificationSettings.FontFamily))
             {
-                var fontStyleName = defaultFormatting.GetFontStyleName();
-                classification.FontStyle = new CoCoFontStyle(fontStyleName, FontStyleService.SupportedFontStyles[fontStyleName]);
+                classification.FontFamily = defaultFormatting.GetFontFamily();
             }
             else
             {
-                classification.FontStyle = new CoCoFontStyle(classificationSettings.FontStyle, fontStyle);
+                classification.FontFamily = classificationSettings.FontFamily;
+            }
+
+            classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
+
+            if (string.IsNullOrWhiteSpace(classificationSettings.FontStyle) ||
+                !FontStyleService.SupportedFontStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+            {
+                classification.FontStyle = defaultFormatting.GetFontStyleName();
+            }
+            else
+            {
+                classification.FontStyle = classificationSettings.FontStyle;
             }
 
             classification.IsOverline = classificationSettings.IsOverline ??
@@ -261,8 +269,9 @@ namespace CoCo.Services
             var settings = new ClassificationSettings
             {
                 Name = classification.Name,
+                FontFamily = classification.FontFamily,
                 IsBold = classification.IsBold,
-                FontStyle = classification.FontStyle.Name,
+                FontStyle = classification.FontStyle,
                 IsOverline = classification.IsOverline,
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,
