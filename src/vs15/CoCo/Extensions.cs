@@ -46,10 +46,8 @@ namespace CoCo
         }
 
         /// <summary>
-        /// 
+        /// Returns the relevant font family name for <paramref name="formatting"/> if if exists or the fallback name
         /// </summary>
-        /// <param name="formatting"></param>
-        /// <returns></returns>
         public static string GetFontFamily(this TextFormattingRunProperties formatting)
         {
             string source = null;
@@ -60,8 +58,8 @@ namespace CoCo
             }
 
             source = "Consolas";
-            return FontFamilyService.SupportedFamilies.ContainsKey(source) 
-                ? source 
+            return FontFamilyService.SupportedFamilies.ContainsKey(source)
+                ? source
                 : FontFamilyService.SupportedFamilies.Keys.First();
         }
 
