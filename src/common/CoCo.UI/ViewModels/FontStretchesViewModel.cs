@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -13,11 +14,13 @@ namespace CoCo.UI.ViewModels
 
         private readonly ObservableCollection<string> _stretches;
 
-        public FontStretchesViewModel(int selectedStretch)
+        public FontStretchesViewModel(int selectedStretch, string selectedFamily, string selectedStyle)
         {
-            _selectedStretch = FontStretchService.SupportedStretchesNames[selectedStretch];
+            _selectedStretch = FontStretchService.SupportedStretchNames[selectedStretch];
 
-            _stretches = new ObservableCollection<string>(FontStretchService.SupportedStretchesByNames.Keys);
+            _stretches = new ObservableCollection<string>();
+            InitializeStretches(_stretches, selectedFamily, selectedStyle);
+
             /// NOTE: avoid redundant creation of <see cref="ListCollectionView"/>
             if (!(CollectionViewSource.GetDefaultView(_stretches) is ListCollectionView listView))
             {
@@ -44,7 +47,7 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedStretch, value);
         }
 
-        public int Stretch => FontStretchService.SupportedStretchesByNames[SelectedStretch].ToOpenTypeStretch();
+        public int Stretch => FontStretchService.SupportedStretchByNames[SelectedStretch].ToOpenTypeStretch();
 
         public void OnSelectedFontFamilyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -72,11 +75,26 @@ namespace CoCo.UI.ViewModels
         {
             var selectedStretch = _selectedStretch;
             _stretches.Clear();
-            var addedStretchesMask = 0;
-            var isSelectionUnchanged = false;
 
-            var selectedFamily = FontFamilyService.SupportedFamilies[_selectedFamily];
-            var selectedStyle = FontStyleService.SupportedStyles[_selectedStyle];
+            InitializeStretches(_stretches, _selectedFamily, _selectedStyle);
+
+            foreach (var stretch in _stretches)
+            {
+                if (stretch.EqualsNoCase(selectedStretch))
+                {
+                    _selectedStretch = selectedStretch;
+                    break;
+                }
+            }
+            RaisePropertyChanged(nameof(SelectedStretch));
+        }
+
+        private static void InitializeStretches(ICollection<string> stretches, string selectedFamilyName, string selectedStyleName)
+        {
+            var addedStretchesMask = 0;
+
+            var selectedFamily = FontFamilyService.SupportedFamilies[selectedFamilyName];
+            var selectedStyle = FontStyleService.SupportedStyleByNames[selectedStyleName];
             foreach (var typeFace in selectedFamily.FamilyTypefaces)
             {
                 if (typeFace.Style.Equals(selectedStyle))
@@ -84,20 +102,14 @@ namespace CoCo.UI.ViewModels
                     var stretch = typeFace.Stretch.ToOpenTypeStretch();
                     // NOTE: i bit is 1 => stretch with i usWidthClass was added
                     var oldValue = addedStretchesMask;
-                    if (oldValue != (addedStretchesMask |= 1 << (stretch - 1)))
+                    if (oldValue != (addedStretchesMask |= 1 << (stretch - 1)) &&
+                        FontStretchService.SupportedStretchNames.TryGetValue(stretch, out var stretchName))
                     {
-                        var stretchName = FontStretchService.SupportedStretchesNames[stretch];
-                        isSelectionUnchanged = isSelectionUnchanged || stretchName.EqualsNoCase(selectedStretch);
-                        _stretches.Add(stretchName);
+                        stretches.Add(stretchName);
+                        if (stretches.Count == FontStretchService.SupportedStretches.Count) return;
                     }
                 }
             }
-
-            if (isSelectionUnchanged)
-            {
-                _selectedStretch = selectedStretch;
-            }
-            RaisePropertyChanged(nameof(SelectedStretch));
         }
     }
 }

@@ -20,30 +20,30 @@ namespace CoCo.UI
             [9] = FontStretches.UltraExpanded,
         };
 
-        public static IDictionary<string, FontStretch> SupportedStretchesByNames = new SortedDictionary<string, FontStretch>
+        public static IDictionary<string, FontStretch> SupportedStretchByNames = new SortedDictionary<string, FontStretch>
         {
-            ["UltraCondensed"] = FontStretches.UltraCondensed,
-            ["ExtraCondensed"] = FontStretches.ExtraCondensed,
+            ["Ultra Condensed"] = FontStretches.UltraCondensed,
+            ["Extra Condensed"] = FontStretches.ExtraCondensed,
             ["Condensed"] = FontStretches.Condensed,
-            ["SemiCondensed"] = FontStretches.SemiCondensed,
+            ["Semi Condensed"] = FontStretches.SemiCondensed,
             ["Normal"] = FontStretches.Normal,
-            ["SemiExpanded"] = FontStretches.SemiExpanded,
+            ["Semi Expanded"] = FontStretches.SemiExpanded,
             ["Expanded"] = FontStretches.Expanded,
-            ["ExtraExpanded"] = FontStretches.ExtraExpanded,
-            ["UltraExpanded"] = FontStretches.UltraExpanded,
+            ["Extra Expanded"] = FontStretches.ExtraExpanded,
+            ["Ultra Expanded"] = FontStretches.UltraExpanded,
         };
 
-        public static IDictionary<int, string> SupportedStretchesNames = new SortedDictionary<int, string>
+        public static IDictionary<int, string> SupportedStretchNames = new SortedDictionary<int, string>
         {
-            [1] = "UltraCondensed",
-            [2] = "ExtraCondensed",
+            [1] = "Ultra Condensed",
+            [2] = "Extra Condensed",
             [3] = "Condensed",
-            [4] = "SemiCondensed",
+            [4] = "Semi Condensed",
             [5] = "Normal",
-            [6] = "SemiExpanded",
+            [6] = "Semi Expanded",
             [7] = "Expanded",
-            [8] = "ExtraExpanded",
-            [9] = "UltraExpanded",
+            [8] = "Extra Expanded",
+            [9] = "Ultra Expanded",
         };
     }
 }

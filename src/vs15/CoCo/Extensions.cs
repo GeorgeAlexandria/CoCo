@@ -42,7 +42,7 @@ namespace CoCo
             if (formatting.TypefaceEmpty) return FontStyleService.Normal;
 
             var styleName = formatting.Typeface.Style.ToString();
-            return FontStyleService.SupportedStyles.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
+            return FontStyleService.SupportedStyleByNames.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
         }
 
         /// <summary>

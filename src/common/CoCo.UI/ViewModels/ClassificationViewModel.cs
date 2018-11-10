@@ -20,9 +20,10 @@ namespace CoCo.UI.ViewModels
             _isBaseLine = classification.IsBaseline;
             _fontRenderingSize = classification.FontRenderingSize;
 
-            FontStylesContainer = new FontStylesViewModel(classification.FontStyle);
             FontFamiliesContainer = new FontFamiliesViewModel(classification.FontFamily);
-            FontStretchesContainer = new FontStretchesViewModel(classification.FontStretch);
+            FontStylesContainer = new FontStylesViewModel(classification.FontStyle, classification.FontFamily);
+            FontStretchesContainer = new FontStretchesViewModel(
+                classification.FontStretch, classification.FontFamily, classification.FontStyle);
 
             FontFamiliesContainer.PropertyChanged += FontStylesContainer.OnSelectedFontFamilyChanged;
             FontFamiliesContainer.PropertyChanged += FontStretchesContainer.OnSelectedFontFamilyChanged;

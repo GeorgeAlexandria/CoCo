@@ -212,7 +212,7 @@ namespace CoCo.Services
             classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
 
             if (string.IsNullOrWhiteSpace(classificationSettings.FontStyle) ||
-                !FontStyleService.SupportedStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+                !FontStyleService.SupportedStyleByNames.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
             {
                 classification.FontStyle = defaultFormatting.GetFontStyleName();
             }

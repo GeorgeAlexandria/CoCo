@@ -46,7 +46,7 @@
          HorizontalAlignment="Stretch"
          VerticalAlignment="Stretch">
          <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="150" />
+            <ColumnDefinition MinWidth="130" />
             <ColumnDefinition Width="Auto" />
          </Grid.ColumnDefinitions>
          <ListView
@@ -306,7 +306,7 @@
                            FontSize="12"
                            Style="{StaticResource labelStyle}" />
                         <ComboBox
-                           Width="80"
+                           Width="120"
                            ItemsSource="{Binding Stretches}"
                            SelectedItem="{Binding SelectedStretch}"
                            Style="{StaticResource comboBoxFlatStyle}" />
@@ -331,7 +331,6 @@
                            IsChecked="{Binding IsUnderline}"
                            Style="{StaticResource checkBoxFlatStyle}" />
                         <CheckBox
-                           Margin="0,0,10,0"
                            Content="Strikethrough"
                            IsChecked="{Binding IsStrikethrough}"
                            Style="{StaticResource checkBoxFlatStyle}" />

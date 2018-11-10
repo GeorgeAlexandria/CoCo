@@ -61,6 +61,7 @@ namespace CoCo.Services
             var defaultIdentifierFormatting =
                 GetDefaultFormatting(classificationFormatMap, ClassificationManager.DefaultIdentifierClassification);
 
+            classificationFormatMap.BeginBatchUpdate();
             foreach (var language in option.Languages)
             {
                 // TODO: do need to write in a log if the classification after preparing still not exists?
@@ -82,6 +83,7 @@ namespace CoCo.Services
                     }
                 }
             }
+            classificationFormatMap.EndBatchUpdate();
         }
 
         private static TextFormattingRunProperties Apply(
@@ -161,7 +163,7 @@ namespace CoCo.Services
 
                 return formatting.SetTypeface(new Typeface(
                     mask.Is(TypeFaces.Family) ? FontFamilyService.SupportedFamilies[classification.FontFamily] : fallbackFace.FontFamily,
-                    mask.Is(TypeFaces.Style) ? FontStyleService.SupportedStyles[classification.FontStyle] : fallbackFace.Style,
+                    mask.Is(TypeFaces.Style) ? FontStyleService.SupportedStyleByNames[classification.FontStyle] : fallbackFace.Style,
                     fallbackFace.Weight,
                     mask.Is(TypeFaces.Stretch) ? FontStretchService.SupportedStretches[classification.FontStretch] : fallbackFace.Stretch));
             }
@@ -188,7 +190,7 @@ namespace CoCo.Services
             else
             {
                 var typeFace = formatting.Typeface;
-                if (!typeFace.Style.Equals(FontStyleService.SupportedStyles[classification.FontStyle]) ||
+                if (!typeFace.Style.Equals(FontStyleService.SupportedStyleByNames[classification.FontStyle]) ||
                     !typeFace.FontFamily.Source.Equals(classification.FontFamily) ||
                     typeFace.Stretch.ToOpenTypeStretch() != classification.FontStretch)
                 {
