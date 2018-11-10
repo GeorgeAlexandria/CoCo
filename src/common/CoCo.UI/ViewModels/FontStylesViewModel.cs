@@ -8,15 +8,15 @@ namespace CoCo.UI.ViewModels
 {
     public class FontStylesViewModel : BaseViewModel
     {
-        private readonly ObservableCollection<string> _styles = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> _styles;
 
         public FontStylesViewModel(string selectedStyle)
         {
             _selectedStyle = selectedStyle;
 
-            _styles = new ObservableCollection<string>(FontStyleService.SupportedFontStyles.Keys);
+            _styles = new ObservableCollection<string>(FontStyleService.SupportedStyles.Keys);
             /// NOTE: avoid redundant creation of <see cref="ListCollectionView"/>
-            if (!(CollectionViewSource.GetDefaultView(FontFamilyService.SupportedFamilies.Keys) is ListCollectionView listView))
+            if (!(CollectionViewSource.GetDefaultView(_styles) is ListCollectionView listView))
             {
                 listView = new ListCollectionView(_styles);
             }
@@ -32,7 +32,7 @@ namespace CoCo.UI.ViewModels
         {
             get
             {
-                if (_selectedStyle == null && Styles.MoveCurrentToFirst())
+                if (_selectedStyle is null && Styles.MoveCurrentToFirst())
                 {
                     SelectedStyle = (string)Styles.CurrentItem;
                 }
@@ -46,21 +46,32 @@ namespace CoCo.UI.ViewModels
             if (!e.PropertyName.EqualsNoCase(nameof(FontFamiliesViewModel.SelectedFamily))) return;
             if (!(sender is FontFamiliesViewModel familiesViewModel)) return;
 
+            var selectedStyle = _selectedStyle;
+
+            // HACK: Removing only italic item seems not working: combobox selector cannot retrieve the correct changed selection
+            // => clear all and add them again
+            _styles.Clear();
+            // NOTE: assume that all fonts have normal and oblique styles
+            _styles.Add(FontStyleService.Normal);
+            _styles.Add(FontStyleService.Oblique);
+
             var selectedFamily = FontFamilyService.SupportedFamilies[familiesViewModel.SelectedFamily];
-            var italic = FontStyleService.SupportedFontStyles[FontStyleService.Italic];
+            var italic = FontStyleService.SupportedStyles[FontStyleService.Italic];
             foreach (var typeFace in selectedFamily.FamilyTypefaces)
             {
                 if (typeFace.Style.Equals(italic))
                 {
-                    // NOTE: assume that all fonts have normal and oblique style
-                    if (_styles.Count != 3)
-                    {
-                        _styles.Add(FontStyleService.Italic);
-                    }
-                    return;
+                    _styles.Add(FontStyleService.Italic);
+                    _selectedStyle = selectedStyle;
+                    break;
                 }
             }
-            _styles.Remove(FontStyleService.Italic);
+
+            if (_styles.Count == 2 && Styles.MoveCurrentToFirst())
+            {
+                _selectedStyle = (string)Styles.CurrentItem;
+            }
+            RaisePropertyChanged(nameof(SelectedStyle));
         }
     }
 }

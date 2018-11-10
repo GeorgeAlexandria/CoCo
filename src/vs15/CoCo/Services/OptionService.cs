@@ -212,13 +212,23 @@ namespace CoCo.Services
             classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
 
             if (string.IsNullOrWhiteSpace(classificationSettings.FontStyle) ||
-                !FontStyleService.SupportedFontStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+                !FontStyleService.SupportedStyles.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
             {
                 classification.FontStyle = defaultFormatting.GetFontStyleName();
             }
             else
             {
                 classification.FontStyle = classificationSettings.FontStyle;
+            }
+
+            if (!classificationSettings.FontStretch.HasValue ||
+                !FontStretchService.SupportedStretches.ContainsKey(classificationSettings.FontStretch.Value))
+            {
+                classification.FontStretch = defaultFormatting.GetFontStretch();
+            }
+            else
+            {
+                classification.FontStretch = classificationSettings.FontStretch.Value;
             }
 
             classification.IsOverline = classificationSettings.IsOverline ??
@@ -272,6 +282,7 @@ namespace CoCo.Services
                 FontFamily = classification.FontFamily,
                 IsBold = classification.IsBold,
                 FontStyle = classification.FontStyle,
+                FontStretch = classification.FontStretch,
                 IsOverline = classification.IsOverline,
                 IsUnderline = classification.IsUnderline,
                 IsStrikethrough = classification.IsStrikethrough,

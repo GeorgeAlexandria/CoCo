@@ -42,7 +42,7 @@ namespace CoCo
             if (formatting.TypefaceEmpty) return FontStyleService.Normal;
 
             var styleName = formatting.Typeface.Style.ToString();
-            return FontStyleService.SupportedFontStyles.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
+            return FontStyleService.SupportedStyles.ContainsKey(styleName) ? styleName : FontStyleService.Normal;
         }
 
         /// <summary>
@@ -61,6 +61,17 @@ namespace CoCo
             return FontFamilyService.SupportedFamilies.ContainsKey(source)
                 ? source
                 : FontFamilyService.SupportedFamilies.Keys.First();
+        }
+
+        /// <summary>
+        /// Returns the relevant font stretch for <paramref name="formatting"/> if if exists or the fallback value
+        /// </summary>
+        public static int GetFontStretch(this TextFormattingRunProperties formatting)
+        {
+            if (formatting.TypefaceEmpty) return FontStretchService.Normal;
+
+            var stretch = formatting.Typeface.Stretch.ToOpenTypeStretch();
+            return FontStretchService.SupportedStretches.ContainsKey(stretch) ? stretch : FontStretchService.Normal;
         }
 
         /// <summary>
