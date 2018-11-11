@@ -18,7 +18,8 @@ namespace CoCo.Services
             None = 0,
             Style = 1 << 0,
             Family = 1 << 1,
-            All = Style | Family ,
+            Stretch = 1 << 2,
+            All = Style | Family | Stretch,
         }
 
         public static TextFormattingRunProperties GetDefaultFormatting(string classificationName)
@@ -60,6 +61,7 @@ namespace CoCo.Services
             var defaultIdentifierFormatting =
                 GetDefaultFormatting(classificationFormatMap, ClassificationManager.DefaultIdentifierClassification);
 
+            classificationFormatMap.BeginBatchUpdate();
             foreach (var language in option.Languages)
             {
                 // TODO: do need to write in a log if the classification after preparing still not exists?
@@ -81,6 +83,7 @@ namespace CoCo.Services
                     }
                 }
             }
+            classificationFormatMap.EndBatchUpdate();
         }
 
         private static TextFormattingRunProperties Apply(
@@ -160,14 +163,14 @@ namespace CoCo.Services
 
                 return formatting.SetTypeface(new Typeface(
                     mask.Is(TypeFaces.Family) ? FontFamilyService.SupportedFamilies[classification.FontFamily] : fallbackFace.FontFamily,
-                    mask.Is(TypeFaces.Style) ? FontStyleService.SupportedFontStyles[classification.FontStyle] : fallbackFace.Style,
+                    mask.Is(TypeFaces.Style) ? FontStyleService.SupportedStyleByNames[classification.FontStyle] : fallbackFace.Style,
                     fallbackFace.Weight,
-                    fallbackFace.Stretch));
+                    mask.Is(TypeFaces.Stretch) ? FontStretchService.SupportedStretches[classification.FontStretch] : fallbackFace.Stretch));
             }
 
             if (formatting.TypefaceEmpty)
             {
-                var faces = TypeFaces.Family;
+                var faces = TypeFaces.Family | TypeFaces.Stretch;
                 switch (classification.FontStyle)
                 {
                     case FontStyleService.Italic when !formatting.Italic:
@@ -187,8 +190,9 @@ namespace CoCo.Services
             else
             {
                 var typeFace = formatting.Typeface;
-                if (!typeFace.Style.Equals(FontStyleService.SupportedFontStyles[classification.FontStyle]) ||
-                    !typeFace.FontFamily.Source.Equals(classification.FontFamily))
+                if (!typeFace.Style.Equals(FontStyleService.SupportedStyleByNames[classification.FontStyle]) ||
+                    !typeFace.FontFamily.Source.Equals(classification.FontFamily) ||
+                    typeFace.Stretch.ToOpenTypeStretch() != classification.FontStretch)
                 {
                     formatting = ApplyTypeFace(TypeFaces.All, typeFace);
                 }

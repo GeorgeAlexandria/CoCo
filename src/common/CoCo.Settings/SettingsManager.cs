@@ -166,6 +166,11 @@ namespace CoCo.Settings
             {
                 classification.FontStyle = fontStyle;
             }
+            if (jObject[nameof(ClassificationSettings.FontStretch)] is JValue jFontStretch &&
+                jFontStretch.Value is long fontStretch && fontStretch < 10)
+            {
+                classification.FontStretch = (int)fontStretch;
+            }
             if (jObject[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
                 jOverline.Value is bool isOverline)
             {
@@ -250,6 +255,10 @@ namespace CoCo.Settings
             if (!string.IsNullOrWhiteSpace(classification.FontStyle))
             {
                 jClassification.Add(nameof(classification.FontStyle), new JValue(classification.FontStyle));
+            }
+            if (classification.FontStretch.HasValue)
+            {
+                jClassification.Add(nameof(classification.FontStretch), new JValue(classification.FontStretch.Value));
             }
             if (classification.IsOverline.HasValue)
             {

@@ -65,6 +65,7 @@ namespace CoCo
             var formatMap = formatMapService.GetClassificationFormatMap(category: "text");
             var identifierPosition = GetClassificationPosition(registryService, formatMap, PredefinedClassificationTypeNames.Identifier);
 
+            formatMap.BeginBatchUpdate();
             foreach (var (language, names) in Names.All)
             {
                 var languageClassifications = new List<IClassificationType>();
@@ -107,6 +108,7 @@ namespace CoCo
                 }
                 _classifications.Add(language, languageClassifications);
             }
+            formatMap.EndBatchUpdate();
 
             return _classifications;
         }

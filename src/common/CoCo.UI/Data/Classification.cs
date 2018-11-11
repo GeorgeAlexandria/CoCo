@@ -22,6 +22,8 @@ namespace CoCo.UI.Data
 
         public string FontStyle { get; set; }
 
+        public int FontStretch { get; set; }
+
         public bool IsOverline { get; set; }
 
         public bool IsUnderline { get; set; }

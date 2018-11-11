@@ -20,10 +20,14 @@ namespace CoCo.UI.ViewModels
             _isBaseLine = classification.IsBaseline;
             _fontRenderingSize = classification.FontRenderingSize;
 
-            FontStylesContainer = new FontStylesViewModel(classification.FontStyle);
             FontFamiliesContainer = new FontFamiliesViewModel(classification.FontFamily);
+            FontStylesContainer = new FontStylesViewModel(classification.FontStyle, classification.FontFamily);
+            FontStretchesContainer = new FontStretchesViewModel(
+                classification.FontStretch, classification.FontFamily, classification.FontStyle);
 
             FontFamiliesContainer.PropertyChanged += FontStylesContainer.OnSelectedFontFamilyChanged;
+            FontFamiliesContainer.PropertyChanged += FontStretchesContainer.OnSelectedFontFamilyChanged;
+            FontStylesContainer.PropertyChanged += FontStretchesContainer.OnSelectedFontStyleChanged;
 
             Foreground = new ClassificationColorViewModel(
                 _classificationName, classification.Foreground, classification.ForegroundWasReset, resetValuesProvider);
@@ -44,6 +48,8 @@ namespace CoCo.UI.ViewModels
         public FontStylesViewModel FontStylesContainer { get; }
 
         public FontFamiliesViewModel FontFamiliesContainer { get; }
+
+        public FontStretchesViewModel FontStretchesContainer { get; }
 
         public ClassificationColorViewModel Foreground { get; set; }
 
@@ -134,6 +140,7 @@ namespace CoCo.UI.ViewModels
             FontFamily = FontFamiliesContainer.SelectedFamily,
             IsBold = IsBold,
             FontStyle = FontStylesContainer.SelectedStyle,
+            FontStretch = FontStretchesContainer.Stretch,
             IsOverline = IsOverline,
             IsUnderline = IsUnderline,
             IsStrikethrough = IsStrikethrough,

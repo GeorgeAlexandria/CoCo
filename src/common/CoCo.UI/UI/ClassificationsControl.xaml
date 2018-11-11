@@ -46,7 +46,7 @@
          HorizontalAlignment="Stretch"
          VerticalAlignment="Stretch">
          <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="150" />
+            <ColumnDefinition MinWidth="130" />
             <ColumnDefinition Width="Auto" />
          </Grid.ColumnDefinitions>
          <ListView
@@ -137,7 +137,6 @@
                      HorizontalAlignment="Left"
                      DataContext="{Binding ElementName=listView, Path=SelectedItem}">
                      <StackPanel
-                        Grid.Row="0"
                         Width="Auto"
                         Height="26"
                         Margin="0,0,0,4"
@@ -279,7 +278,6 @@
                            Template="{StaticResource ResetButton}" />
                      </StackPanel>
                      <StackPanel
-                        Grid.Row="0"
                         Width="Auto"
                         Height="26"
                         Margin="0,0,0,4"
@@ -294,6 +292,23 @@
                            Width="80"
                            ItemsSource="{Binding Styles}"
                            SelectedItem="{Binding SelectedStyle}"
+                           Style="{StaticResource comboBoxFlatStyle}" />
+                     </StackPanel>
+                     <StackPanel
+                        Width="Auto"
+                        Height="26"
+                        Margin="0,0,0,4"
+                        HorizontalAlignment="Left"
+                        DataContext="{Binding FontStretchesContainer}"
+                        Orientation="Horizontal">
+                        <Label
+                           Content="Font stretch:"
+                           FontSize="12"
+                           Style="{StaticResource labelStyle}" />
+                        <ComboBox
+                           Width="120"
+                           ItemsSource="{Binding Stretches}"
+                           SelectedItem="{Binding SelectedStretch}"
                            Style="{StaticResource comboBoxFlatStyle}" />
                      </StackPanel>
                      <WrapPanel
@@ -316,7 +331,6 @@
                            IsChecked="{Binding IsUnderline}"
                            Style="{StaticResource checkBoxFlatStyle}" />
                         <CheckBox
-                           Margin="0,0,10,0"
                            Content="Strikethrough"
                            IsChecked="{Binding IsStrikethrough}"
                            Style="{StaticResource checkBoxFlatStyle}" />
