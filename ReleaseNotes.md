@@ -1,5 +1,13 @@
 # Release notes
 
+## 2.5.0
+
+**2018-11-18**
+
+- [x] Release issue [#35](https://github.com/GeorgeAlexandria/CoCo/issues/35) – Supported changing font family for classification
+- [x] Release issue [#37](https://github.com/GeorgeAlexandria/CoCo/issues/37) – Supported changing font stretch for classification
+- [x] Release issue [#38](https://github.com/GeorgeAlexandria/CoCo/issues/38) – Extended supporting of italic font to changing font style for classification
+
 ## 2.4.0
 
 **2018-10-27**
@@ -71,7 +79,7 @@
 
 ## 1.0.2
 
-**2017-08-11**
+**2017-10-08**
 
  - [x] Fixed issue [#12](https://github.com/GeorgeAlexandria/CoCo/issues/12) - Change order of format definitions to enable bold fonts   
 
