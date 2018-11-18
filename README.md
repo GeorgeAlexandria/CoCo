@@ -1,10 +1,12 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.4.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.4.0-green.svg)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg?style=flat-square)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (VS14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (VS15) extension that is analyzing C#, VB\.Net source codes to colorize 
 appropriate syntax nodes to different colors and decorate them to different styles. It makes easily recognizabling the supported elements. 
 
-Extension supports the following elements:
+## Supported items 
+
+Extension supports the following language elements:
 
 #### CSharp
 
@@ -39,7 +41,9 @@ Extension supports the following elements:
 
 supports the following decorations:
 * Changing foreground and background
-* Using bold and italic font
+* Changing font family
+* Changing font styles and stretches
+* Using bold font weight
 * Changing font rendering size
 * Using overline, underline, strikethrough and baseline font
 
@@ -55,13 +59,13 @@ The following screenshots show a different applying decorations and colors to th
 
 ![](https://user-images.githubusercontent.com/13402478/44617735-04cb4000-a871-11e8-9f69-52caf1210996.png)
 
-![](https://user-images.githubusercontent.com/13402478/46107422-05deec80-c1e4-11e8-9978-c5195a19f37c.png)
+![](https://user-images.githubusercontent.com/13402478/48673969-722cfb00-eb58-11e8-9896-6caa1188ee1d.png)
 
 
-## How to use 
+## Usage 
 Use **CoCo/Classifications** option page in the Visual Studio options to change decorations of items or their analyze options:
 
-![](https://user-images.githubusercontent.com/13402478/47605876-e4586700-da14-11e8-8faa-d0841f9ac6c6.png)
+![](https://user-images.githubusercontent.com/13402478/48673975-83760780-eb58-11e8-9cce-b0a7eb8f05a7.png)
 
 
 You can disable classification of the chosen item in the **Analyze settings** sections to allow the other similar extensions or Visual Studio classify this item.
@@ -72,7 +76,7 @@ Also you can use **CoCo/Presets** option page to save your current settings as p
 
 You need to click **OK** button to confirm your changes on the **CoCo/Classifications** and 
 to confirm applying, creating or deleting preset on the **CoCo/Presets**. If you will not click the **OK** button 
-extension will use the previous (or default) settings for both of pages.
+extension will use the previous (or default) settings for both of pages. Settings are stored under **%localappdata%\CoCo\CoCo.config**.
 
 ### After installation
 Extension doesn't apply the one of ***default*** presets after installation. It only apply settings from config file if it exists on your system, 
