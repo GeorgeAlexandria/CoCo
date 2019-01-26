@@ -4,27 +4,23 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-   d:DesignHeight="300"
-   d:DesignWidth="400"
+   d:DesignHeight="200"
+   d:DesignWidth="300"
    mc:Ignorable="d">
-   <UserControl.Resources>
-      <ResourceDictionary>
-         <DataTemplate x:Key="itemDateTemplate">
-            <Border BorderThickness="2" SnapsToDevicePixels="True">
-               <ContentPresenter Content="{Binding}" />
-            </Border>
-         </DataTemplate>
-         <Style x:Key="itemTemplateStyle" TargetType="{x:Type ItemsControl}">
-            <Setter Property="ItemTemplate" Value="{StaticResource itemDateTemplate}" />
-         </Style>
-      </ResourceDictionary>
-   </UserControl.Resources>
    <UserControl.Style>
       <Style TargetType="{x:Type UserControl}">
-         <Setter Property="BorderThickness" Value="2" />
-         <Setter Property="BorderBrush" Value="{Binding Path=BorderBrush, Mode=OneTime}" />
-         <Setter Property="Background" Value="{Binding Path=BackgroundBrush, Mode=OneTime}" />
-         <Setter Property="Padding" Value="5,0,5,0" />
+         <Setter Property="BorderThickness" Value="1" />
+         <Setter Property="BorderBrush">
+            <Setter.Value>
+               <SolidColorBrush Color="{Binding BorderColor, Mode=OneTime}" />
+            </Setter.Value>
+         </Setter>
+         <Setter Property="Background">
+            <Setter.Value>
+               <SolidColorBrush Color="{Binding Background, Mode=OneTime}" />
+            </Setter.Value>
+         </Setter>
+         <Setter Property="Padding" Value="10,2,10,2" />
          <Setter Property="HorizontalContentAlignment" Value="Left" />
          <Setter Property="VerticalContentAlignment" Value="Center" />
          <Setter Property="Focusable" Value="False" />
@@ -35,7 +31,8 @@
                      Padding="{TemplateBinding Padding}"
                      Background="{TemplateBinding Background}"
                      BorderBrush="{TemplateBinding BorderBrush}"
-                     BorderThickness="{TemplateBinding BorderThickness}">
+                     BorderThickness="{TemplateBinding BorderThickness}"
+                     CornerRadius="2.5">
                      <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                   </Border>
                </ControlTemplate>
@@ -43,5 +40,12 @@
          </Setter>
       </Style>
    </UserControl.Style>
-   <ItemsControl ItemsSource="{Binding Contents, Mode=OneTime}" Style="{StaticResource itemTemplateStyle}" />
+   <ItemsControl ItemsSource="{Binding Contents, Mode=OneTime}">
+      <ItemsControl.ItemContainerStyle>
+         <Style>
+            <Setter Property="FrameworkElement.Margin" Value="0,4,0,4" />
+            <Setter Property="FrameworkElement.SnapsToDevicePixels" Value="True" />
+         </Style>
+      </ItemsControl.ItemContainerStyle>
+   </ItemsControl>
 </UserControl>

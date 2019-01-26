@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using CoCo.UI;
 using CoCo.UI.ViewModels;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
@@ -56,6 +57,7 @@ namespace CoCo
 
         private void InitializePopup(IEnumerable<object> content)
         {
+            _popup.AllowsTransparency = true;
             UpdatePopup(content);
 
             _popup.Closed += OnPopupClosed;
@@ -77,9 +79,11 @@ namespace CoCo
                 }
             }
 
+            var background = VSColorTheme.GetThemedColor(EnvironmentColors.ToolTipColorKey);
+            var borderColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolTipBorderColorKey);
             _popup.Child = new VsToolTipControl
             {
-                DataContext = new VsToolTipViewModel(ToUIElements(content)),
+                DataContext = new VsToolTipViewModel(ToUIElements(content), background.DrawingToMedia(), borderColor.DrawingToMedia()),
             };
         }
 
