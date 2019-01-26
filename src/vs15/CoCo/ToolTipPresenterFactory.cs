@@ -9,9 +9,12 @@ namespace CoCo
     [Order(Before = "default")]
     internal class ToolTipPresenterFactory : IToolTipPresenterFactory
     {
+        [Import]
+        public IViewElementFactoryService viewElementFactoryService;
+
         public IToolTipPresenter Create(ITextView textView, ToolTipParameters parameters)
         {
-            return new ToolTipPresenter(textView, parameters);
+            return new ToolTipPresenter(viewElementFactoryService, textView, parameters);
         }
     }
 }

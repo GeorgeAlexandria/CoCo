@@ -24,6 +24,9 @@
     <Compile Update="UI\PresetsControl.xaml.cs">
       <DependentUpon>PresetsControl.xaml</DependentUpon>
     </Compile>
+    <Compile Update="UI\VsToolTipControl.xaml.cs">
+      <DependentUpon>VsToolTipControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="UI\Resources\Templates\Buttons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -57,6 +60,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\Resources\Templates\Controls.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\VsToolTipControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
