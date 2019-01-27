@@ -11,12 +11,46 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace CoCo
 {
+    internal class MouseTrackToolTipPresenter : ToolTipPresenter
+    {
+        public MouseTrackToolTipPresenter(
+            IViewElementFactoryService viewElementFactoryService, ITextView textView, ToolTipParameters toolTipParameters) :
+            base(viewElementFactoryService, textView, toolTipParameters)
+        {
+        }
+
+        public override void StartOrUpdate(ITrackingSpan applicableToSpan, IEnumerable<object> content)
+        {
+            popup.MouseLeave += OnMouseLeave;
+            popup.MouseMove += OnMouseMove;
+            popup.Placement = PlacementMode.Mouse;
+            base.StartOrUpdate(applicableToSpan, content);
+        }
+
+        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (popup.IsMouseOver || toolTipParameters.KeepOpen) return;
+            if (textView is IWpfTextView wpfTextView && !wpfTextView.VisualElement.IsMouseOver)
+            {
+                Dismiss();
+            }
+        }
+
+        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            popup.MouseLeave -= OnMouseLeave;
+            popup.MouseMove -= OnMouseMove;
+            Dismiss();
+        }
+    }
+
     internal class ToolTipPresenter : IToolTipPresenter
     {
         private readonly IViewElementFactoryService _viewElementFactoryService;
-        private readonly ITextView _textView;
-        private readonly ToolTipParameters _toolTipParameters;
-        private readonly Popup _popup = new Popup();
+
+        protected readonly ITextView textView;
+        protected readonly ToolTipParameters toolTipParameters;
+        protected readonly Popup popup = new Popup();
 
         public ToolTipPresenter(
             IViewElementFactoryService viewElementFactoryService,
@@ -24,30 +58,30 @@ namespace CoCo
             ToolTipParameters toolTipParameters)
         {
             this._viewElementFactoryService = viewElementFactoryService ?? throw new ArgumentNullException(nameof(viewElementFactoryService));
-            this._textView = textView ?? throw new ArgumentNullException(nameof(textView));
-            this._toolTipParameters = toolTipParameters ?? throw new ArgumentNullException(nameof(toolTipParameters));
+            this.textView = textView ?? throw new ArgumentNullException(nameof(textView));
+            this.toolTipParameters = toolTipParameters ?? throw new ArgumentNullException(nameof(toolTipParameters));
         }
 
         public event EventHandler Dismissed;
 
         public virtual void Dismiss()
         {
-            if (!(_popup is null))
+            if (!(popup is null))
             {
-                _popup.Closed -= OnPopupClosed;
-                _popup.IsOpen = false;
-                _popup.Child = null;
+                popup.Closed -= OnPopupClosed;
+                popup.IsOpen = false;
+                popup.Child = null;
 
-                _textView.TextBuffer.Changed -= OnTextBufferChanged;
+                textView.TextBuffer.Changed -= OnTextBufferChanged;
             }
 
             if (Dismissed is null) return;
-            Dismissed(this, EventArgs.Empty);
+            Dismissed?.Invoke(this, EventArgs.Empty);
         }
 
         public virtual void StartOrUpdate(ITrackingSpan applicableToSpan, IEnumerable<object> content)
         {
-            if (_popup.IsOpen)
+            if (popup.IsOpen)
             {
                 UpdatePopup(content);
                 return;
@@ -57,14 +91,14 @@ namespace CoCo
 
         private void InitializePopup(IEnumerable<object> content)
         {
-            _popup.AllowsTransparency = true;
+            popup.AllowsTransparency = true;
             UpdatePopup(content);
 
-            _popup.Closed += OnPopupClosed;
-            _textView.TextBuffer.Changed += OnTextBufferChanged;
+            popup.Closed += OnPopupClosed;
+            textView.TextBuffer.Changed += OnTextBufferChanged;
 
-            _popup.IsOpen = true;
-            _popup.BringIntoView();
+            popup.IsOpen = true;
+            popup.BringIntoView();
         }
 
         private void UpdatePopup(IEnumerable<object> content)
@@ -73,7 +107,7 @@ namespace CoCo
             {
                 foreach (var item in models)
                 {
-                    var element = _viewElementFactoryService.CreateViewElement<UIElement>(_textView, item);
+                    var element = _viewElementFactoryService.CreateViewElement<UIElement>(textView, item);
                     if (element is null) continue;
                     yield return element;
                 }
@@ -81,7 +115,7 @@ namespace CoCo
 
             var background = VSColorTheme.GetThemedColor(EnvironmentColors.ToolTipColorKey);
             var borderColor = VSColorTheme.GetThemedColor(EnvironmentColors.ToolTipBorderColorKey);
-            _popup.Child = new VsToolTipControl
+            popup.Child = new VsToolTipControl
             {
                 DataContext = new VsToolTipViewModel(ToUIElements(content), background.DrawingToMedia(), borderColor.DrawingToMedia()),
             };

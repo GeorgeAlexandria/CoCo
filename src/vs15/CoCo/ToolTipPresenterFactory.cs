@@ -10,11 +10,15 @@ namespace CoCo
     internal class ToolTipPresenterFactory : IToolTipPresenterFactory
     {
         [Import]
-        public IViewElementFactoryService viewElementFactoryService;
+        private IViewElementFactoryService _viewElementFactoryService;
 
         public IToolTipPresenter Create(ITextView textView, ToolTipParameters parameters)
         {
             return new ToolTipPresenter(viewElementFactoryService, textView, parameters);
+
+            return parameters.TrackMouse
+                ? new MouseTrackToolTipPresenter(_viewElementFactoryService, textView, parameters)
+                : new ToolTipPresenter(_viewElementFactoryService, textView, parameters);
         }
     }
 }
