@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using CoCo.UI;
 using CoCo.UI.ViewModels;
 using Microsoft.VisualStudio.PlatformUI;
@@ -13,6 +14,11 @@ namespace CoCo
 {
     internal class MouseTrackToolTipPresenter : ToolTipPresenter
     {
+        /// <summary>
+        /// The element above which the tooltip popped
+        /// </summary>
+        private UIElement capturedElement;
+
         public MouseTrackToolTipPresenter(
             IViewElementFactoryService viewElementFactoryService, ITextView textView, ToolTipParameters toolTipParameters) :
             base(viewElementFactoryService, textView, toolTipParameters)
@@ -21,26 +27,76 @@ namespace CoCo
 
         public override void StartOrUpdate(ITrackingSpan applicableToSpan, IEnumerable<object> content)
         {
-            popup.MouseLeave += OnMouseLeave;
-            popup.MouseMove += OnMouseMove;
-            popup.Placement = PlacementMode.Mouse;
-            base.StartOrUpdate(applicableToSpan, content);
-        }
-
-        private void OnMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            if (popup.IsMouseOver || toolTipParameters.KeepOpen) return;
-            if (textView is IWpfTextView wpfTextView && !wpfTextView.VisualElement.IsMouseOver)
+            if (!DismissOnOutOfView())
             {
-                Dismiss();
+                popup.Placement = PlacementMode.Mouse;
+                if (!popup.IsVisible)
+                {
+                    SubscribeOnMove();
+                }
+                base.StartOrUpdate(applicableToSpan, content);
             }
         }
 
-        private void OnMouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        public override void Dismiss()
         {
-            popup.MouseLeave -= OnMouseLeave;
-            popup.MouseMove -= OnMouseMove;
-            Dismiss();
+            if (!(capturedElement is null))
+            {
+                UnsubscribeOnMove();
+            }
+            base.Dismiss();
+        }
+
+        private void SubscribeOnMove()
+        {
+            if (capturedElement is null && Mouse.DirectlyOver is UIElement uielement)
+            {
+                uielement.MouseLeave += OnMouseLeave;
+                uielement.MouseMove += OnMouseMove;
+                capturedElement = uielement;
+            }
+        }
+
+        private void UnsubscribeOnMove()
+        {
+            if (!(capturedElement is null))
+            {
+                capturedElement.MouseLeave -= OnMouseLeave;
+                capturedElement.MouseMove -= OnMouseMove;
+                capturedElement = null;
+            }
+        }
+
+        private void OnMouseMove(object sender, MouseEventArgs e) => DismissOnOutOfView();
+
+        private void OnMouseLeave(object sender, MouseEventArgs e)
+        {
+            // NOTE: unsubscribe from the current element and then subscribe to the element under
+            // the current cursor position to keep tooltip when it's under the current position
+            UnsubscribeOnMove();
+            SubscribeOnMove();
+
+            if (capturedElement is null)
+            {
+                Dismiss();
+                return;
+            }
+            DismissOnOutOfView();
+        }
+
+        /// <summary>
+        /// Dismiss when the mouse is over outside of view
+        /// </summary>
+        /// <returns></returns>
+        private bool DismissOnOutOfView()
+        {
+            var wpfTextView = textView as IWpfTextView;
+            if (wpfTextView is null || !popup.IsMouseOver && !toolTipParameters.KeepOpen && !wpfTextView.VisualElement.IsMouseOver)
+            {
+                Dismiss();
+                return true;
+            }
+            return false;
         }
     }
 
