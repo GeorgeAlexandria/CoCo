@@ -1,9 +1,52 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Immutable;
+using System.Threading;
+using Microsoft.CodeAnalysis;
 
 namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
+        public static ISymbol GetDeclaredSymbol(
+            this SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken = default)
+        {
+            var location = token.GetLocation();
+            var parent = token.Parent;
+            foreach (var item in parent.AncestorsAndSelf())
+            {
+                var declaredSymbol = semanticModel.GetDeclaredSymbol(item, cancellationToken);
+                if (!(declaredSymbol is null) && declaredSymbol.Locations.Contains(location)) return declaredSymbol;
+            }
+            return null;
+        }
+
+        public static ISymbol GetOverriddenSymbol(this ISymbol symbol)
+        {
+            switch (symbol)
+            {
+                case IMethodSymbol method:
+                    return method.OverriddenMethod;
+
+                case IPropertySymbol property:
+                    return property.OverriddenProperty;
+
+                case IEventSymbol @event:
+                    return @event.OverriddenEvent;
+            }
+            return null;
+        }
+
+        public static ImmutableArray<ISymbol> GetSymbolOrCandidates(
+            this SemanticModel semanticModel, SyntaxNode node, CancellationToken cancellationToken = default)
+        {
+            var info = semanticModel.GetSymbolInfo(node, cancellationToken);
+            return
+                !(info.Symbol is null) ? ImmutableArray.Create(info.Symbol) :
+                info.CandidateSymbols.Length > 0 ? info.CandidateSymbols :
+                ImmutableArray<ISymbol>.Empty;
+        }
+
+        public static bool IsErrorType(this ISymbol symbol) => (symbol as ITypeSymbol)?.TypeKind == TypeKind.Error;
+
         /// <summary>
         /// Try to retrieve the symbol for <paramref name="node"/>
         /// </summary>
