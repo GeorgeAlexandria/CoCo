@@ -48,6 +48,30 @@ namespace CoCo.Analyser
         public static bool IsErrorType(this ISymbol symbol) => (symbol as ITypeSymbol)?.TypeKind == TypeKind.Error;
 
         /// <summary>
+        /// Determines if <paramref name="symbol"/> is awaitable: contains GetAwaiter method which returns
+        /// <see cref="System.Runtime.CompilerServices.TaskAwaiter"/>
+        /// </summary>
+        public static bool IsAwaitable(this ISymbol symbol)
+        {
+            var typeToCheck = symbol is IMethodSymbol methodSymbol
+                ? methodSymbol.ReturnType?.OriginalDefinition
+                : symbol as ITypeSymbol;
+
+            if (typeToCheck is null) return false;
+
+            foreach (var item in typeToCheck.GetMembers(WellKnownMemberNames.GetAwaiter))
+            {
+                if (item is IMethodSymbol awaiter && awaiter.Parameters.Length == 0 &&
+                    (awaiter.ReturnType.MetadataName.Equals("System.Runtime.CompilerServices.TaskAwaiter") ||
+                    awaiter.ReturnType.MetadataName.Equals("System.Runtime.CompilerServices.TaskAwaiter`1")))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Try to retrieve the symbol for <paramref name="node"/>
         /// </summary>
         /// <param name="failureReason">Contains the roslyn failure reason.
