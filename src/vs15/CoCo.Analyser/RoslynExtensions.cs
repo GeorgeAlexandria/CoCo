@@ -6,6 +6,18 @@ namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
+        public static ImmutableArray<Compilation> GetReferencedCompilations(this Compilation compilation)
+        {
+            var builder = ImmutableArray.CreateBuilder<Compilation>();
+            foreach (var reference in compilation.References)
+            {
+                if (reference is CompilationReference compilationReference)
+                {
+                    builder.Add(compilationReference.Compilation);
+                }
+            }
+        }
+
         public static ISymbol GetDeclaredSymbol(
             this SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken = default)
         {

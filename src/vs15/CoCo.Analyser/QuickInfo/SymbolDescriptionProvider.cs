@@ -67,11 +67,6 @@ namespace CoCo.Analyser.QuickInfo
 
         protected abstract Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol);
 
-        /// <summary>
-        /// Adds captured variables if <paramref name="symbol"/> is local function or lambda
-        /// </summary>
-        protected abstract void AppendCaptureParts(ISymbol symbol);
-
         protected async Task AppendPartsAsync(ImmutableArray<ISymbol> symbols)
         {
             var main = symbols[0];
@@ -170,6 +165,51 @@ namespace CoCo.Analyser.QuickInfo
                     CreateText($"{count}"), CreateSpaces(),
                     count == 1 ? CreateText("overload") : CreateText("overloads"),
                     CreatePunctuation(")"));
+            }
+        }
+
+        /// <summary>
+        /// Adds captured variables
+        /// </summary>
+        protected void AppendCaptureParts(ISymbol symbol)
+        {
+            // NOTE: lambda initializer in type cannot reference to a non static fields
+            if (symbol is IMethodSymbol method && method.ContainingSymbol.Kind == SymbolKind.Method)
+            {
+                if (method.DeclaringSyntaxReferences.IsDefaultOrEmpty) return;
+
+                var syntax = method.DeclaringSyntaxReferences[0].GetSyntax();
+                // TODO: should directly check that syntax is lambda or delegate?
+                if (!(syntax is null))
+                {
+                    var dataFlow = GetSemanticModel(syntax.SyntaxTree)?.AnalyzeDataFlow(syntax);
+                    if (dataFlow is null) return;
+
+                    var declaredVariables = new HashSet<ISymbol>(dataFlow.VariablesDeclared);
+
+                    List<SymbolDisplayPart> parts = null;
+                    for (int i = 0; i < dataFlow.CapturedInside.Length; ++i)
+                    {
+                        var captureVariable = dataFlow.CapturedInside[i];
+                        if (declaredVariables.Contains(captureVariable)) continue;
+
+                        if (parts is null)
+                        {
+                            parts = new List<SymbolDisplayPart> { CreateText("\r\nVariables captured:") };
+                        }
+                        else
+                        {
+                            parts.Add(CreatePunctuation(","));
+                        }
+                        parts.Add(CreateSpaces());
+                        parts.AddRange(ToMinimalDisplayParts(captureVariable, _capturesFormat));
+                    }
+
+                    if (!(parts is null))
+                    {
+                        AppendParts(SymbolDescriptionKind.Captures, parts);
+                    }
+                }
             }
         }
 
@@ -334,6 +374,21 @@ namespace CoCo.Analyser.QuickInfo
         {
             format = format ?? _minimallyQualifiedFormat;
             return symbol.ToMinimalDisplayParts(_semanticModel, _position, format).ToBuilder();
+        }
+
+        private SemanticModel GetSemanticModel(SyntaxTree syntaxTree)
+        {
+            if (_semanticModel.SyntaxTree.Equals(syntaxTree)) return _semanticModel;
+
+            var compilation = _semanticModel.Compilation;
+            if (compilation.ContainsSyntaxTree(syntaxTree)) return compilation.GetSemanticModel(syntaxTree);
+
+            // NOTE: try to find from referenced projects
+            foreach (var referencedCompilation in compilation.GetReferencedCompilations())
+            {
+                if (referencedCompilation.ContainsSyntaxTree(syntaxTree)) return referencedCompilation.GetSemanticModel(syntaxTree);
+            }
+            return null;
         }
 
         // TODO: move to some extension class

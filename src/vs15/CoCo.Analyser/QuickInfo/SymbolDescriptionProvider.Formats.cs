@@ -89,5 +89,22 @@ namespace CoCo.Analyser.QuickInfo
 
         private static readonly SymbolDisplayFormat _delegateFormat = _descriptionFormat
             .WithMiscellaneousOptions(SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        private static readonly SymbolDisplayFormat _capturesFormat = new SymbolDisplayFormat(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
+            memberOptions:
+                SymbolDisplayMemberOptions.IncludeContainingType |
+                SymbolDisplayMemberOptions.IncludeParameters |
+                SymbolDisplayMemberOptions.IncludeRef |
+                SymbolDisplayMemberOptions.IncludeType,
+            kindOptions: SymbolDisplayKindOptions.IncludeMemberKeyword,
+            parameterOptions:
+                SymbolDisplayParameterOptions.IncludeDefaultValue |
+                SymbolDisplayParameterOptions.IncludeName |
+                SymbolDisplayParameterOptions.IncludeParamsRefOut,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
+                SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
     }
 }
