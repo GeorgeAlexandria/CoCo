@@ -24,28 +24,33 @@ namespace CoCo.Analyser.QuickInfo
         /// <summary>
         /// Contains collected classified texts for input symbols
         /// </summary>
-        private readonly Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder> _description =
-            new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder>();
+        private Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder> _description;
 
         private readonly SemanticModel _semanticModel;
         private readonly int _position;
+        private readonly ImmutableArray<ISymbol> _symbols;
 
         protected readonly CancellationToken CancellationToken;
 
-        protected SymbolDescriptionProvider(SemanticModel semanticModel, int position, CancellationToken cancellationToken)
+        protected SymbolDescriptionProvider(
+            SemanticModel semanticModel, int position, ImmutableArray<ISymbol> symbols, CancellationToken cancellationToken)
         {
             _semanticModel = semanticModel;
             _position = position;
+            _symbols = symbols;
             CancellationToken = cancellationToken;
         }
 
-        public async Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync(
-            ImmutableArray<ISymbol> symbols)
+        public async Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync()
         {
             // TODO: cache empty value
-            if (symbols.Length == 0) return new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
+            if (_symbols.IsDefaultOrEmpty) return new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
 
-            await AppendPartsAsync(symbols);
+            if (_description is null)
+            {
+                _description = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder>();
+                await AppendPartsAsync(_symbols);
+            }
 
             var result = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
             foreach (var item in _description)
