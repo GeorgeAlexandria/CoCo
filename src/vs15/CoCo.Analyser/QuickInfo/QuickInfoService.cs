@@ -30,12 +30,9 @@ namespace CoCo.Analyser.QuickInfo
         private readonly string _language;
 
         // TODO: append implementations. Assumes that providers will be divide to semantic and syntax providers
-        private readonly ImmutableArray<QuickInfoItemProvider> _csharpProviders = new ImmutableArray<QuickInfoItemProvider>
-        {
-            new CSharpSemanticProvider()
-        };
+        private readonly ImmutableArray<QuickInfoItemProvider> _csharpProviders;
 
-        private readonly ImmutableArray<QuickInfoItemProvider> _visualBasicProviders = new ImmutableArray<QuickInfoItemProvider>();
+        private readonly ImmutableArray<QuickInfoItemProvider> _visualBasicProviders;
 
         private ImmutableArray<QuickInfoItemProvider> Providers => _language.Equals(LanguageNames.CSharp)
             ? _csharpProviders
@@ -43,6 +40,9 @@ namespace CoCo.Analyser.QuickInfo
 
         public QuickInfoService(string language)
         {
+            _csharpProviders = ImmutableArray.Create<QuickInfoItemProvider>(new CSharpSemanticProvider());
+            _visualBasicProviders = ImmutableArray<QuickInfoItemProvider>.Empty;
+
             _language = language;
         }
 

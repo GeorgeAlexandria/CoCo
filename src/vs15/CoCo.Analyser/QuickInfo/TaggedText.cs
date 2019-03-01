@@ -1,8 +1,11 @@
-﻿namespace CoCo.Analyser.QuickInfo
+﻿using System.Diagnostics;
+
+namespace CoCo.Analyser.QuickInfo
 {
     /// <summary>
     /// Reppresents classification kind and the real part of text
     /// </summary>
+    [DebuggerDisplay("{Text}")]
     public struct TaggedText
     {
         public string Tag { get; }

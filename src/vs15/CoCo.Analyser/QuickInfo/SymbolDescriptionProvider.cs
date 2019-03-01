@@ -356,49 +356,39 @@ namespace CoCo.Analyser.QuickInfo
         protected void AppendParts(SymbolDescriptionKind kind, params SymbolDisplayPart[] partsArray) =>
             AppendParts<SymbolDisplayPart[]>(kind, partsArray);
 
-        protected void AppendParts<T>(SymbolDescriptionKind descriptionKind, T appendParts) where T : IEnumerable<SymbolDisplayPart>
+        protected void AppendParts<T>(SymbolDescriptionKind descriptionKind, T parts) where T : IEnumerable<SymbolDisplayPart>
         {
-            IEnumerable<TaggedText> ToTags(T parts)
+            if (!_description.TryGetValue(descriptionKind, out var builder))
             {
-                var builder = ImmutableArray.CreateBuilder<TaggedText>();
-                foreach (var part in parts)
-                {
-                    if (part.Symbol is null)
-                    {
-                        var classification =
-                            part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
-                            part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
-                            part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
-                            part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
-                            part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
-                            part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
-                            null;
-
-                        if (!(classification is null))
-                        {
-                            builder.Add(new TaggedText(classification, part.ToString()));
-                        }
-                    }
-                    else
-                    {
-                        var tag = ToTag(part);
-                        if (!tag.IsDefault)
-                        {
-                            builder.Add(tag);
-                        }
-                    }
-                }
-                return builder;
+                builder = ImmutableArray.CreateBuilder<TaggedText>();
+                _description.Add(descriptionKind, builder);
             }
-            var enumerator = appendParts.GetEnumerator();
-            while (enumerator.MoveNext())
+
+            foreach (var part in parts)
             {
-                if (!_description.TryGetValue(descriptionKind, out var existing))
+                TaggedText tag;
+                if (part.Symbol is null)
                 {
-                    existing = ImmutableArray.CreateBuilder<TaggedText>();
-                    _description.Add(descriptionKind, existing);
+                    var classification =
+                        part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
+                        part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
+                        part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
+                        part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
+                        part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
+                        part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
+                        null;
+
+                    tag = new TaggedText(classification, part.ToString());
                 }
-                existing.AddRange(ToTags(appendParts));
+                else
+                {
+                    tag = ToTag(part);
+                }
+
+                if (!tag.IsDefault)
+                {
+                    builder.Add(tag);
+                }
             }
         }
 
