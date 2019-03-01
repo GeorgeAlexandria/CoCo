@@ -1,20 +1,25 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using CoCo.Analyser.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CoCo.Analyser.QuickInfo
 {
-    public class CSharpSymbolDescriptionProvider : SymbolDescriptionProvider
+    internal class CSharpSymbolDescriptionProvider : SymbolDescriptionProvider
     {
+        private readonly CSharpClassifier _classifier;
+
         public CSharpSymbolDescriptionProvider(
+            CSharpClassifier classifier,
             SemanticModel semanticModel,
             int position,
             ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
             : base(semanticModel, position, symbols, cancellationToken)
         {
+            _classifier = classifier;
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -71,6 +76,16 @@ namespace CoCo.Analyser.QuickInfo
 
             if (initializer is null) return ImmutableArray<SymbolDisplayPart>.Empty;
             return GetInitializerParts(initializer);
+        }
+
+        protected override TaggedText ToTag(SymbolDisplayPart displayPart)
+        {
+            if (displayPart.Symbol is null) return default;
+
+            var classificationType = _classifier.GetClassification(displayPart.Symbol);
+            if (classificationType?.Classification is null) return default;
+
+            return new TaggedText(classificationType.Classification, displayPart.ToString());
         }
 
         /// <summary>

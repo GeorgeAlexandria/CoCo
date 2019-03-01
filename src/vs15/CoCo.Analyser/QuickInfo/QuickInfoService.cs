@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Text;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -45,11 +46,12 @@ namespace CoCo.Analyser.QuickInfo
             _language = language;
         }
 
-        public async Task<QuickInfoItem> GetQuickInfoAsync(Document document, int position, CancellationToken cancellationToken)
+        public async Task<QuickInfoItem> GetQuickInfoAsync(
+            ITextBuffer textBuffer, Document document, int position, CancellationToken cancellationToken)
         {
             foreach (var provider in Providers)
             {
-                var info = await provider.GetQuickInfoAsync(document, position, cancellationToken).ConfigureAwait(false);
+                var info = await provider.GetQuickInfoAsync(textBuffer, document, position, cancellationToken).ConfigureAwait(false);
 
                 // NOTE: returns the first non null item
                 if (!(info is null)) return info;
@@ -61,13 +63,14 @@ namespace CoCo.Analyser.QuickInfo
     // TODO: append implementation for c# and vb
     internal abstract class QuickInfoItemProvider
     {
-        public virtual async Task<QuickInfoItem> GetQuickInfoAsync(Document document, int position, CancellationToken cancellationToken)
+        public virtual async Task<QuickInfoItem> GetQuickInfoAsync(
+            ITextBuffer textBuffer, Document document, int position, CancellationToken cancellationToken)
         {
             var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken);
             var token = await syntaxTree.GetIntersectTokenAsync(position, true, cancellationToken);
             if (token != default && token.Span.IntersectsWith(position))
             {
-                return await GetQuickInfoAsync(document, token, cancellationToken);
+                return await GetQuickInfoAsync(textBuffer, document, token, cancellationToken);
             }
 
             return default;
@@ -76,6 +79,6 @@ namespace CoCo.Analyser.QuickInfo
         protected virtual bool CheckPreviousToken(SyntaxToken token) => true;
 
         protected abstract Task<QuickInfoItem> GetQuickInfoAsync(
-            Document document, SyntaxToken token, CancellationToken cancellationToken);
+            ITextBuffer buffer, Document document, SyntaxToken token, CancellationToken cancellationToken);
     }
 }

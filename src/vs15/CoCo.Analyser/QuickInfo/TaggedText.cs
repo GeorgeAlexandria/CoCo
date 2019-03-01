@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoCo.Analyser.QuickInfo
+﻿namespace CoCo.Analyser.QuickInfo
 {
     /// <summary>
     /// Reppresents classification kind and the real part of text
@@ -16,5 +14,7 @@ namespace CoCo.Analyser.QuickInfo
             Tag = tag;
             Text = text;
         }
+
+        public bool IsDefault => Tag is null || Text is null;
     }
 }

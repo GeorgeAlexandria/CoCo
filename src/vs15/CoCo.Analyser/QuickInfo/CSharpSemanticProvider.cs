@@ -6,6 +6,7 @@ using CoCo.Analyser.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.VisualStudio.Text;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -57,9 +58,18 @@ namespace CoCo.Analyser.QuickInfo
         }
 
         protected override Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync(
-            SemanticModel semanticModel, int position, ImmutableArray<ISymbol> symbols, CancellationToken cancellationToken)
+            ITextBuffer textBuffer,
+            SemanticModel semanticModel,
+            int position,
+            ImmutableArray<ISymbol> symbols,
+            CancellationToken cancellationToken)
         {
-            return new CSharpSymbolDescriptionProvider(semanticModel, position, symbols, cancellationToken).GetDescriptionAsync();
+            if (textBuffer.Properties.TryGetProperty<CSharpClassifier>(typeof(CSharpClassifier), out var classifier))
+            {
+                return new CSharpSymbolDescriptionProvider(classifier, semanticModel, position, symbols, cancellationToken).GetDescriptionAsync();
+            }
+            return Task.FromResult<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>>(
+                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>());
         }
 
         protected override bool CheckPreviousToken(SyntaxToken token) => true;

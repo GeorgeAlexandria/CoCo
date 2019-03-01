@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.VisualStudio.Text;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -54,7 +55,7 @@ namespace CoCo.Analyser.QuickInfo
         }
 
         protected override async Task<QuickInfoItem> GetQuickInfoAsync(
-            Document document, SyntaxToken token, CancellationToken cancellationToken)
+            ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
             var symbols = GetSymbolsByTokenAsync(semanticModel, token, cancellationToken);
@@ -99,11 +100,15 @@ namespace CoCo.Analyser.QuickInfo
                 }
             }
 
-            return await GetQuickInfoAsync(semanticModel, token, symbols, cancellationToken);
+            return await GetQuickInfoAsync(textBuffer, semanticModel, token, symbols, cancellationToken);
         }
 
         protected abstract Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync(
-            SemanticModel semanticModel, int position, ImmutableArray<ISymbol> symbols, CancellationToken cancellationToken);
+            ITextBuffer textBuffer,
+            SemanticModel semanticModel,
+            int position,
+            ImmutableArray<ISymbol> symbols,
+            CancellationToken cancellationToken);
 
         protected abstract SyntaxNode GetRelevantParent(SyntaxToken token);
 
@@ -118,9 +123,13 @@ namespace CoCo.Analyser.QuickInfo
         protected abstract bool TryGetLambdaByLambdaToken(SyntaxToken token, out SyntaxNode found);
 
         private async Task<QuickInfoItem> GetQuickInfoAsync(
-            SemanticModel semanticModel, SyntaxToken token, ImmutableArray<ISymbol> symbols, CancellationToken cancellationToken)
+           ITextBuffer textBuffer,
+           SemanticModel semanticModel,
+           SyntaxToken token,
+           ImmutableArray<ISymbol> symbols,
+           CancellationToken cancellationToken)
         {
-            var description = await GetDescriptionAsync(semanticModel, token.SpanStart, symbols, cancellationToken);
+            var description = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
             var sections = ImmutableArray.CreateBuilder<SymbolDescription>();
             if (description.TryGetValue(SymbolDescriptionKind.Main, out var mainParts) && !mainParts.IsDefaultOrEmpty)
             {

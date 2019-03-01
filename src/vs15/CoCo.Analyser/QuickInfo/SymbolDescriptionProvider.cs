@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Classification;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -59,6 +60,8 @@ namespace CoCo.Analyser.QuickInfo
             }
             return result;
         }
+
+        protected abstract TaggedText ToTag(SymbolDisplayPart displayPart);
 
         /// <remarks>
         /// C# and VB has a different style for braces and for the word's case
@@ -357,12 +360,36 @@ namespace CoCo.Analyser.QuickInfo
         {
             IEnumerable<TaggedText> ToTags(T parts)
             {
-                // TODO: apply CoCo classifications to tags
-                throw new NotImplementedException();
+                var builder = ImmutableArray.CreateBuilder<TaggedText>();
+                foreach (var part in parts)
+                {
+                    if (part.Symbol is null)
+                    {
+                        var classification =
+                            part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
+                            part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
+                            part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
+                            part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
+                            part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
+                            part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
+                            null;
+
+                        if (!(classification is null))
+                        {
+                            builder.Add(new TaggedText(classification, part.ToString()));
+                        }
+                    }
+                    else
+                    {
+                        var tag = ToTag(part);
+                        if (!tag.IsDefault)
+                        {
+                            builder.Add(tag);
+                        }
+                    }
+                }
+                return builder;
             }
-
-            var builder = ImmutableArray.CreateBuilder<TaggedText>();
-
             var enumerator = appendParts.GetEnumerator();
             while (enumerator.MoveNext())
             {

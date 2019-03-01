@@ -9,11 +9,11 @@ namespace CoCo.Analyser.CSharp
 {
     internal sealed class QuickInfoSource : IAsyncQuickInfoSource
     {
-        private readonly ITextBuffer textBuffer;
+        private readonly ITextBuffer _textBuffer;
 
         public QuickInfoSource(ITextBuffer textBuffer)
         {
-            this.textBuffer = textBuffer;
+            _textBuffer = textBuffer;
         }
 
         public void Dispose()
@@ -23,7 +23,7 @@ namespace CoCo.Analyser.CSharp
         public async Task<Microsoft.VisualStudio.Language.Intellisense.QuickInfoItem> GetQuickInfoItemAsync(
             IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
-            var triggerPoint = session.GetTriggerPoint(textBuffer.CurrentSnapshot);
+            var triggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
             if (!triggerPoint.HasValue) return null;
 
             var document = triggerPoint.Value.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
@@ -34,7 +34,7 @@ namespace CoCo.Analyser.CSharp
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var quickInfoService = new QuickInfoService(root.Language);
 
-            var item = await quickInfoService.GetQuickInfoAsync(document, triggerPoint.Value, cancellationToken);
+            var item = await quickInfoService.GetQuickInfoAsync(_textBuffer, document, triggerPoint.Value, cancellationToken);
             if (item is null) return null;
 
             // TODO: map custom QII to MQII
