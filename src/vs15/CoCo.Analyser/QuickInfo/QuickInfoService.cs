@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -11,6 +12,16 @@ namespace CoCo.Analyser.QuickInfo
     public sealed class QuickInfoItem
     {
         // TODO: understand what kind of info must be provided
+
+        public TextSpan Span { get; }
+
+        public ImmutableArray<SymbolDescription> Descriptions { get; }
+
+        public QuickInfoItem(TextSpan span, ImmutableArray<SymbolDescription> descriptions)
+        {
+            Span = span;
+            Descriptions = descriptions.IsDefault ? ImmutableArray<SymbolDescription>.Empty : descriptions;
+        }
     }
 
     internal class QuickInfoService
@@ -18,7 +29,10 @@ namespace CoCo.Analyser.QuickInfo
         private readonly string _language;
 
         // TODO: append implementations. Assumes that providers will be divide to semantic and syntax providers
-        private readonly ImmutableArray<QuickInfoItemProvider> _csharpProviders = new ImmutableArray<QuickInfoItemProvider>();
+        private readonly ImmutableArray<QuickInfoItemProvider> _csharpProviders = new ImmutableArray<QuickInfoItemProvider>
+        {
+            new CSharpSemanticProvider()
+        };
 
         private readonly ImmutableArray<QuickInfoItemProvider> _visualBasicProviders = new ImmutableArray<QuickInfoItemProvider>();
 
@@ -31,11 +45,11 @@ namespace CoCo.Analyser.QuickInfo
             _language = language;
         }
 
-        public async Task<QuickInfoItem> GetQuickInfoItemAsync(Document document, int position, CancellationToken cancellationToken)
+        public async Task<QuickInfoItem> GetQuickInfoAsync(Document document, int position, CancellationToken cancellationToken)
         {
             foreach (var provider in Providers)
             {
-                var info = await provider.GetQuickInfoItemAsync(document, position, cancellationToken).ConfigureAwait(false);
+                var info = await provider.GetQuickInfoAsync(document, position, cancellationToken).ConfigureAwait(false);
 
                 // NOTE: returns the first non null item
                 if (!(info is null)) return info;
@@ -47,13 +61,13 @@ namespace CoCo.Analyser.QuickInfo
     // TODO: append implementation for c# and vb
     internal abstract class QuickInfoItemProvider
     {
-        public virtual async Task<QuickInfoItem> GetQuickInfoItemAsync(Document document, int position, CancellationToken cancellationToken)
+        public virtual async Task<QuickInfoItem> GetQuickInfoAsync(Document document, int position, CancellationToken cancellationToken)
         {
             var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken);
-            var token = await GetIntersectTokenAsync(syntaxTree, position, cancellationToken, true);
+            var token = await syntaxTree.GetIntersectTokenAsync(position, true, cancellationToken);
             if (token != default && token.Span.IntersectsWith(position))
             {
-                return await GetQuickInfoItemAsync(document, token, cancellationToken);
+                return await GetQuickInfoAsync(document, token, cancellationToken);
             }
 
             return default;
@@ -61,21 +75,7 @@ namespace CoCo.Analyser.QuickInfo
 
         protected virtual bool CheckPreviousToken(SyntaxToken token) => true;
 
-        protected abstract Task<QuickInfoItem> GetQuickInfoItemAsync(
+        protected abstract Task<QuickInfoItem> GetQuickInfoAsync(
             Document document, SyntaxToken token, CancellationToken cancellationToken);
-
-        private static async Task<SyntaxToken> GetIntersectTokenAsync(
-           SyntaxTree syntaxTree, int position, CancellationToken cancellationToken, bool findInsideTrivia)
-        {
-            if (position >= syntaxTree.Length) return default;
-
-            var root = await syntaxTree.GetRootAsync(cancellationToken);
-            var token = root.FindToken(position, findInsideTrivia);
-            if (token.Span.Contains(position) || token.Span.End == position) return token;
-
-            // NOTE: if position is the end of previous token => return it.
-            token = token.GetPreviousToken();
-            return token.Span.End == position ? token : default;
-        }
     }
 }

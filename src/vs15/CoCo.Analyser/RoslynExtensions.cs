@@ -1,11 +1,26 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
 namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
+        public static async Task<SyntaxToken> GetIntersectTokenAsync(
+            this SyntaxTree syntaxTree, int position, bool findInsideTrivia, CancellationToken cancellationToken)
+        {
+            if (position >= syntaxTree.Length) return default;
+
+            var root = await syntaxTree.GetRootAsync(cancellationToken);
+            var token = root.FindToken(position, findInsideTrivia);
+            if (token.Span.Contains(position) || token.Span.End == position) return token;
+
+            // NOTE: if position is the end of previous token => return it.
+            token = token.GetPreviousToken();
+            return token.Span.End == position ? token : default;
+        }
+
         public static ImmutableArray<Compilation> GetReferencedCompilations(this Compilation compilation)
         {
             var builder = ImmutableArray.CreateBuilder<Compilation>();

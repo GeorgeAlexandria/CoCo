@@ -31,10 +31,10 @@ namespace CoCo.Analyser.CSharp
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken);
-            var quickInfoService = new QuickInfoService(syntaxRoot.Language);
+            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var quickInfoService = new QuickInfoService(root.Language);
 
-            var item = await quickInfoService.GetQuickInfoItemAsync(document, triggerPoint.Value, cancellationToken);
+            var item = await quickInfoService.GetQuickInfoAsync(document, triggerPoint.Value, cancellationToken);
             if (item is null) return null;
 
             // TODO: map custom QII to MQII
