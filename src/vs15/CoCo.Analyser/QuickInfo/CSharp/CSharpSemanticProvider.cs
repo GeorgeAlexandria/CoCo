@@ -57,7 +57,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             return false;
         }
 
-        protected override Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync(
+        protected override Task<SymbolDescriptionInfo> GetDescriptionAsync(
             ITextBuffer textBuffer,
             SemanticModel semanticModel,
             int position,
@@ -68,8 +68,8 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             {
                 return new CSharpSymbolDescriptionProvider(classifier, semanticModel, position, symbols, cancellationToken).GetDescriptionAsync();
             }
-            return Task.FromResult<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>>(
-                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>());
+            return Task.FromResult(new SymbolDescriptionInfo(
+                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>(), ImageKind.None));
         }
     }
 }

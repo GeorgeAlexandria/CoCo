@@ -27,6 +27,8 @@ namespace CoCo.Analyser.QuickInfo
         /// </summary>
         private Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder> _description;
 
+        private ImageKind _image;
+
         private readonly SemanticModel _semanticModel;
         private readonly int _position;
         private readonly ImmutableArray<ISymbol> _symbols;
@@ -42,10 +44,11 @@ namespace CoCo.Analyser.QuickInfo
             CancellationToken = cancellationToken;
         }
 
-        public async Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync()
+        public async Task<SymbolDescriptionInfo> GetDescriptionAsync()
         {
             // TODO: cache empty value
-            if (_symbols.IsDefaultOrEmpty) return new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
+            if (_symbols.IsDefaultOrEmpty) return new SymbolDescriptionInfo(
+                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>(), ImageKind.None);
 
             if (_description is null)
             {
@@ -58,7 +61,8 @@ namespace CoCo.Analyser.QuickInfo
             {
                 result[item.Key] = item.Value.ToImmutable();
             }
-            return result;
+
+            return new SymbolDescriptionInfo(result, _image);
         }
 
         protected abstract TaggedText ToTag(SymbolDisplayPart displayPart);
@@ -99,43 +103,81 @@ namespace CoCo.Analyser.QuickInfo
 
         protected async Task AppendDescriptionPartsAsync(ISymbol symbol)
         {
+            void AppendImageKind(int pos, Accessibility accessibility = Accessibility.NotApplicable)
+            {
+                var delta =
+                    accessibility == Accessibility.Public ? 0 :
+                    accessibility == Accessibility.Internal ? 1 :
+                    accessibility == Accessibility.Protected ? 2 :
+                    accessibility == Accessibility.Private ? 3 :
+                    0;
+                _image = (ImageKind)(pos + delta);
+            }
+
             // TODO: miss something?
             switch (symbol)
             {
                 case IFieldSymbol field:
                     await AppendFieldPartsAsync(field);
+
+                    var fieldStart =
+                        field.Type.TypeKind == TypeKind.Enum ? 17 :
+                        field.IsConst ? 5 :
+                        29;
+                    AppendImageKind(fieldStart, field.DeclaredAccessibility);
                     break;
 
                 case ILabelSymbol label:
                     AppendLabelParts(label);
+                    AppendImageKind(53);
                     break;
 
                 case ILocalSymbol local:
                     await AppendLocalPartsAsync(local);
+                    AppendImageKind(54);
                     break;
 
                 case IMethodSymbol method:
                     AppendMethodParts(method);
+
+                    var methodStart = method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension ? 25 : 37;
+                    AppendImageKind(methodStart, method.DeclaredAccessibility);
                     break;
 
                 case INamedTypeSymbol namedType:
                     await AppendNamedTypePartsAsync(namedType);
+
+                    var (start, accessibility) =
+                        namedType.TypeKind == TypeKind.Class ? (1, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.Struct ? (49, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.Enum ? (13, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.Delegate ? (9, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.Error ? (58, Accessibility.NotApplicable) :
+                        namedType.TypeKind == TypeKind.Interface ? (33, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.Module ? (41, namedType.DeclaredAccessibility) :
+                        namedType.TypeKind == TypeKind.TypeParameter ? (57, Accessibility.NotApplicable) :
+                        (0, Accessibility.NotApplicable);
+                    AppendImageKind(start, accessibility);
                     break;
 
                 case INamespaceSymbol @namespace:
                     AppendNamespaceParts(@namespace);
+                    AppendImageKind(55);
                     break;
 
                 case IParameterSymbol parameter:
                     await AppendParameterPartsAsync(parameter);
+                    AppendImageKind(56);
                     break;
 
                 case IPropertySymbol property:
                     AppendPropertyParts(property);
+                    AppendImageKind(45, property.DeclaredAccessibility);
                     break;
 
                 case ITypeParameterSymbol typeParameter:
                     AppendTypeParameterParts(typeParameter);
+                    AppendImageKind(57);
                     break;
 
                 default:

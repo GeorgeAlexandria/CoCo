@@ -103,7 +103,7 @@ namespace CoCo.Analyser.QuickInfo
             return await GetQuickInfoAsync(textBuffer, semanticModel, token, symbols, cancellationToken);
         }
 
-        protected abstract Task<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>> GetDescriptionAsync(
+        protected abstract Task<SymbolDescriptionInfo> GetDescriptionAsync(
             ITextBuffer textBuffer,
             SemanticModel semanticModel,
             int position,
@@ -129,26 +129,28 @@ namespace CoCo.Analyser.QuickInfo
            ImmutableArray<ISymbol> symbols,
            CancellationToken cancellationToken)
         {
-            var description = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
+            var descriptionInfo = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
+            var descriptions = descriptionInfo.Descriptions;
+
             var sections = ImmutableArray.CreateBuilder<SymbolDescription>();
-            if (description.TryGetValue(SymbolDescriptionKind.Main, out var mainParts) && !mainParts.IsDefaultOrEmpty)
+            if (descriptions.TryGetValue(SymbolDescriptionKind.Main, out var mainParts) && !mainParts.IsDefaultOrEmpty)
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.Main, mainParts));
             }
-            if (description.TryGetValue(SymbolDescriptionKind.Additional, out var additionalParts) && !additionalParts.IsDefaultOrEmpty)
+            if (descriptions.TryGetValue(SymbolDescriptionKind.Additional, out var additionalParts) && !additionalParts.IsDefaultOrEmpty)
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.Additional, additionalParts));
             }
-            if (description.TryGetValue(SymbolDescriptionKind.Captures, out var capturesParts) && !capturesParts.IsDefaultOrEmpty)
+            if (descriptions.TryGetValue(SymbolDescriptionKind.Captures, out var capturesParts) && !capturesParts.IsDefaultOrEmpty)
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.Captures, capturesParts));
             }
-            if (description.TryGetValue(SymbolDescriptionKind.TypeParameter, out var typeParameterParts) &&
+            if (descriptions.TryGetValue(SymbolDescriptionKind.TypeParameter, out var typeParameterParts) &&
                 !typeParameterParts.IsDefaultOrEmpty)
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.TypeParameter, typeParameterParts));
             }
-            return new QuickInfoItem(token.Span, sections.ToImmutable());
+            return new QuickInfoItem(token.Span, descriptionInfo.Image, sections.ToImmutable());
         }
 
         private ImmutableArray<ISymbol> GetSymbolsByTokenAsync(

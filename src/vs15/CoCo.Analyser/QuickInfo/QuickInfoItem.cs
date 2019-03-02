@@ -15,10 +15,13 @@ namespace CoCo.Analyser.QuickInfo
 
         public ImmutableArray<SymbolDescription> Descriptions { get; }
 
-        public QuickInfoItem(TextSpan span, ImmutableArray<SymbolDescription> descriptions)
+        public ImageKind Image { get; }
+
+        public QuickInfoItem(TextSpan span, ImageKind image, ImmutableArray<SymbolDescription> descriptions)
         {
             Span = span;
             Descriptions = descriptions.IsDefault ? ImmutableArray<SymbolDescription>.Empty : descriptions;
+            Image = image;
         }
 
         public Span GetSpan() => new Span(Span.Start, Span.Length);
