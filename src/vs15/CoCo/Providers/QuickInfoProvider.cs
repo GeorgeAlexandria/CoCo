@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Composition;
-using CoCo.Analyser.CSharp;
+using CoCo.Services;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;

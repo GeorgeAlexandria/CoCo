@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.VisualStudio.Text;
 
-namespace CoCo.Analyser.QuickInfo
+namespace CoCo.Analyser.QuickInfo.CSharp
 {
     internal class CSharpSemanticProvider : SemanticProvider
     {
@@ -71,7 +71,5 @@ namespace CoCo.Analyser.QuickInfo
             return Task.FromResult<IDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>>(
                 new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>());
         }
-
-        protected override bool CheckPreviousToken(SyntaxToken token) => true;
     }
 }

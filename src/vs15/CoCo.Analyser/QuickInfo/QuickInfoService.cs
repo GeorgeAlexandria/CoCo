@@ -1,31 +1,15 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using CoCo.Analyser.QuickInfo.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
 namespace CoCo.Analyser.QuickInfo
 {
-    /// <summary>
-    /// Provides info about quick info content
-    /// </summary>
-    public sealed class QuickInfoItem
-    {
-        // TODO: understand what kind of info must be provided
-
-        public TextSpan Span { get; }
-
-        public ImmutableArray<SymbolDescription> Descriptions { get; }
-
-        public QuickInfoItem(TextSpan span, ImmutableArray<SymbolDescription> descriptions)
-        {
-            Span = span;
-            Descriptions = descriptions.IsDefault ? ImmutableArray<SymbolDescription>.Empty : descriptions;
-        }
-    }
-
-    internal class QuickInfoService
+    internal sealed class QuickInfoService
     {
         private readonly string _language;
 
@@ -38,7 +22,7 @@ namespace CoCo.Analyser.QuickInfo
             ? _csharpProviders
             : _visualBasicProviders;
 
-        public QuickInfoService(string language)
+        private QuickInfoService(string language)
         {
             _csharpProviders = ImmutableArray.Create<QuickInfoItemProvider>(new CSharpSemanticProvider());
             _visualBasicProviders = ImmutableArray<QuickInfoItemProvider>.Empty;
@@ -46,7 +30,24 @@ namespace CoCo.Analyser.QuickInfo
             _language = language;
         }
 
-        public async Task<QuickInfoItem> GetQuickInfoAsync(
+        public static async Task<QuickInfoItem> GetQuickInfo(
+            ITextBuffer textBuffer, IAsyncQuickInfoSession session, CancellationToken cancellationToken)
+        {
+            var triggerPoint = session.GetTriggerPoint(textBuffer.CurrentSnapshot);
+            if (!triggerPoint.HasValue) return null;
+
+            var document = triggerPoint.Value.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
+            if (document is null) return null;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var quickInfoService = new QuickInfoService(root.Language);
+
+            return await quickInfoService.GetQuickInfoAsync(textBuffer, document, triggerPoint.Value, cancellationToken);
+        }
+
+        private async Task<QuickInfoItem> GetQuickInfoAsync(
             ITextBuffer textBuffer, Document document, int position, CancellationToken cancellationToken)
         {
             foreach (var provider in Providers)
@@ -58,27 +59,5 @@ namespace CoCo.Analyser.QuickInfo
             }
             return default;
         }
-    }
-
-    // TODO: append implementation for c# and vb
-    internal abstract class QuickInfoItemProvider
-    {
-        public virtual async Task<QuickInfoItem> GetQuickInfoAsync(
-            ITextBuffer textBuffer, Document document, int position, CancellationToken cancellationToken)
-        {
-            var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken);
-            var token = await syntaxTree.GetIntersectTokenAsync(position, true, cancellationToken);
-            if (token != default && token.Span.IntersectsWith(position))
-            {
-                return await GetQuickInfoAsync(textBuffer, document, token, cancellationToken);
-            }
-
-            return default;
-        }
-
-        protected virtual bool CheckPreviousToken(SyntaxToken token) => true;
-
-        protected abstract Task<QuickInfoItem> GetQuickInfoAsync(
-            ITextBuffer buffer, Document document, SyntaxToken token, CancellationToken cancellationToken);
     }
 }

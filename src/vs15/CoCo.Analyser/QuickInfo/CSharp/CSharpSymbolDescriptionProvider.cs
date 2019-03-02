@@ -5,7 +5,7 @@ using CoCo.Analyser.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace CoCo.Analyser.QuickInfo
+namespace CoCo.Analyser.QuickInfo.CSharp
 {
     internal class CSharpSymbolDescriptionProvider : SymbolDescriptionProvider
     {

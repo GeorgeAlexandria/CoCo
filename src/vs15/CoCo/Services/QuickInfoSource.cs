@@ -2,12 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.QuickInfo;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 
-namespace CoCo.Analyser.CSharp
+namespace CoCo.Services
 {
     using MsQuickInfoItem = Microsoft.VisualStudio.Language.Intellisense.QuickInfoItem;
 
@@ -29,19 +28,10 @@ namespace CoCo.Analyser.CSharp
             var triggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
             if (!triggerPoint.HasValue) return null;
 
-            var document = triggerPoint.Value.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
-            if (document is null) return null;
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
-            var quickInfoService = new QuickInfoService(root.Language);
-
-            var quickInfo = await quickInfoService.GetQuickInfoAsync(_textBuffer, document, triggerPoint.Value, cancellationToken);
+            var quickInfo = await QuickInfoService.GetQuickInfo(_textBuffer, session, cancellationToken);
             if (quickInfo is null) return null;
 
-            var span = new Span(quickInfo.Span.Start, quickInfo.Span.Length);
-            var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(span, SpanTrackingMode.EdgeInclusive);
+            var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(quickInfo.GetSpan(), SpanTrackingMode.EdgeInclusive);
 
             var items = new List<object>();
             foreach (var item in quickInfo.Descriptions)
