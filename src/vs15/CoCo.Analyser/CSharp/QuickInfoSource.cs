@@ -1,12 +1,16 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.QuickInfo;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 
 namespace CoCo.Analyser.CSharp
 {
+    using MsQuickInfoItem = Microsoft.VisualStudio.Language.Intellisense.QuickInfoItem;
+
     internal sealed class QuickInfoSource : IAsyncQuickInfoSource
     {
         private readonly ITextBuffer _textBuffer;
@@ -20,8 +24,7 @@ namespace CoCo.Analyser.CSharp
         {
         }
 
-        public async Task<Microsoft.VisualStudio.Language.Intellisense.QuickInfoItem> GetQuickInfoItemAsync(
-            IAsyncQuickInfoSession session, CancellationToken cancellationToken)
+        public async Task<MsQuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
             var triggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
             if (!triggerPoint.HasValue) return null;
@@ -34,11 +37,36 @@ namespace CoCo.Analyser.CSharp
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var quickInfoService = new QuickInfoService(root.Language);
 
-            var item = await quickInfoService.GetQuickInfoAsync(_textBuffer, document, triggerPoint.Value, cancellationToken);
-            if (item is null) return null;
+            var quickInfo = await quickInfoService.GetQuickInfoAsync(_textBuffer, document, triggerPoint.Value, cancellationToken);
+            if (quickInfo is null) return null;
 
-            // TODO: map custom QII to MQII
-            return null;
+            var span = new Span(quickInfo.Span.Start, quickInfo.Span.Length);
+            var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(span, SpanTrackingMode.EdgeInclusive);
+
+            var items = new List<object>();
+            foreach (var item in quickInfo.Descriptions)
+            {
+                if (item.Kind == SymbolDescriptionKind.Main)
+                {
+                    items.Insert(0, new ContainerElement(ContainerElementStyle.Wrapped, ToClassifiedTextElement(item)));
+                }
+                else
+                {
+                    items.Add(ToClassifiedTextElement(item));
+                }
+            }
+
+            return new MsQuickInfoItem(trackingSpan, new ContainerElement(ContainerElementStyle.Stacked, items));
+        }
+
+        private static ClassifiedTextElement ToClassifiedTextElement(SymbolDescription symbolDescription)
+        {
+            var list = new List<ClassifiedTextRun>();
+            foreach (var item in symbolDescription.TaggedParts)
+            {
+                list.Add(new ClassifiedTextRun(item.Tag, item.Text));
+            }
+            return new ClassifiedTextElement(list);
         }
     }
 }
