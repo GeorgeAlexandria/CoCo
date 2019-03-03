@@ -74,6 +74,8 @@
         Namespace = 55,
         Parameter = 56,
         TypeParameter = 57,
-        Error = 58,
+        RangeVariable = 58,
+
+        Error = 100,
     }
 }

@@ -156,7 +156,7 @@ namespace CoCo.Analyser.QuickInfo
                         namedType.TypeKind == TypeKind.Struct ? (49, namedType.DeclaredAccessibility) :
                         namedType.TypeKind == TypeKind.Enum ? (13, namedType.DeclaredAccessibility) :
                         namedType.TypeKind == TypeKind.Delegate ? (9, namedType.DeclaredAccessibility) :
-                        namedType.TypeKind == TypeKind.Error ? (58, Accessibility.NotApplicable) :
+                        namedType.TypeKind == TypeKind.Error ? (100, Accessibility.NotApplicable) :
                         namedType.TypeKind == TypeKind.Interface ? (33, namedType.DeclaredAccessibility) :
                         namedType.TypeKind == TypeKind.Module ? (41, namedType.DeclaredAccessibility) :
                         namedType.TypeKind == TypeKind.TypeParameter ? (57, Accessibility.NotApplicable) :
@@ -177,6 +177,11 @@ namespace CoCo.Analyser.QuickInfo
                 case IPropertySymbol property:
                     AppendPropertyParts(property);
                     AppendImageKind(45, property.DeclaredAccessibility);
+                    break;
+
+                case IRangeVariableSymbol rangeVariable:
+                    AppendRangeVariableParts(rangeVariable);
+                    AppendImageKind(58);
                     break;
 
                 case ITypeParameterSymbol typeParameter:
@@ -356,6 +361,13 @@ namespace CoCo.Analyser.QuickInfo
         {
             AppendParts(SymbolDescriptionKind.Main, CreatePart(SymbolDisplayPartKind.Keyword, "dynamic"));
             AppendParts(SymbolDescriptionKind.Additional, CreateText("Represents an object whose operations will be resolved at runtime."));
+        }
+
+        protected void AppendRangeVariableParts(IRangeVariableSymbol symbol)
+        {
+            var parts = CreateDescription("range variable");
+            parts.AddRange(ToMinimalDisplayParts(symbol));
+            AppendParts(SymbolDescriptionKind.Main, parts);
         }
 
         protected void AppendSymbolParts(ISymbol symbol) =>

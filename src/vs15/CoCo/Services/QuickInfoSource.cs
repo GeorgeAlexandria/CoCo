@@ -139,6 +139,7 @@ namespace CoCo.Services
                 image == CoCoImageKind.Namespace ? KnownImageIds.Namespace :
                 image == CoCoImageKind.Parameter ? KnownImageIds.Parameter :
                 image == CoCoImageKind.TypeParameter ? KnownImageIds.Type :
+                image == CoCoImageKind.RangeVariable ? KnownImageIds.FieldPublic :
                 image == CoCoImageKind.Error ? KnownImageIds.StatusError :
                 -27;
 
