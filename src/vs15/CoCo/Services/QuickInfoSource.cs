@@ -129,10 +129,10 @@ namespace CoCo.Services
                 image == CoCoImageKind.PropertyProtected ? KnownImageIds.PropertyProtected :
                 image == CoCoImageKind.PropertyPrivate ? KnownImageIds.PropertyPrivate :
 
-                image == CoCoImageKind.StructPublic ? KnownImageIds.StructurePublic :
-                image == CoCoImageKind.StructInternal ? KnownImageIds.StructureInternal :
-                image == CoCoImageKind.StructProtected ? KnownImageIds.StructureProtected :
-                image == CoCoImageKind.StructPrivate ? KnownImageIds.StructurePrivate :
+                image == CoCoImageKind.StructPublic ? KnownImageIds.ValueTypePublic :
+                image == CoCoImageKind.StructInternal ? KnownImageIds.ValueTypeInternal :
+                image == CoCoImageKind.StructProtected ? KnownImageIds.ValueTypeProtected :
+                image == CoCoImageKind.StructPrivate ? KnownImageIds.ValueTypePrivate :
 
                 image == CoCoImageKind.Label ? KnownImageIds.Label :
                 image == CoCoImageKind.Local ? KnownImageIds.LocalVariable :

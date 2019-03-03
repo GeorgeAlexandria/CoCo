@@ -117,6 +117,10 @@ namespace CoCo.Analyser.QuickInfo
             // TODO: miss something?
             switch (symbol)
             {
+                case IDynamicTypeSymbol _:
+                    AppendDynamicTypeParts();
+                    break;
+
                 case IFieldSymbol field:
                     await AppendFieldPartsAsync(field);
 
@@ -348,6 +352,12 @@ namespace CoCo.Analyser.QuickInfo
             AppendParts(SymbolDescriptionKind.Main, parts);
         }
 
+        protected void AppendDynamicTypeParts()
+        {
+            AppendParts(SymbolDescriptionKind.Main, CreatePart(SymbolDisplayPartKind.Keyword, "dynamic"));
+            AppendParts(SymbolDescriptionKind.Additional, CreateText("Represents an object whose operations will be resolved at runtime."));
+        }
+
         protected void AppendSymbolParts(ISymbol symbol) =>
             AppendParts(SymbolDescriptionKind.Main, ToMinimalDisplayParts(symbol));
 
@@ -408,18 +418,18 @@ namespace CoCo.Analyser.QuickInfo
 
             foreach (var part in parts)
             {
-                TaggedText tag;
-                if (part.Symbol is null)
-                {
-                    var classification =
-                        part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
-                        part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
-                        part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
-                        part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
-                        part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
-                        part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
-                        null;
+                var classification =
+                    part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
+                    part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
+                    part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
+                    part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
+                    part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
+                    part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
+                    null;
 
+                TaggedText tag;
+                if (part.Symbol is null || !(classification is null))
+                {
                     tag = new TaggedText(classification, part.ToString());
                 }
                 else

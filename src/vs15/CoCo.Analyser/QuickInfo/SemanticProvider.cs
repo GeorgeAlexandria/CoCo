@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +23,8 @@ namespace CoCo.Analyser.QuickInfo
             public override bool VisitParameter(IParameterSymbol symbol) => Visit(symbol.Type);
 
             public override bool VisitEvent(IEventSymbol symbol) => Visit(symbol.Type);
+
+            public override bool VisitArrayType(IArrayTypeSymbol symbol) => Visit(symbol.ElementType);
 
             public override bool DefaultVisit(ISymbol symbol) => true;
 
@@ -211,14 +212,12 @@ namespace CoCo.Analyser.QuickInfo
 
             AddToBuilder(declaredSymbol);
             AddToBuilder(aliasSymbol);
-            if (!(declaredSymbol is null))
+
+            // NOTE: and try to get any other symbols (overloads or something else)
+            foreach (var item in semanticModel.GetSymbolOrCandidates(relevantParent, cancellationToken))
             {
-                // NOTE: and try to get any other symbols (overloads or something else)
-                foreach (var item in semanticModel.GetSymbolOrCandidates(relevantParent, cancellationToken))
-                {
-                    if (item.Equals(declaredSymbol)) continue;
-                    builder.Add(item);
-                }
+                if (item is null || item.Equals(declaredSymbol)) continue;
+                builder.Add(item);
             }
             AddToBuilder(type);
             AddToBuilder(convertedType);
