@@ -174,13 +174,18 @@ namespace CoCo.Analyser.QuickInfo
             {
                 foreach (var item in GetSymbolsByToken(semanticModel, token, cancellationToken))
                 {
-                    if (!IsErrorType(item) && !overloads.Contains(item))
+                    if (!IsErrorType(item))
                     {
                         symbols.Add(item);
+                        overloads.Remove(item);
                     }
                 }
             }
-            symbols.AddRange(overloads);
+
+            if (overloads.Count > 0)
+            {
+                symbols.AddRange(overloads);
+            }
             return symbols.ToImmutable();
         }
 

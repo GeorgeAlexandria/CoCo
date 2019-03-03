@@ -12,7 +12,20 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 {
     internal class CSharpSemanticProvider : SemanticProvider
     {
-        protected override SyntaxNode GetRelevantParent(SyntaxToken token) => token.Parent;
+        protected override SyntaxNode GetRelevantParent(SyntaxToken token)
+        {
+            var node = token.Parent;
+            while (!(node is null))
+            {
+                var parent = node.Parent;
+                if (parent is ObjectCreationExpressionSyntax objectCreation && objectCreation.Type == node) return parent;
+
+                // NOTE: try to up until node's parent is name
+                if (!(parent is NameSyntax)) break;
+                node = parent;
+            }
+            return token.Parent;
+        }
 
         protected override bool TryGetIdentifierByOverrideToken(SyntaxToken token, out SyntaxToken identifier)
         {
