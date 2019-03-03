@@ -121,6 +121,11 @@ namespace CoCo.Analyser.QuickInfo
                     AppendDynamicTypeParts();
                     break;
 
+                case IEventSymbol _:
+                    AppendSymbolParts(symbol);
+                    AppendImageKind(21, symbol.DeclaredAccessibility);
+                    break;
+
                 case IFieldSymbol field:
                     await AppendFieldPartsAsync(field);
 
@@ -284,6 +289,7 @@ namespace CoCo.Analyser.QuickInfo
 
             var format = symbol.TypeKind == TypeKind.Delegate ? _delegateFormat : _descriptionFormat;
             AppendParts(SymbolDescriptionKind.Main, symbol.OriginalDefinition.ToDisplayParts(format));
+            AppendTypeParameterParts(symbol);
         }
 
         protected void AppendNamespaceParts(INamespaceSymbol symbol)
@@ -368,6 +374,39 @@ namespace CoCo.Analyser.QuickInfo
             var parts = CreateDescription("range variable");
             parts.AddRange(ToMinimalDisplayParts(symbol));
             AppendParts(SymbolDescriptionKind.Main, parts);
+        }
+
+        protected void AppendTypeParameterParts(INamedTypeSymbol symbol)
+        {
+            if (symbol.IsUnboundGenericType) return;
+
+            var containingTypes = symbol.AncestorsContainingTypesAndSelf();
+            var typeParameters = new List<ITypeParameterSymbol>();
+            foreach (var item in containingTypes)
+            {
+                typeParameters.AddRange(item.TypeParameters);
+            }
+
+            var typeArguments = new List<ITypeSymbol>();
+            foreach (var item in containingTypes)
+            {
+                typeArguments.AddRange(item.TypeArguments);
+            }
+
+            var parts = new List<SymbolDisplayPart>();
+            for (int i = 0; i < typeParameters.Count; ++i)
+            {
+                parts.AddRange(ToMinimalDisplayParts(typeParameters[i]));
+                parts.Add(CreateSpaces());
+                parts.Add(CreateText("is"));
+                parts.Add(CreateSpaces());
+                parts.AddRange(ToMinimalDisplayParts(typeArguments[i]));
+                if (i < typeParameters.Count - 1)
+                {
+                    parts.Add(CreatePart(SymbolDisplayPartKind.LineBreak, "\r\n"));
+                }
+            }
+            AppendParts(SymbolDescriptionKind.TypeParameter, parts);
         }
 
         protected void AppendSymbolParts(ISymbol symbol) =>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -73,6 +74,18 @@ namespace CoCo.Analyser
         }
 
         public static bool IsErrorType(this ISymbol symbol) => (symbol as ITypeSymbol)?.TypeKind == TypeKind.Error;
+
+        public static Stack<INamedTypeSymbol> AncestorsContainingTypesAndSelf(this INamedTypeSymbol symbol)
+        {
+            var stack = new Stack<INamedTypeSymbol>();
+            var current = symbol;
+            while (!(current is null))
+            {
+                stack.Push(current);
+                current = current.ContainingType;
+            }
+            return stack;
+        }
 
         /// <summary>
         /// Determines if <paramref name="symbol"/> is awaitable: contains GetAwaiter method which returns
