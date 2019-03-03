@@ -196,7 +196,7 @@ namespace CoCo.Analyser.QuickInfo
             {
                 if (symbols.IsDefaultOrEmpty) { return 0; }
 
-                var main = symbols[0];
+                var main = symbols[0].OriginalDefinition;
                 var overloadCount = 0;
                 foreach (var symbol in symbols)
                 {

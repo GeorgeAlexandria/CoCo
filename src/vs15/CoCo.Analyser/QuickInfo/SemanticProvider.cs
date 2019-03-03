@@ -165,16 +165,17 @@ namespace CoCo.Analyser.QuickInfo
             if (TryGetLambdaByLambdaToken(token, out SyntaxNode lambda))
             {
                 var symbol = semanticModel.GetSymbolInfo(lambda).Symbol;
-                if (!IsErrorType(symbol) && !overloads.Contains(symbol))
+                if (!IsErrorType(symbol) && !symbols.Contains(symbol))
                 {
                     symbols.Add(symbol);
+                    overloads.Remove(symbol);
                 }
             }
             else
             {
                 foreach (var item in GetSymbolsByToken(semanticModel, token, cancellationToken))
                 {
-                    if (!IsErrorType(item))
+                    if (!IsErrorType(item) && !symbols.Contains(item))
                     {
                         symbols.Add(item);
                         overloads.Remove(item);
