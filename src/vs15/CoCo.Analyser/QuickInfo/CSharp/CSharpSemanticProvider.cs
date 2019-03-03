@@ -18,6 +18,15 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             while (!(node is null))
             {
                 var parent = node.Parent;
+
+                // NOTE: don't try to up when you look at a descendant nodes of object creation or something else
+                if (parent is QualifiedNameSyntax qualifiedSyntax && qualifiedSyntax.Left == node ||
+                    parent is MemberAccessExpressionSyntax memberSyntax && memberSyntax.Expression == node ||
+                    parent is AliasQualifiedNameSyntax aliasSyntax && aliasSyntax.Alias == node)
+                {
+                    return node;
+                }
+
                 if (parent is ObjectCreationExpressionSyntax objectCreation && objectCreation.Type == node) return parent;
 
                 // NOTE: try to up until node's parent is name
