@@ -87,6 +87,7 @@ namespace CoCo.Analyser.QuickInfo
             await AppendDescriptionPartsAsync(main);
             AppendOverloadCountParts(symbols);
             AppendCaptureParts(main);
+            Comment.Parse(this, main.GetDocumentationCommentXml());
         }
 
         protected void AppendDeprecatedParts(ISymbol symbol)
@@ -478,15 +479,9 @@ namespace CoCo.Analyser.QuickInfo
                     part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
                     null;
 
-                TaggedText tag;
-                if (part.Symbol is null || !(classification is null))
-                {
-                    tag = new TaggedText(classification, part.ToString());
-                }
-                else
-                {
-                    tag = ToTag(part);
-                }
+                var tag = part.Symbol is null || !(classification is null)
+                    ? new TaggedText(classification, part.ToString())
+                    : ToTag(part);
 
                 if (!tag.IsDefault)
                 {

@@ -106,5 +106,22 @@ namespace CoCo.Analyser.QuickInfo
             miscellaneousOptions:
                 SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
                 SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
+
+        private static readonly SymbolDisplayFormat _crefFormat = new SymbolDisplayFormat(
+            globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
+            genericsOptions:
+                SymbolDisplayGenericsOptions.IncludeTypeParameters |
+                SymbolDisplayGenericsOptions.IncludeVariance,
+            memberOptions:
+                SymbolDisplayMemberOptions.IncludeParameters |
+                SymbolDisplayMemberOptions.IncludeExplicitInterface |
+                SymbolDisplayMemberOptions.IncludeContainingType,
+            propertyStyle: SymbolDisplayPropertyStyle.NameOnly,
+            parameterOptions:
+                SymbolDisplayParameterOptions.IncludeParamsRefOut |
+                SymbolDisplayParameterOptions.IncludeType,
+            miscellaneousOptions:
+                SymbolDisplayMiscellaneousOptions.EscapeKeywordIdentifiers |
+                SymbolDisplayMiscellaneousOptions.UseSpecialTypes);
     }
 }
