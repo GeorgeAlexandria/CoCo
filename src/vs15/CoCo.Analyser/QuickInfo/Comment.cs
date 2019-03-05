@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -41,7 +42,7 @@ namespace CoCo.Analyser.QuickInfo
             {
                 if (node is XText text)
                 {
-                    AppendParts(Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, text.Value)));
+                    AppendParts(Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, Normalize(text.Value))));
                     return;
                 }
 
@@ -120,6 +121,43 @@ namespace CoCo.Analyser.QuickInfo
                 }
 
                 return Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)));
+            }
+
+            /// <summary>
+            /// Normalize <paramref name="text"/> by <see cref="currentDescription"/>
+            /// </summary>
+            private string Normalize(string text)
+            {
+                var builder = new StringBuilder();
+                var currentIsWhiteSpace = false;
+                foreach (var item in text)
+                {
+                    if (char.IsWhiteSpace(item))
+                    {
+                        currentIsWhiteSpace = true;
+                    }
+                    else
+                    {
+                        if (currentIsWhiteSpace)
+                        {
+                            currentIsWhiteSpace = false;
+                            // NOTE: skip whitespaces if still doesn't add anything
+                            if (_provider._description.TryGetValue(currentDescription, out var parts) && parts.Count != 0 ||
+                                builder.Length > 0)
+                            {
+                                builder.Append(' ');
+                            }
+                        }
+                        builder.Append(item);
+                    }
+                }
+
+                if (currentIsWhiteSpace)
+                {
+                    builder.Append(' ');
+                }
+
+                return builder.ToString();
             }
 
             private static IEnumerable<SymbolDisplayPart> Enumerate(SymbolDisplayPart part)
