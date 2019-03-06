@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -13,6 +14,7 @@ namespace CoCo.Analyser.QuickInfo
             {
                 public const string CrefAttribute = "cref";
                 public const string NameAttribute = "name";
+                public const string ParaElement = "para";
                 public const string ParameterRefElement = "paramref";
                 public const string SeeElement = "see";
                 public const string SeeAlsoElement = "seealso";
@@ -21,8 +23,10 @@ namespace CoCo.Analyser.QuickInfo
             }
 
             private readonly SymbolDescriptionProvider _provider;
+            private readonly SymbolDisplayPart _lineBreak = new SymbolDisplayPart(SymbolDisplayPartKind.LineBreak, null, "\r\n");
 
             private SymbolDescriptionKind currentDescription;
+            private bool _lineWasBroken;
 
             private Comment(SymbolDescriptionProvider provider)
             {
@@ -34,12 +38,23 @@ namespace CoCo.Analyser.QuickInfo
                 var rawXml = "<i>" + xml + "</i>";
                 var comment = new Comment(provider);
 
-                // TODO: catch?
-                comment.Parse(XDocument.Parse(rawXml));
+                XDocument doc = null;
+                try
+                {
+                    doc = XDocument.Parse(rawXml);
+                }
+                catch (XmlException)
+                {
+                    return;
+                }
+
+                comment.Parse(doc);
             }
 
             private void Parse(XNode node)
             {
+                if (node.NodeType == XmlNodeType.Comment) return;
+
                 if (node is XText text)
                 {
                     AppendParts(Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, Normalize(text.Value))));
@@ -51,6 +66,7 @@ namespace CoCo.Analyser.QuickInfo
                 var name = element.Name;
                 if (name == XmlNames.SummaryElement)
                 {
+                    // TODO: does changing description effect on a line breaking?
                     var oldDescription = currentDescription;
                     currentDescription = SymbolDescriptionKind.Additional;
 
@@ -60,6 +76,17 @@ namespace CoCo.Analyser.QuickInfo
                     }
 
                     currentDescription = oldDescription;
+                    return;
+                }
+
+                if (name == XmlNames.ParaElement)
+                {
+                    _lineWasBroken = true;
+                    foreach (var childNode in element.Nodes())
+                    {
+                        Parse(childNode);
+                    }
+                    _lineWasBroken = true;
                     return;
                 }
 
@@ -89,7 +116,7 @@ namespace CoCo.Analyser.QuickInfo
 
             private void AppendAttributeParts(XAttribute attribute, string refAttributeName)
             {
-                // NOTE: if attribute is expected => get parts from it, else just add it as one text part
+                // NOTE: if attribute is expected => get parts from it, otherwise just add it as one text part
                 if (refAttributeName == attribute.Name.LocalName)
                 {
                     AppendParts(RefToParts(attribute.Value));
@@ -104,6 +131,14 @@ namespace CoCo.Analyser.QuickInfo
             {
                 if (currentDescription != SymbolDescriptionKind.None)
                 {
+                    if (_lineWasBroken)
+                    {
+                        _lineWasBroken = false;
+                        // NOTE: only one line break doesn't append a new line to quick info
+                        AppendParts(Enumerate(_lineBreak));
+                        AppendParts(Enumerate(_lineBreak));
+                    }
+
                     _provider.AppendParts(currentDescription, parts);
                 }
             }
@@ -169,7 +204,7 @@ namespace CoCo.Analyser.QuickInfo
             /// Removes ref prefix likes "M:" in "M:Namespace..."
             /// </summary>
             private static string TrimRefPrefix(string value) =>
-                value.Length >= 2 && value[1] == ':'
+                value.Length > 1 && value[1] == ':'
                     ? value.Substring(2)
                     : value;
         }
