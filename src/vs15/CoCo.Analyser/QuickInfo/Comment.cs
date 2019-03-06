@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
@@ -20,6 +21,7 @@ namespace CoCo.Analyser.QuickInfo
                 public const string SeeAlsoElement = "seealso";
                 public const string SummaryElement = "summary";
                 public const string TypeParameterRefElement = "typeparamref";
+                public const string ExceptionElement = "exception";
             }
 
             private readonly SymbolDescriptionProvider _provider;
@@ -57,7 +59,7 @@ namespace CoCo.Analyser.QuickInfo
 
                 if (node is XText text)
                 {
-                    AppendParts(Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, Normalize(text.Value))));
+                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, Normalize(text.Value)).Enumerate());
                     return;
                 }
 
@@ -87,6 +89,36 @@ namespace CoCo.Analyser.QuickInfo
                         Parse(childNode);
                     }
                     _lineWasBroken = true;
+                    return;
+                }
+
+                if (name == XmlNames.ExceptionElement)
+                {
+                    var oldDescription = currentDescription;
+                    currentDescription = SymbolDescriptionKind.Exceptions;
+
+
+                    // TODO: add intends for all exception types and it descriptions
+                    if (!_provider._description.TryGetValue(currentDescription, out var parts) || parts.Count == 0)
+                    {
+                        AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, "Exceptions:").Enumerate());
+                        AppendParts(_lineBreak.Enumerate());
+                    }
+
+                    foreach (var attribute in element.Attributes())
+                    {
+                        AppendAttributeParts(attribute, XmlNames.CrefAttribute);
+                    }
+
+                    AppendParts(_lineBreak.Enumerate());
+                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " ").Enumerate());
+
+                    foreach (var childNode in element.Nodes())
+                    {
+                        Parse(childNode);
+                    }
+
+                    currentDescription = oldDescription;
                     return;
                 }
 
@@ -123,7 +155,7 @@ namespace CoCo.Analyser.QuickInfo
                 }
                 else
                 {
-                    AppendParts(Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, attribute.Value)));
+                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, attribute.Value).Enumerate());
                 }
             }
 
@@ -135,8 +167,8 @@ namespace CoCo.Analyser.QuickInfo
                     {
                         _lineWasBroken = false;
                         // NOTE: only one line break doesn't append a new line to quick info
-                        AppendParts(Enumerate(_lineBreak));
-                        AppendParts(Enumerate(_lineBreak));
+                        AppendParts(_lineBreak.Enumerate());
+                        AppendParts(_lineBreak.Enumerate());
                     }
 
                     _provider.AppendParts(currentDescription, parts);
@@ -155,7 +187,7 @@ namespace CoCo.Analyser.QuickInfo
                     }
                 }
 
-                return Enumerate(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)));
+                return new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)).Enumerate();
             }
 
             /// <summary>
@@ -193,11 +225,6 @@ namespace CoCo.Analyser.QuickInfo
                 }
 
                 return builder.ToString();
-            }
-
-            private static IEnumerable<SymbolDisplayPart> Enumerate(SymbolDisplayPart part)
-            {
-                yield return part;
             }
 
             /// <summary>

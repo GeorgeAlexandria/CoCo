@@ -151,6 +151,11 @@ namespace CoCo.Analyser.QuickInfo
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.TypeParameter, typeParameterParts));
             }
+            if (descriptions.TryGetValue(SymbolDescriptionKind.Exceptions, out var exceptionParts) &&
+                !exceptionParts.IsDefaultOrEmpty)
+            {
+                sections.Add(new SymbolDescription(SymbolDescriptionKind.Exceptions, exceptionParts));
+            }
             return new QuickInfoItem(token.Span, descriptionInfo.Image, sections.ToImmutable());
         }
 

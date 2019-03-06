@@ -12,13 +12,14 @@ namespace CoCo.Analyser.QuickInfo
         /// <summary>
         /// Main description e.g. signature
         /// </summary>
-        Main = 1 << 0,
-        Additional = 1 << 1,
-        TypeParameter = 1 << 2,
+        Main = 1,
+        Additional = 2,
+        TypeParameter = 3,
 
         /// <summary>
         /// Captured variables for lambda, delegate and for local function
         /// </summary>
-        Captures = 1 << 3,
+        Captures = 4,
+        Exceptions = 5,
     }
 }
