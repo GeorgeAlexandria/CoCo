@@ -28,12 +28,16 @@ namespace CoCo.Analyser.QuickInfo
             private readonly SymbolDisplayPart _lineBreak = new SymbolDisplayPart(SymbolDisplayPartKind.LineBreak, null, "\r\n");
 
             private SymbolDescriptionKind currentDescription;
-            private bool _lineWasBroken;
+            private int _lineBrokenCount;
+
+            private Dictionary<SymbolDescriptionKind, int> _indentions;
 
             private Comment(SymbolDescriptionProvider provider)
             {
                 _provider = provider;
             }
+
+            private bool HasAnyParts => _provider._description.TryGetValue(currentDescription, out var parts) && parts.Count > 0;
 
             public static void Parse(SymbolDescriptionProvider provider, string xml)
             {
@@ -83,42 +87,18 @@ namespace CoCo.Analyser.QuickInfo
 
                 if (name == XmlNames.ParaElement)
                 {
-                    _lineWasBroken = true;
+                    _lineBrokenCount = 2;
                     foreach (var childNode in element.Nodes())
                     {
                         Parse(childNode);
                     }
-                    _lineWasBroken = true;
+                    _lineBrokenCount = 2;
                     return;
                 }
 
                 if (name == XmlNames.ExceptionElement)
                 {
-                    var oldDescription = currentDescription;
-                    currentDescription = SymbolDescriptionKind.Exceptions;
-
-
-                    // TODO: add intends for all exception types and it descriptions
-                    if (!_provider._description.TryGetValue(currentDescription, out var parts) || parts.Count == 0)
-                    {
-                        AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, "Exceptions:").Enumerate());
-                        AppendParts(_lineBreak.Enumerate());
-                    }
-
-                    foreach (var attribute in element.Attributes())
-                    {
-                        AppendAttributeParts(attribute, XmlNames.CrefAttribute);
-                    }
-
-                    AppendParts(_lineBreak.Enumerate());
-                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, " ").Enumerate());
-
-                    foreach (var childNode in element.Nodes())
-                    {
-                        Parse(childNode);
-                    }
-
-                    currentDescription = oldDescription;
+                    AppendExceptionParts(element);
                     return;
                 }
 
@@ -146,6 +126,40 @@ namespace CoCo.Analyser.QuickInfo
                 }
             }
 
+            private void AppendExceptionParts(XElement element)
+            {
+                if (_indentions is null)
+                {
+                    _indentions = new Dictionary<SymbolDescriptionKind, int>();
+                }
+
+                var oldDescription = currentDescription;
+                currentDescription = SymbolDescriptionKind.Exceptions;
+
+                if (!HasAnyParts)
+                {
+                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, "\r\nExceptions:").Enumerate());
+                    _indentions[SymbolDescriptionKind.Exceptions] = 2;
+                    _lineBrokenCount = 1;
+                }
+
+                foreach (var attribute in element.Attributes())
+                {
+                    AppendAttributeParts(attribute, XmlNames.CrefAttribute);
+                }
+
+                _lineBrokenCount = 1;
+                ++_indentions[SymbolDescriptionKind.Exceptions];
+                foreach (var childNode in element.Nodes())
+                {
+                    Parse(childNode);
+                }
+                --_indentions[SymbolDescriptionKind.Exceptions];
+                _lineBrokenCount = 1;
+
+                currentDescription = oldDescription;
+            }
+
             private void AppendAttributeParts(XAttribute attribute, string refAttributeName)
             {
                 // NOTE: if attribute is expected => get parts from it, otherwise just add it as one text part
@@ -163,12 +177,17 @@ namespace CoCo.Analyser.QuickInfo
             {
                 if (currentDescription != SymbolDescriptionKind.None)
                 {
-                    if (_lineWasBroken)
+                    if (_lineBrokenCount > 0)
                     {
-                        _lineWasBroken = false;
-                        // NOTE: only one line break doesn't append a new line to quick info
-                        AppendParts(_lineBreak.Enumerate());
-                        AppendParts(_lineBreak.Enumerate());
+                        if (HasAnyParts)
+                        {
+                            while (_lineBrokenCount-- > 0) _provider.AppendParts(currentDescription, _lineBreak);
+                        }
+                        _lineBrokenCount = 0;
+                    }
+                    if (!(_indentions is null) && _indentions.TryGetValue(currentDescription, out var indentions) && HasAnyParts)
+                    {
+                        _provider.AppendParts(currentDescription, _provider.CreateSpaces(indentions));
                     }
 
                     _provider.AppendParts(currentDescription, parts);
@@ -209,8 +228,7 @@ namespace CoCo.Analyser.QuickInfo
                         {
                             currentIsWhiteSpace = false;
                             // NOTE: skip whitespaces if still doesn't add anything
-                            if (_provider._description.TryGetValue(currentDescription, out var parts) && parts.Count != 0 ||
-                                builder.Length > 0)
+                            if (HasAnyParts || builder.Length > 0)
                             {
                                 builder.Append(' ');
                             }
