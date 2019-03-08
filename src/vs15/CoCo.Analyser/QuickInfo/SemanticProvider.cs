@@ -151,6 +151,11 @@ namespace CoCo.Analyser.QuickInfo
             {
                 sections.Add(new SymbolDescription(SymbolDescriptionKind.TypeParameter, typeParameterParts));
             }
+            if (descriptions.TryGetValue(SymbolDescriptionKind.AnonymousTypes, out var anonymousParts) &&
+               !anonymousParts.IsDefaultOrEmpty)
+            {
+                sections.Add(new SymbolDescription(SymbolDescriptionKind.AnonymousTypes, anonymousParts));
+            }
             if (descriptions.TryGetValue(SymbolDescriptionKind.Exceptions, out var exceptionParts) &&
                 !exceptionParts.IsDefaultOrEmpty)
             {

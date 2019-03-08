@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -28,6 +29,7 @@ namespace CoCo.Analyser.QuickInfo
         private Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder> _description;
 
         private ImageKind _image;
+        private Dictionary<ISymbol, string> _anonymousNames;
 
         private readonly SemanticModel _semanticModel;
         private readonly int _position;
@@ -460,6 +462,70 @@ namespace CoCo.Analyser.QuickInfo
         protected void AppendParts(SymbolDescriptionKind kind, params SymbolDisplayPart[] partsArray) =>
             AppendParts<SymbolDisplayPart[]>(kind, partsArray);
 
+        protected SymbolDisplayPart ProcessAnonymousType(SymbolDisplayPart part)
+        {
+            if (part.Symbol is ITypeSymbol type && type.IsAnonymousType)
+            {
+                if (_anonymousNames is null)
+                {
+                    _anonymousNames = new Dictionary<ISymbol, string>();
+                }
+
+                if (!_anonymousNames.TryGetValue(part.Symbol, out var anonymousName))
+                {
+                    var count = _anonymousNames.Count;
+                    var div = count >= 26 ? count / 26 : 0;
+                    var mod = count - div * 26;
+                    var @char = (char)(mod + 97);
+                    anonymousName = div > 0 ? $"'{@char}{div}" : $"'{@char}";
+                    _anonymousNames[part.Symbol] = anonymousName;
+                    part = new SymbolDisplayPart(part.Kind, part.Symbol, anonymousName);
+
+                    if (!_description.TryGetValue(SymbolDescriptionKind.AnonymousTypes, out var anonymousParts))
+                    {
+                        anonymousParts = ImmutableArray.CreateBuilder<TaggedText>();
+                        _description.Add(SymbolDescriptionKind.AnonymousTypes, anonymousParts);
+
+                        AppendParts(SymbolDescriptionKind.AnonymousTypes, CreateText("\r\nAnonymous Types:").Enumerate());
+                        AppendParts(SymbolDescriptionKind.AnonymousTypes, CreatePart(SymbolDisplayPartKind.LineBreak, "\r\n"));
+                    }
+
+                    var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+                    builder.Add(CreateSpaces(2));
+                    builder.Add(part);
+                    builder.Add(CreateSpaces(1));
+                    builder.Add(CreateText("is"));
+                    builder.Add(CreateSpaces(1));
+                    builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "new"));
+                    builder.Add(CreateSpaces(1));
+                    builder.Add(CreatePunctuation("{"));
+
+                    var wasAdded = false;
+                    foreach (var member in type.GetMembers())
+                    {
+                        if (!(member is IPropertySymbol prop) || !prop.CanBeReferencedByName) continue;
+
+                        if (wasAdded)
+                        {
+                            builder.Add(CreatePunctuation(","));
+                        }
+
+                        wasAdded = true;
+                        builder.Add(CreateSpaces(1));
+                        builder.AddRange(ToMinimalDisplayParts(prop.Type));
+                        builder.Add(CreateSpaces(1));
+                        builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.PropertyName, prop, prop.Name));
+                    }
+
+                    builder.Add(CreateSpaces(1));
+                    builder.Add(CreatePunctuation("}"));
+                    AppendParts(SymbolDescriptionKind.AnonymousTypes, builder);
+                }
+                part = new SymbolDisplayPart(part.Kind, part.Symbol, anonymousName);
+            }
+            return part;
+        }
+
         protected void AppendParts<T>(SymbolDescriptionKind descriptionKind, T parts) where T : IEnumerable<SymbolDisplayPart>
         {
             if (!_description.TryGetValue(descriptionKind, out var builder))
@@ -468,8 +534,10 @@ namespace CoCo.Analyser.QuickInfo
                 _description.Add(descriptionKind, builder);
             }
 
-            foreach (var part in parts)
+            foreach (var item in parts)
             {
+                var part = ProcessAnonymousType(item);
+
                 var classification =
                     part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
                     part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :

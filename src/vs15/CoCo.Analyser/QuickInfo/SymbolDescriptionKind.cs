@@ -21,5 +21,6 @@ namespace CoCo.Analyser.QuickInfo
         /// </summary>
         Captures = 4,
         Exceptions = 5,
+        AnonymousTypes = 6,
     }
 }
