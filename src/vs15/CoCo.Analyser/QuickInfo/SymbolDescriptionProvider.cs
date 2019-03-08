@@ -477,6 +477,8 @@ namespace CoCo.Analyser.QuickInfo
                     part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
                     part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
                     part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
+                    part.Kind == SymbolDisplayPartKind.StringLiteral ? ClassificationTypeNames.StringLiteral :
+                    part.Kind == SymbolDisplayPartKind.NumericLiteral ? ClassificationTypeNames.NumericLiteral :
                     null;
 
                 var tag = part.Symbol is null || !(classification is null)

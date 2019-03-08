@@ -38,10 +38,12 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 
         protected override async Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol)
         {
+            object evaluatedValue = null;
             EqualsValueClauseSyntax initializer = null;
             switch (symbol)
             {
                 case IFieldSymbol field:
+                    evaluatedValue = field.ConstantValue;
                     var fieldDeclarator = await GetDeclaration<VariableDeclaratorSyntax>(symbol);
                     if (fieldDeclarator is null)
                     {
@@ -58,6 +60,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                     break;
 
                 case ILocalSymbol local:
+                    evaluatedValue = local.ConstantValue;
                     var localDeclarator = await GetDeclaration<VariableDeclaratorSyntax>(symbol);
                     if (!(localDeclarator is null))
                     {
@@ -66,6 +69,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                     break;
 
                 case IParameterSymbol parameter:
+                    evaluatedValue = parameter.ExplicitDefaultValue;
                     var parameterSyntax = await GetDeclaration<ParameterSyntax>(symbol);
                     if (!(parameterSyntax is null))
                     {
@@ -74,8 +78,21 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                     break;
             }
 
-            if (initializer is null) return ImmutableArray<SymbolDisplayPart>.Empty;
-            return GetInitializerParts(initializer);
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            if (!(evaluatedValue is null))
+            {
+                if (evaluatedValue is string str)
+                {
+                    builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.StringLiteral, null, $"\"{str}\""));
+                }
+                else if (IsNumber(evaluatedValue))
+                {
+                    builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.NumericLiteral, null, evaluatedValue.ToString()));
+                }
+            }
+
+            if (initializer is null) return builder.ToImmutable();
+            return GetInitializerParts(builder, initializer);
         }
 
         protected override TaggedText ToTag(SymbolDisplayPart displayPart)
@@ -101,10 +118,16 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             return null;
         }
 
-        private ImmutableArray<SymbolDisplayPart> GetInitializerParts(EqualsValueClauseSyntax equalsValue)
+        private ImmutableArray<SymbolDisplayPart> GetInitializerParts(
+            ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueClauseSyntax equalsValue)
         {
-            // TODO: how to get symbol display parts from nodes?
-            return ImmutableArray<SymbolDisplayPart>.Empty;
+            // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
+            return parts.ToImmutable();
         }
+
+        private static bool IsNumber(object value) =>
+           value is sbyte || value is byte || value is short || value is ushort ||
+           value is int || value is uint || value is long || value is ulong ||
+           value is float || value is double || value is decimal;
     }
 }
