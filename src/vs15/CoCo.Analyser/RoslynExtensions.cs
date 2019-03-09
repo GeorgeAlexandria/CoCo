@@ -8,6 +8,9 @@ namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
+        public static bool IsExtensionMethod(this IMethodSymbol method) => 
+            method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension;
+
         public static async Task<SyntaxToken> GetIntersectTokenAsync(
             this SyntaxTree syntaxTree, int position, bool findInsideTrivia, CancellationToken cancellationToken)
         {

@@ -22,27 +22,35 @@ namespace CoCo.Analyser.QuickInfo
                 public const string SummaryElement = "summary";
                 public const string TypeParameterRefElement = "typeparamref";
                 public const string ExceptionElement = "exception";
+
+                /// <summary>
+                /// Represents a couple of keywords (such null, true, false and so on)
+                /// </summary>
+                public const string LangwordAttribute = "langword";
             }
 
             private readonly SymbolDescriptionProvider _provider;
+            private readonly ISymbol _symbol;
             private readonly SymbolDisplayPart _lineBreak = new SymbolDisplayPart(SymbolDisplayPartKind.LineBreak, null, "\r\n");
 
+            private bool _indentWasApplied;
             private SymbolDescriptionKind currentDescription;
             private int _lineBrokenCount;
 
             private Dictionary<SymbolDescriptionKind, int> _indentions;
 
-            private Comment(SymbolDescriptionProvider provider)
+            private Comment(SymbolDescriptionProvider provider, ISymbol symbol)
             {
                 _provider = provider;
+                _symbol = symbol;
             }
 
             private bool HasAnyParts => _provider._description.TryGetValue(currentDescription, out var parts) && parts.Count > 0;
 
-            public static void Parse(SymbolDescriptionProvider provider, string xml)
+            public static void Parse(SymbolDescriptionProvider provider, ISymbol symbol, string xml)
             {
                 var rawXml = "<i>" + xml + "</i>";
-                var comment = new Comment(provider);
+                var comment = new Comment(provider, symbol);
 
                 XDocument doc = null;
                 try
@@ -106,7 +114,7 @@ namespace CoCo.Analyser.QuickInfo
                 {
                     foreach (var attribute in element.Attributes())
                     {
-                        AppendAttributeParts(attribute, XmlNames.CrefAttribute);
+                        AppendAttributeParts(name.LocalName, attribute, XmlNames.CrefAttribute);
                     }
                     return;
                 }
@@ -115,7 +123,7 @@ namespace CoCo.Analyser.QuickInfo
                 {
                     foreach (var attribute in element.Attributes())
                     {
-                        AppendAttributeParts(attribute, XmlNames.NameAttribute);
+                        AppendAttributeParts(name.LocalName, attribute, XmlNames.NameAttribute);
                     }
                     return;
                 }
@@ -145,10 +153,11 @@ namespace CoCo.Analyser.QuickInfo
 
                 foreach (var attribute in element.Attributes())
                 {
-                    AppendAttributeParts(attribute, XmlNames.CrefAttribute);
+                    AppendAttributeParts(element.Name.LocalName, attribute, XmlNames.CrefAttribute);
                 }
 
                 _lineBrokenCount = 1;
+                _indentWasApplied = false;
                 ++_indentions[SymbolDescriptionKind.Exceptions];
                 foreach (var childNode in element.Nodes())
                 {
@@ -160,17 +169,99 @@ namespace CoCo.Analyser.QuickInfo
                 currentDescription = oldDescription;
             }
 
-            private void AppendAttributeParts(XAttribute attribute, string refAttributeName)
+            private void AppendAttributeParts(string elementName, XAttribute attribute, string refAttributeName)
             {
+                var attributeName = attribute.Name.LocalName;
                 // NOTE: if attribute is expected => get parts from it, otherwise just add it as one text part
-                if (refAttributeName == attribute.Name.LocalName)
+                if (refAttributeName == attributeName)
                 {
-                    AppendParts(RefToParts(attribute.Value));
+                    AppendParts(RefToParts(elementName, attribute.Value));
                 }
                 else
                 {
-                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, attribute.Value).Enumerate());
+                    var partKind = attributeName == XmlNames.LangwordAttribute
+                        ? SymbolDisplayPartKind.Keyword
+                        : SymbolDisplayPartKind.Text;
+                    AppendParts(new SymbolDisplayPart(partKind, null, attribute.Value).Enumerate());
                 }
+            }
+
+            private IEnumerable<SymbolDisplayPart> RefToParts(string elementName, string refValue)
+            {
+                var semanticModel = _provider._semanticModel;
+                if (!(semanticModel is null))
+                {
+                    var symbol = DocumentationCommentId.GetFirstSymbolForDeclarationId(refValue, semanticModel.Compilation);
+                    if (!(symbol is null)) return symbol.ToMinimalDisplayParts(semanticModel, _provider._position, _crefFormat);
+                    if (TryProcessRef(elementName, refValue, out var part)) return part.Enumerate();
+                }
+                return new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)).Enumerate();
+            }
+
+            private bool TryProcessRef(string elementName, string refValue, out SymbolDisplayPart part)
+            {
+                IMethodSymbol method;
+                if (elementName == XmlNames.ParameterRefElement)
+                {
+                    method = _symbol as IMethodSymbol;
+                    if (method is null)
+                    {
+                        part = default;
+                        return false;
+                    }
+
+                    method = method.IsExtensionMethod()
+                        ? method.GetConstructedReducedFrom()
+                        : method;
+
+                    foreach (var item in method.Parameters)
+                    {
+                        if (item.Name.Equals(refValue))
+                        {
+                            part = new SymbolDisplayPart(SymbolDisplayPartKind.ParameterName, item, TrimRefPrefix(item.Name));
+                            return true;
+                        }
+                    }
+                }
+                else if (elementName == XmlNames.TypeParameterRefElement)
+                {
+                    INamedTypeSymbol type = null;
+                    method = _symbol as IMethodSymbol;
+                    if (!(method is null))
+                    {
+                        foreach (var item in method.TypeParameters)
+                        {
+                            if (item.Name.Equals(refValue))
+                            {
+                                part = new SymbolDisplayPart(SymbolDisplayPartKind.TypeParameterName, item, TrimRefPrefix(item.Name));
+                                return true;
+                            }
+                        }
+                        type = method.ContainingType;
+                    }
+
+                    if (type is null)
+                    {
+                        type = _symbol as INamedTypeSymbol;
+                        if (type is null)
+                        {
+                            part = default;
+                            return false;
+                        }
+                    }
+
+                    foreach (var item in type.TypeParameters)
+                    {
+                        if (item.Name.Equals(refValue))
+                        {
+                            part = new SymbolDisplayPart(SymbolDisplayPartKind.TypeParameterName, item, TrimRefPrefix(item.Name));
+                            return true;
+                        }
+                    }
+                }
+
+                part = default;
+                return false;
             }
 
             private void AppendParts<T>(T parts) where T : IEnumerable<SymbolDisplayPart>
@@ -184,29 +275,17 @@ namespace CoCo.Analyser.QuickInfo
                             while (_lineBrokenCount-- > 0) _provider.AppendParts(currentDescription, _lineBreak);
                         }
                         _lineBrokenCount = 0;
+                        _indentWasApplied = false;
                     }
-                    if (!(_indentions is null) && _indentions.TryGetValue(currentDescription, out var indentions) && HasAnyParts)
+                    if (!(_indentions is null) && _indentions.TryGetValue(currentDescription, out var indentions) && 
+                        HasAnyParts && !_indentWasApplied)
                     {
+                        _indentWasApplied = true;
                         _provider.AppendParts(currentDescription, _provider.CreateSpaces(indentions));
                     }
 
                     _provider.AppendParts(currentDescription, parts);
                 }
-            }
-
-            private IEnumerable<SymbolDisplayPart> RefToParts(string refValue)
-            {
-                var semanticModel = _provider._semanticModel;
-                if (!(semanticModel is null))
-                {
-                    var symbol = DocumentationCommentId.GetFirstSymbolForDeclarationId(refValue, semanticModel.Compilation);
-                    if (!(symbol is null))
-                    {
-                        return symbol.ToMinimalDisplayParts(semanticModel, _provider._position, _crefFormat);
-                    }
-                }
-
-                return new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)).Enumerate();
             }
 
             /// <summary>

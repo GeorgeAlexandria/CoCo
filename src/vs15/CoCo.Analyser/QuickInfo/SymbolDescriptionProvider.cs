@@ -89,7 +89,7 @@ namespace CoCo.Analyser.QuickInfo
             await AppendDescriptionPartsAsync(main);
             AppendOverloadCountParts(symbols);
             AppendCaptureParts(main);
-            Comment.Parse(this, main.GetDocumentationCommentXml());
+            Comment.Parse(this, main, main.GetDocumentationCommentXml());
         }
 
         protected void AppendDeprecatedParts(ISymbol symbol)
@@ -152,7 +152,7 @@ namespace CoCo.Analyser.QuickInfo
                 case IMethodSymbol method:
                     AppendMethodParts(method);
 
-                    var methodStart = method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension ? 25 : 37;
+                    var methodStart = method.IsExtensionMethod() ? 25 : 37;
                     AppendImageKind(methodStart, method.DeclaredAccessibility);
                     break;
 
@@ -334,7 +334,7 @@ namespace CoCo.Analyser.QuickInfo
             // NOTE: VS shows special prefix: (awaitable), (extension) and (awaitable, extension)
             // for the corresponding method's type and doesn't show anything else for regular methods
             var isAwaitable = method.IsAwaitable();
-            var isExtension = method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension;
+            var isExtension = method.IsExtensionMethod();
 
             var prefix =
                 isAwaitable && isExtension ? PrefixKind.All :
