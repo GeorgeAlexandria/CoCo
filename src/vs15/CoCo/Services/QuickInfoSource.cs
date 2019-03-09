@@ -32,7 +32,7 @@ namespace CoCo.Services
             if (!triggerPoint.HasValue) return null;
 
             var quickInfo = await QuickInfoService.GetQuickInfo(_textBuffer, session, cancellationToken);
-            if (quickInfo is null) return null;
+            if (quickInfo is null || quickInfo.Descriptions.Length == 0) return null;
 
             var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(quickInfo.GetSpan(), SpanTrackingMode.EdgeInclusive);
 
