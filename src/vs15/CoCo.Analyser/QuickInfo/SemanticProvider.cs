@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -130,44 +131,37 @@ namespace CoCo.Analyser.QuickInfo
            ImmutableArray<ISymbol> symbols,
            CancellationToken cancellationToken)
         {
+            void Append(
+                IReadOnlyDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>> map,
+                SymbolDescriptionKind kind,
+                ImmutableArray<SymbolDescription>.Builder descriptions)
+            {
+                if (map.TryGetValue(kind, out var parts) && !parts.IsDefaultOrEmpty)
+                {
+                    descriptions.Add(new SymbolDescription(kind, parts));
+                }
+            }
+
             var descriptionInfo = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
-            var descriptions = descriptionInfo.Descriptions;
+            if (descriptionInfo.IsDefault) return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray<SymbolDescription>.Empty);
+
+            var descriptionsMap = descriptionInfo.Descriptions;
 
             var sections = ImmutableArray.CreateBuilder<SymbolDescription>();
-            if (descriptions.TryGetValue(SymbolDescriptionKind.Main, out var mainParts) && !mainParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.Main, mainParts));
-            }
-            if (descriptions.TryGetValue(SymbolDescriptionKind.Additional, out var additionalParts) && !additionalParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.Additional, additionalParts));
-            }
-            if (descriptions.TryGetValue(SymbolDescriptionKind.Captures, out var capturesParts) && !capturesParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.Captures, capturesParts));
-            }
-            if (descriptions.TryGetValue(SymbolDescriptionKind.TypeParameter, out var typeParameterParts) &&
-                !typeParameterParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.TypeParameter, typeParameterParts));
-            }
-            if (descriptions.TryGetValue(SymbolDescriptionKind.AnonymousTypes, out var anonymousParts) &&
-               !anonymousParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.AnonymousTypes, anonymousParts));
-            }
-            if (descriptions.TryGetValue(SymbolDescriptionKind.Exceptions, out var exceptionParts) &&
-                !exceptionParts.IsDefaultOrEmpty)
-            {
-                sections.Add(new SymbolDescription(SymbolDescriptionKind.Exceptions, exceptionParts));
-            }
+            Append(descriptionsMap, SymbolDescriptionKind.Main, sections);
+            Append(descriptionsMap, SymbolDescriptionKind.Additional, sections);
+            Append(descriptionsMap, SymbolDescriptionKind.Captures, sections);
+            Append(descriptionsMap, SymbolDescriptionKind.TypeParameter, sections);
+            Append(descriptionsMap, SymbolDescriptionKind.AnonymousTypes, sections);
+            Append(descriptionsMap, SymbolDescriptionKind.Exceptions, sections);
+
             return new QuickInfoItem(token.Span, descriptionInfo.Image, sections.ToImmutable());
         }
 
         private ImmutableArray<ISymbol> GetSymbolsByTokenAsync(
             SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken)
         {
-            bool IsErrorType(ISymbol input) => input == null || input.IsErrorType();
+            bool IsErrorType(ISymbol input) => input is null || input.IsErrorType();
 
             var relevantParent = GetRelevantParent(token);
             var overloads = semanticModel.GetMemberGroup(relevantParent, cancellationToken).ToHashSet();

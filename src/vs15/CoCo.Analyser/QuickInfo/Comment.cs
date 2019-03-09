@@ -9,7 +9,7 @@ namespace CoCo.Analyser.QuickInfo
 {
     public partial class SymbolDescriptionProvider
     {
-        private class Comment
+        private class XmlDocumentParser
         {
             private static class XmlNames
             {
@@ -39,7 +39,7 @@ namespace CoCo.Analyser.QuickInfo
 
             private Dictionary<SymbolDescriptionKind, int> _indentions;
 
-            private Comment(SymbolDescriptionProvider provider, ISymbol symbol)
+            private XmlDocumentParser(SymbolDescriptionProvider provider, ISymbol symbol)
             {
                 _provider = provider;
                 _symbol = symbol;
@@ -47,10 +47,10 @@ namespace CoCo.Analyser.QuickInfo
 
             private bool HasAnyParts => _provider._description.TryGetValue(currentDescription, out var parts) && parts.Count > 0;
 
-            public static void Parse(SymbolDescriptionProvider provider, ISymbol symbol, string xml)
+            public static void Parse(SymbolDescriptionProvider provider, ISymbol symbol)
             {
-                var rawXml = "<i>" + xml + "</i>";
-                var comment = new Comment(provider, symbol);
+                var rawXml = "<i>" + symbol.GetDocumentationCommentXml() + "</i>";
+                var comment = new XmlDocumentParser(provider, symbol);
 
                 XDocument doc = null;
                 try
@@ -71,13 +71,13 @@ namespace CoCo.Analyser.QuickInfo
 
                 if (node is XText text)
                 {
-                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, Normalize(text.Value)).Enumerate());
+                    AppendParts(_provider.CreatePart(SymbolDisplayPartKind.Text, Normalize(text.Value)).Enumerate());
                     return;
                 }
 
                 var element = (node as XDocument)?.Root ?? (XElement)node;
 
-                var name = element.Name;
+                var name = element.Name.LocalName;
                 if (name == XmlNames.SummaryElement)
                 {
                     // TODO: does changing description effect on a line breaking?
@@ -114,7 +114,7 @@ namespace CoCo.Analyser.QuickInfo
                 {
                     foreach (var attribute in element.Attributes())
                     {
-                        AppendAttributeParts(name.LocalName, attribute, XmlNames.CrefAttribute);
+                        AppendAttributeParts(name, attribute, XmlNames.CrefAttribute);
                     }
                     return;
                 }
@@ -123,7 +123,7 @@ namespace CoCo.Analyser.QuickInfo
                 {
                     foreach (var attribute in element.Attributes())
                     {
-                        AppendAttributeParts(name.LocalName, attribute, XmlNames.NameAttribute);
+                        AppendAttributeParts(name, attribute, XmlNames.NameAttribute);
                     }
                     return;
                 }
@@ -146,7 +146,7 @@ namespace CoCo.Analyser.QuickInfo
 
                 if (!HasAnyParts)
                 {
-                    AppendParts(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, "\r\nExceptions:").Enumerate());
+                    AppendParts(_provider.CreatePart(SymbolDisplayPartKind.Text, "\r\nExceptions:").Enumerate());
                     _indentions[SymbolDescriptionKind.Exceptions] = 2;
                     _lineBrokenCount = 1;
                 }
@@ -156,8 +156,9 @@ namespace CoCo.Analyser.QuickInfo
                     AppendAttributeParts(element.Name.LocalName, attribute, XmlNames.CrefAttribute);
                 }
 
-                _lineBrokenCount = 1;
                 _indentWasApplied = false;
+
+                _lineBrokenCount = 1;
                 ++_indentions[SymbolDescriptionKind.Exceptions];
                 foreach (var childNode in element.Nodes())
                 {
@@ -182,7 +183,7 @@ namespace CoCo.Analyser.QuickInfo
                     var partKind = attributeName == XmlNames.LangwordAttribute
                         ? SymbolDisplayPartKind.Keyword
                         : SymbolDisplayPartKind.Text;
-                    AppendParts(new SymbolDisplayPart(partKind, null, attribute.Value).Enumerate());
+                    AppendParts(_provider.CreatePart(partKind, attribute.Value).Enumerate());
                 }
             }
 
@@ -195,7 +196,7 @@ namespace CoCo.Analyser.QuickInfo
                     if (!(symbol is null)) return symbol.ToMinimalDisplayParts(semanticModel, _provider._position, _crefFormat);
                     if (TryProcessRef(elementName, refValue, out var part)) return part.Enumerate();
                 }
-                return new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, TrimRefPrefix(refValue)).Enumerate();
+                return _provider.CreatePart(SymbolDisplayPartKind.Text, TrimRefPrefix(refValue)).Enumerate();
             }
 
             private bool TryProcessRef(string elementName, string refValue, out SymbolDisplayPart part)
@@ -240,14 +241,11 @@ namespace CoCo.Analyser.QuickInfo
                         type = method.ContainingType;
                     }
 
+                    type = type ?? _symbol as INamedTypeSymbol;
                     if (type is null)
                     {
-                        type = _symbol as INamedTypeSymbol;
-                        if (type is null)
-                        {
-                            part = default;
-                            return false;
-                        }
+                        part = default;
+                        return false;
                     }
 
                     foreach (var item in type.TypeParameters)
@@ -277,7 +275,7 @@ namespace CoCo.Analyser.QuickInfo
                         _lineBrokenCount = 0;
                         _indentWasApplied = false;
                     }
-                    if (!(_indentions is null) && _indentions.TryGetValue(currentDescription, out var indentions) && 
+                    if (!(_indentions is null) && _indentions.TryGetValue(currentDescription, out var indentions) &&
                         HasAnyParts && !_indentWasApplied)
                     {
                         _indentWasApplied = true;

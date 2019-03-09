@@ -15,5 +15,7 @@ namespace CoCo.Analyser.QuickInfo
         public IReadOnlyDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>> Descriptions { get; }
 
         public ImageKind Image { get; }
+
+        public bool IsDefault => Descriptions is null || Image == ImageKind.None;
     }
 }

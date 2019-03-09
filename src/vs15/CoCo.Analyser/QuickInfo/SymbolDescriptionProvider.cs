@@ -48,9 +48,7 @@ namespace CoCo.Analyser.QuickInfo
 
         public async Task<SymbolDescriptionInfo> GetDescriptionAsync()
         {
-            // TODO: cache empty value
-            if (_symbols.IsDefaultOrEmpty) return new SymbolDescriptionInfo(
-                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>(), ImageKind.None);
+            if (_symbols.IsDefaultOrEmpty) return default;
 
             if (_description is null)
             {
@@ -89,7 +87,7 @@ namespace CoCo.Analyser.QuickInfo
             await AppendDescriptionPartsAsync(main);
             AppendOverloadCountParts(symbols);
             AppendCaptureParts(main);
-            Comment.Parse(this, main, main.GetDocumentationCommentXml());
+            XmlDocumentParser.Parse(this, main);
         }
 
         protected void AppendDeprecatedParts(ISymbol symbol)
@@ -106,7 +104,7 @@ namespace CoCo.Analyser.QuickInfo
 
         protected async Task AppendDescriptionPartsAsync(ISymbol symbol)
         {
-            void AppendImageKind(int pos, Accessibility accessibility = Accessibility.NotApplicable)
+            void AppendImageKind(int startPosition, Accessibility accessibility = Accessibility.NotApplicable)
             {
                 var delta =
                     accessibility == Accessibility.Public ? 0 :
@@ -114,7 +112,7 @@ namespace CoCo.Analyser.QuickInfo
                     accessibility == Accessibility.Protected ? 2 :
                     accessibility == Accessibility.Private ? 3 :
                     0;
-                _image = (ImageKind)(pos + delta);
+                _image = (ImageKind)(startPosition + delta);
             }
 
             // TODO: miss something?

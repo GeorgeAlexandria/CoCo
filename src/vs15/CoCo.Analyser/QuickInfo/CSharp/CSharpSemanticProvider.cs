@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.CSharp;
@@ -88,10 +87,10 @@ namespace CoCo.Analyser.QuickInfo.CSharp
         {
             if (textBuffer.Properties.TryGetProperty<CSharpClassifier>(typeof(CSharpClassifier), out var classifier))
             {
-                return new CSharpSymbolDescriptionProvider(classifier, semanticModel, position, symbols, cancellationToken).GetDescriptionAsync();
+                return new CSharpSymbolDescriptionProvider(classifier, semanticModel, position, symbols, cancellationToken)
+                    .GetDescriptionAsync();
             }
-            return Task.FromResult(new SymbolDescriptionInfo(
-                new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>(), ImageKind.None));
+            return Task.FromResult<SymbolDescriptionInfo>(default);
         }
     }
 }
