@@ -15,7 +15,7 @@ namespace CoCo.Services
 
         public event ClassificationChangedEventHandler ClassificationChanged;
 
-        public static void SetAnalyzingOptions(Option option)
+        public static void SetAnalyzingOptions(EditorOption option)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
             foreach (var languageClassifications in ClassificationManager.GetClassifications().Values)

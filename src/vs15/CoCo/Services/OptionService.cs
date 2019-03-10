@@ -15,7 +15,7 @@ namespace CoCo.Services
         /// <summary>
         /// Converts <paramref name="option"/> to <see cref="EditorSettings"/>
         /// </summary>
-        public static EditorSettings ToSettings(Option option)
+        public static EditorSettings ToSettings(EditorOption option)
         {
             List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {
@@ -77,13 +77,13 @@ namespace CoCo.Services
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values
+        /// Converts <paramref name="settings"/> to <see cref="EditorOption"/> using a default values
         /// </summary>
-        public static Option ToEditorOption(EditorSettings settings)
+        public static EditorOption ToOption(EditorSettings settings)
         {
             var defaultPresets = PresetService.GetDefaultPresets();
 
-            var option = new Option();
+            var option = new EditorOption();
             foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
                 var language = new Language(languageName);
@@ -139,9 +139,9 @@ namespace CoCo.Services
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values
+        /// Converts <paramref name="settings"/> to <see cref="QuickInfoOption"/> using a default values
         /// </summary>
-        public static QuickInfoOption ToQuickInfoOption(QuickInfoSettings settings)
+        public static QuickInfoOption ToOption(QuickInfoSettings settings)
         {
             var option = new QuickInfoOption();
             foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })

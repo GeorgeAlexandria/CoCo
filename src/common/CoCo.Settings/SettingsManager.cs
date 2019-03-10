@@ -16,22 +16,7 @@ namespace CoCo.Settings
 
         private const string CurrentClassificationsName = "current";
 
-        public static void SaveSettings(Settings settings)
-        {
-            SaveSettings(settings.Editor, settings.EditorPath);
-            SaveSettings(settings.QuickInfo, settings.QuickInfoPath);
-        }
-
-        public static Settings LoadSettings(string editorPath, string quickInfoPath, IMigrationService service = null)
-        {
-            return new Settings
-            {
-                Editor = LoadSettings(editorPath, service),
-                QuickInfo = LoadSettings(quickInfoPath)
-            };
-        }
-
-        private static void SaveSettings(QuickInfoSettings settings, string path)
+        public static void SaveSettings(QuickInfoSettings settings, string path)
         {
             var jSettings = new JObject();
             foreach (var language in settings.Languages)
@@ -47,7 +32,7 @@ namespace CoCo.Settings
             WriteToFile(jSettings, path);
         }
 
-        private static void SaveSettings(EditorSettings settings, string path)
+        public static void SaveSettings(EditorSettings settings, string path)
         {
             JArray ToJArray(ICollection<ClassificationSettings> classificationSettings)
             {
@@ -74,7 +59,7 @@ namespace CoCo.Settings
             WriteToFile(jSettings, path);
         }
 
-        private static QuickInfoSettings LoadSettings(string path)
+        public static QuickInfoSettings LoadQuickInfoSettings(string path)
         {
             if (!File.Exists(path))
             {
@@ -115,7 +100,7 @@ namespace CoCo.Settings
             return new QuickInfoSettings { Languages = languages };
         }
 
-        private static EditorSettings LoadSettings(string path, IMigrationService service = null)
+        public static EditorSettings LoadEditorSettings(string path, IMigrationService service = null)
         {
             if (!File.Exists(path))
             {

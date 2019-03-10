@@ -156,18 +156,7 @@ namespace CoCo
                 }
             };
 
-            var allSettings = new Settings.Settings
-            {
-                Editor = settings,
-                EditorPath = Paths.CoCoSettingsFile,
-
-                QuickInfo = new QuickInfoSettings
-                {
-                    Languages = new List<QuickInfoLanguageSettings>(),
-                },
-                QuickInfoPath = Paths.CoCoQuickInfoSettingsFile,
-            };
-            SettingsManager.SaveSettings(allSettings);
+            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
         }
 
         /// <summary>

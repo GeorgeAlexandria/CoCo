@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace CoCo.UI.Data
 {
     [DebuggerDisplay("{Name}")]
-    public class Language
+    public sealed class Language
     {
         public Language(string name)
         {

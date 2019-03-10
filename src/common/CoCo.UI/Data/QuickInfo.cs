@@ -1,5 +1,8 @@
-﻿namespace CoCo.UI.Data
+﻿using System.Diagnostics;
+
+namespace CoCo.UI.Data
 {
+    [DebuggerDisplay("{Language}")]
     public sealed class QuickInfo
     {
         public QuickInfo(string language)

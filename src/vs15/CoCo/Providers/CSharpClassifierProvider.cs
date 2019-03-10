@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Services;
+using CoCo.Settings;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -53,9 +54,8 @@ namespace CoCo.Providers
             MigrationService.MigrateSettingsTo_2_0_0();
             if (!_wasSettingsSet)
             {
-                var settings = Settings.SettingsManager.LoadSettings(
-                    Paths.CoCoSettingsFile, Paths.CoCoQuickInfoSettingsFile, MigrationService.Instance);
-                var option = OptionService.ToEditorOption(settings.Editor);
+                var settings = SettingsManager.LoadEditorSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
+                var option = OptionService.ToOption(settings);
                 FormattingService.SetFormattingOptions(option);
                 AnalyzingService.SetAnalyzingOptions(option);
                 _wasSettingsSet = true;
