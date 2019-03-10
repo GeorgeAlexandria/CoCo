@@ -13,9 +13,9 @@ namespace CoCo.Services
     public static class OptionService
     {
         /// <summary>
-        /// Converts <paramref name="option"/> to <see cref="Settings.Settings"/>
+        /// Converts <paramref name="option"/> to <see cref="EditorSettings"/>
         /// </summary>
-        public static Settings.Settings ToSettings(Option option)
+        public static EditorSettings ToSettings(Option option)
         {
             List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {
@@ -27,7 +27,7 @@ namespace CoCo.Services
                 return classificationSetings;
             }
 
-            var languagesSettings = new List<LanguageSettings>(option.Languages.Count);
+            var languagesSettings = new List<EditorLanguageSettings>(option.Languages.Count);
             foreach (var language in option.Languages)
             {
                 var classificationsSettings = ToSettings(language.Classifications);
@@ -49,20 +49,37 @@ namespace CoCo.Services
                     });
                 }
 
-                languagesSettings.Add(new LanguageSettings
+                languagesSettings.Add(new EditorLanguageSettings
                 {
                     Name = language.Name,
                     CurrentClassifications = classificationsSettings,
                     Presets = presetsSettings
                 });
             }
-            return new Settings.Settings { Languages = languagesSettings };
+            return new EditorSettings { Languages = languagesSettings };
+        }
+
+        /// <summary>
+        /// Converts <paramref name="option"/> to <see cref="QuickInfoSettings"/>
+        /// </summary>
+        public static QuickInfoSettings ToSettings(QuickInfoOption option)
+        {
+            var languageSettings = new List<QuickInfoLanguageSettings>(option.Languages.Count);
+            foreach (var item in option.Languages)
+            {
+                languageSettings.Add(new QuickInfoLanguageSettings
+                {
+                    Name = item.Language,
+                    State = item.State,
+                });
+            }
+            return new QuickInfoSettings { Languages = languageSettings };
         }
 
         /// <summary>
         /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values
         /// </summary>
-        public static Option ToOption(Settings.Settings settings)
+        public static Option ToEditorOption(EditorSettings settings)
         {
             var defaultPresets = PresetService.GetDefaultPresets();
 
@@ -116,6 +133,45 @@ namespace CoCo.Services
                     FillClassifications(languageClassifications, Array.Empty<ClassificationSettings>(), language.Classifications);
                 }
                 option.Languages.Add(language);
+            }
+
+            return option;
+        }
+
+        /// <summary>
+        /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values
+        /// </summary>
+        public static QuickInfoOption ToQuickInfoOption(QuickInfoSettings settings)
+        {
+            var option = new QuickInfoOption();
+            foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
+            {
+                var quickInfo = new QuickInfo(language);
+
+                var languageExists = false;
+                foreach (var item in settings.Languages)
+                {
+                    if (item.Name.Equals(language))
+                    {
+                        languageExists = true;
+
+                        if (item.State.HasValue && QuickInfoStateService.SupportedState.ContainsKey(item.State.Value))
+                        {
+                            quickInfo.State = item.State.Value;
+                        }
+                        else
+                        {
+                            quickInfo.State = 0;
+                        }
+                        option.Languages.Add(quickInfo);
+                    }
+                }
+
+                if (!languageExists)
+                {
+                    quickInfo.State = 0;
+                    option.Languages.Add(quickInfo);
+                }
             }
 
             return option;

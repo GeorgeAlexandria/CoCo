@@ -16,7 +16,38 @@ namespace CoCo.Settings
 
         private const string CurrentClassificationsName = "current";
 
-        public static void SaveSettings(Settings settings, string path)
+        public static void SaveSettings(Settings settings)
+        {
+            SaveSettings(settings.Editor, settings.EditorPath);
+            SaveSettings(settings.QuickInfo, settings.QuickInfoPath);
+        }
+
+        public static Settings LoadSettings(string editorPath, string quickInfoPath, IMigrationService service = null)
+        {
+            return new Settings
+            {
+                Editor = LoadSettings(editorPath, service),
+                QuickInfo = LoadSettings(quickInfoPath)
+            };
+        }
+
+        private static void SaveSettings(QuickInfoSettings settings, string path)
+        {
+            var jSettings = new JObject();
+            foreach (var language in settings.Languages)
+            {
+                var jLanguage = new JObject();
+                if (language.State.HasValue)
+                {
+                    jLanguage.Add(nameof(QuickInfoLanguageSettings.State), new JValue(language.State));
+                }
+                jSettings.Add(language.Name, jLanguage);
+            }
+
+            WriteToFile(jSettings, path);
+        }
+
+        private static void SaveSettings(EditorSettings settings, string path)
         {
             JArray ToJArray(ICollection<ClassificationSettings> classificationSettings)
             {
@@ -40,25 +71,14 @@ namespace CoCo.Settings
                 jSettings.Add(language.Name, jLanguage);
             }
 
-            var info = new FileInfo(path);
-            if (!info.Directory.Exists)
-            {
-                info.Directory.Create();
-            }
-
-            using (var writer = !info.Exists ? info.CreateText() : new StreamWriter(path))
-            using (var jsonWriter = new JsonTextWriter(writer))
-            {
-                jsonWriter.Formatting = Formatting.Indented;
-                jSettings.WriteTo(jsonWriter);
-            }
+            WriteToFile(jSettings, path);
         }
 
-        public static Settings LoadSettings(string path, IMigrationService service = null)
+        private static QuickInfoSettings LoadSettings(string path)
         {
             if (!File.Exists(path))
             {
-                return new Settings { Languages = new List<LanguageSettings>() };
+                return new QuickInfoSettings { Languages = new List<QuickInfoLanguageSettings>() };
             }
 
             JObject jSettings;
@@ -71,16 +91,57 @@ namespace CoCo.Settings
                 }
                 catch (JsonReaderException)
                 {
-                    return new Settings { Languages = new List<LanguageSettings>() };
+                    return new QuickInfoSettings { Languages = new List<QuickInfoLanguageSettings>() };
                 }
             }
 
-            var languages = new List<LanguageSettings>();
+            var languages = new List<QuickInfoLanguageSettings>();
             foreach (var jSetting in jSettings)
             {
                 if (!(jSetting.Value is JObject jLanguageSettings)) continue;
 
-                var language = new LanguageSettings
+                var language = new QuickInfoLanguageSettings
+                {
+                    Name = jSetting.Key,
+                };
+
+                if (jLanguageSettings[nameof(QuickInfoLanguageSettings.State)] is JValue jValue && jValue.Value is long state)
+                {
+                    language.State = (int)state;
+                }
+                languages.Add(language);
+            }
+
+            return new QuickInfoSettings { Languages = languages };
+        }
+
+        private static EditorSettings LoadSettings(string path, IMigrationService service = null)
+        {
+            if (!File.Exists(path))
+            {
+                return new EditorSettings { Languages = new List<EditorLanguageSettings>() };
+            }
+
+            JObject jSettings;
+            using (var reader = File.OpenText(path))
+            using (var jsonReader = new JsonTextReader(reader))
+            {
+                try
+                {
+                    jSettings = (JObject)JToken.ReadFrom(jsonReader);
+                }
+                catch (JsonReaderException)
+                {
+                    return new EditorSettings { Languages = new List<EditorLanguageSettings>() };
+                }
+            }
+
+            var languages = new List<EditorLanguageSettings>();
+            foreach (var jSetting in jSettings)
+            {
+                if (!(jSetting.Value is JObject jLanguageSettings)) continue;
+
+                var language = new EditorLanguageSettings
                 {
                     Name = jSetting.Key,
                     CurrentClassifications = new List<ClassificationSettings>(),
@@ -126,7 +187,23 @@ namespace CoCo.Settings
 
                 languages.Add(language);
             }
-            return new Settings { Languages = languages };
+            return new EditorSettings { Languages = languages };
+        }
+
+        private static void WriteToFile(JObject jSettings, string path)
+        {
+            var info = new FileInfo(path);
+            if (!info.Directory.Exists)
+            {
+                info.Directory.Create();
+            }
+
+            using (var writer = !info.Exists ? info.CreateText() : new StreamWriter(path))
+            using (var jsonWriter = new JsonTextWriter(writer))
+            {
+                jsonWriter.Formatting = Formatting.Indented;
+                jSettings.WriteTo(jsonWriter);
+            }
         }
 
         private static bool TryParseClassification(

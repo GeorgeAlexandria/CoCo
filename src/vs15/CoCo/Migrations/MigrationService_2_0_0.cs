@@ -143,11 +143,11 @@ namespace CoCo
                 }
             }
 
-            var settings = new Settings.Settings
+            var settings = new EditorSettings
             {
-                Languages = new List<LanguageSettings>
+                Languages = new List<EditorLanguageSettings>
                 {
-                    new LanguageSettings
+                    new EditorLanguageSettings
                     {
                         Name = Languages.CSharp,
                         CurrentClassifications = result.Values.ToList(),
@@ -156,7 +156,18 @@ namespace CoCo
                 }
             };
 
-            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
+            var allSettings = new Settings.Settings
+            {
+                Editor = settings,
+                EditorPath = Paths.CoCoSettingsFile,
+
+                QuickInfo = new QuickInfoSettings
+                {
+                    Languages = new List<QuickInfoLanguageSettings>(),
+                },
+                QuickInfoPath = Paths.CoCoQuickInfoSettingsFile,
+            };
+            SettingsManager.SaveSettings(allSettings);
         }
 
         /// <summary>

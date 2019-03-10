@@ -12,62 +12,126 @@ using Microsoft.VisualStudio.Shell;
 
 namespace CoCo
 {
+    public struct Options
+    {
+        public Option EditorOption { get; set; }
+
+        public QuickInfoOption QuickInfoOption { get; set; }
+    }
+
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
     [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
+    [ProvideOptionPage(typeof(QuickInfoOptionPage), "CoCo", "Quick info", 0, 0, true)]
     [Guid(Guids.Package)]
     public sealed class VsPackage : AsyncPackage
     {
-        private static OptionViewModel _optionViewModel;
+        private static OptionViewModel _editorOptionViewModel;
+        private static QuickInfoOptionViewModel _quickInfoOptionViewModel;
 
-        private static int _receivedCount;
-        private static bool _isApply;
+        private static int _receivedEditorCount;
+        private static bool _quickInfoWasRealesed;
 
-        internal static OptionViewModel ReceiveOption()
+        private static bool _optionsWereApplied;
+
+        internal static OptionViewModel ReceiveEditorContext()
         {
-            ++_receivedCount;
-            if (!(_optionViewModel is null)) return _optionViewModel;
+            ++_receivedEditorCount;
+            if (!(_editorOptionViewModel is null)) return _editorOptionViewModel;
 
-            return _optionViewModel = new OptionViewModel(Receive(), ResetValuesProvider.Instance);
+            return _editorOptionViewModel = new OptionViewModel(ReceiveEditorOption(), ResetValuesProvider.Instance);
+        }
+
+        internal static QuickInfoOptionViewModel ReceiveQuickInfoContext()
+        {
+            _quickInfoWasRealesed = false;
+            if (!(_quickInfoOptionViewModel is null)) return _quickInfoOptionViewModel;
+
+            return _quickInfoOptionViewModel = new QuickInfoOptionViewModel(ReceiveQuickInfoOption());
         }
 
         internal static void SaveOption(OptionViewModel optionViewModel) =>
-            _isApply |= ReferenceEquals(optionViewModel, _optionViewModel);
+            _optionsWereApplied |= ReferenceEquals(optionViewModel, _editorOptionViewModel);
+
+        internal static void SaveOption(QuickInfoOptionViewModel quickInfoOptionViewModel) =>
+            _optionsWereApplied |= ReferenceEquals(_quickInfoOptionViewModel, quickInfoOptionViewModel);
 
         internal static void ReleaseOption(OptionViewModel optionViewModel)
         {
-            if (_receivedCount <= 0 || ReferenceEquals(optionViewModel, _optionViewModel) && --_receivedCount != 0) return;
-
-            if (_isApply)
+            if (_receivedEditorCount <= 0 || ReferenceEquals(optionViewModel, _editorOptionViewModel) && --_receivedEditorCount != 0)
             {
-                Release(_optionViewModel.ExtractData());
-                _isApply = false;
+                return;
             }
 
-            _optionViewModel = null;
+            ReleaseOptions();
         }
 
-        private static Option Receive()
+        internal static void ReleaseOption(QuickInfoOptionViewModel optionViewModel)
+        {
+            if (_quickInfoWasRealesed || !ReferenceEquals(_quickInfoOptionViewModel, optionViewModel)) return;
+
+            _quickInfoWasRealesed = true;
+            ReleaseOptions();
+        }
+
+        private static void ReleaseOptions()
+        {
+            if (!_quickInfoWasRealesed || _receivedEditorCount != 0) return;
+
+            if (_optionsWereApplied)
+            {
+                var allOptions = new Options
+                {
+                    EditorOption = _editorOptionViewModel.ExtractData(),
+                    QuickInfoOption = _quickInfoOptionViewModel.ExtractData(),
+                };
+                Release(allOptions);
+                _optionsWereApplied = false;
+            }
+
+            _editorOptionViewModel = null;
+            _quickInfoOptionViewModel = null;
+        }
+
+        private static QuickInfoOption ReceiveQuickInfoOption()
         {
             MigrationService.MigrateSettingsTo_2_0_0();
-            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
-            var option = OptionService.ToOption(settings);
+            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile, Paths.CoCoQuickInfoSettingsFile, MigrationService.Instance);
+            var option = OptionService.ToQuickInfoOption(settings.QuickInfo);
+            return option;
+        }
+
+        private static Option ReceiveEditorOption()
+        {
+            MigrationService.MigrateSettingsTo_2_0_0();
+            var settings = SettingsManager.LoadSettings(Paths.CoCoSettingsFile, Paths.CoCoQuickInfoSettingsFile, MigrationService.Instance);
+            var option = OptionService.ToEditorOption(settings.Editor);
             FormattingService.SetFormattingOptions(option);
             return option;
         }
 
-        private static void Release(Option option)
+        private static void Release(Options option)
         {
-            FormattingService.SetFormattingOptions(option);
-            AnalyzingService.SetAnalyzingOptions(option);
-            var settings = OptionService.ToSettings(option);
-            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
+            var editorOption = option.EditorOption;
+            FormattingService.SetFormattingOptions(editorOption);
+            AnalyzingService.SetAnalyzingOptions(editorOption);
+
+            var settings = new Settings.Settings
+            {
+                Editor = OptionService.ToSettings(editorOption),
+                EditorPath = Paths.CoCoSettingsFile,
+
+                QuickInfo = OptionService.ToSettings(option.QuickInfoOption),
+                QuickInfoPath = Paths.CoCoQuickInfoSettingsFile,
+            };
+
+            SettingsManager.SaveSettings(settings);
         }
     }
 
-    public abstract class DialogPage : UIElementDialogPage
+    public abstract class DialogPage<T> : UIElementDialogPage where T : class
     {
-        private OptionViewModel _childDataContext;
+        private T _childDataContext;
 
         private FrameworkElement _child;
 
@@ -75,13 +139,18 @@ namespace CoCo
 
         protected abstract FrameworkElement GetChild();
 
+        protected abstract T GetChildContext();
+
+        protected abstract void SaveChildContext(T childContext);
+
+        protected abstract void ReleaseChildContext(T childContext);
+
         protected override void OnActivate(CancelEventArgs e)
         {
             /// NOTE: imitate page's initialization using <see cref="OnActivate"/>
             if (_childDataContext is null)
             {
-                _childDataContext = VsPackage.ReceiveOption();
-                _child.DataContext = _childDataContext;
+                _child.DataContext = _childDataContext = GetChildContext();
             }
 
             base.OnActivate(e);
@@ -89,7 +158,7 @@ namespace CoCo
 
         protected override void OnClosed(EventArgs e)
         {
-            VsPackage.ReleaseOption(_childDataContext);
+            ReleaseChildContext(_childDataContext);
             _childDataContext = null;
 
             base.OnClosed(e);
@@ -100,19 +169,42 @@ namespace CoCo
             // NOTE: save options only when was clicked Ok button at the options page
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                VsPackage.SaveOption(_childDataContext);
+                SaveChildContext(_childDataContext);
             }
             base.OnApply(e);
         }
     }
 
-    public class ClassificationsOption : DialogPage
+    public class ClassificationsOption : DialogPage<OptionViewModel>
     {
         protected override FrameworkElement GetChild() => new ClassificationsControl();
+
+        protected override OptionViewModel GetChildContext() => VsPackage.ReceiveEditorContext();
+
+        protected override void ReleaseChildContext(OptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
+
+        protected override void SaveChildContext(OptionViewModel childContext) => VsPackage.SaveOption(childContext);
     }
 
-    public class PresetsOption : DialogPage
+    public class PresetsOption : DialogPage<OptionViewModel>
     {
         protected override FrameworkElement GetChild() => new PresetsControl();
+
+        protected override OptionViewModel GetChildContext() => VsPackage.ReceiveEditorContext();
+
+        protected override void ReleaseChildContext(OptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
+
+        protected override void SaveChildContext(OptionViewModel childContext) => VsPackage.SaveOption(childContext);
+    }
+
+    public class QuickInfoOptionPage : DialogPage<QuickInfoOptionViewModel>
+    {
+        protected override FrameworkElement GetChild() => new QuickInfoControl();
+
+        protected override QuickInfoOptionViewModel GetChildContext() => VsPackage.ReceiveQuickInfoContext();
+
+        protected override void ReleaseChildContext(QuickInfoOptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
+
+        protected override void SaveChildContext(QuickInfoOptionViewModel childContext) => VsPackage.SaveOption(childContext);
     }
 }

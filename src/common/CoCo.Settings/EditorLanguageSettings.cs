@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace CoCo.Settings
 {
     [DebuggerDisplay("{Name}")]
-    public struct LanguageSettings
+    public struct EditorLanguageSettings
     {
         public string Name { get; set; }
 

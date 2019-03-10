@@ -18,6 +18,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
+    <Compile Update="UI\QuickInfoControl.xaml.cs">
+      <DependentUpon>QuickInfoControl.xaml</DependentUpon>
+    </Compile>
     <Compile Update="UI\ClassificationsControl.xaml.cs">
       <DependentUpon>ClassificationsControl.xaml</DependentUpon>
     </Compile>
@@ -64,6 +67,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\VsToolTipControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\QuickInfoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

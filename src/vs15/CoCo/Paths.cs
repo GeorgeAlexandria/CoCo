@@ -8,5 +8,7 @@ namespace CoCo
         public static string CoCoFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CoCo");
 
         public static string CoCoSettingsFile = Path.Combine(CoCoFolder, "CoCo.config");
+
+        public static string CoCoQuickInfoSettingsFile = Path.Combine(CoCoFolder, "CoCo quick info.config");
     }
 }
