@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Guids.cs" />
     <Compile Include="MouseTrackToolTipPresenter.cs" />
+    <Compile Include="Services\QuickInfoChangingService.cs" />
     <Compile Include="Services\QuickInfoSource.cs" />
     <Compile Include="Services\AnalyzingService.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />

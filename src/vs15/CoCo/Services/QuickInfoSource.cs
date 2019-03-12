@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.QuickInfo;
+using CoCo.Utils;
 using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -16,10 +17,29 @@ namespace CoCo.Services
     internal sealed class QuickInfoSource : IAsyncQuickInfoSource
     {
         private readonly ITextBuffer _textBuffer;
+        private readonly string _language;
+        private readonly ITextDocumentFactoryService _documentFactoryService;
 
-        public QuickInfoSource(ITextBuffer textBuffer)
+        private QuickInfoState _state;
+
+        public QuickInfoSource(
+            ITextBuffer textBuffer,
+            IReadOnlyDictionary<string, QuickInfoState> quickInfoOptions,
+            ITextDocumentFactoryService documentFactoryService)
         {
             _textBuffer = textBuffer;
+            _documentFactoryService = documentFactoryService;
+            _language = GetLanguage(_textBuffer);
+            _state = quickInfoOptions.TryGetValue(_language, out var state) ? state : QuickInfoState.Disable;
+
+            _documentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+            QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
+        }
+
+        // TODO: move to Analyser project
+        private string GetLanguage(ITextBuffer textBuffer)
+        {
+            return null;
         }
 
         public void Dispose()
@@ -28,6 +48,10 @@ namespace CoCo.Services
 
         public async Task<MsQuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
+            // TODO: support override
+            // NOTE: returned null would be ignored by VS
+            if (_state == QuickInfoState.Disable) return null;
+
             var triggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
             if (!triggerPoint.HasValue) return null;
 
@@ -151,6 +175,25 @@ namespace CoCo.Services
 
             imageElement = new ImageElement(new ImageId(KnownImageIds.ImageCatalogGuid, id));
             return true;
+        }
+
+        private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)
+        {
+            foreach (var (language, state) in args.Changes)
+            {
+                if (_language.Equals(language))
+                {
+                    _state = state;
+                }
+            }
+        }
+
+        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
+        {
+            if (e.TextDocument.TextBuffer == _textBuffer)
+            {
+                QuickInfoChangingService.Instance.QuickInfoChanged -= OnQuickInfoChanged;
+            }
         }
     }
 }
