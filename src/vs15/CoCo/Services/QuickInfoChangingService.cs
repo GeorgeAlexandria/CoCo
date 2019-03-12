@@ -41,7 +41,7 @@ namespace CoCo.Services
                 changes[item.Language] = (QuickInfoState)item.State;
             }
 
-            Instance?.QuickInfoChanged(new QuickInfoChangedEventArgs(changes));
+            Instance.QuickInfoChanged?.Invoke(new QuickInfoChangedEventArgs(changes));
         }
     }
 }

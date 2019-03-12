@@ -102,6 +102,7 @@ namespace CoCo
 
         private static void Release(QuickInfoOption option)
         {
+            QuickInfoChangingService.SetQuickInfoOptions(option);
             var settings = OptionService.ToSettings(option);
             SettingsManager.SaveSettings(settings, Paths.CoCoQuickInfoSettingsFile);
         }

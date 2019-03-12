@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.Services;
 using CoCo.Utils;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
@@ -45,7 +44,7 @@ namespace CoCo
                 _wereSettingsSet = true;
             }
 
-            var language = GetLanguage(textView.TextBuffer);
+            var language = textView.TextBuffer.GetLanguage();
             if (_quickInfoOptions.TryGetValue(language, out var state) && state != QuickInfoState.Override)
             {
                 // NOTE: the next tooltip presenter would be invoked when an one from the exported returns null
@@ -55,12 +54,6 @@ namespace CoCo
             return parameters.TrackMouse
                 ? new MouseTrackToolTipPresenter(_viewElementFactoryService, textView, parameters)
                 : new ToolTipPresenter(_viewElementFactoryService, textView, parameters);
-        }
-
-        // TODO: move to Analyser project
-        private string GetLanguage(ITextBuffer textBuffer)
-        {
-            return null;
         }
 
         private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)

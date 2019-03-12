@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoCo.Analyser;
 using CoCo.Analyser.QuickInfo;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Core.Imaging;
@@ -29,17 +30,11 @@ namespace CoCo.Services
         {
             _textBuffer = textBuffer;
             _documentFactoryService = documentFactoryService;
-            _language = GetLanguage(_textBuffer);
+            _language = _textBuffer.GetLanguage();
             _state = quickInfoOptions.TryGetValue(_language, out var state) ? state : QuickInfoState.Disable;
 
             _documentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
             QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
-        }
-
-        // TODO: move to Analyser project
-        private string GetLanguage(ITextBuffer textBuffer)
-        {
-            return null;
         }
 
         public void Dispose()
