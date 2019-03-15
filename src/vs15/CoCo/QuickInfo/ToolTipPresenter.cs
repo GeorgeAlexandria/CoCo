@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
-using CoCo.Services;
 using CoCo.UI;
 using CoCo.UI.ViewModels;
 using Microsoft.VisualStudio.PlatformUI;
@@ -10,7 +9,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace CoCo
+namespace CoCo.QuickInfo
 {
     internal class ToolTipPresenter : IToolTipPresenter
     {

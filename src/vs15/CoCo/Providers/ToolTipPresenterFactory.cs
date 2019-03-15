@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
+using CoCo.QuickInfo;
 using CoCo.Services;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 
-namespace CoCo
+namespace CoCo.Providers
 {
     [Export(typeof(IToolTipPresenterFactory))]
     [Order(Before = "default")]

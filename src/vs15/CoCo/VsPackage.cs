@@ -2,7 +2,8 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
-using CoCo.Providers;
+using CoCo.Editor;
+using CoCo.QuickInfo;
 using CoCo.Services;
 using CoCo.Settings;
 using CoCo.UI;

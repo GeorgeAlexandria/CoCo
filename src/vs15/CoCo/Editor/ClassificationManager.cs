@@ -2,13 +2,12 @@
 using CoCo.Analyser;
 using CoCo.Analyser.CSharp;
 using CoCo.Analyser.VisualBasic;
-using CoCo.Providers;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo
+namespace CoCo.Editor
 {
     public sealed class ClassificationManager
     {

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace CoCo
+namespace CoCo.QuickInfo
 {
     internal class MouseTrackToolTipPresenter : ToolTipPresenter
     {
@@ -28,7 +28,7 @@ namespace CoCo
 
         public override void StartOrUpdate(ITrackingSpan applicableToSpan, IEnumerable<object> content)
         {
-            this.capturedSpan = applicableToSpan;
+            capturedSpan = applicableToSpan;
             if (!DismissOnOutsideOfSpan())
             {
                 popup.Placement = PlacementMode.Mouse;

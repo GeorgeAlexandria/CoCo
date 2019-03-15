@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 
-namespace CoCo.Services
+namespace CoCo.QuickInfo
 {
     using CoCoImageKind = CoCo.Analyser.QuickInfo.ImageKind;
     using MsQuickInfoItem = Microsoft.VisualStudio.Language.Intellisense.QuickInfoItem;
@@ -71,6 +71,7 @@ namespace CoCo.Services
                 }
             }
 
+            // NOTE: wrap element into a specified type to determine that the content element was created by CoCo or not
             return _state == QuickInfoState.Override
                 ? new MsQuickInfoItem(trackingSpan, new QuickInfoWrapper(new ContainerElement(ContainerElementStyle.Stacked, items)))
                 : new MsQuickInfoItem(trackingSpan, new ContainerElement(ContainerElementStyle.Stacked, items));

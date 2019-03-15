@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
+using CoCo.QuickInfo;
 using CoCo.Services;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -25,7 +26,7 @@ namespace CoCo.Providers
         /// Text document factory to be used for getting a event of text document disposed.
         /// </summary>
         [Import]
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+        private ITextDocumentFactoryService _textDocumentFactoryService;
 
         public QuickInfoProvider()
         {

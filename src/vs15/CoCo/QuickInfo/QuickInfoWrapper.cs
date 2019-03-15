@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text.Adornments;
 
-namespace CoCo.Services
+namespace CoCo.QuickInfo
 {
     internal sealed class QuickInfoWrapper
     {

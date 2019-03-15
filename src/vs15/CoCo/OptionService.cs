@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
+using CoCo.Editor;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
+using QucikInfoData = CoCo.UI.Data.QuickInfo;
 
 namespace CoCo.Services
 {
@@ -146,7 +148,7 @@ namespace CoCo.Services
             var option = new QuickInfoOption();
             foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
             {
-                var quickInfo = new QuickInfo(language);
+                var quickInfo = new QucikInfoData(language);
 
                 var languageExists = false;
                 foreach (var item in settings.Languages)

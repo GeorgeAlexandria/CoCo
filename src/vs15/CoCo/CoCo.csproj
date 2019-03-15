@@ -49,26 +49,27 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Guids.cs" />
-    <Compile Include="MouseTrackToolTipPresenter.cs" />
-    <Compile Include="Services\QuickInfoChangingService.cs" />
-    <Compile Include="Services\QuickInfoSource.cs" />
-    <Compile Include="Services\AnalyzingService.cs" />
+    <Compile Include="QuickInfo\MouseTrackToolTipPresenter.cs" />
+    <Compile Include="QuickInfo\QuickInfoChangedEventArgs.cs" />
+    <Compile Include="QuickInfo\QuickInfoChangingService.cs" />
+    <Compile Include="QuickInfo\QuickInfoSource.cs" />
+    <Compile Include="Editor\AnalyzingService.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
-    <Compile Include="ClassificationManager.cs" />
+    <Compile Include="Editor\ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Providers\CSharpClassifierProvider.cs" />
-    <Compile Include="Services\QuickInfoWrapper.cs" />
-    <Compile Include="Services\FormattingService.cs" />
+    <Compile Include="QuickInfo\QuickInfoWrapper.cs" />
+    <Compile Include="Editor\FormattingService.cs" />
     <Compile Include="Providers\QuickInfoProvider.cs" />
-    <Compile Include="Services\OptionService.cs" />
+    <Compile Include="OptionService.cs" />
     <Compile Include="Paths.cs" />
-    <Compile Include="Services\PresetService.cs" />
+    <Compile Include="Editor\PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ResetValuesProvider.cs" />
-    <Compile Include="Providers\ServicesProvider.cs" />
+    <Compile Include="Editor\ResetValuesProvider.cs" />
+    <Compile Include="ServicesProvider.cs" />
     <Compile Include="Providers\VisualBasicClassifierProvider.cs" />
-    <Compile Include="ToolTipPresenter.cs" />
-    <Compile Include="ToolTipPresenterFactory.cs" />
+    <Compile Include="QuickInfo\ToolTipPresenter.cs" />
+    <Compile Include="Providers\ToolTipPresenterFactory.cs" />
     <Compile Include="VsPackage.cs" />
     <Compile Include="Migrations\MigrationService_2_0_0.cs" />
   </ItemGroup>
