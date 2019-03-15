@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo.Providers
 {
     [Export(typeof(IToolTipPresenterFactory))]
+    [Name("CoCo tooltip factory")]
     [Order(Before = "default")]
     internal class ToolTipPresenterFactory : IToolTipPresenterFactory
     {

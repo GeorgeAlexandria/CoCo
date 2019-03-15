@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
 using CoCo.Editor;
+using CoCo.QuickInfo;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.UI.Data;
@@ -146,7 +147,9 @@ namespace CoCo.Services
         public static QuickInfoOption ToOption(QuickInfoSettings settings)
         {
             var option = new QuickInfoOption();
-            foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
+
+            // TODO: currently works for csharp
+            foreach (var language in new[] { Languages.CSharp/*, Languages.VisualBasic */})
             {
                 var quickInfo = new QucikInfoData(language);
 
@@ -157,14 +160,10 @@ namespace CoCo.Services
                     {
                         languageExists = true;
 
-                        if (item.State.HasValue && QuickInfoStateService.SupportedState.ContainsKey(item.State.Value))
-                        {
-                            quickInfo.State = item.State.Value;
-                        }
-                        else
-                        {
-                            quickInfo.State = 0;
-                        }
+                        quickInfo.State = item.State.HasValue && QuickInfoStateService.SupportedState.ContainsKey(item.State.Value)
+                            ? item.State.Value
+                            : (int)QuickInfoChangingService.Instance.GetDefaultValue();
+
                         option.Languages.Add(quickInfo);
                     }
                 }

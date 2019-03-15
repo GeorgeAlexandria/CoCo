@@ -36,7 +36,7 @@ namespace CoCo.Providers
             {
                 _classificationsInfo[item] = default;
             }
-            AnalyzingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
+            ClassificationChangingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
         }
 
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
@@ -58,12 +58,12 @@ namespace CoCo.Providers
                 var settings = SettingsManager.LoadEditorSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
                 var option = OptionService.ToOption(settings);
                 FormattingService.SetFormattingOptions(option);
-                AnalyzingService.SetAnalyzingOptions(option);
+                ClassificationChangingService.SetAnalyzingOptions(option);
                 _wereSettingsSet = true;
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new CSharpClassifier(_classificationsInfo, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
+                new CSharpClassifier(_classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
         }
 
         private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)

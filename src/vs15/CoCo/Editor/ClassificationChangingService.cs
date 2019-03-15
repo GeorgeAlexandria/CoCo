@@ -5,11 +5,11 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Editor
 {
-    public sealed class AnalyzingService : IAnalyzingService
+    public sealed class ClassificationChangingService : IClassificationChangingService
     {
-        public static readonly AnalyzingService Instance = new AnalyzingService();
+        public static readonly ClassificationChangingService Instance = new ClassificationChangingService();
 
-        private AnalyzingService()
+        private ClassificationChangingService()
         {
         }
 

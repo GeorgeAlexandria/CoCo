@@ -96,7 +96,7 @@ namespace CoCo
         private static void Release(EditorOption option)
         {
             FormattingService.SetFormattingOptions(option);
-            AnalyzingService.SetAnalyzingOptions(option);
+            ClassificationChangingService.SetAnalyzingOptions(option);
             var settings = OptionService.ToSettings(option);
             SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
         }

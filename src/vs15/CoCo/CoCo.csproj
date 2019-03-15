@@ -53,7 +53,7 @@
     <Compile Include="QuickInfo\QuickInfoChangedEventArgs.cs" />
     <Compile Include="QuickInfo\QuickInfoChangingService.cs" />
     <Compile Include="QuickInfo\QuickInfoSource.cs" />
-    <Compile Include="Editor\AnalyzingService.cs" />
+    <Compile Include="Editor\ClassificationChangingService.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
     <Compile Include="Editor\ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />

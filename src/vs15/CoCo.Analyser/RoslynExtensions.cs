@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 
 namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
-        public static bool IsExtensionMethod(this IMethodSymbol method) => 
+        public static bool IsExtensionMethod(this IMethodSymbol method) =>
             method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension;
 
         public static async Task<SyntaxToken> GetIntersectTokenAsync(
@@ -35,8 +37,13 @@ namespace CoCo.Analyser
                     builder.Add(compilationReference.Compilation);
                 }
             }
+
+            return builder.ToImmutable();
         }
 
+        /// <summary>
+        /// Retrieves declared symbol from <paramref name="token"/> or go to it parents until doesn't retrieve symbol
+        /// </summary>
         public static ISymbol GetDeclaredSymbol(
             this SemanticModel semanticModel, SyntaxToken token, CancellationToken cancellationToken = default)
         {
@@ -50,6 +57,10 @@ namespace CoCo.Analyser
             return null;
         }
 
+        /// <summary>
+        /// Rerieves overriden symbol if <paramref name="symbol"/> is <see cref="IMethodSymbol"/>, <see cref="IPropertySymbol"/> or
+        /// <see cref="IEventSymbol"/>, otherwise returns <see langword="null"/>
+        /// </summary>
         public static ISymbol GetOverriddenSymbol(this ISymbol symbol)
         {
             switch (symbol)
@@ -140,6 +151,20 @@ namespace CoCo.Analyser
             }
 
             return !(symbol is null);
+        }
+
+        //TODO: Check behavior for document that isn't including in solution
+        public static Document GetDocument(this Workspace workspace, SourceText text)
+        {
+            if (workspace == null) throw new ArgumentException("Input parameter is null", nameof(workspace));
+            if (text == null) throw new ArgumentException("Input parameter is null", nameof(text));
+
+            var id = workspace.GetDocumentIdInCurrentContext(text.Container);
+            if (id == null) return null;
+
+            return !workspace.CurrentSolution.ContainsDocument(id)
+                ? workspace.CurrentSolution.WithDocumentText(id, text, PreservationMode.PreserveIdentity).GetDocument(id)
+                : workspace.CurrentSolution.GetDocument(id);
         }
     }
 }

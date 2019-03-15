@@ -23,5 +23,7 @@ namespace CoCo.QuickInfo
 
             Instance.QuickInfoChanged?.Invoke(new QuickInfoChangedEventArgs(changes));
         }
+
+        public QuickInfoState GetDefaultValue() => QuickInfoState.Disable;
     }
 }

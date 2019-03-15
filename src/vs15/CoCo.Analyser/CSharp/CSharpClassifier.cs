@@ -41,7 +41,7 @@ namespace CoCo.Analyser.CSharp
 
         internal CSharpClassifier(
             IReadOnlyDictionary<string, ClassificationInfo> classifications,
-            IAnalyzingService analyzingService,
+            IClassificationChangingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
             ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {
@@ -213,10 +213,7 @@ namespace CoCo.Analyser.CSharp
                 case SymbolKind.NamedType:
                     var typeSymbol = symbol as INamedTypeSymbol;
                     var type = GetTypeClassification(typeSymbol);
-                    if (!(type is null))
-                    {
-                        return type;
-                    }
+                    if (!(type is null)) return type;
                     break;
             }
 
