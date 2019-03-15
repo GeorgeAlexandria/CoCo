@@ -43,7 +43,6 @@ namespace CoCo.Services
 
         public async Task<MsQuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
-            // TODO: support override
             // NOTE: returned null would be ignored by VS
             if (_state == QuickInfoState.Disable) return null;
 
@@ -72,7 +71,9 @@ namespace CoCo.Services
                 }
             }
 
-            return new MsQuickInfoItem(trackingSpan, new ContainerElement(ContainerElementStyle.Stacked, items));
+            return _state == QuickInfoState.Override
+                ? new MsQuickInfoItem(trackingSpan, new QuickInfoWrapper(new ContainerElement(ContainerElementStyle.Stacked, items)))
+                : new MsQuickInfoItem(trackingSpan, new ContainerElement(ContainerElementStyle.Stacked, items));
         }
 
         private static ClassifiedTextElement ToClassifiedTextElement(SymbolDescription symbolDescription)

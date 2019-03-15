@@ -57,6 +57,7 @@
     <Compile Include="ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Providers\CSharpClassifierProvider.cs" />
+    <Compile Include="Services\QuickInfoWrapper.cs" />
     <Compile Include="Services\FormattingService.cs" />
     <Compile Include="Providers\QuickInfoProvider.cs" />
     <Compile Include="Services\OptionService.cs" />

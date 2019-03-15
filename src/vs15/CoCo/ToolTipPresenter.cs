@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using CoCo.Services;
 using CoCo.UI;
 using CoCo.UI.ViewModels;
 using Microsoft.VisualStudio.PlatformUI;
@@ -74,9 +75,12 @@ namespace CoCo
             {
                 foreach (var item in models)
                 {
-                    var element = _viewElementFactoryService.CreateViewElement<UIElement>(textView, item);
-                    if (element is null) continue;
-                    yield return element;
+                    if (item is QuickInfoWrapper wrapper)
+                    {
+                        var element = _viewElementFactoryService.CreateViewElement<UIElement>(textView, wrapper.Element);
+                        if (element is null) continue;
+                        yield return element;
+                    }
                 }
             }
 
