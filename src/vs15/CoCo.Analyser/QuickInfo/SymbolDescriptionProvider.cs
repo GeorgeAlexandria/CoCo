@@ -308,7 +308,7 @@ namespace CoCo.Analyser.QuickInfo
             // NOTE: don't show redundant info for enum fields
             if (symbol.Type.TypeKind != TypeKind.Enum)
             {
-                InsertRange(parts, 0, symbol.IsConst ? CreateDescription("constant") : CreateDescription("field"));
+                parts.InsertRange(0, symbol.IsConst ? CreateDescription("constant") : CreateDescription("field"));
             }
             AppendParts(SymbolDescriptionKind.Main, parts);
         }
@@ -316,7 +316,7 @@ namespace CoCo.Analyser.QuickInfo
         protected async Task AppendLocalPartsAsync(ILocalSymbol symbol)
         {
             var parts = await GetDeclarationPartsAsync(symbol, symbol.IsConst);
-            InsertRange(parts, 0, symbol.IsConst ? CreateDescription("local constant") : CreateDescription("local variable"));
+            parts.InsertRange(0, symbol.IsConst ? CreateDescription("local constant") : CreateDescription("local variable"));
             AppendParts(SymbolDescriptionKind.Main, parts);
         }
 
@@ -350,7 +350,7 @@ namespace CoCo.Analyser.QuickInfo
         protected async Task AppendParameterPartsAsync(IParameterSymbol symbol)
         {
             var parts = await GetDeclarationPartsAsync(symbol, symbol.IsOptional);
-            InsertRange(parts, 0, CreateDescription("parameter"));
+            parts.InsertRange(0, CreateDescription("parameter"));
             AppendParts(SymbolDescriptionKind.Main, parts);
         }
 
@@ -554,6 +554,36 @@ namespace CoCo.Analyser.QuickInfo
                 if (!tag.IsDefault)
                 {
                     builder.Add(tag);
+                    continue;
+                }
+
+                // NOTE: use fallback classifications if classifier returned nothing
+                classification =
+                    part.Kind == SymbolDisplayPartKind.AliasName ? ClassificationTypeNames.Identifier :
+                    part.Kind == SymbolDisplayPartKind.AnonymousTypeIndicator ? ClassificationTypeNames.Text :
+                    part.Kind == SymbolDisplayPartKind.AssemblyName ? ClassificationTypeNames.Identifier :
+                    part.Kind == SymbolDisplayPartKind.ClassName ? ClassificationTypeNames.ClassName :
+                    part.Kind == SymbolDisplayPartKind.DelegateName ? ClassificationTypeNames.DelegateName :
+                    part.Kind == SymbolDisplayPartKind.EnumName ? ClassificationTypeNames.EnumName : // TODO: enum meber
+                    part.Kind == SymbolDisplayPartKind.ErrorTypeName ? ClassificationTypeNames.Identifier :
+                    part.Kind == SymbolDisplayPartKind.EventName ? ClassificationTypeNames.EventName :
+                    part.Kind == SymbolDisplayPartKind.FieldName ? ClassificationTypeNames.FieldName :
+                    part.Kind == SymbolDisplayPartKind.InterfaceName ? ClassificationTypeNames.InterfaceName :
+                    part.Kind == SymbolDisplayPartKind.LabelName ? ClassificationTypeNames.Identifier : // TODO: label name
+                    part.Kind == SymbolDisplayPartKind.LocalName ? ClassificationTypeNames.LocalName :
+                    part.Kind == SymbolDisplayPartKind.MethodName ? ClassificationTypeNames.MethodName :
+                    part.Kind == SymbolDisplayPartKind.ModuleName ? ClassificationTypeNames.ModuleName :
+                    // TODO: namespace name
+                    part.Kind == SymbolDisplayPartKind.ParameterName ? ClassificationTypeNames.ParameterName :
+                    part.Kind == SymbolDisplayPartKind.PropertyName ? ClassificationTypeNames.PropertyName :
+                    // TODO: range variable name
+                    part.Kind == SymbolDisplayPartKind.StructName ? ClassificationTypeNames.StructName :
+                    part.Kind == SymbolDisplayPartKind.TypeParameterName ? ClassificationTypeNames.TypeParameterName :
+                    null;
+
+                if (!(classification is null))
+                {
+                    builder.Add(new TaggedText(classification, part.ToString()));
                 }
             }
         }
@@ -577,15 +607,6 @@ namespace CoCo.Analyser.QuickInfo
                 if (referencedCompilation.ContainsSyntaxTree(syntaxTree)) return referencedCompilation.GetSemanticModel(syntaxTree);
             }
             return null;
-        }
-
-        // TODO: move to some extension class
-        private static void InsertRange<T>(ImmutableArray<T>.Builder builder, int index, IEnumerable<T> items)
-        {
-            foreach (var item in items)
-            {
-                builder.Insert(index++, item);
-            }
         }
     }
 }

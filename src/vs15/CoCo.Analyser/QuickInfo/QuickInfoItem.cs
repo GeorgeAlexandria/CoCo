@@ -9,8 +9,6 @@ namespace CoCo.Analyser.QuickInfo
     /// </summary>
     public sealed class QuickInfoItem
     {
-        // TODO: understand what kind of info must be provided
-
         public TextSpan Span { get; }
 
         public ImmutableArray<SymbolDescription> Descriptions { get; }
