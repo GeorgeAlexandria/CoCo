@@ -253,9 +253,8 @@ namespace CoCo.Analyser.QuickInfo
                     var declaredVariables = new HashSet<ISymbol>(dataFlow.VariablesDeclared);
 
                     List<SymbolDisplayPart> parts = null;
-                    for (int i = 0; i < dataFlow.CapturedInside.Length; ++i)
+                    foreach (var captureVariable in dataFlow.Captured)
                     {
-                        var captureVariable = dataFlow.CapturedInside[i];
                         if (declaredVariables.Contains(captureVariable)) continue;
 
                         if (parts is null)
@@ -269,7 +268,6 @@ namespace CoCo.Analyser.QuickInfo
                         parts.Add(CreateSpaces());
                         parts.AddRange(ToMinimalDisplayParts(captureVariable, _capturesFormat));
                     }
-
                     if (!(parts is null))
                     {
                         AppendParts(SymbolDescriptionKind.Captures, parts);
@@ -558,30 +556,7 @@ namespace CoCo.Analyser.QuickInfo
                 }
 
                 // NOTE: use fallback classifications if classifier returned nothing
-                classification =
-                    part.Kind == SymbolDisplayPartKind.AliasName ? ClassificationTypeNames.Identifier :
-                    part.Kind == SymbolDisplayPartKind.AnonymousTypeIndicator ? ClassificationTypeNames.Text :
-                    part.Kind == SymbolDisplayPartKind.AssemblyName ? ClassificationTypeNames.Identifier :
-                    part.Kind == SymbolDisplayPartKind.ClassName ? ClassificationTypeNames.ClassName :
-                    part.Kind == SymbolDisplayPartKind.DelegateName ? ClassificationTypeNames.DelegateName :
-                    part.Kind == SymbolDisplayPartKind.EnumName ? ClassificationTypeNames.EnumName : // TODO: enum meber
-                    part.Kind == SymbolDisplayPartKind.ErrorTypeName ? ClassificationTypeNames.Identifier :
-                    part.Kind == SymbolDisplayPartKind.EventName ? ClassificationTypeNames.EventName :
-                    part.Kind == SymbolDisplayPartKind.FieldName ? ClassificationTypeNames.FieldName :
-                    part.Kind == SymbolDisplayPartKind.InterfaceName ? ClassificationTypeNames.InterfaceName :
-                    part.Kind == SymbolDisplayPartKind.LabelName ? ClassificationTypeNames.Identifier : // TODO: label name
-                    part.Kind == SymbolDisplayPartKind.LocalName ? ClassificationTypeNames.LocalName :
-                    part.Kind == SymbolDisplayPartKind.MethodName ? ClassificationTypeNames.MethodName :
-                    part.Kind == SymbolDisplayPartKind.ModuleName ? ClassificationTypeNames.ModuleName :
-                    // TODO: namespace name
-                    part.Kind == SymbolDisplayPartKind.ParameterName ? ClassificationTypeNames.ParameterName :
-                    part.Kind == SymbolDisplayPartKind.PropertyName ? ClassificationTypeNames.PropertyName :
-                    // TODO: range variable name
-                    part.Kind == SymbolDisplayPartKind.StructName ? ClassificationTypeNames.StructName :
-                    part.Kind == SymbolDisplayPartKind.TypeParameterName ? ClassificationTypeNames.TypeParameterName :
-                    null;
-
-                if (!(classification is null))
+                if (SymbolDisplayPartHelper.TryGetClassificationName(part, out classification))
                 {
                     builder.Add(new TaggedText(classification, part.ToString()));
                 }

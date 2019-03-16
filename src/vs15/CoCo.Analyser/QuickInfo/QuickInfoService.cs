@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using CoCo.Analyser.QuickInfo.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
 namespace CoCo.Analyser.QuickInfo
@@ -31,12 +30,9 @@ namespace CoCo.Analyser.QuickInfo
         }
 
         public static async Task<QuickInfoItem> GetQuickInfo(
-            ITextBuffer textBuffer, IAsyncQuickInfoSession session, CancellationToken cancellationToken)
+            ITextBuffer textBuffer, SnapshotPoint triggerPoint, CancellationToken cancellationToken)
         {
-            var triggerPoint = session.GetTriggerPoint(textBuffer.CurrentSnapshot);
-            if (!triggerPoint.HasValue) return null;
-
-            var document = triggerPoint.Value.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
+            var document = triggerPoint.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
             if (document is null) return null;
 
             cancellationToken.ThrowIfCancellationRequested();
@@ -44,7 +40,7 @@ namespace CoCo.Analyser.QuickInfo
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var quickInfoService = new QuickInfoService(root.Language);
 
-            return await quickInfoService.GetQuickInfoAsync(textBuffer, document, triggerPoint.Value, cancellationToken);
+            return await quickInfoService.GetQuickInfoAsync(textBuffer, document, triggerPoint, cancellationToken);
         }
 
         private async Task<QuickInfoItem> GetQuickInfoAsync(
