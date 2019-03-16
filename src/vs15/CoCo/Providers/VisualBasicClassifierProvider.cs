@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.Analyser.VisualBasic;
 using CoCo.Editor;
-using CoCo.Services;
 using CoCo.Settings;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text;

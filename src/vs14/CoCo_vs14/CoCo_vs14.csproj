@@ -49,6 +49,8 @@
     <Compile Include="..\..\vs15\CoCo\Editor\ClassificationChangingService.cs" Link="Editor\ClassificationChangingService.cs" />
     <Compile Include="..\..\vs15\CoCo\Paths.cs" Link="Paths.cs" />
     <Compile Include="..\..\vs15\CoCo\Editor\ResetValuesProvider.cs" Link="Editor\ResetValuesProvider.cs" />
+    <Compile Include="..\..\vs15\CoCo\QuickInfo\QuickInfoChangedEventArgs.cs" Link="QuickInfo\QuickInfoChangedEventArgs.cs" />
+    <Compile Include="..\..\vs15\CoCo\QuickInfo\QuickInfoChangingService.cs" Link="QuickInfo\QuickInfoChangingService.cs" />
     <Compile Include="..\..\vs15\CoCo\ServicesProvider.cs" Link="ServicesProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\Providers\VisualBasicClassifierProvider.cs" Link="Providers\VisualBasicClassifierProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\VsPackage.cs" Link="VsPackage.cs" />
@@ -63,6 +65,8 @@
     <Compile Include="Migrations\MigrationService_2_0_0.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickInfo\QuickInfoSource.cs" />
+    <Compile Include="Providers\QuickInfoSourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -82,8 +86,14 @@
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.CoreUtility.14.3.25407\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ImageCatalog, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.ImageCatalog.14.3.25407\lib\net45\Microsoft.VisualStudio.ImageCatalog.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Language.Intellisense.14.3.25407\lib\net45\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.Language.StandardClassification.14.3.25407\lib\net45\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>

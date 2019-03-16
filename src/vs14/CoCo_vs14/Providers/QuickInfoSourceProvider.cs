@@ -10,9 +10,10 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace CoCo.Providers
 {
-    [Export(typeof(IAsyncQuickInfoSourceProvider))]
+    [Export(typeof(IQuickInfoSourceProvider))]
+    [Name("CoCo quickInfo provider")]
     [ContentType("any")]
-    internal sealed class QuickInfoProvider : IAsyncQuickInfoSourceProvider
+    internal sealed class QuickInfoSourceProvider : IQuickInfoSourceProvider
     {
         /// <summary>
         /// Determines that settings were set to avoid a many sets settings from the classifier
@@ -27,7 +28,7 @@ namespace CoCo.Providers
         [Import]
         private ITextDocumentFactoryService _textDocumentFactoryService;
 
-        public QuickInfoProvider()
+        public QuickInfoSourceProvider()
         {
             _quickInfoOptions = new Dictionary<string, QuickInfoState>
             {
@@ -38,7 +39,7 @@ namespace CoCo.Providers
             QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
         }
 
-        public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
+        public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
             if (!_wereSettingsSet)
             {

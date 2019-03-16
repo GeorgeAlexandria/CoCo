@@ -2,7 +2,6 @@
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.QuickInfo;
-using CoCo.Services;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;

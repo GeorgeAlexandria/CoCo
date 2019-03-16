@@ -11,7 +11,7 @@ using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
 using QucikInfoData = CoCo.UI.Data.QuickInfo;
 
-namespace CoCo.Services
+namespace CoCo
 {
     public static class OptionService
     {

@@ -31,8 +31,7 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo.Analyser\QuickInfo\**\*.*" Link="QuickInfo\%(RecursiveDir)%(Filename)%(Extension)"
-             Exclude="**\SymbolDescriptionProvider.Formats.cs;**\SymbolDisplayPartHelper.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\QuickInfo\**\*.*" Link="QuickInfo\%(RecursiveDir)%(Filename)%(Extension)" Exclude="**\SymbolDescriptionProvider.Formats.cs;**\SymbolDisplayPartHelper.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationsChangedEventArgs.cs" Link="ClassificationsChangedEventArgs.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationService.cs" Link="ClassificationService.cs" />
@@ -45,6 +44,7 @@
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicClassifier.cs" Link="VisualBasic\VisualBasicClassifier.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicNames.cs" Link="VisualBasic\VisualBasicNames.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicSyntaxNodeExtensions.cs" Link="VisualBasic\VisualBasicSyntaxNodeExtensions.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\VisualStudioExtensions.cs" Link="VisualStudioExtensions.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Log.cs" Link="Log.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpSyntaxNodeExtensions.cs" Link="CSharp\CSharpSyntaxNodeExtensions.cs" />
