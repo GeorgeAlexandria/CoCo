@@ -40,7 +40,7 @@ namespace CoCo.Analyser.CSharp
 
         internal CSharpClassifier(
             IReadOnlyDictionary<string, ClassificationInfo> classifications,
-            IAnalyzingService analyzingService,
+            IClassificationChangingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
             ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {

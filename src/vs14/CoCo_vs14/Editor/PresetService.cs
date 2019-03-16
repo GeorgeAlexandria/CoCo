@@ -5,7 +5,7 @@ using CoCo.Analyser.CSharp;
 using CoCo.Analyser.VisualBasic;
 using CoCo.Settings;
 
-namespace CoCo.Services
+namespace CoCo.Editor
 {
     public static class PresetService
     {

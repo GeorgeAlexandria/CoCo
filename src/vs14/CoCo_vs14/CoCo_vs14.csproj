@@ -46,22 +46,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo\Services\AnalyzingService.cs" Link="Services\AnalyzingService.cs" />
+    <Compile Include="..\..\vs15\CoCo\Editor\ClassificationChangingService.cs" Link="Editor\ClassificationChangingService.cs" />
     <Compile Include="..\..\vs15\CoCo\Paths.cs" Link="Paths.cs" />
-    <Compile Include="..\..\vs15\CoCo\Providers\ResetValuesProvider.cs" Link="Providers\ResetValuesProvider.cs" />
-    <Compile Include="..\..\vs15\CoCo\Providers\ServicesProvider.cs" Link="Providers\ServicesProvider.cs" />
+    <Compile Include="..\..\vs15\CoCo\Editor\ResetValuesProvider.cs" Link="Editor\ResetValuesProvider.cs" />
+    <Compile Include="..\..\vs15\CoCo\ServicesProvider.cs" Link="ServicesProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\Providers\VisualBasicClassifierProvider.cs" Link="Providers\VisualBasicClassifierProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\VsPackage.cs" Link="VsPackage.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <Compile Include="..\..\vs15\CoCo\ClassificationManager.cs" Link="ClassificationManager.cs" />
+    <Compile Include="..\..\vs15\CoCo\Editor\ClassificationManager.cs" Link="Editor\ClassificationManager.cs" />
     <Compile Include="..\..\vs15\CoCo\Providers\CSharpClassifierProvider.cs" Link="Providers\CSharpClassifierProvider.cs" />
     <Compile Include="..\..\vs15\CoCo\Extensions.cs" Link="Extensions.cs" />
-    <Compile Include="..\..\vs15\CoCo\Services\FormattingService.cs" Link="Services\FormattingService.cs" />
-    <Compile Include="..\..\vs15\CoCo\Services\OptionService.cs" Link="Services\OptionService.cs" />
+    <Compile Include="..\..\vs15\CoCo\Editor\FormattingService.cs" Link="Editor\FormattingService.cs" />
+    <Compile Include="..\..\vs15\CoCo\OptionService.cs" Link="OptionService.cs" />
+    <Compile Include="Editor\PresetService.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="Migrations\MigrationService_2_0_0.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
-    <Compile Include="Services\PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
