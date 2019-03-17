@@ -9,11 +9,15 @@ using System.Windows.Documents;
 using CoCo.Analyser;
 using CoCo.Analyser.QuickInfo;
 using CoCo.Utils;
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
 namespace CoCo.QuickInfo
 {
+    using CoCoImageKind = CoCo.Analyser.QuickInfo.ImageKind;
+
     internal sealed class QuickInfoSource : IQuickInfoSource
     {
         private readonly ITextBuffer _textBuffer;
@@ -76,7 +80,15 @@ namespace CoCo.QuickInfo
                 if (item.Kind == SymbolDescriptionKind.Main)
                 {
                     var panel = new WrapPanel();
-                    Populate(panel, textBlock.Enumerate());
+                    if (TryGetImageElement(quickInfo.Image, out var image))
+                    {
+                        Populate(panel, image.Enumerate().Concat(textBlock.Enumerate()));
+                    }
+                    else
+                    {
+                        Populate(panel, textBlock.Enumerate());
+                    }
+
                     items.Insert(0, panel);
                 }
                 else
@@ -89,6 +101,99 @@ namespace CoCo.QuickInfo
             Populate(container, items);
             quickInfoContent.Add(container);
             applicableToSpan = trackingSpan;
+        }
+
+        private static bool TryGetImageElement(CoCoImageKind image, out UIElement imageElement)
+        {
+            var id =
+                image == CoCoImageKind.ClassPublic ? KnownImageIds.ClassPublic :
+                image == CoCoImageKind.ClassInternal ? KnownImageIds.ClassInternal :
+                image == CoCoImageKind.ClassProtected ? KnownImageIds.ClassProtected :
+                image == CoCoImageKind.ClassPrivate ? KnownImageIds.ClassPrivate :
+
+                image == CoCoImageKind.ConstPublic ? KnownImageIds.ConstantPublic :
+                image == CoCoImageKind.ConstInternal ? KnownImageIds.ConstantInternal :
+                image == CoCoImageKind.ConstProtected ? KnownImageIds.ConstantProtected :
+                image == CoCoImageKind.ConstPrivate ? KnownImageIds.ConstantPrivate :
+
+                image == CoCoImageKind.DelegatePublic ? KnownImageIds.DelegatePublic :
+                image == CoCoImageKind.DelegateInternal ? KnownImageIds.DelegateInternal :
+                image == CoCoImageKind.DelegateProtected ? KnownImageIds.DelegateProtected :
+                image == CoCoImageKind.DelegatePrivate ? KnownImageIds.DelegatePrivate :
+
+                image == CoCoImageKind.EnumPublic ? KnownImageIds.EnumerationPublic :
+                image == CoCoImageKind.EnumInternal ? KnownImageIds.EnumerationInternal :
+                image == CoCoImageKind.EnumProtected ? KnownImageIds.EnumerationProtected :
+                image == CoCoImageKind.EnumPrivate ? KnownImageIds.EnumerationPrivate :
+
+                image == CoCoImageKind.EnumMemberPublic ? KnownImageIds.EnumerationItemPublic :
+                image == CoCoImageKind.EnumMemberInternal ? KnownImageIds.EnumerationItemInternal :
+                image == CoCoImageKind.EnumMemberProtected ? KnownImageIds.EnumerationItemProtected :
+                image == CoCoImageKind.EnumMemberPrivate ? KnownImageIds.EnumerationItemPrivate :
+
+                image == CoCoImageKind.EventPublic ? KnownImageIds.EventPublic :
+                image == CoCoImageKind.EventInternal ? KnownImageIds.EventInternal :
+                image == CoCoImageKind.EventProtected ? KnownImageIds.EventProtected :
+                image == CoCoImageKind.EventPrivate ? KnownImageIds.EventPrivate :
+
+                image == CoCoImageKind.ExtensionMethodPublic ? KnownImageIds.ExtensionMethod :
+                image == CoCoImageKind.ExtensionMethodInternal ? KnownImageIds.ExtensionMethod :
+                image == CoCoImageKind.ExtensionMethodProtected ? KnownImageIds.ExtensionMethod :
+                image == CoCoImageKind.ExtensionMethodPrivate ? KnownImageIds.ExtensionMethod :
+
+                image == CoCoImageKind.FieldPublic ? KnownImageIds.FieldPublic :
+                image == CoCoImageKind.FieldInternal ? KnownImageIds.FieldInternal :
+                image == CoCoImageKind.FieldProtected ? KnownImageIds.FieldProtected :
+                image == CoCoImageKind.FieldPrivate ? KnownImageIds.FieldPrivate :
+
+                image == CoCoImageKind.InterfacePublic ? KnownImageIds.InterfacePublic :
+                image == CoCoImageKind.InterfaceInternal ? KnownImageIds.InterfaceInternal :
+                image == CoCoImageKind.InterfaceProtected ? KnownImageIds.InterfaceProtected :
+                image == CoCoImageKind.InterfacePrivate ? KnownImageIds.InterfacePrivate :
+
+                image == CoCoImageKind.MethodPublic ? KnownImageIds.MethodPublic :
+                image == CoCoImageKind.MethodInternal ? KnownImageIds.MethodInternal :
+                image == CoCoImageKind.MethodProtected ? KnownImageIds.MethodProtected :
+                image == CoCoImageKind.MethodPrivate ? KnownImageIds.MethodPrivate :
+
+                image == CoCoImageKind.ModulePublic ? KnownImageIds.ModulePublic :
+                image == CoCoImageKind.ModuleInternal ? KnownImageIds.ModuleInternal :
+                image == CoCoImageKind.ModuleProtected ? KnownImageIds.ModuleProtected :
+                image == CoCoImageKind.ModulePrivate ? KnownImageIds.ModulePrivate :
+
+                image == CoCoImageKind.PropertyPublic ? KnownImageIds.PropertyPublic :
+                image == CoCoImageKind.PropertyInternal ? KnownImageIds.PropertyPublic :
+                image == CoCoImageKind.PropertyProtected ? KnownImageIds.PropertyProtected :
+                image == CoCoImageKind.PropertyPrivate ? KnownImageIds.PropertyPrivate :
+
+                image == CoCoImageKind.StructPublic ? KnownImageIds.ValueTypePublic :
+                image == CoCoImageKind.StructInternal ? KnownImageIds.ValueTypeInternal :
+                image == CoCoImageKind.StructProtected ? KnownImageIds.ValueTypeProtected :
+                image == CoCoImageKind.StructPrivate ? KnownImageIds.ValueTypePrivate :
+
+                image == CoCoImageKind.Label ? KnownImageIds.Label :
+                image == CoCoImageKind.Local ? KnownImageIds.LocalVariable :
+                image == CoCoImageKind.Namespace ? KnownImageIds.Namespace :
+                image == CoCoImageKind.Parameter ? KnownImageIds.Parameter :
+                image == CoCoImageKind.TypeParameter ? KnownImageIds.Type :
+                image == CoCoImageKind.RangeVariable ? KnownImageIds.FieldPublic :
+                image == CoCoImageKind.Error ? KnownImageIds.StatusError :
+                -27;
+
+            if (id == -27)
+            {
+                imageElement = default;
+                return false;
+            }
+
+            imageElement = new CrispImage
+            {
+                Moniker = new ImageMoniker { Guid = KnownImageIds.ImageCatalogGuid, Id = id },
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top,
+                Margin = new Thickness(0, 0, 4, 4),
+            };
+            return true;
         }
 
         private void Populate<T>(Panel panel, T uiElements) where T : IEnumerable<UIElement>
