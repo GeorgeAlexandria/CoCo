@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Windows;
+using System.Windows.Automation;
+using System.Windows.Controls;
+using System.Windows.Documents;
 using CoCo.Analyser;
 using CoCo.Analyser.QuickInfo;
 using CoCo.Utils;
@@ -64,8 +69,88 @@ namespace CoCo.QuickInfo
 
             var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(quickInfo.GetSpan(), SpanTrackingMode.EdgeInclusive);
 
-            // TODO: cast quick info item to UIElements
+            var items = new List<UIElement>();
+            foreach (var item in quickInfo.Descriptions)
+            {
+                var textBlock = ToTextBlock(item);
+                if (item.Kind == SymbolDescriptionKind.Main)
+                {
+                    var panel = new WrapPanel();
+                    Populate(panel, textBlock.Enumerate());
+                    items.Insert(0, panel);
+                }
+                else
+                {
+                    items.Add(textBlock);
+                }
+            }
+
+            var container = new StackPanel();
+            Populate(container, items);
+            quickInfoContent.Add(container);
             applicableToSpan = trackingSpan;
+        }
+
+        private void Populate<T>(Panel panel, T uiElements) where T : IEnumerable<UIElement>
+        {
+            panel.HorizontalAlignment = HorizontalAlignment.Left;
+            panel.VerticalAlignment = VerticalAlignment.Top;
+
+            var builder = StringBuilderCache.Acquire();
+            foreach (var uiElement in uiElements)
+            {
+                panel.Children.Add(uiElement);
+                var text = uiElement.GetValue(AutomationProperties.NameProperty)?.ToString();
+                if (!string.IsNullOrEmpty(text))
+                {
+                    builder.Append(text).Append("\r\n");
+                }
+            }
+            panel.SetValue(AutomationProperties.NameProperty, StringBuilderCache.Release(builder));
+        }
+
+        private TextBlock ToTextBlock(SymbolDescription symbolDescription)
+        {
+            var formatMapService = ServicesProvider.Instance.FormatMapService;
+            var tooltipFormatMap = formatMapService.GetClassificationFormatMap("tooltip");
+            var textFormatMap = formatMapService.GetClassificationFormatMap("text");
+            var defaultRunProperties = tooltipFormatMap.DefaultTextProperties;
+            var registryService = ServicesProvider.Instance.RegistryService;
+
+            var textBlock = new TextBlock();
+            var builder = StringBuilderCache.Acquire();
+            foreach (var classifiedText in symbolDescription.TaggedParts)
+            {
+                var textRunProperties = defaultRunProperties;
+                var classificationType = registryService.GetClassificationType(classifiedText.Tag);
+                if (!(classificationType is null))
+                {
+                    // TODO: compare classification with known CoCo classifications
+                    textRunProperties = classificationType.Classification.StartsWith("CoCo")
+                        ? textFormatMap.GetExplicitTextProperties(classificationType)
+                        : tooltipFormatMap.GetTextProperties(classificationType);
+                }
+
+                textBlock.Inlines.Add(new Run
+                {
+                    Background = textRunProperties.BackgroundBrush,
+                    BaselineAlignment = textRunProperties.BaselineAlignment,
+                    Foreground = textRunProperties.ForegroundBrush,
+                    Text = classifiedText.Text,
+                    TextDecorations = textRunProperties.TextDecorations,
+                    TextEffects = textRunProperties.TextEffects,
+                    FontSize = defaultRunProperties.FontRenderingEmSize,
+                    FontFamily = defaultRunProperties.Typeface.FontFamily,
+                    FontStretch = defaultRunProperties.Typeface.Stretch,
+                    FontStyle = defaultRunProperties.Typeface.Style,
+                    FontWeight = defaultRunProperties.Typeface.Weight
+                });
+                builder.Append(classifiedText.Text);
+            }
+
+            textBlock.SetValue(AutomationProperties.NameProperty, StringBuilderCache.Release(builder));
+            textBlock.TextWrapping = TextWrapping.Wrap;
+            return textBlock;
         }
 
         private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)

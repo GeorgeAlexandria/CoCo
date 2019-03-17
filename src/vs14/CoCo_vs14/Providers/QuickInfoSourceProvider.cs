@@ -12,6 +12,7 @@ namespace CoCo.Providers
 {
     [Export(typeof(IQuickInfoSourceProvider))]
     [Name("CoCo quickInfo provider")]
+    [Order(After = "Default Quick Info Presenter")]
     [ContentType("any")]
     internal sealed class QuickInfoSourceProvider : IQuickInfoSourceProvider
     {
