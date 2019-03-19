@@ -166,58 +166,66 @@ namespace CoCo.Analyser.CSharp
 
         public IClassificationType GetClassification(ISymbol symbol)
         {
-            switch (symbol.Kind)
+            IClassificationType GetClassification()
             {
-                case SymbolKind.Label:
-                    return _labelType;
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Label:
+                        return _labelType;
 
-                case SymbolKind.RangeVariable:
-                    return _rangeVariableType;
+                    case SymbolKind.RangeVariable:
+                        return _rangeVariableType;
 
-                case SymbolKind.Field:
-                    var fieldSymbol = symbol as IFieldSymbol;
-                    return
-                        fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
-                        fieldSymbol.IsConst ? _constantFieldType :
-                        _fieldType;
+                    case SymbolKind.Field:
+                        var fieldSymbol = symbol as IFieldSymbol;
+                        return
+                            fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
+                            fieldSymbol.IsConst ? _constantFieldType :
+                            _fieldType;
 
-                case SymbolKind.Property:
-                    return _propertyType;
+                    case SymbolKind.Property:
+                        return _propertyType;
 
-                case SymbolKind.Event:
-                    return _eventType;
+                    case SymbolKind.Event:
+                        return _eventType;
 
-                case SymbolKind.Local:
-                    return _localVariableType;
+                    case SymbolKind.Local:
+                        return _localVariableType;
 
-                case SymbolKind.Namespace:
-                    return _namespaceType;
+                    case SymbolKind.Namespace:
+                        return _namespaceType;
 
-                case SymbolKind.Parameter:
-                    return _parameterType;
-                    break;
+                    case SymbolKind.Parameter:
+                        return _parameterType;
+                        break;
 
-                case SymbolKind.Method:
-                    var methodSymbol = symbol as IMethodSymbol;
-                    return
-                        methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
-                        methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
-                        methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
-                        methodSymbol.IsExtensionMethod ? _extensionMethodType :
-                        methodSymbol.IsStatic ? _staticMethodType :
-                        _methodType;
+                    case SymbolKind.Method:
+                        var methodSymbol = symbol as IMethodSymbol;
+                        return
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
+                            methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsStatic ? _staticMethodType :
+                            _methodType;
 
-                case SymbolKind.TypeParameter:
-                    return _typeParameterType;
+                    case SymbolKind.TypeParameter:
+                        return _typeParameterType;
 
-                case SymbolKind.NamedType:
-                    var typeSymbol = symbol as INamedTypeSymbol;
-                    var type = GetTypeClassification(typeSymbol);
-                    if (!(type is null)) return type;
-                    break;
+                    case SymbolKind.NamedType:
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        var type = GetTypeClassification(typeSymbol);
+                        if (!(type is null)) return type;
+                        break;
+                }
+
+                return null;
             }
 
-            return null;
+            var classification = GetClassification();
+            return classification is null || options[classification].IsDisabled
+                ? null
+                : classification;
         }
 
         private IClassificationType GetTypeClassification(INamedTypeSymbol typeSymbol) =>
