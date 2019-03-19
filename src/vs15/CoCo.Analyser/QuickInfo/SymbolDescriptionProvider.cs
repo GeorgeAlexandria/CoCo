@@ -118,6 +118,10 @@ namespace CoCo.Analyser.QuickInfo
             // TODO: miss something?
             switch (symbol)
             {
+                case IAliasSymbol alias:
+                    await AppendDescriptionPartsAsync(alias.Target);
+                    break;
+
                 case IDynamicTypeSymbol _:
                     AppendDynamicTypeParts();
                     break;

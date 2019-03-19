@@ -27,6 +27,8 @@ namespace CoCo.Analyser.QuickInfo
 
             public override bool VisitArrayType(IArrayTypeSymbol symbol) => Visit(symbol.ElementType);
 
+            public override bool VisitAlias(IAliasSymbol symbol) => Visit(symbol.Target);
+
             public override bool DefaultVisit(ISymbol symbol) => true;
 
             public override bool VisitMethod(IMethodSymbol symbol)
