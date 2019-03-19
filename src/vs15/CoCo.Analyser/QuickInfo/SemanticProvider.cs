@@ -33,11 +33,11 @@ namespace CoCo.Analyser.QuickInfo
             {
                 foreach (var item in symbol.Parameters)
                 {
-                    if (!Visit(item)) return true;
+                    if (Visit(item)) return true;
                 }
                 foreach (var item in symbol.TypeParameters)
                 {
-                    if (!Visit(item)) return true;
+                    if (Visit(item)) return true;
                 }
                 return false;
             }

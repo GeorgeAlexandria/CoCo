@@ -29,7 +29,7 @@ namespace CoCo.Analyser.QuickInfo
             _language = language;
         }
 
-        public static async Task<QuickInfoItem> GetQuickInfo(
+        public static async Task<QuickInfoItem> GetQuickInfoAsync(
             ITextBuffer textBuffer, SnapshotPoint triggerPoint, CancellationToken cancellationToken)
         {
             var document = triggerPoint.Snapshot.GetOpenDocumentInCurrentContextWithChanges();

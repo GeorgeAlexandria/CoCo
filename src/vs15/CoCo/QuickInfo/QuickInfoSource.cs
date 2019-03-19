@@ -31,7 +31,9 @@ namespace CoCo.QuickInfo
             _textBuffer = textBuffer;
             _documentFactoryService = documentFactoryService;
             _language = _textBuffer.GetLanguage();
-            _state = quickInfoOptions.TryGetValue(_language, out var state) ? state : QuickInfoState.Disable;
+            _state = quickInfoOptions.TryGetValue(_language, out var state)
+                ? state
+                : QuickInfoChangingService.Instance.GetDefaultValue();
 
             _documentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
             QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
@@ -49,7 +51,7 @@ namespace CoCo.QuickInfo
             var triggerPoint = session.GetTriggerPoint(_textBuffer.CurrentSnapshot);
             if (!triggerPoint.HasValue) return null;
 
-            var quickInfo = await QuickInfoService.GetQuickInfo(_textBuffer, triggerPoint.Value, cancellationToken);
+            var quickInfo = await QuickInfoService.GetQuickInfoAsync(_textBuffer, triggerPoint.Value, cancellationToken);
             if (quickInfo is null || quickInfo.Descriptions.Length == 0) return null;
 
             var trackingSpan = triggerPoint.Value.Snapshot.CreateTrackingSpan(quickInfo.GetSpan(), SpanTrackingMode.EdgeInclusive);

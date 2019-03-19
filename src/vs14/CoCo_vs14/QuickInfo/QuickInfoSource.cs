@@ -34,7 +34,9 @@ namespace CoCo.QuickInfo
             _textBuffer = textBuffer;
             _documentFactoryService = documentFactoryService;
             _language = _textBuffer.GetLanguage();
-            _state = quickInfoOptions.TryGetValue(_language, out var state) ? state : QuickInfoState.Disable;
+            _state = quickInfoOptions.TryGetValue(_language, out var state)
+                ? state
+                : QuickInfoChangingService.Instance.GetDefaultValue();
 
             _documentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
             QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
@@ -64,7 +66,7 @@ namespace CoCo.QuickInfo
                 return;
             }
 
-            var quickInfo = QuickInfoService.GetQuickInfo(_textBuffer, triggerPoint.Value, CancellationToken.None).Result;
+            var quickInfo = QuickInfoService.GetQuickInfoAsync(_textBuffer, triggerPoint.Value, CancellationToken.None).Result;
             if (quickInfo is null || quickInfo.Descriptions.Length == 0)
             {
                 applicableToSpan = default;

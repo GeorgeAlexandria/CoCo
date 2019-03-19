@@ -97,7 +97,7 @@ namespace CoCo.Analyser.QuickInfo
                 if (item.AttributeClass.MetadataName.Equals("ObsoleteAttribute"))
                 {
                     AppenDeprecatedParts();
-                    break;
+                    return;
                 }
             }
         }
@@ -205,7 +205,7 @@ namespace CoCo.Analyser.QuickInfo
         {
             int GetOverloadCount()
             {
-                if (symbols.IsDefaultOrEmpty) { return 0; }
+                if (symbols.IsDefaultOrEmpty) return 0;
 
                 var main = symbols[0].OriginalDefinition;
                 var overloadCount = 0;
@@ -392,9 +392,20 @@ namespace CoCo.Analyser.QuickInfo
                 typeArguments.AddRange(item.TypeArguments);
             }
 
-            var parts = new List<SymbolDisplayPart>();
+            List<SymbolDisplayPart> parts = null;
             for (int i = 0; i < typeParameters.Count; ++i)
             {
+                if (i >= typeArguments.Count) continue;
+
+                var typeParameter = typeParameters[i];
+                var typeArgument = typeArguments[i];
+                if (typeParameter.Equals(typeArgument) || typeParameter.Name.Equals(typeArgument.Name)) continue;
+
+                if (parts is null)
+                {
+                    parts = new List<SymbolDisplayPart>();
+                }
+
                 parts.AddRange(ToMinimalDisplayParts(typeParameters[i]));
                 parts.Add(CreateSpaces());
                 parts.Add(CreateText("is"));
@@ -405,7 +416,11 @@ namespace CoCo.Analyser.QuickInfo
                     parts.Add(CreatePart(SymbolDisplayPartKind.LineBreak, "\r\n"));
                 }
             }
-            AppendParts(SymbolDescriptionKind.TypeParameter, parts);
+
+            if (!(parts is null))
+            {
+                AppendParts(SymbolDescriptionKind.TypeParameter, parts);
+            }
         }
 
         protected void AppendSymbolParts(ISymbol symbol) =>

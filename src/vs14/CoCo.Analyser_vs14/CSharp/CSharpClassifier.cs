@@ -196,7 +196,7 @@ namespace CoCo.Analyser.CSharp
 
                 case SymbolKind.Method:
                     var methodSymbol = symbol as IMethodSymbol;
-                    return  
+                    return
                         methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
                         methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
                         methodSymbol.IsExtensionMethod ? _extensionMethodType :
@@ -208,10 +208,7 @@ namespace CoCo.Analyser.CSharp
 
                 case SymbolKind.NamedType:
                     var type = GetTypeClassification(symbol as INamedTypeSymbol);
-                    if (!(type is null))
-                    {
-                        return type;
-                    }
+                    if (!(type is null)) return type;
                     break;
             }
             return null;

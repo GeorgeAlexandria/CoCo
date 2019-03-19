@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using CoCo.Utils;
 using Microsoft.CodeAnalysis;
 
 namespace CoCo.Analyser.QuickInfo
@@ -291,7 +292,7 @@ namespace CoCo.Analyser.QuickInfo
             /// </summary>
             private string Normalize(string text)
             {
-                var builder = new StringBuilder();
+                var builder =  StringBuilderCache.Acquire();
                 var currentIsWhiteSpace = false;
                 foreach (var item in text)
                 {
@@ -319,7 +320,7 @@ namespace CoCo.Analyser.QuickInfo
                     builder.Append(' ');
                 }
 
-                return builder.ToString();
+                return StringBuilderCache.Release(builder);
             }
 
             /// <summary>
