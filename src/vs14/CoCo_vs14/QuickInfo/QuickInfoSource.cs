@@ -82,14 +82,11 @@ namespace CoCo.QuickInfo
                 if (item.Kind == SymbolDescriptionKind.Main)
                 {
                     var panel = new WrapPanel();
-                    if (TryGetImageElement(quickInfo.Image, out var image))
-                    {
-                        Populate(panel, image.Enumerate().Concat(textBlock.Enumerate()));
-                    }
-                    else
-                    {
-                        Populate(panel, textBlock.Enumerate());
-                    }
+
+                    var uiElements = TryGetImageElement(quickInfo.Image, out var image)
+                        ? image.Enumerate().Concat(textBlock.Enumerate())
+                        : textBlock.Enumerate();
+                    Populate(panel, uiElements);
 
                     items.Insert(0, panel);
                 }

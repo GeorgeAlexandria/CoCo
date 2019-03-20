@@ -170,7 +170,7 @@ namespace CoCo
 
                 if (!languageExists)
                 {
-                    quickInfo.State = 0;
+                    quickInfo.State = (int)QuickInfoChangingService.Instance.GetDefaultValue();
                     option.Languages.Add(quickInfo);
                 }
             }
