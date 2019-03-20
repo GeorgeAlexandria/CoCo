@@ -41,7 +41,7 @@ namespace CoCo.Analyser.CSharp
 
         internal CSharpClassifier(
             IReadOnlyDictionary<string, ClassificationInfo> classifications,
-            IAnalyzingService analyzingService,
+            IClassificationChangingService analyzingService,
             ITextDocumentFactoryService textDocumentFactoryService,
             ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
         {
@@ -162,6 +162,70 @@ namespace CoCo.Analyser.CSharp
             }
 
             return spans;
+        }
+
+        public IClassificationType GetClassification(ISymbol symbol)
+        {
+            IClassificationType GetClassification()
+            {
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Label:
+                        return _labelType;
+
+                    case SymbolKind.RangeVariable:
+                        return _rangeVariableType;
+
+                    case SymbolKind.Field:
+                        var fieldSymbol = symbol as IFieldSymbol;
+                        return
+                            fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
+                            fieldSymbol.IsConst ? _constantFieldType :
+                            _fieldType;
+
+                    case SymbolKind.Property:
+                        return _propertyType;
+
+                    case SymbolKind.Event:
+                        return _eventType;
+
+                    case SymbolKind.Local:
+                        return _localVariableType;
+
+                    case SymbolKind.Namespace:
+                        return _namespaceType;
+
+                    case SymbolKind.Parameter:
+                        return _parameterType;
+                        break;
+
+                    case SymbolKind.Method:
+                        var methodSymbol = symbol as IMethodSymbol;
+                        return
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
+                            methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsStatic ? _staticMethodType :
+                            _methodType;
+
+                    case SymbolKind.TypeParameter:
+                        return _typeParameterType;
+
+                    case SymbolKind.NamedType:
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        var type = GetTypeClassification(typeSymbol);
+                        if (!(type is null)) return type;
+                        break;
+                }
+
+                return null;
+            }
+
+            var classification = GetClassification();
+            return classification is null || options[classification].IsDisabled
+                ? null
+                : classification;
         }
 
         private IClassificationType GetTypeClassification(INamedTypeSymbol typeSymbol) =>

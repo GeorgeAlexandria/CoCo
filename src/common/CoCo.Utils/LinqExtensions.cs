@@ -1,9 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace System.Linq
 {
     public static class LinqExtensions
     {
+        private struct SingleItemEnumerable<T> : IEnumerable<T>, IEnumerator<T>
+        {
+            private readonly T _item;
+            private bool _itemWasEnumerated;
+
+            public SingleItemEnumerable(T item)
+            {
+                _item = item;
+                _itemWasEnumerated = false;
+            }
+
+            public T Current => _item;
+
+            object IEnumerator.Current => Current;
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext() => !_itemWasEnumerated
+                ? _itemWasEnumerated = true
+                : false;
+
+            public void Reset() => _itemWasEnumerated = false;
+
+            public IEnumerator<T> GetEnumerator() => this;
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        }
+
+        /// <summary>
+        /// Enumerates input <paramref name="item"/>
+        /// </summary>
+        public static IEnumerable<T> Enumerate<T>(this T item) => new SingleItemEnumerable<T>(item);
+
         /// <summary>
         ///  Creates a <see cref="HashSet{T}"/> from an <see cref="IEnumerable{T}"/>
         /// </summary>

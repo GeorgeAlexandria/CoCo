@@ -2,7 +2,8 @@
 using System.ComponentModel.Composition;
 using CoCo.Analyser;
 using CoCo.Analyser.VisualBasic;
-using CoCo.Services;
+using CoCo.Editor;
+using CoCo.Settings;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -11,7 +12,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo.Providers
 {
     /// <summary>
-    /// Classifier provider which adds <see cref="VisualBasicClassifierProvider"/> to the set of classifiers.
+    /// Classifier provider which adds <see cref="VisualBasicClassifier"/> to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("Basic")]
@@ -20,7 +21,7 @@ namespace CoCo.Providers
         /// <summary>
         /// Determines that settings was set to avoid a many sets settings from the classifier
         /// </summary>
-        private static bool _wasSettingsSet;
+        private static bool _wereSettingsSet;
 
         private readonly Dictionary<string, ClassificationInfo> _classificationsInfo;
 
@@ -31,7 +32,7 @@ namespace CoCo.Providers
             {
                 _classificationsInfo[item] = default;
             }
-            AnalyzingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
+            ClassificationChangingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
         }
 
 #pragma warning disable 649
@@ -47,17 +48,17 @@ namespace CoCo.Providers
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             MigrationService.MigrateSettingsTo_2_0_0();
-            if (!_wasSettingsSet)
+            if (!_wereSettingsSet)
             {
-                var settings = Settings.SettingsManager.LoadSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
+                var settings = SettingsManager.LoadEditorSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
                 var option = OptionService.ToOption(settings);
                 FormattingService.SetFormattingOptions(option);
-                AnalyzingService.SetAnalyzingOptions(option);
-                _wasSettingsSet = true;
+                ClassificationChangingService.SetAnalyzingOptions(option);
+                _wereSettingsSet = true;
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new VisualBasicClassifier(_classificationsInfo, AnalyzingService.Instance, _textDocumentFactoryService, textBuffer));
+                new VisualBasicClassifier(_classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
         }
 
         private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)

@@ -143,11 +143,11 @@ namespace CoCo
                 }
             }
 
-            var settings = new Settings.Settings
+            var settings = new EditorSettings
             {
-                Languages = new List<LanguageSettings>
+                Languages = new List<EditorLanguageSettings>
                 {
-                    new LanguageSettings
+                    new EditorLanguageSettings
                     {
                         Name = Languages.CSharp,
                         CurrentClassifications = result.Values.ToList(),

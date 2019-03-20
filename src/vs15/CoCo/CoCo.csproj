@@ -49,19 +49,27 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Guids.cs" />
-    <Compile Include="Services\AnalyzingService.cs" />
+    <Compile Include="QuickInfo\MouseTrackToolTipPresenter.cs" />
+    <Compile Include="QuickInfo\QuickInfoChangedEventArgs.cs" />
+    <Compile Include="QuickInfo\QuickInfoChangingService.cs" />
+    <Compile Include="QuickInfo\QuickInfoSource.cs" />
+    <Compile Include="Editor\ClassificationChangingService.cs" />
     <Compile Include="Migrations\MigrationService_2_3_0.cs" />
-    <Compile Include="ClassificationManager.cs" />
+    <Compile Include="Editor\ClassificationManager.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Providers\CSharpClassifierProvider.cs" />
-    <Compile Include="Services\FormattingService.cs" />
-    <Compile Include="Services\OptionService.cs" />
+    <Compile Include="QuickInfo\QuickInfoWrapper.cs" />
+    <Compile Include="Editor\FormattingService.cs" />
+    <Compile Include="Providers\QuickInfoProvider.cs" />
+    <Compile Include="OptionService.cs" />
     <Compile Include="Paths.cs" />
-    <Compile Include="Services\PresetService.cs" />
+    <Compile Include="Editor\PresetService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ResetValuesProvider.cs" />
-    <Compile Include="Providers\ServicesProvider.cs" />
+    <Compile Include="Editor\ResetValuesProvider.cs" />
+    <Compile Include="ServicesProvider.cs" />
     <Compile Include="Providers\VisualBasicClassifierProvider.cs" />
+    <Compile Include="QuickInfo\ToolTipPresenter.cs" />
+    <Compile Include="Providers\ToolTipPresenterFactory.cs" />
     <Compile Include="VsPackage.cs" />
     <Compile Include="Migrations\MigrationService_2_0_0.cs" />
   </ItemGroup>
@@ -88,12 +96,21 @@
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.CoreUtility.15.6.27740\lib\net46\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ImageCatalog, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.ImageCatalog.15.0.26606\lib\net45\Microsoft.VisualStudio.ImageCatalog.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.Imaging.15.4.27004\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.14.3.26930\lib\net20\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Language.15.6.27740\lib\net46\Microsoft.VisualStudio.Language.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.VisualStudio.Language.Intellisense.15.6.27740\lib\net46\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.Language.StandardClassification.15.6.27740\lib\net46\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
@@ -158,9 +175,11 @@
       <HintPath>..\..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.3.1\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>

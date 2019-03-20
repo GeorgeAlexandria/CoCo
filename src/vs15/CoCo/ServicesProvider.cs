@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Providers
+namespace CoCo
 {
     public sealed class ServicesProvider
     {

@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace CoCo.Settings
+﻿namespace CoCo.Settings
 {
     public struct Settings
     {
-        public ICollection<LanguageSettings> Languages { get; set; }
+        public EditorSettings Editor { get; set; }
+
+        public string EditorPath { get; set; }
+
+        public QuickInfoSettings QuickInfo { get; set; }
+
+        public string QuickInfoPath { get; set; }
     }
 }

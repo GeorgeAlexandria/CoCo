@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
-using CoCo.Providers;
 using CoCo.UI;
 using CoCo.UI.Data;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
-namespace CoCo.Services
+namespace CoCo.Editor
 {
     public static class FormattingService
     {
@@ -44,7 +43,7 @@ namespace CoCo.Services
             return GetDefaultFormatting(classificationFormatMap, classification);
         }
 
-        public static void SetFormattingOptions(Option option)
+        public static void SetFormattingOptions(EditorOption option)
         {
             var classificationTypes = ClassificationManager.GetClassifications();
             var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");

@@ -1,8 +1,7 @@
 ﻿using System.Windows.Media;
-using CoCo.Services;
 using CoCo.UI.ViewModels;
 
-namespace CoCo.Providers
+namespace CoCo.Editor
 {
     internal sealed class ResetValuesProvider : IResetValuesProvider
     {

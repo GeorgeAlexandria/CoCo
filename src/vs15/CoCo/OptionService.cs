@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
+using CoCo.Editor;
+using CoCo.QuickInfo;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
+using QucikInfoData = CoCo.UI.Data.QuickInfo;
 
-namespace CoCo.Services
+namespace CoCo
 {
     public static class OptionService
     {
         /// <summary>
-        /// Converts <paramref name="option"/> to <see cref="Settings.Settings"/>
+        /// Converts <paramref name="option"/> to <see cref="EditorSettings"/>
         /// </summary>
-        public static Settings.Settings ToSettings(Option option)
+        public static EditorSettings ToSettings(EditorOption option)
         {
             List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {
@@ -27,7 +30,7 @@ namespace CoCo.Services
                 return classificationSetings;
             }
 
-            var languagesSettings = new List<LanguageSettings>(option.Languages.Count);
+            var languagesSettings = new List<EditorLanguageSettings>(option.Languages.Count);
             foreach (var language in option.Languages)
             {
                 var classificationsSettings = ToSettings(language.Classifications);
@@ -49,24 +52,41 @@ namespace CoCo.Services
                     });
                 }
 
-                languagesSettings.Add(new LanguageSettings
+                languagesSettings.Add(new EditorLanguageSettings
                 {
                     Name = language.Name,
                     CurrentClassifications = classificationsSettings,
                     Presets = presetsSettings
                 });
             }
-            return new Settings.Settings { Languages = languagesSettings };
+            return new EditorSettings { Languages = languagesSettings };
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="Option"/> using a default values
+        /// Converts <paramref name="option"/> to <see cref="QuickInfoSettings"/>
         /// </summary>
-        public static Option ToOption(Settings.Settings settings)
+        public static QuickInfoSettings ToSettings(QuickInfoOption option)
+        {
+            var languageSettings = new List<QuickInfoLanguageSettings>(option.Languages.Count);
+            foreach (var item in option.Languages)
+            {
+                languageSettings.Add(new QuickInfoLanguageSettings
+                {
+                    Name = item.Language,
+                    State = item.State,
+                });
+            }
+            return new QuickInfoSettings { Languages = languageSettings };
+        }
+
+        /// <summary>
+        /// Converts <paramref name="settings"/> to <see cref="EditorOption"/> using a default values
+        /// </summary>
+        public static EditorOption ToOption(EditorSettings settings)
         {
             var defaultPresets = PresetService.GetDefaultPresets();
 
-            var option = new Option();
+            var option = new EditorOption();
             foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
                 var language = new Language(languageName);
@@ -116,6 +136,43 @@ namespace CoCo.Services
                     FillClassifications(languageClassifications, Array.Empty<ClassificationSettings>(), language.Classifications);
                 }
                 option.Languages.Add(language);
+            }
+
+            return option;
+        }
+
+        /// <summary>
+        /// Converts <paramref name="settings"/> to <see cref="QuickInfoOption"/> using a default values
+        /// </summary>
+        public static QuickInfoOption ToOption(QuickInfoSettings settings)
+        {
+            var option = new QuickInfoOption();
+
+            // TODO: currently works for csharp
+            foreach (var language in new[] { Languages.CSharp/*, Languages.VisualBasic */})
+            {
+                var quickInfo = new QucikInfoData(language);
+
+                var languageExists = false;
+                foreach (var item in settings.Languages)
+                {
+                    if (item.Name.Equals(language))
+                    {
+                        languageExists = true;
+
+                        quickInfo.State = item.State.HasValue && QuickInfoStateService.SupportedState.ContainsKey(item.State.Value)
+                            ? item.State.Value
+                            : (int)QuickInfoChangingService.Instance.GetDefaultValue();
+
+                        option.Languages.Add(quickInfo);
+                    }
+                }
+
+                if (!languageExists)
+                {
+                    quickInfo.State = (int)QuickInfoChangingService.Instance.GetDefaultValue();
+                    option.Languages.Add(quickInfo);
+                }
             }
 
             return option;

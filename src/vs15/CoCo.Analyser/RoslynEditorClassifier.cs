@@ -15,7 +15,7 @@ namespace CoCo.Analyser
     {
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
-        private readonly IAnalyzingService _analyzingService;
+        private readonly IClassificationChangingService _analyzingService;
 
         private SemanticModel _semanticModel;
 
@@ -29,7 +29,7 @@ namespace CoCo.Analyser
         }
 
         protected RoslynEditorClassifier(
-            IAnalyzingService analyzingService, ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
+            IClassificationChangingService analyzingService, ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
         {
             _textBuffer = buffer;
             _textDocumentFactoryService = textDocumentFactoryService;

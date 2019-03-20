@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.Text.Formatting;
 
 namespace CoCo
 {
+    using DrawingColor = System.Drawing.Color;
+    using MediaColor = System.Windows.Media.Color;
+
     public static class Extensions
     {
         /// <summary>
@@ -79,5 +82,10 @@ namespace CoCo
         /// or <see cref="Colors.Black"/>
         /// </summary>
         public static Color GetColor(this Brush brush) => brush is SolidColorBrush colorBrush ? colorBrush.Color : Colors.Black;
+
+        /// <summary>
+        /// Converts <see cref="DrawingColor"/> to <see cref="MediaColor"/>
+        /// </summary>
+        public static MediaColor DrawingToMedia(this DrawingColor color) => MediaColor.FromArgb(color.A, color.R, color.G, color.B);
     }
 }

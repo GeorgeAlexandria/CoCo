@@ -3,19 +3,19 @@ using CoCo.Analyser;
 using CoCo.UI.Data;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Services
+namespace CoCo.Editor
 {
-    public sealed class AnalyzingService : IAnalyzingService
+    public sealed class ClassificationChangingService : IClassificationChangingService
     {
-        public static readonly AnalyzingService Instance = new AnalyzingService();
+        public static readonly ClassificationChangingService Instance = new ClassificationChangingService();
 
-        private AnalyzingService()
+        private ClassificationChangingService()
         {
         }
 
         public event ClassificationChangedEventHandler ClassificationChanged;
 
-        public static void SetAnalyzingOptions(Option option)
+        public static void SetAnalyzingOptions(EditorOption option)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
             foreach (var languageClassifications in ClassificationManager.GetClassifications().Values)

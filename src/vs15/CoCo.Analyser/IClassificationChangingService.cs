@@ -1,6 +1,6 @@
 ﻿namespace CoCo.Analyser
 {
-    internal interface IAnalyzingService
+    internal interface IClassificationChangingService
     {
         event ClassificationChangedEventHandler ClassificationChanged;
     }
