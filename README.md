@@ -1,45 +1,13 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg?style=flat-square)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS14-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20VS15-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg?style=flat-square)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs14-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs15-v2.5.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
-A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (VS14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (VS15) extension that is analyzing C#, VB\.Net source codes to colorize 
-appropriate syntax nodes to different colors and decorate them to different styles. It makes easily recognizabling the supported elements. 
+A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (vs14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (vs15) extension that is analyzing source code to colorize and decorate appropriate syntax nodes to different colors and different styles. It makes easily to read and understand sources, to find sought entities and to navigate by code. 
 
-## Supported items 
+## Features
 
-Extension supports the following language elements:
+Currently extension supports analyzing C#, VB\.Net source codes. It's colorize and decorate a many semantic and language elements such as **variables**, **methods**, **types**, **members**, **namespaces** and many others. For more detailed list of supported items, please see [Classifications.md](https://github.com/GeorgeAlexandria/CoCo/blob/dev/Classifications.md).
 
-#### CSharp
-
-* Namespaces and aliases for them
-* Local and range variables
-* Parameters
-* Instance methods 
-* Constructors and destructors
-* Static and extension methods
-* Local functions (supports only for VS15)
-* Events
-* Properties
-* Instance, enum and constant fields
-* Labels
-* Class, structure and interface types
-* Enum, delegate and type parameter types
-
-#### VisualBasic
-
-* Namespaces and aliases for them
-* Local and range variables
-* Static local and function variables
-* Parameters
-* Function and sub methods 
-* Shared and extension methods
-* Events
-* Properties and "WithEvents" fields
-* Instance, enum and constant fields
-* Class, structure and module types
-* Enum and delegate types
-* Interface and type parameter types
-
-supports the following decorations:
+CoCo may apply the following decorations to analyzed elements:
 * Changing foreground and background
 * Changing font family
 * Changing font styles and stretches
@@ -47,7 +15,7 @@ supports the following decorations:
 * Changing font rendering size
 * Using overline, underline, strikethrough and baseline font
 
-and supports the following analyze options:
+and also supports the following analyze options:
 * Disable classification a current item
 * Disable classification a current item inside a xml doc comments
 
@@ -62,7 +30,7 @@ The following screenshots show a different applying decorations and colors to th
 ![](https://user-images.githubusercontent.com/13402478/48673969-722cfb00-eb58-11e8-9896-6caa1188ee1d.png)
 
 
-## Usage 
+## How to use 
 Use **CoCo/Classifications** option page in the Visual Studio options to change decorations of items or their analyze options:
 
 ![](https://user-images.githubusercontent.com/13402478/48673975-83760780-eb58-11e8-9cce-b0a7eb8f05a7.png)
@@ -78,11 +46,11 @@ You need to click **OK** button to confirm your changes on the **CoCo/Classifica
 to confirm applying, creating or deleting preset on the **CoCo/Presets**. If you will not click the **OK** button 
 extension will use the previous (or default) settings for both of pages. Settings are stored under **%localappdata%\CoCo\CoCo.config**.
 
-### After installation
-Extension doesn't apply the one of ***default*** presets after installation. It only apply settings from config file if it exists on your system, 
-else you need to set colors and decorations manually or apply existing presets as pointed out above if you want to see how the extension works.
+### Installation
+Extension doesn't apply the one of **default presets** after the **first installation** on a system. Therefore, you need to set colors and decorations manually or **apply existing presets** as pointed out above. After **updating extension** to a new version it will use the stored settings from the config fie on your system if it exists otherwise you still need to apply some colors and decorations.
 
-You can look at the screenshot where code was classified after applying the **CoCo dark theme** preset:
+### Presets
+You can look at the screenshot below where code was colorized and decorate after applying the **CoCo dark theme** preset:
 
 <details>
 <summary>Click to expand screenshot</summary>
@@ -91,7 +59,7 @@ You can look at the screenshot where code was classified after applying the **Co
 
 </details>
 
-And you can look at the similar screenshot where code was classified after applying another preset - **CoCo light|blue theme**:
+And you can look at the similar screenshot where code was colorized and decorate after applying another preset - **CoCo light|blue theme**:
 
 <details>
 <summary>Click to expand screenshot</summary>
