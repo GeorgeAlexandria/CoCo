@@ -7,7 +7,7 @@ Imports System.Runtime.InteropServices
 ' associated with an assembly.
 <Assembly: AssemblyCompany("")>
 <Assembly: AssemblyProduct("CoCo")>
-<Assembly: AssemblyCopyright("Copyright © 2018 George Aleksandria")>
+<Assembly: AssemblyCopyright("Copyright © 2018-2019 George Aleksandria")>
 
 ' Version information for an assembly consists of the following four values:
 '
