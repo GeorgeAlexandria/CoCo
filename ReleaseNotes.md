@@ -1,5 +1,11 @@
 # Release notes
 
+## 3.0.0
+
+**2019-03-23**
+
+- [x] Release issue [#31](https://github.com/GeorgeAlexandria/CoCo/issues/31) – Supported classification of elements in quick info for **C#** 
+
 ## 2.5.0
 
 **2018-11-18**
