@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.QuickInfo.CSharp;
+using CoCo.Analyser.QuickInfo.VisualBasic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
@@ -24,7 +25,7 @@ namespace CoCo.Analyser.QuickInfo
         private QuickInfoService(string language)
         {
             _csharpProviders = ImmutableArray.Create<QuickInfoItemProvider>(new CSharpSemanticProvider());
-            _visualBasicProviders = ImmutableArray<QuickInfoItemProvider>.Empty;
+            _visualBasicProviders = ImmutableArray.Create<QuickInfoItemProvider>(new VisualBasicSemanticProvider());
 
             _language = language;
         }

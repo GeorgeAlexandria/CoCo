@@ -214,9 +214,7 @@ namespace CoCo.Analyser.CSharp
 
                     case SymbolKind.NamedType:
                         var typeSymbol = symbol as INamedTypeSymbol;
-                        var type = GetTypeClassification(typeSymbol);
-                        if (!(type is null)) return type;
-                        break;
+                        return GetTypeClassification(typeSymbol);
                 }
 
                 return null;

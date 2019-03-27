@@ -1,19 +1,19 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using CoCo.Analyser.CSharp;
+using CoCo.Analyser.VisualBasic;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
-namespace CoCo.Analyser.QuickInfo.CSharp
+namespace CoCo.Analyser.QuickInfo.VisualBasic
 {
-    internal class CSharpSymbolDescriptionProvider : SymbolDescriptionProvider
+    internal class VisualBasicSymbolDescriptionProvider : SymbolDescriptionProvider
     {
-        private readonly CSharpClassifier _classifier;
+        private readonly VisualBasicClassifier _classifier;
 
-        public CSharpSymbolDescriptionProvider(
-            CSharpClassifier classifier,
+        public VisualBasicSymbolDescriptionProvider(
+            VisualBasicClassifier classifier,
             SemanticModel semanticModel,
             int position,
             ImmutableArray<ISymbol> symbols,
@@ -24,23 +24,23 @@ namespace CoCo.Analyser.QuickInfo.CSharp
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
-            CreatePunctuation("["), CreateText("deprecated"), CreatePunctuation("]"), CreateSpaces());
+           CreatePunctuation("("), CreateText("Deprecated"), CreatePunctuation(")"), CreateSpaces());
 
         protected override void AppendPrefixParts(PrefixKind prefix)
         {
             var prefixString =
-                prefix == PrefixKind.Awaitable ? "awaitable" :
-                prefix == PrefixKind.Extension ? "extension" :
-                "awaitable, extension";
+                prefix == PrefixKind.Awaitable ? "Awaitable" :
+                prefix == PrefixKind.Extension ? "Extension" :
+                "Awaitable, Extension";
 
             AppendParts(
-                SymbolDescriptionKind.Main, CreatePunctuation("("), CreateText(prefixString), CreatePunctuation(")"), CreateSpaces());
+                SymbolDescriptionKind.Main, CreatePunctuation("<"), CreateText(prefixString), CreatePunctuation(">"), CreateSpaces());
         }
 
         protected override async Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol)
         {
             object evaluatedValue = null;
-            EqualsValueClauseSyntax initializer = null;
+            EqualsValueSyntax initializer = null;
             switch (symbol)
             {
                 case IFieldSymbol field:
@@ -51,7 +51,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                         var enumMemberDeclaration = await symbol.GetDeclaration<EnumMemberDeclarationSyntax>(CancellationToken);
                         if (!(enumMemberDeclaration is null))
                         {
-                            initializer = enumMemberDeclaration.EqualsValue;
+                            initializer = enumMemberDeclaration.Initializer;
                         }
                     }
                     else
@@ -107,7 +107,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
         }
 
         private ImmutableArray<SymbolDisplayPart> GetInitializerParts(
-            ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueClauseSyntax equalsValue)
+            ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueSyntax equalsValue)
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
             return parts.ToImmutable();

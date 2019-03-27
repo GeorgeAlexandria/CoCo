@@ -208,9 +208,7 @@ namespace CoCo.Analyser.CSharp
                         return _typeParameterType;
 
                     case SymbolKind.NamedType:
-                        var type = GetTypeClassification(symbol as INamedTypeSymbol);
-                        if (!(type is null)) return type;
-                        break;
+                        return GetTypeClassification(symbol as INamedTypeSymbol);
                 }
                 return null;
             }
