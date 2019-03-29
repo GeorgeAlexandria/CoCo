@@ -228,12 +228,21 @@ namespace CoCo.Analyser.QuickInfo
             // NOTE: and try to get any other symbols (overloads or something else)
             foreach (var item in semanticModel.GetSymbolOrCandidates(relevantParent, cancellationToken))
             {
-                if (item is null || item.Equals(declaredSymbol)) continue;
-                builder.Add(item);
+                var symbol = GetRelevantSymbol(item);
+                if (symbol is null || symbol.Equals(declaredSymbol)) continue;
+                builder.Add(symbol);
             }
             AddToBuilder(type);
             AddToBuilder(convertedType);
             return builder.ToImmutable();
+        }
+
+        private ISymbol GetRelevantSymbol(ISymbol symbol)
+        {
+            // NOTE: return actual type for param reference to this|Me
+            return symbol is IParameterSymbol parameter && parameter.IsThis
+                ? parameter.Type
+                : symbol;
         }
 
         private static bool SymbolsContainErrors(ImmutableArray<ISymbol> symbols) =>
