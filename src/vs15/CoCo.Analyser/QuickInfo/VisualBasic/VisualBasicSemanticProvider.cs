@@ -11,6 +11,14 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 {
     internal class VisualBasicSemanticProvider : SemanticProvider
     {
+        protected override async Task<QuickInfoItem> GetQuickInfoAsync(
+            ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
+        {
+            return
+                await GetDimQuickInfoAsync(textBuffer, document, token, cancellationToken) ??
+                await base.GetQuickInfoAsync(textBuffer, document, token, cancellationToken);
+        }
+
         protected override Task<SymbolDescriptionInfo> GetDescriptionAsync(
             ITextBuffer textBuffer,
             SemanticModel semanticModel,
@@ -80,6 +88,73 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
             found = default;
             return false;
+        }
+
+        private async Task<QuickInfoItem> GetDimQuickInfoAsync(
+            ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
+        {
+            QuickInfoItem quickInfoItem = default;
+
+            if (token.IsKind(SyntaxKind.DimKeyword))
+            {
+                ITypeSymbol type = null;
+                var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+                if (token.Parent is LocalDeclarationStatementSyntax localDeclaration)
+                {
+                    foreach (var declarator in localDeclaration.Declarators)
+                    {
+                        foreach (var name in declarator.Names)
+                        {
+                            var symbol = semanticModel.GetDeclaredSymbol(name);
+                            if (symbol is ILocalSymbol local)
+                            {
+                                if (type is null)
+                                {
+                                    type = local.Type;
+                                    quickInfoItem = await GetQuickInfoAsync(
+                                        textBuffer, semanticModel, token, ImmutableArray.Create<ISymbol>(type), cancellationToken);
+                                }
+                                else if (!type.Equals(local.Type))
+                                {
+                                    // TODO: would be nice to show all the types
+                                    var text = new TaggedText("text", "<Multiply Types>");
+                                    var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
+                                    return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
+                                }
+                            }
+                        }
+                    }
+                }
+                // NOTE: Dim also can be part of field declaration
+                else if (token.Parent is FieldDeclarationSyntax fieldDeclaration)
+                {
+                    foreach (var declarator in fieldDeclaration.Declarators)
+                    {
+                        foreach (var name in declarator.Names)
+                        {
+                            var symbol = semanticModel.GetDeclaredSymbol(name);
+                            if (symbol is IFieldSymbol field)
+                            {
+                                if (type is null)
+                                {
+                                    type = field.Type;
+                                    quickInfoItem = await GetQuickInfoAsync(
+                                        textBuffer, semanticModel, token, ImmutableArray.Create<ISymbol>(type), cancellationToken);
+                                }
+                                else if (!type.Equals(field.Type))
+                                {
+                                    // TODO: would be nice to show all the types
+                                    var text = new TaggedText("text", "<Multiply Types>");
+                                    var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
+                                    return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return quickInfoItem;
         }
     }
 }

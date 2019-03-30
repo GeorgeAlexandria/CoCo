@@ -126,7 +126,7 @@ namespace CoCo.Analyser.QuickInfo
         /// </summary>
         protected abstract bool TryGetLambdaByLambdaToken(SyntaxToken token, out SyntaxNode found);
 
-        private async Task<QuickInfoItem> GetQuickInfoAsync(
+        protected async Task<QuickInfoItem> GetQuickInfoAsync(
            ITextBuffer textBuffer,
            SemanticModel semanticModel,
            SyntaxToken token,
