@@ -9,8 +9,8 @@ namespace CoCo.Analyser.QuickInfo
         /// Try to reteive relevant <see cref="ClassificationTypeNames"/> for the <paramref name="part"/>
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the <see cref="SymbolDisplayPart.Kind"/> of <paramref name="part"/> 
-        /// is not one of keyword or punctuation types 
+        /// <see langword="true"/> if the <see cref="SymbolDisplayPart.Kind"/> of <paramref name="part"/>
+        /// is not one of keyword or punctuation types
         /// </returns>
         public static bool TryGetClassificationName(SymbolDisplayPart part, out string classification)
         {
@@ -39,5 +39,17 @@ namespace CoCo.Analyser.QuickInfo
 
             return !(classification is null);
         }
+
+        public static SymbolDisplayPart ToKeywordPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Keyword, null, text);
+
+        public static SymbolDisplayPart ToTextPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, text);
+
+        public static SymbolDisplayPart ToPunctuationPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, text);
+
+        public static SymbolDisplayPart ToSpacesPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, text);
     }
 }

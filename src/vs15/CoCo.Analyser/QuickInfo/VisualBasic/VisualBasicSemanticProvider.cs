@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.VisualBasic;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.VisualStudio.Text;
@@ -16,6 +17,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
         {
             return
                 await GetDimQuickInfoAsync(textBuffer, document, token, cancellationToken) ??
+                await GetBuiltInOperationsQuickInfoAsync(textBuffer, document, token, cancellationToken) ??
                 await base.GetQuickInfoAsync(textBuffer, document, token, cancellationToken);
         }
 
@@ -26,12 +28,9 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
         {
-            if (textBuffer.Properties.TryGetProperty<VisualBasicClassifier>(typeof(VisualBasicClassifier), out var classifier))
-            {
-                return new VisualBasicSymbolDescriptionProvider(classifier, semanticModel, position, symbols, cancellationToken)
-                    .GetDescriptionAsync();
-            }
-            return Task.FromResult<SymbolDescriptionInfo>(default);
+            var converter = GetConverter(textBuffer);
+            return new VisualBasicSymbolDescriptionProvider(converter, semanticModel, position, symbols, cancellationToken)
+                .GetDescriptionAsync();
         }
 
         protected override SyntaxNode GetRelevantParent(SyntaxToken token)
@@ -117,7 +116,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                                 else if (!type.Equals(local.Type))
                                 {
                                     // TODO: would be nice to show all the types
-                                    var text = new TaggedText("text", "<Multiply Types>");
+                                    var text = new TaggedText(ClassificationTypeNames.Text, "<Multiply Types>");
                                     var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
                                     return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
                                 }
@@ -144,7 +143,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                                 else if (!type.Equals(field.Type))
                                 {
                                     // TODO: would be nice to show all the types
-                                    var text = new TaggedText("text", "<Multiply Types>");
+                                    var text = new TaggedText(ClassificationTypeNames.Text, "<Multiply Types>");
                                     var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
                                     return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
                                 }
@@ -156,5 +155,68 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
             return quickInfoItem;
         }
+
+        private async Task<QuickInfoItem> GetBuiltInOperationsQuickInfoAsync(
+         ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
+        {
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var converter = GetConverter(textBuffer);
+            if (token.Parent is AddRemoveHandlerStatementSyntax)
+            {
+                var isAddHandler = token.IsKind(SyntaxKind.AddHandlerKeyword);
+
+                var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+                builder.Add((isAddHandler ? "AddHandler" : "RemoveHandler").ToKeywordPart());
+                builder.Add(" ".ToSpacesPart());
+                builder.Add("<event>".ToTextPart());
+                builder.Add(",".ToPunctuationPart());
+                builder.Add("<handler>".ToTextPart());
+                var main = new SymbolDescription(SymbolDescriptionKind.Main, converter.ToTags(builder));
+                builder.Clear();
+
+                var description = isAddHandler
+                    ? "Associates an event with an event handler delegate or lambda expression at run time"
+                    : "Removes the association between an event and an event handler or delegate at run time";
+                builder.Add(description.ToTextPart());
+                var additional = new SymbolDescription(SymbolDescriptionKind.Additional, converter.ToTags(builder));
+
+                return new QuickInfoItem(token.Span, ImageKind.Keyword, ImmutableArray.Create(main, additional));
+            }
+            if (token.Parent is BinaryConditionalExpressionSyntax binaryExpression)
+            {
+                var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+                builder.Add("If".ToKeywordPart());
+                builder.Add("(".ToPunctuationPart());
+                builder.Add("<expression>".ToTextPart());
+                builder.Add(",".ToPunctuationPart());
+                builder.Add(" ".ToSpacesPart());
+                builder.Add("<expressionIfNothing>".ToTextPart());
+                builder.Add(")".ToPunctuationPart());
+                var typeInfo = semanticModel.GetTypeInfo(binaryExpression, cancellationToken);
+                if (!(typeInfo.Type is null))
+                {
+                    builder.Add(" ".ToSpacesPart());
+                    builder.Add("As".ToKeywordPart());
+                    builder.Add(" ".ToSpacesPart());
+                    builder.AddRange(typeInfo.Type.ToMinimalDisplayParts(semanticModel, token.SpanStart));
+                }
+                var main = new SymbolDescription(SymbolDescriptionKind.Main, converter.ToTags(builder));
+                builder.Clear();
+
+                builder.Add(
+                    ("If <expression> evaluates to a reference or Nullable value that is not Nothing the " +
+                    "function returns that value Otherwise it calculates and returns <expressionIfNothing>.").ToTextPart());
+                var additional = new SymbolDescription(SymbolDescriptionKind.Additional, converter.ToTags(builder));
+
+                return new QuickInfoItem(token.Span, ImageKind.Keyword, ImmutableArray.Create(main, additional));
+            }
+
+            return null;
+        }
+
+        private SymbolDisplayPartConverter GetConverter(ITextBuffer textBuffer) =>
+            textBuffer.Properties.TryGetProperty<VisualBasicClassifier>(typeof(VisualBasicClassifier), out var classifier)
+                ? new SymbolDisplayPartConverter(classifier)
+                : new SymbolDisplayPartConverter();
     }
 }

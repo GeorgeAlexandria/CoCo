@@ -39,5 +39,17 @@ namespace CoCo.Analyser.QuickInfo
 
             return !(classification is null);
         }
+
+        public static SymbolDisplayPart ToKeywordPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Keyword, null, text);
+
+        public static SymbolDisplayPart ToTextPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, text);
+
+        public static SymbolDisplayPart ToPunctuationPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Punctuation, null, text);
+
+        public static SymbolDisplayPart ToSpacesPart(this string text) =>
+            new SymbolDisplayPart(SymbolDisplayPartKind.Space, null, text);
     }
 }

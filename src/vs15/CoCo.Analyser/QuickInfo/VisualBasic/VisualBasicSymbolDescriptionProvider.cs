@@ -10,17 +10,14 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 {
     internal class VisualBasicSymbolDescriptionProvider : SymbolDescriptionProvider
     {
-        private readonly VisualBasicClassifier _classifier;
-
         public VisualBasicSymbolDescriptionProvider(
-            VisualBasicClassifier classifier,
+            SymbolDisplayPartConverter converter,
             SemanticModel semanticModel,
             int position,
             ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
-            : base(semanticModel, position, symbols, cancellationToken)
+            : base(converter, semanticModel, position, symbols, cancellationToken)
         {
-            _classifier = classifier;
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -141,16 +138,6 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
             if (initializer is null) return builder.ToImmutable();
             return GetInitializerParts(builder, initializer);
-        }
-
-        protected override TaggedText ToTag(SymbolDisplayPart displayPart)
-        {
-            if (displayPart.Symbol is null) return default;
-
-            var classificationType = _classifier.GetClassification(displayPart.Symbol);
-            if (classificationType?.Classification is null) return default;
-
-            return new TaggedText(classificationType.Classification, displayPart.ToString());
         }
 
         private ImmutableArray<SymbolDisplayPart> GetInitializerParts(

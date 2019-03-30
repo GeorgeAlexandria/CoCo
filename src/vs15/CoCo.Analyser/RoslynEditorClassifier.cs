@@ -8,10 +8,15 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser
 {
+    internal interface IAnalyzeClassifier
+    {
+        IClassificationType GetClassification(ISymbol symbol);
+    }
+
     /// <summary>
     /// Common editor classifier for roslyn based languages.
     /// </summary>
-    internal abstract class RoslynEditorClassifier : IClassifier
+    internal abstract class RoslynEditorClassifier : IClassifier, IAnalyzeClassifier
     {
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
@@ -69,6 +74,8 @@ namespace CoCo.Analyser
 
             return GetClassificationSpans(workspace, semanticModel, span);
         }
+
+        public abstract IClassificationType GetClassification(ISymbol symbol);
 
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);

@@ -177,7 +177,9 @@ namespace CoCo.QuickInfo
                 image == CoCoImageKind.TypeParameter ? KnownImageIds.Type :
                 image == CoCoImageKind.RangeVariable ? KnownImageIds.FieldPublic :
                 image == CoCoImageKind.Error ? KnownImageIds.StatusError :
-                -27;
+
+                image == CoCoImageKind.Keyword ? KnownImageIds.IntellisenseKeyword :
+                - 27;
 
             if (id == -27)
             {

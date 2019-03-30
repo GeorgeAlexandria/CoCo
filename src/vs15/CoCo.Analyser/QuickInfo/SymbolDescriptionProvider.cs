@@ -12,7 +12,7 @@ namespace CoCo.Analyser.QuickInfo
     /// <summary>
     /// It's a abstract provider for full description of symbols in quick info (tooltip)
     /// </summary>
-    public abstract partial class SymbolDescriptionProvider
+    internal abstract partial class SymbolDescriptionProvider
     {
         [Flags]
         protected enum PrefixKind
@@ -31,6 +31,7 @@ namespace CoCo.Analyser.QuickInfo
         private ImageKind _image;
         private Dictionary<ISymbol, string> _anonymousNames;
 
+        private readonly SymbolDisplayPartConverter _displayConverter;
         private readonly SemanticModel _semanticModel;
         private readonly int _position;
         private readonly ImmutableArray<ISymbol> _symbols;
@@ -38,8 +39,13 @@ namespace CoCo.Analyser.QuickInfo
         protected readonly CancellationToken CancellationToken;
 
         protected SymbolDescriptionProvider(
-            SemanticModel semanticModel, int position, ImmutableArray<ISymbol> symbols, CancellationToken cancellationToken)
+            SymbolDisplayPartConverter displayConverter,
+            SemanticModel semanticModel,
+            int position,
+            ImmutableArray<ISymbol> symbols,
+            CancellationToken cancellationToken)
         {
+            _displayConverter = displayConverter;
             _semanticModel = semanticModel;
             _position = position;
             _symbols = symbols;
@@ -64,8 +70,6 @@ namespace CoCo.Analyser.QuickInfo
 
             return new SymbolDescriptionInfo(result, _image);
         }
-
-        protected abstract TaggedText ToTag(SymbolDisplayPart displayPart);
 
         /// <remarks>
         /// C# and VB has a different style for braces and for the word's case
@@ -526,32 +530,10 @@ namespace CoCo.Analyser.QuickInfo
             foreach (var item in parts)
             {
                 var part = ProcessAnonymousType(item);
-
-                var classification =
-                    part.Kind == SymbolDisplayPartKind.Keyword ? ClassificationTypeNames.Keyword :
-                    part.Kind == SymbolDisplayPartKind.LineBreak ? ClassificationTypeNames.WhiteSpace :
-                    part.Kind == SymbolDisplayPartKind.Operator ? ClassificationTypeNames.Operator :
-                    part.Kind == SymbolDisplayPartKind.Punctuation ? ClassificationTypeNames.Punctuation :
-                    part.Kind == SymbolDisplayPartKind.Space ? ClassificationTypeNames.WhiteSpace :
-                    part.Kind == SymbolDisplayPartKind.Text ? ClassificationTypeNames.Text :
-                    part.Kind == SymbolDisplayPartKind.StringLiteral ? ClassificationTypeNames.StringLiteral :
-                    part.Kind == SymbolDisplayPartKind.NumericLiteral ? ClassificationTypeNames.NumericLiteral :
-                    null;
-
-                var tag = part.Symbol is null || !(classification is null)
-                    ? new TaggedText(classification, part.ToString())
-                    : ToTag(part);
-
+                var tag = _displayConverter.ToTag(part);
                 if (!tag.IsDefault)
                 {
                     builder.Add(tag);
-                    continue;
-                }
-
-                // NOTE: use fallback classifications if classifier returned nothing
-                if (SymbolDisplayPartHelper.TryGetClassificationName(part, out classification))
-                {
-                    builder.Add(new TaggedText(classification, part.ToString()));
                 }
             }
         }

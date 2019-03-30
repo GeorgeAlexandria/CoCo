@@ -164,7 +164,7 @@ namespace CoCo.Analyser.VisualBasic
             return spans;
         }
 
-        public IClassificationType GetClassification(ISymbol symbol)
+        public override IClassificationType GetClassification(ISymbol symbol)
         {
             IClassificationType GetClassification()
             {
