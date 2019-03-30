@@ -37,6 +37,53 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                 SymbolDescriptionKind.Main, CreatePunctuation("<"), CreateText(prefixString), CreatePunctuation(">"), CreateSpaces());
         }
 
+        protected override ImmutableArray<SymbolDisplayPart>.Builder GetAnonymousTypeParts(
+            SymbolDisplayPart part, ITypeSymbol anonymousType)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateSpaces(2));
+            builder.Add(part);
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreateText("is"));
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "New"));
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "With"));
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePunctuation("{"));
+
+            var wasAdded = false;
+            foreach (var member in anonymousType.GetMembers())
+            {
+                if (!(member is IPropertySymbol property) || !property.CanBeReferencedByName) continue;
+
+                if (wasAdded)
+                {
+                    builder.Add(CreatePunctuation(","));
+                }
+
+                wasAdded = true;
+                // NOTE: Key shows only for readonly properties
+                if (property.IsReadOnly)
+                {
+                    builder.Add(CreateSpaces(1));
+                    builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "Key"));
+                }
+
+                builder.Add(CreateSpaces(1));
+                builder.Add(CreatePunctuation("."));
+                builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.PropertyName, property, property.Name));
+                builder.Add(CreateSpaces(1));
+                builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "As"));
+                builder.AddRange(ToMinimalDisplayParts(property.Type));
+                builder.Add(CreateSpaces(1));
+            }
+
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePunctuation("}"));
+            return builder;
+        }
+
         protected override async Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol)
         {
             object evaluatedValue = null;

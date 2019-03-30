@@ -77,6 +77,9 @@ namespace CoCo.Analyser.QuickInfo
         /// </remarks>
         protected abstract void AppendPrefixParts(PrefixKind prefix);
 
+        protected abstract ImmutableArray<SymbolDisplayPart>.Builder GetAnonymousTypeParts(
+            SymbolDisplayPart part, ITypeSymbol anonymousType);
+
         protected abstract Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol);
 
         protected async Task AppendPartsAsync(ImmutableArray<ISymbol> symbols)
@@ -505,36 +508,7 @@ namespace CoCo.Analyser.QuickInfo
                         AppendParts(SymbolDescriptionKind.AnonymousTypes, CreatePart(SymbolDisplayPartKind.LineBreak, "\r\n"));
                     }
 
-                    var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
-                    builder.Add(CreateSpaces(2));
-                    builder.Add(part);
-                    builder.Add(CreateSpaces(1));
-                    builder.Add(CreateText("is"));
-                    builder.Add(CreateSpaces(1));
-                    builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "new"));
-                    builder.Add(CreateSpaces(1));
-                    builder.Add(CreatePunctuation("{"));
-
-                    var wasAdded = false;
-                    foreach (var member in type.GetMembers())
-                    {
-                        if (!(member is IPropertySymbol prop) || !prop.CanBeReferencedByName) continue;
-
-                        if (wasAdded)
-                        {
-                            builder.Add(CreatePunctuation(","));
-                        }
-
-                        wasAdded = true;
-                        builder.Add(CreateSpaces(1));
-                        builder.AddRange(ToMinimalDisplayParts(prop.Type));
-                        builder.Add(CreateSpaces(1));
-                        builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.PropertyName, prop, prop.Name));
-                    }
-
-                    builder.Add(CreateSpaces(1));
-                    builder.Add(CreatePunctuation("}"));
-                    AppendParts(SymbolDescriptionKind.AnonymousTypes, builder);
+                    AppendParts(SymbolDescriptionKind.AnonymousTypes, GetAnonymousTypeParts(part, type));
                 }
                 part = new SymbolDisplayPart(part.Kind, part.Symbol, anonymousName);
             }
