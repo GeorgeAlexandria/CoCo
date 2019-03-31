@@ -112,28 +112,29 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
                 if (descriptionInfo.HasDescriptions) return ExtractQuickInfoItem(token, descriptionInfo);
             }
-
             if (token.Parent is AddRemoveHandlerStatementSyntax)
             {
                 var descriptionInfo = provider.GetAddRemoveHandlerDescription(token);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
-
             if (token.Parent is BinaryConditionalExpressionSyntax)
             {
                 var descriptionInfo = provider.GetNullCoalescingDescription(token);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
-
             if (token.Parent is TernaryConditionalExpressionSyntax)
             {
                 var descriptionInfo = provider.GetTernaryDescription(token);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
-
             if (token.Parent is CTypeExpressionSyntax ctypeSyntax)
             {
                 var descriptionInfo = provider.GetCTypeDescription(token, ctypeSyntax.Type);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
+            if (token.Parent is PredefinedCastExpressionSyntax castSyntax)
+            {
+                var descriptionInfo = provider.GetPredefinedCastDescription(token, castSyntax);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
 

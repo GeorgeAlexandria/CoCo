@@ -154,6 +154,35 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             return BuildDescription();
         }
 
+        public SymbolDescriptionInfo GetPredefinedCastDescription(SyntaxToken token, PredefinedCastExpressionSyntax castSyntax)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword(castSyntax.Keyword.ValueText));
+            builder.Add(CreatePunctuation("("));
+            builder.Add(CreateText("<expression>"));
+            builder.Add(CreatePunctuation(")"));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateKeyword("As"));
+            builder.Add(CreateSpaces());
+
+            var type = GetTypeByPredefinedCast(SemanticModel.Compilation, castSyntax.Keyword.Kind());
+            if (!(type is null))
+            {
+                builder.AddRange(type.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
+            }
+            else
+            {
+                builder.Add(CreateText("<unknown data type>"));
+            }
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            builder.Add(CreateText($"Converts an expression to the {(type is null ? "<unknown data type>" : type.Name)} data type"));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.MethodPublic);
+            return BuildDescription();
+        }
+
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
            CreatePunctuation("("), CreateText("Deprecated"), CreatePunctuation(")"), CreateSpaces());
 
@@ -279,6 +308,72 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
             return parts.ToImmutable();
+        }
+
+        // TODO: Move to extension
+        private static ITypeSymbol GetTypeByPredefinedCast(Compilation compilation, SyntaxKind kind)
+        {
+            SpecialType GetSpecialType()
+            {
+                switch (kind)
+                {
+                    case SyntaxKind.CBoolKeyword:
+                        return SpecialType.System_Boolean;
+
+                    case SyntaxKind.CByteKeyword:
+                        return SpecialType.System_Byte;
+
+                    case SyntaxKind.CCharKeyword:
+                        return SpecialType.System_Char;
+
+                    case SyntaxKind.CDateKeyword:
+                        return SpecialType.System_DateTime;
+
+                    case SyntaxKind.CDecKeyword:
+                        return SpecialType.System_Decimal;
+
+                    case SyntaxKind.CDblKeyword:
+                        return SpecialType.System_Double;
+
+                    case SyntaxKind.CIntKeyword:
+                        return SpecialType.System_Int32;
+
+                    case SyntaxKind.CLngKeyword:
+                        return SpecialType.System_Int64;
+
+                    case SyntaxKind.CObjKeyword:
+                        return SpecialType.System_Object;
+
+                    case SyntaxKind.CSByteKeyword:
+                        return SpecialType.System_SByte;
+
+                    case SyntaxKind.CSngKeyword:
+                        return SpecialType.System_Single;
+
+                    case SyntaxKind.CStrKeyword:
+                        return SpecialType.System_String;
+
+                    case SyntaxKind.CShortKeyword:
+                        return SpecialType.System_Int16;
+
+                    case SyntaxKind.CUIntKeyword:
+                        return SpecialType.System_UInt32;
+
+                    case SyntaxKind.CULngKeyword:
+                        return SpecialType.System_UInt64;
+
+                    case SyntaxKind.CUShortKeyword:
+                        return SpecialType.System_UInt16;
+
+                    default:
+                        return SpecialType.None;
+                }
+            }
+
+            var specialType = GetSpecialType();
+            return specialType != SpecialType.None
+                ? compilation.GetSpecialType(specialType)
+                : null;
         }
     }
 }
