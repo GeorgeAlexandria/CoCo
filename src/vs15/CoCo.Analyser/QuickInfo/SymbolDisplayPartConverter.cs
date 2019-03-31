@@ -7,9 +7,9 @@ namespace CoCo.Analyser.QuickInfo
 {
     internal class SymbolDisplayPartConverter
     {
-        private readonly IAnalyzeClassifier _classifier;
+        private readonly ICodeClassifier _classifier;
 
-        public SymbolDisplayPartConverter(IAnalyzeClassifier classifier = null)
+        public SymbolDisplayPartConverter(ICodeClassifier classifier = null)
         {
             _classifier = classifier;
         }

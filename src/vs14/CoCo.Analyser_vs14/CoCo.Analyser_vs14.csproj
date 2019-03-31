@@ -36,6 +36,7 @@
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationService.cs" Link="ClassificationService.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\IClassificationChangingService.cs" Link="IClassificationChangingService.cs" />
+    <Compile Include="..\..\vs15\CoCo.Analyser\ICodeClassifier.cs" Link="ICodeClassifier.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\ImmutableExtensions.cs" Link="ImmutableExtensions.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
     <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />

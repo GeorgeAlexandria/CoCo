@@ -189,7 +189,7 @@ namespace CoCo.Analyser.QuickInfo
 
             private IEnumerable<SymbolDisplayPart> RefToParts(string elementName, string refValue)
             {
-                var semanticModel = _provider._semanticModel;
+                var semanticModel = _provider.SemanticModel;
                 if (!(semanticModel is null))
                 {
                     var symbol = DocumentationCommentId.GetFirstSymbolForDeclarationId(refValue, semanticModel.Compilation);

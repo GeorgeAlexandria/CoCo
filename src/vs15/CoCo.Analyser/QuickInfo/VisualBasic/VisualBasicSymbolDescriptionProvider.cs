@@ -1,9 +1,10 @@
 ﻿using System.Collections.Immutable;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoCo.Analyser.VisualBasic;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace CoCo.Analyser.QuickInfo.VisualBasic
@@ -14,10 +15,72 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             SymbolDisplayPartConverter converter,
             SemanticModel semanticModel,
             int position,
-            ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
-            : base(converter, semanticModel, position, symbols, cancellationToken)
+            : base(converter, semanticModel, position, cancellationToken)
         {
+        }
+
+        public async Task<SymbolDescriptionInfo> GetDimDescriptionAsync(ITypeSymbol type)
+        {
+            // NOTE: if type is null assume that the variables have the different types
+            if (type is null)
+            {
+                // TODO: would be nice to show all the types
+                AppendParts(SymbolDescriptionKind.Main, CreateText("<Multiply Types>").Enumerate());
+                return BuildDescription();
+            }
+            return await GetDescriptionAsync(ImmutableArray.Create<ISymbol>(type));
+        }
+
+        public SymbolDescriptionInfo GetAddRemoveHandlerDescription(SyntaxToken token)
+        {
+            var isAddHandler = token.IsKind(SyntaxKind.AddHandlerKeyword);
+
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword(isAddHandler ? "AddHandler" : "RemoveHandler"));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateText("<event>"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateText("<handler>"));
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            var description = isAddHandler
+                ? "Associates an event with an event handler delegate or lambda expression at run time"
+                : "Removes the association between an event and an event handler or delegate at run time";
+            builder.Add(CreateText(description));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.Keyword);
+            return BuildDescription();
+        }
+
+        public SymbolDescriptionInfo GetNullCoalescingDescription(SyntaxToken token)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword("If"));
+            builder.Add(CreatePunctuation("("));
+            builder.Add(CreateText("<expression>"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateText("<expressionIfNothing>"));
+            builder.Add(CreatePunctuation(")"));
+            var typeInfo = SemanticModel.GetTypeInfo(token.Parent, CancellationToken);
+            if (!(typeInfo.Type is null))
+            {
+                builder.Add(CreateSpaces());
+                builder.Add(CreateKeyword("As"));
+                builder.Add(CreateSpaces());
+                builder.AddRange(typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
+            }
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            builder.Add(CreateText
+                ("If <expression> evaluates to a reference or Nullable value that is not Nothing the " +
+                "function returns that value Otherwise it calculates and returns <expressionIfNothing>."));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.MethodPublic);
+            return BuildDescription();
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -43,9 +106,9 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             builder.Add(CreateSpaces(1));
             builder.Add(CreateText("is"));
             builder.Add(CreateSpaces(1));
-            builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "New"));
+            builder.Add(CreateKeyword("New"));
             builder.Add(CreateSpaces(1));
-            builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "With"));
+            builder.Add(CreateKeyword("With"));
             builder.Add(CreateSpaces(1));
             builder.Add(CreatePunctuation("{"));
 
@@ -64,14 +127,14 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                 if (property.IsReadOnly)
                 {
                     builder.Add(CreateSpaces(1));
-                    builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "Key"));
+                    builder.Add(CreateKeyword("Key"));
                 }
 
                 builder.Add(CreateSpaces(1));
                 builder.Add(CreatePunctuation("."));
                 builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.PropertyName, property, property.Name));
                 builder.Add(CreateSpaces(1));
-                builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "As"));
+                builder.Add(CreateKeyword("As"));
                 builder.AddRange(ToMinimalDisplayParts(property.Type));
                 builder.Add(CreateSpaces(1));
             }

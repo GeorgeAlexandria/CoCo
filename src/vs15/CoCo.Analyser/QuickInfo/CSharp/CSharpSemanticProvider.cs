@@ -88,8 +88,8 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             if (textBuffer.Properties.TryGetProperty<CSharpClassifier>(typeof(CSharpClassifier), out var classifier))
             {
                 var converter = new SymbolDisplayPartConverter(classifier);
-                return new CSharpSymbolDescriptionProvider(converter, semanticModel, position, symbols, cancellationToken)
-                    .GetDescriptionAsync();
+                return new CSharpSymbolDescriptionProvider(converter, semanticModel, position, cancellationToken)
+                    .GetDescriptionAsync(symbols);
             }
             return Task.FromResult<SymbolDescriptionInfo>(default);
         }

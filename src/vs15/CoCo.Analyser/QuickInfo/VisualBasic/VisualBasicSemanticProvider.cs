@@ -1,9 +1,9 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using CoCo.Analyser.VisualBasic;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.VisualStudio.Text;
@@ -16,7 +16,6 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
             return
-                await GetDimQuickInfoAsync(textBuffer, document, token, cancellationToken) ??
                 await GetBuiltInOperationsQuickInfoAsync(textBuffer, document, token, cancellationToken) ??
                 await base.GetQuickInfoAsync(textBuffer, document, token, cancellationToken);
         }
@@ -29,8 +28,8 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             CancellationToken cancellationToken)
         {
             var converter = GetConverter(textBuffer);
-            return new VisualBasicSymbolDescriptionProvider(converter, semanticModel, position, symbols, cancellationToken)
-                .GetDescriptionAsync();
+            return new VisualBasicSymbolDescriptionProvider(converter, semanticModel, position, cancellationToken)
+                .GetDescriptionAsync(symbols);
         }
 
         protected override SyntaxNode GetRelevantParent(SyntaxToken token)
@@ -89,129 +88,72 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             return false;
         }
 
-        private async Task<QuickInfoItem> GetDimQuickInfoAsync(
+        private async Task<QuickInfoItem> GetBuiltInOperationsQuickInfoAsync(
             ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
         {
-            QuickInfoItem quickInfoItem = default;
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var converter = GetConverter(textBuffer);
+            var provider = new VisualBasicSymbolDescriptionProvider(converter, semanticModel, token.SpanStart, cancellationToken);
 
             if (token.IsKind(SyntaxKind.DimKeyword))
             {
-                ITypeSymbol type = null;
-                var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+                SymbolDescriptionInfo descriptionInfo = default;
                 if (token.Parent is LocalDeclarationStatementSyntax localDeclaration)
                 {
-                    foreach (var declarator in localDeclaration.Declarators)
-                    {
-                        foreach (var name in declarator.Names)
-                        {
-                            var symbol = semanticModel.GetDeclaredSymbol(name);
-                            if (symbol is ILocalSymbol local)
-                            {
-                                if (type is null)
-                                {
-                                    type = local.Type;
-                                    quickInfoItem = await GetQuickInfoAsync(
-                                        textBuffer, semanticModel, token, ImmutableArray.Create<ISymbol>(type), cancellationToken);
-                                }
-                                else if (!type.Equals(local.Type))
-                                {
-                                    // TODO: would be nice to show all the types
-                                    var text = new TaggedText(ClassificationTypeNames.Text, "<Multiply Types>");
-                                    var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
-                                    return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
-                                }
-                            }
-                        }
-                    }
+                    var commonType = GetDeclarationType(semanticModel, localDeclaration.Declarators);
+                    descriptionInfo = await provider.GetDimDescriptionAsync(commonType);
                 }
                 // NOTE: Dim also can be part of field declaration
                 else if (token.Parent is FieldDeclarationSyntax fieldDeclaration)
                 {
-                    foreach (var declarator in fieldDeclaration.Declarators)
-                    {
-                        foreach (var name in declarator.Names)
-                        {
-                            var symbol = semanticModel.GetDeclaredSymbol(name);
-                            if (symbol is IFieldSymbol field)
-                            {
-                                if (type is null)
-                                {
-                                    type = field.Type;
-                                    quickInfoItem = await GetQuickInfoAsync(
-                                        textBuffer, semanticModel, token, ImmutableArray.Create<ISymbol>(type), cancellationToken);
-                                }
-                                else if (!type.Equals(field.Type))
-                                {
-                                    // TODO: would be nice to show all the types
-                                    var text = new TaggedText(ClassificationTypeNames.Text, "<Multiply Types>");
-                                    var description = new SymbolDescription(SymbolDescriptionKind.Main, ImmutableArray.Create(text));
-                                    return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray.Create(description));
-                                }
-                            }
-                        }
-                    }
+                    var commonType = GetDeclarationType(semanticModel, fieldDeclaration.Declarators);
+                    descriptionInfo = await provider.GetDimDescriptionAsync(commonType);
                 }
+
+                if (descriptionInfo.HasDescriptions) return ExtractQuickInfoItem(token, descriptionInfo);
             }
 
-            return quickInfoItem;
-        }
-
-        private async Task<QuickInfoItem> GetBuiltInOperationsQuickInfoAsync(
-         ITextBuffer textBuffer, Document document, SyntaxToken token, CancellationToken cancellationToken)
-        {
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
-            var converter = GetConverter(textBuffer);
             if (token.Parent is AddRemoveHandlerStatementSyntax)
             {
-                var isAddHandler = token.IsKind(SyntaxKind.AddHandlerKeyword);
-
-                var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
-                builder.Add((isAddHandler ? "AddHandler" : "RemoveHandler").ToKeywordPart());
-                builder.Add(" ".ToSpacesPart());
-                builder.Add("<event>".ToTextPart());
-                builder.Add(",".ToPunctuationPart());
-                builder.Add("<handler>".ToTextPart());
-                var main = new SymbolDescription(SymbolDescriptionKind.Main, converter.ToTags(builder));
-                builder.Clear();
-
-                var description = isAddHandler
-                    ? "Associates an event with an event handler delegate or lambda expression at run time"
-                    : "Removes the association between an event and an event handler or delegate at run time";
-                builder.Add(description.ToTextPart());
-                var additional = new SymbolDescription(SymbolDescriptionKind.Additional, converter.ToTags(builder));
-
-                return new QuickInfoItem(token.Span, ImageKind.Keyword, ImmutableArray.Create(main, additional));
+                var descriptionInfo = provider.GetAddRemoveHandlerDescription(token);
+                return ExtractQuickInfoItem(token, descriptionInfo);
             }
+
             if (token.Parent is BinaryConditionalExpressionSyntax binaryExpression)
             {
-                var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
-                builder.Add("If".ToKeywordPart());
-                builder.Add("(".ToPunctuationPart());
-                builder.Add("<expression>".ToTextPart());
-                builder.Add(",".ToPunctuationPart());
-                builder.Add(" ".ToSpacesPart());
-                builder.Add("<expressionIfNothing>".ToTextPart());
-                builder.Add(")".ToPunctuationPart());
-                var typeInfo = semanticModel.GetTypeInfo(binaryExpression, cancellationToken);
-                if (!(typeInfo.Type is null))
-                {
-                    builder.Add(" ".ToSpacesPart());
-                    builder.Add("As".ToKeywordPart());
-                    builder.Add(" ".ToSpacesPart());
-                    builder.AddRange(typeInfo.Type.ToMinimalDisplayParts(semanticModel, token.SpanStart));
-                }
-                var main = new SymbolDescription(SymbolDescriptionKind.Main, converter.ToTags(builder));
-                builder.Clear();
-
-                builder.Add(
-                    ("If <expression> evaluates to a reference or Nullable value that is not Nothing the " +
-                    "function returns that value Otherwise it calculates and returns <expressionIfNothing>.").ToTextPart());
-                var additional = new SymbolDescription(SymbolDescriptionKind.Additional, converter.ToTags(builder));
-
-                return new QuickInfoItem(token.Span, ImageKind.Keyword, ImmutableArray.Create(main, additional));
+                var descriptionInfo = provider.GetNullCoalescingDescription(token);
+                return ExtractQuickInfoItem(token, descriptionInfo);
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// If all variables in <paramref name="declarators"/> have the same type returns it, otherwise returns <see langword="null"/>
+        /// </summary>
+        private static ITypeSymbol GetDeclarationType<T>(SemanticModel semanticModel, T declarators)
+            where T : IEnumerable<VariableDeclaratorSyntax>
+        {
+            ITypeSymbol type = null;
+            foreach (var declarator in declarators)
+            {
+                foreach (var name in declarator.Names)
+                {
+                    var symbol = semanticModel.GetDeclaredSymbol(name);
+                    var currentType =
+                        symbol is ILocalSymbol local ? local.Type :
+                        symbol is IFieldSymbol field ? field.Type
+                        : null;
+                    if (currentType is null) continue;
+
+                    if (type is null)
+                    {
+                        type = currentType;
+                    }
+                    else if (!type.Equals(currentType)) return null;
+                }
+            }
+            return type;
         }
 
         private SymbolDisplayPartConverter GetConverter(ITextBuffer textBuffer) =>

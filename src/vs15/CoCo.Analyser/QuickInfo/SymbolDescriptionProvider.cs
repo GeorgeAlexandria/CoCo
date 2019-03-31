@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Classification;
 
 namespace CoCo.Analyser.QuickInfo
 {
@@ -32,43 +31,35 @@ namespace CoCo.Analyser.QuickInfo
         private Dictionary<ISymbol, string> _anonymousNames;
 
         private readonly SymbolDisplayPartConverter _displayConverter;
-        private readonly SemanticModel _semanticModel;
         private readonly int _position;
-        private readonly ImmutableArray<ISymbol> _symbols;
 
+        protected readonly SemanticModel SemanticModel;
         protected readonly CancellationToken CancellationToken;
 
         protected SymbolDescriptionProvider(
             SymbolDisplayPartConverter displayConverter,
             SemanticModel semanticModel,
             int position,
-            ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
         {
             _displayConverter = displayConverter;
-            _semanticModel = semanticModel;
             _position = position;
-            _symbols = symbols;
+
+            SemanticModel = semanticModel;            
             CancellationToken = cancellationToken;
         }
 
-        public async Task<SymbolDescriptionInfo> GetDescriptionAsync()
+        public async Task<SymbolDescriptionInfo> GetDescriptionAsync(ImmutableArray<ISymbol> symbols)
         {
-            if (_symbols.IsDefaultOrEmpty) return default;
+            if (symbols.IsDefaultOrEmpty) return default;
 
             if (_description is null)
             {
                 _description = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder>();
-                await AppendPartsAsync(_symbols);
             }
 
-            var result = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
-            foreach (var item in _description)
-            {
-                result[item.Key] = item.Value.ToImmutable();
-            }
-
-            return new SymbolDescriptionInfo(result, _image);
+            await AppendPartsAsync(symbols);
+            return BuildDescription();
         }
 
         /// <remarks>
@@ -85,6 +76,19 @@ namespace CoCo.Analyser.QuickInfo
             SymbolDisplayPart part, ITypeSymbol anonymousType);
 
         protected abstract Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol);
+
+        protected SymbolDescriptionInfo BuildDescription()
+        {
+            var result = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
+            foreach (var item in _description)
+            {
+                result[item.Key] = item.Value.ToImmutable();
+            }
+
+            return new SymbolDescriptionInfo(result, _image);
+        }
+
+        protected void SetImage(ImageKind image) => _image = image;
 
         protected async Task AppendPartsAsync(ImmutableArray<ISymbol> symbols)
         {
@@ -119,7 +123,7 @@ namespace CoCo.Analyser.QuickInfo
                     accessibility == Accessibility.Protected ? 2 :
                     accessibility == Accessibility.Private ? 3 :
                     0;
-                _image = (ImageKind)(startPosition + delta);
+                SetImage((ImageKind)startPosition + delta);
             }
 
             // TODO: miss something?
@@ -375,7 +379,7 @@ namespace CoCo.Analyser.QuickInfo
 
         protected void AppendDynamicTypeParts()
         {
-            AppendParts(SymbolDescriptionKind.Main, CreatePart(SymbolDisplayPartKind.Keyword, "dynamic"));
+            AppendParts(SymbolDescriptionKind.Main, CreateKeyword("dynamic"));
             AppendParts(SymbolDescriptionKind.Additional, CreateText("Represents an object whose operations will be resolved at runtime."));
         }
 
@@ -471,6 +475,8 @@ namespace CoCo.Analyser.QuickInfo
             return CreatePart(SymbolDisplayPartKind.Space, text);
         }
 
+        protected SymbolDisplayPart CreateKeyword(string text) => CreatePart(SymbolDisplayPartKind.Keyword, text);
+
         protected List<SymbolDisplayPart> CreateDescription(string description) => new List<SymbolDisplayPart>
         {
             CreatePunctuation("("),
@@ -521,6 +527,11 @@ namespace CoCo.Analyser.QuickInfo
 
         protected void AppendParts<T>(SymbolDescriptionKind descriptionKind, T parts) where T : IEnumerable<SymbolDisplayPart>
         {
+            if (_description is null)
+            {
+                _description = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>.Builder>();
+            }
+
             if (!_description.TryGetValue(descriptionKind, out var builder))
             {
                 builder = ImmutableArray.CreateBuilder<TaggedText>();
@@ -541,14 +552,14 @@ namespace CoCo.Analyser.QuickInfo
         protected ImmutableArray<SymbolDisplayPart>.Builder ToMinimalDisplayParts(ISymbol symbol, SymbolDisplayFormat format = null)
         {
             format = format ?? _minimallyQualifiedFormat;
-            return symbol.ToMinimalDisplayParts(_semanticModel, _position, format).ToBuilder();
+            return symbol.ToMinimalDisplayParts(SemanticModel, _position, format).ToBuilder();
         }
 
         private SemanticModel GetSemanticModel(SyntaxTree syntaxTree)
         {
-            if (_semanticModel.SyntaxTree.Equals(syntaxTree)) return _semanticModel;
+            if (SemanticModel.SyntaxTree.Equals(syntaxTree)) return SemanticModel;
 
-            var compilation = _semanticModel.Compilation;
+            var compilation = SemanticModel.Compilation;
             if (compilation.ContainsSyntaxTree(syntaxTree)) return compilation.GetSemanticModel(syntaxTree);
 
             // NOTE: try to find from referenced projects

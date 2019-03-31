@@ -133,19 +133,24 @@ namespace CoCo.Analyser.QuickInfo
            ImmutableArray<ISymbol> symbols,
            CancellationToken cancellationToken)
         {
+            var descriptionInfo = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
+            if (descriptionInfo.IsDefault) return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray<SymbolDescription>.Empty);
+
+            return ExtractQuickInfoItem(token, descriptionInfo);
+        }
+
+        protected QuickInfoItem ExtractQuickInfoItem(SyntaxToken token, SymbolDescriptionInfo descriptionInfo)
+        {
             void Append(
-                IReadOnlyDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>> map,
-                SymbolDescriptionKind kind,
-                ImmutableArray<SymbolDescription>.Builder descriptions)
+               IReadOnlyDictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>> map,
+               SymbolDescriptionKind kind,
+               ImmutableArray<SymbolDescription>.Builder descriptions)
             {
                 if (map.TryGetValue(kind, out var parts) && !parts.IsDefaultOrEmpty)
                 {
                     descriptions.Add(new SymbolDescription(kind, parts));
                 }
             }
-
-            var descriptionInfo = await GetDescriptionAsync(textBuffer, semanticModel, token.SpanStart, symbols, cancellationToken);
-            if (descriptionInfo.IsDefault) return new QuickInfoItem(token.Span, ImageKind.None, ImmutableArray<SymbolDescription>.Empty);
 
             var descriptionsMap = descriptionInfo.Descriptions;
 

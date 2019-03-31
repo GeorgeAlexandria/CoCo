@@ -13,9 +13,8 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             SymbolDisplayPartConverter converter,
             SemanticModel semanticModel,
             int position,
-            ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
-            : base(converter, semanticModel, position, symbols, cancellationToken)
+            : base(converter, semanticModel, position, cancellationToken)
         {
         }
 
@@ -42,7 +41,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             builder.Add(CreateSpaces(1));
             builder.Add(CreateText("is"));
             builder.Add(CreateSpaces(1));
-            builder.Add(CreatePart(SymbolDisplayPartKind.Keyword, "new"));
+            builder.Add(CreateKeyword("new"));
             builder.Add(CreateSpaces(1));
             builder.Add(CreatePunctuation("{"));
 
