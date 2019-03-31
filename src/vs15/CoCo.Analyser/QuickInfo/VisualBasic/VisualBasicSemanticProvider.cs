@@ -119,9 +119,21 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
 
-            if (token.Parent is BinaryConditionalExpressionSyntax binaryExpression)
+            if (token.Parent is BinaryConditionalExpressionSyntax)
             {
                 var descriptionInfo = provider.GetNullCoalescingDescription(token);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
+
+            if (token.Parent is TernaryConditionalExpressionSyntax)
+            {
+                var descriptionInfo = provider.GetTernaryDescription(token);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
+
+            if (token.Parent is CTypeExpressionSyntax ctypeSyntax)
+            {
+                var descriptionInfo = provider.GetCTypeDescription(token, ctypeSyntax.Type);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
 

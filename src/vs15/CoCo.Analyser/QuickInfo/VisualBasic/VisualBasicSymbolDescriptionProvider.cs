@@ -77,7 +77,78 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
             builder.Add(CreateText
                 ("If <expression> evaluates to a reference or Nullable value that is not Nothing the " +
-                "function returns that value Otherwise it calculates and returns <expressionIfNothing>."));
+                "function returns that value. Otherwise, it calculates and returns <expressionIfNothing>."));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.MethodPublic);
+            return BuildDescription();
+        }
+
+        public SymbolDescriptionInfo GetTernaryDescription(SyntaxToken token)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword("If"));
+            builder.Add(CreatePunctuation("("));
+            builder.Add(CreateText("<condition>"));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateKeyword("As"));
+            builder.Add(CreateKeyword("Boolean"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateText("<expressionIfTrue>"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateText("<expressionIfFalse>"));
+            builder.Add(CreatePunctuation(")"));
+            var typeInfo = SemanticModel.GetTypeInfo(token.Parent, CancellationToken);
+            if (!(typeInfo.Type is null))
+            {
+                builder.Add(CreateSpaces());
+                builder.Add(CreateKeyword("As"));
+                builder.Add(CreateSpaces());
+                builder.AddRange(typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
+            }
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            builder.Add(CreateText(
+                "If <condition> returns True the function calculates and returns <expressionIfTrue>. Otherwise, it returns <expressionIfFalse>"));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.MethodPublic);
+            return BuildDescription();
+        }
+
+        public SymbolDescriptionInfo GetCTypeDescription(SyntaxToken token, TypeSyntax typeSyntax)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword("CType"));
+            builder.Add(CreatePunctuation("("));
+            builder.Add(CreateText("<expression>"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateSpaces());
+            var typeInfo = SemanticModel.GetTypeInfo(typeSyntax, CancellationToken);
+            if (!(typeInfo.Type is null))
+            {
+                var typeParts = typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart);
+                builder.AddRange(typeParts);
+                builder.Add(CreatePunctuation(")"));
+                builder.Add(CreateSpaces());
+                builder.Add(CreateKeyword("As"));
+                builder.Add(CreateSpaces());
+                builder.AddRange(typeParts);
+            }
+            else
+            {
+                builder.Add(CreateText("<unknown data type>"));
+                builder.Add(CreatePunctuation(")"));
+                builder.Add(CreateSpaces());
+                builder.Add(CreateKeyword("As"));
+                builder.Add(CreateSpaces());
+                builder.Add(CreateText("<unknown data type>"));
+            }
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            builder.Add(CreateText("Returns the result of explicitly converting an <expression> to a specified data type"));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
