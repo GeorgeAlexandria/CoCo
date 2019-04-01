@@ -137,6 +137,21 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                 var descriptionInfo = provider.GetPredefinedCastDescription(token, castSyntax);
                 return ExtractQuickInfoItem(token, descriptionInfo);
             }
+            if (token.Parent is DirectCastExpressionSyntax directCastSyntax)
+            {
+                var descriptionInfo = provider.GetDirectCastDescription(token, directCastSyntax.Type);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
+            if (token.Parent is TryCastExpressionSyntax tryCastSyntax)
+            {
+                var descriptionInfo = provider.GetTryCastDescription(token, tryCastSyntax.Type);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
+            if (token.Parent is GetTypeExpressionSyntax getTypeSyntax)
+            {
+                var descriptionInfo = provider.GetTypeDescription(token, getTypeSyntax.Type);
+                return ExtractQuickInfoItem(token, descriptionInfo);
+            }
 
             return null;
         }

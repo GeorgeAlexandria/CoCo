@@ -117,38 +117,27 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             return BuildDescription();
         }
 
-        public SymbolDescriptionInfo GetCTypeDescription(SyntaxToken token, TypeSyntax typeSyntax)
+        public SymbolDescriptionInfo GetTypeDescription(SyntaxToken token, TypeSyntax typeSyntax)
         {
             var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
-            builder.Add(CreateKeyword("CType"));
+            builder.Add(CreateKeyword("GetType"));
             builder.Add(CreatePunctuation("("));
-            builder.Add(CreateText("<expression>"));
-            builder.Add(CreatePunctuation(","));
-            builder.Add(CreateSpaces());
             var typeInfo = SemanticModel.GetTypeInfo(typeSyntax, CancellationToken);
-            if (!(typeInfo.Type is null))
-            {
-                var typeParts = typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart);
-                builder.AddRange(typeParts);
-                builder.Add(CreatePunctuation(")"));
-                builder.Add(CreateSpaces());
-                builder.Add(CreateKeyword("As"));
-                builder.Add(CreateSpaces());
-                builder.AddRange(typeParts);
-            }
-            else
-            {
-                builder.Add(CreateText("<unknown data type>"));
-                builder.Add(CreatePunctuation(")"));
-                builder.Add(CreateSpaces());
-                builder.Add(CreateKeyword("As"));
-                builder.Add(CreateSpaces());
-                builder.Add(CreateText("<unknown data type>"));
-            }
+            var typeParts = typeInfo.Type is null
+                ? CreateText("<unknown data type>").Enumerate()
+                : typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart);
+            builder.AddRange(typeParts);
+            builder.Add(CreatePunctuation(")"));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateKeyword("As"));
+            builder.Add(CreateSpaces());
+
+            var systemTypeParts = SemanticModel.Compilation.GetTypeByMetadataName("System.Type");
+            builder.AddRange(systemTypeParts.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText("Returns the result of explicitly converting an <expression> to a specified data type"));
+            builder.Add(CreateText("Returns a System.Type object for the specified type name"));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
@@ -177,10 +166,32 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText($"Converts an expression to the {(type is null ? "<unknown data type>" : type.Name)} data type"));
+            builder.Add(CreateText($"Converts an <expression> to the {(type is null ? "<unknown data type>" : type.Name)} data type"));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
+        }
+
+        public SymbolDescriptionInfo GetCTypeDescription(SyntaxToken token, TypeSyntax typeSyntax)
+        {
+            var description = "Returns the result of explicitly converting an <expression> to a specified data type";
+            return GetCastDescription(token, typeSyntax, "CType", description);
+        }
+
+        public SymbolDescriptionInfo GetDirectCastDescription(SyntaxToken token, TypeSyntax typeSyntax)
+        {
+            var description =
+                "Introduces a type conversion operation similar to CType. The difference is that CType succeeds as long as there " +
+                "is a valid conversion, whereas DirectCast requires that one type inherit from or implement the other type.";
+            return GetCastDescription(token, typeSyntax, "DirectCast", description);
+        }
+
+        public SymbolDescriptionInfo GetTryCastDescription(SyntaxToken token, TypeSyntax typeSyntax)
+        {
+            var description =
+                "Introduces a type conversion operation that does not throw an exception. If an attempted " +
+                "conversion fails, TryCast returns Nothing which your program can test for.";
+            return GetCastDescription(token, typeSyntax, "TryCast", description);
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -308,6 +319,34 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
             return parts.ToImmutable();
+        }
+
+        private SymbolDescriptionInfo GetCastDescription(SyntaxToken token, TypeSyntax typeSyntax, string keyword, string description)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateKeyword(keyword));
+            builder.Add(CreatePunctuation("("));
+            builder.Add(CreateText("<expression>"));
+            builder.Add(CreatePunctuation(","));
+            builder.Add(CreateSpaces());
+            var typeInfo = SemanticModel.GetTypeInfo(typeSyntax, CancellationToken);
+            var typeParts = typeInfo.Type is null
+                ? CreateText("<unknown data type>").Enumerate()
+                : typeInfo.Type.ToMinimalDisplayParts(SemanticModel, token.SpanStart);
+
+            builder.AddRange(typeParts);
+            builder.Add(CreatePunctuation(")"));
+            builder.Add(CreateSpaces());
+            builder.Add(CreateKeyword("As"));
+            builder.Add(CreateSpaces());
+            builder.AddRange(typeParts);
+            AppendParts(SymbolDescriptionKind.Main, builder);
+            builder.Clear();
+
+            builder.Add(CreateText(description));
+            AppendParts(SymbolDescriptionKind.Additional, builder);
+            SetImage(ImageKind.MethodPublic);
+            return BuildDescription();
         }
 
         // TODO: Move to extension
