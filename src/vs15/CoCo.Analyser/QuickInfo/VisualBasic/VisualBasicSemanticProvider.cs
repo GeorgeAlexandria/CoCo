@@ -112,45 +112,32 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
                 if (descriptionInfo.HasDescriptions) return ExtractQuickInfoItem(token, descriptionInfo);
             }
-            if (token.Parent is AddRemoveHandlerStatementSyntax)
+
+            switch (token.Parent)
             {
-                var descriptionInfo = provider.GetAddRemoveHandlerDescription(token);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is BinaryConditionalExpressionSyntax)
-            {
-                var descriptionInfo = provider.GetNullCoalescingDescription(token);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is TernaryConditionalExpressionSyntax)
-            {
-                var descriptionInfo = provider.GetTernaryDescription(token);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is CTypeExpressionSyntax ctypeSyntax)
-            {
-                var descriptionInfo = provider.GetCTypeDescription(token, ctypeSyntax.Type);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is PredefinedCastExpressionSyntax castSyntax)
-            {
-                var descriptionInfo = provider.GetPredefinedCastDescription(token, castSyntax);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is DirectCastExpressionSyntax directCastSyntax)
-            {
-                var descriptionInfo = provider.GetDirectCastDescription(token, directCastSyntax.Type);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is TryCastExpressionSyntax tryCastSyntax)
-            {
-                var descriptionInfo = provider.GetTryCastDescription(token, tryCastSyntax.Type);
-                return ExtractQuickInfoItem(token, descriptionInfo);
-            }
-            if (token.Parent is GetTypeExpressionSyntax getTypeSyntax)
-            {
-                var descriptionInfo = provider.GetTypeDescription(token, getTypeSyntax.Type);
-                return ExtractQuickInfoItem(token, descriptionInfo);
+                case AddRemoveHandlerStatementSyntax _:
+                    return ExtractQuickInfoItem(token, provider.GetAddRemoveHandlerDescription(token));
+
+                case BinaryConditionalExpressionSyntax _:
+                    return ExtractQuickInfoItem(token, provider.GetNullCoalescingDescription(token));
+
+                case TernaryConditionalExpressionSyntax _:
+                    return ExtractQuickInfoItem(token, provider.GetTernaryDescription(token));
+
+                case CTypeExpressionSyntax ctypeSyntax:
+                    return ExtractQuickInfoItem(token, provider.GetCTypeDescription(token, ctypeSyntax.Type));
+
+                case PredefinedCastExpressionSyntax castSyntax:
+                    return ExtractQuickInfoItem(token, provider.GetPredefinedCastDescription(token, castSyntax));
+
+                case DirectCastExpressionSyntax directCastSyntax:
+                    return ExtractQuickInfoItem(token, provider.GetDirectCastDescription(token, directCastSyntax.Type));
+
+                case TryCastExpressionSyntax tryCastSyntax:
+                    return ExtractQuickInfoItem(token, provider.GetTryCastDescription(token, tryCastSyntax.Type));
+
+                case GetTypeExpressionSyntax getTypeSyntax:
+                    return ExtractQuickInfoItem(token, provider.GetTypeDescription(token, getTypeSyntax.Type));
             }
 
             return null;

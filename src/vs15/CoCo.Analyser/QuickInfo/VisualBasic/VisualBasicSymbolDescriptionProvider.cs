@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -75,9 +76,9 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText
-                ("If <expression> evaluates to a reference or Nullable value that is not Nothing the " +
-                "function returns that value. Otherwise, it calculates and returns <expressionIfNothing>."));
+            builder.Add(CreateText("If <expression> evaluates to a reference or Nullable value that is not "));
+            builder.Add(CreateKeyword("Nothing"));
+            builder.Add(CreateText(" the function returns that value. Otherwise, it calculates and returns <expressionIfNothing>."));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
@@ -110,8 +111,9 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText(
-                "If <condition> returns True the function calculates and returns <expressionIfTrue>. Otherwise, it returns <expressionIfFalse>"));
+            builder.Add(CreateText("If <condition> returns "));
+            builder.Add(CreateKeyword("True"));
+            builder.Add(CreateText(" the function calculates and returns <expressionIfTrue>. Otherwise, it returns <expressionIfFalse>"));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
@@ -132,8 +134,10 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             builder.Add(CreateKeyword("As"));
             builder.Add(CreateSpaces());
 
-            var systemTypeParts = SemanticModel.Compilation.GetTypeByMetadataName("System.Type");
-            builder.AddRange(systemTypeParts.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
+            var systemTypeParts = SemanticModel.Compilation
+                .GetTypeByMetadataName("System.Type")
+                .ToMinimalDisplayParts(SemanticModel, token.SpanStart);
+            builder.AddRange(systemTypeParts);
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
@@ -155,18 +159,16 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             builder.Add(CreateSpaces());
 
             var type = GetTypeByPredefinedCast(SemanticModel.Compilation, castSyntax.Keyword.Kind());
-            if (!(type is null))
-            {
-                builder.AddRange(type.ToMinimalDisplayParts(SemanticModel, token.SpanStart));
-            }
-            else
-            {
-                builder.Add(CreateText("<unknown data type>"));
-            }
+            var typeParts = type is null
+                ? CreateText("<unknown data type>").Enumerate()
+                : type.ToMinimalDisplayParts(SemanticModel, token.SpanStart);
+            builder.AddRange(typeParts);
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText($"Converts an <expression> to the {(type is null ? "<unknown data type>" : type.Name)} data type"));
+            builder.Add(CreateText("Converts an <expression> to the "));
+            builder.AddRange(typeParts);
+            builder.Add(CreateText(" data type"));
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
@@ -174,24 +176,32 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
 
         public SymbolDescriptionInfo GetCTypeDescription(SyntaxToken token, TypeSyntax typeSyntax)
         {
-            var description = "Returns the result of explicitly converting an <expression> to a specified data type";
-            return GetCastDescription(token, typeSyntax, "CType", description);
+            var additionalPart = CreateText("Returns the result of explicitly converting an <expression> to a specified data type");
+            return GetCastDescription(token, typeSyntax, "CType", additionalPart.Enumerate());
         }
 
         public SymbolDescriptionInfo GetDirectCastDescription(SyntaxToken token, TypeSyntax typeSyntax)
         {
-            var description =
-                "Introduces a type conversion operation similar to CType. The difference is that CType succeeds as long as there " +
-                "is a valid conversion, whereas DirectCast requires that one type inherit from or implement the other type.";
-            return GetCastDescription(token, typeSyntax, "DirectCast", description);
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateText("Introduces a type conversion operation similar to "));
+            builder.Add(CreateKeyword("CType"));
+            builder.Add(CreateText(". The difference is that "));
+            builder.Add(CreateKeyword("CType"));
+            builder.Add(CreateText(" succeeds as long as there is a valid conversion, whereas "));
+            builder.Add(CreateKeyword("DirectCast"));
+            builder.Add(CreateText(" requires that one type inherit from or implement the other type."));
+            return GetCastDescription(token, typeSyntax, "DirectCast", builder);
         }
 
         public SymbolDescriptionInfo GetTryCastDescription(SyntaxToken token, TypeSyntax typeSyntax)
         {
-            var description =
-                "Introduces a type conversion operation that does not throw an exception. If an attempted " +
-                "conversion fails, TryCast returns Nothing which your program can test for.";
-            return GetCastDescription(token, typeSyntax, "TryCast", description);
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateText("Introduces a type conversion operation that does not throw an exception. If an attempted conversion fails, "));
+            builder.Add(CreateKeyword("TryCast"));
+            builder.Add(CreateText(" returns "));
+            builder.Add(CreateKeyword("Nothing"));
+            builder.Add(CreateText(" which your program can test for."));
+            return GetCastDescription(token, typeSyntax, "TryCast", builder);
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -321,7 +331,8 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             return parts.ToImmutable();
         }
 
-        private SymbolDescriptionInfo GetCastDescription(SyntaxToken token, TypeSyntax typeSyntax, string keyword, string description)
+        private SymbolDescriptionInfo GetCastDescription<T>(
+            SyntaxToken token, TypeSyntax typeSyntax, string keyword, T additionalParts) where T : IEnumerable<SymbolDisplayPart>
         {
             var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
             builder.Add(CreateKeyword(keyword));
@@ -343,7 +354,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             AppendParts(SymbolDescriptionKind.Main, builder);
             builder.Clear();
 
-            builder.Add(CreateText(description));
+            builder.AddRange(additionalParts);
             AppendParts(SymbolDescriptionKind.Additional, builder);
             SetImage(ImageKind.MethodPublic);
             return BuildDescription();
