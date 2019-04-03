@@ -70,10 +70,14 @@ namespace CoCo.Analyser.VisualBasic
                     if (node is ImportAliasClauseSyntax && node.Parent is SimpleImportsClauseSyntax importSyntax)
                     {
                         var aliasNameSymbol = semanticModel.GetSymbolInfo(importSyntax.Name).Symbol;
-                        var aliasType =
-                            aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
-                            aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
-                            null;
+                        IClassificationType aliasType = null;
+                        if (!(aliasNameSymbol is null))
+                        {
+                            aliasType =
+                                aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
+                                aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
+                                null;
+                        }
 
                         if (!(aliasType is null))
                         {
