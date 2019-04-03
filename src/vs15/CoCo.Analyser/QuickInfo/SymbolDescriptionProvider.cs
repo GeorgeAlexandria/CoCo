@@ -45,7 +45,7 @@ namespace CoCo.Analyser.QuickInfo
             _displayConverter = displayConverter;
             _position = position;
 
-            SemanticModel = semanticModel;            
+            SemanticModel = semanticModel;
             CancellationToken = cancellationToken;
         }
 
@@ -92,7 +92,7 @@ namespace CoCo.Analyser.QuickInfo
 
         protected async Task AppendPartsAsync(ImmutableArray<ISymbol> symbols)
         {
-            var main = symbols[0];
+            var main = GetRelevantSymbol(symbols[0]);
 
             AppendDeprecatedParts(main);
             await AppendDescriptionPartsAsync(main);
@@ -129,10 +129,6 @@ namespace CoCo.Analyser.QuickInfo
             // TODO: miss something?
             switch (symbol)
             {
-                case IAliasSymbol alias:
-                    await AppendDescriptionPartsAsync(alias.Target);
-                    break;
-
                 case IDynamicTypeSymbol _:
                     AppendDynamicTypeParts();
                     break;
@@ -554,6 +550,11 @@ namespace CoCo.Analyser.QuickInfo
             format = format ?? _minimallyQualifiedFormat;
             return symbol.ToMinimalDisplayParts(SemanticModel, _position, format).ToBuilder();
         }
+
+        /// <remarks>
+        /// For the couple of symbol, such <see cref="IAliasSymbol"/>, we should collect description from a relevant symbol
+        /// </remarks>
+        private ISymbol GetRelevantSymbol(ISymbol symbol) => symbol.Kind == SymbolKind.Alias ? (symbol as IAliasSymbol)?.Target : symbol;
 
         private SemanticModel GetSemanticModel(SyntaxTree syntaxTree)
         {
