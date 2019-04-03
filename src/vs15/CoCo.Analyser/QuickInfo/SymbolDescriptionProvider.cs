@@ -142,7 +142,7 @@ namespace CoCo.Analyser.QuickInfo
                     await AppendFieldPartsAsync(field);
 
                     var fieldStart =
-                        field.Type.TypeKind == TypeKind.Enum ? 17 :
+                        field.ContainingType.TypeKind == TypeKind.Enum ? 17 :
                         field.IsConst ? 5 :
                         29;
                     AppendImageKind(fieldStart, field.DeclaredAccessibility);
@@ -315,7 +315,7 @@ namespace CoCo.Analyser.QuickInfo
             var parts = await GetDeclarationPartsAsync(symbol, symbol.IsConst);
 
             // NOTE: don't show redundant info for enum fields
-            if (symbol.Type.TypeKind != TypeKind.Enum)
+            if (symbol.ContainingType.TypeKind != TypeKind.Enum)
             {
                 parts.InsertRange(0, symbol.IsConst ? CreateDescription("constant") : CreateDescription("field"));
             }
@@ -325,7 +325,11 @@ namespace CoCo.Analyser.QuickInfo
         protected async Task AppendLocalPartsAsync(ILocalSymbol symbol)
         {
             var parts = await GetDeclarationPartsAsync(symbol, symbol.IsConst);
-            parts.InsertRange(0, symbol.IsConst ? CreateDescription("local constant") : CreateDescription("local variable"));
+            var prefixParts =
+                symbol.IsConst ? CreateDescription("local constant") :
+                symbol.IsFunctionValue ? CreateDescription("function variable") :
+                CreateDescription("local variable");
+            parts.InsertRange(0, prefixParts);
             AppendParts(SymbolDescriptionKind.Main, parts);
         }
 
