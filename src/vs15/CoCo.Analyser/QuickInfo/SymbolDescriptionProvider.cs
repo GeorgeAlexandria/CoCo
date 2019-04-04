@@ -419,6 +419,7 @@ namespace CoCo.Analyser.QuickInfo
                 if (parts is null)
                 {
                     parts = new List<SymbolDisplayPart>();
+                    parts.Add(CreatePart(SymbolDisplayPartKind.LineBreak, "\r\n"));
                 }
 
                 parts.AddRange(ToMinimalDisplayParts(typeParameters[i]));

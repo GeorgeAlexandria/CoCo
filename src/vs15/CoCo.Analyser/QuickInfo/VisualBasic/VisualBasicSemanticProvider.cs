@@ -157,8 +157,8 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                     var symbol = semanticModel.GetDeclaredSymbol(name);
                     var currentType =
                         symbol is ILocalSymbol local ? local.Type :
-                        symbol is IFieldSymbol field ? field.Type
-                        : null;
+                        symbol is IFieldSymbol field ? field.Type :
+                        null;
                     if (currentType is null) continue;
 
                     if (type is null)
