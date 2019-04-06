@@ -46,7 +46,7 @@ namespace CoCo.Providers
             }
 
             var language = textView.TextBuffer.GetLanguage();
-            if (_quickInfoOptions.TryGetValue(language, out var state) && state != QuickInfoState.Override)
+            if (language is null || _quickInfoOptions.TryGetValue(language, out var state) && state != QuickInfoState.Override)
             {
                 // NOTE: the next tooltip presenter would be invoked when an one from the exported returns null
                 return null;

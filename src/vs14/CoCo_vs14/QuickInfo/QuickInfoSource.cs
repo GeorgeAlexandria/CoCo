@@ -34,7 +34,7 @@ namespace CoCo.QuickInfo
             _textBuffer = textBuffer;
             _documentFactoryService = documentFactoryService;
             _language = _textBuffer.GetLanguage();
-            _state = quickInfoOptions.TryGetValue(_language, out var state)
+            _state = !(_language is null) && quickInfoOptions.TryGetValue(_language, out var state)
                 ? state
                 : QuickInfoChangingService.Instance.GetDefaultValue();
 
@@ -177,6 +177,8 @@ namespace CoCo.QuickInfo
                 image == CoCoImageKind.TypeParameter ? KnownImageIds.Type :
                 image == CoCoImageKind.RangeVariable ? KnownImageIds.FieldPublic :
                 image == CoCoImageKind.Error ? KnownImageIds.StatusError :
+
+                image == CoCoImageKind.Keyword ? KnownImageIds.IntellisenseKeyword :
                 -27;
 
             if (id == -27)
@@ -259,6 +261,8 @@ namespace CoCo.QuickInfo
 
         private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)
         {
+            if (_language is null) return;
+
             foreach (var (language, state) in args.Changes)
             {
                 if (_language.Equals(language))

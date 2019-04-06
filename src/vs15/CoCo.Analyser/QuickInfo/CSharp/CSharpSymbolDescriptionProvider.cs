@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using CoCo.Analyser.CSharp;
+using CoCo.Utils;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -9,17 +9,13 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 {
     internal class CSharpSymbolDescriptionProvider : SymbolDescriptionProvider
     {
-        private readonly CSharpClassifier _classifier;
-
         public CSharpSymbolDescriptionProvider(
-            CSharpClassifier classifier,
+            SymbolDisplayPartConverter converter,
             SemanticModel semanticModel,
             int position,
-            ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
-            : base(semanticModel, position, symbols, cancellationToken)
+            : base(converter, semanticModel, position, cancellationToken)
         {
-            _classifier = classifier;
         }
 
         protected override void AppenDeprecatedParts() => AppendParts(SymbolDescriptionKind.Main,
@@ -36,6 +32,41 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                 SymbolDescriptionKind.Main, CreatePunctuation("("), CreateText(prefixString), CreatePunctuation(")"), CreateSpaces());
         }
 
+        protected override ImmutableArray<SymbolDisplayPart>.Builder GetAnonymousTypeParts(
+            SymbolDisplayPart part, ITypeSymbol anonymousType)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolDisplayPart>();
+            builder.Add(CreateSpaces(2));
+            builder.Add(part);
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreateText("is"));
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreateKeyword("new"));
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePunctuation("{"));
+
+            var wasAdded = false;
+            foreach (var member in anonymousType.GetMembers())
+            {
+                if (!(member is IPropertySymbol prop) || !prop.CanBeReferencedByName) continue;
+
+                if (wasAdded)
+                {
+                    builder.Add(CreatePunctuation(","));
+                }
+
+                wasAdded = true;
+                builder.Add(CreateSpaces(1));
+                builder.AddRange(ToMinimalDisplayParts(prop.Type));
+                builder.Add(CreateSpaces(1));
+                builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.PropertyName, prop, prop.Name));
+            }
+
+            builder.Add(CreateSpaces(1));
+            builder.Add(CreatePunctuation("}"));
+            return builder;
+        }
+
         protected override async Task<ImmutableArray<SymbolDisplayPart>> GetInitializerPartsAsync(ISymbol symbol)
         {
             object evaluatedValue = null;
@@ -44,10 +75,10 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             {
                 case IFieldSymbol field:
                     evaluatedValue = field.ConstantValue;
-                    var fieldDeclarator = await GetDeclaration<VariableDeclaratorSyntax>(symbol);
+                    var fieldDeclarator = await symbol.GetDeclaration<VariableDeclaratorSyntax>(CancellationToken);
                     if (fieldDeclarator is null)
                     {
-                        var enumMemberDeclaration = await GetDeclaration<EnumMemberDeclarationSyntax>(symbol);
+                        var enumMemberDeclaration = await symbol.GetDeclaration<EnumMemberDeclarationSyntax>(CancellationToken);
                         if (!(enumMemberDeclaration is null))
                         {
                             initializer = enumMemberDeclaration.EqualsValue;
@@ -61,7 +92,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 
                 case ILocalSymbol local:
                     evaluatedValue = local.ConstantValue;
-                    var localDeclarator = await GetDeclaration<VariableDeclaratorSyntax>(symbol);
+                    var localDeclarator = await symbol.GetDeclaration<VariableDeclaratorSyntax>(CancellationToken);
                     if (!(localDeclarator is null))
                     {
                         initializer = localDeclarator.Initializer;
@@ -70,7 +101,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 
                 case IParameterSymbol parameter:
                     evaluatedValue = parameter.ExplicitDefaultValue;
-                    var parameterSyntax = await GetDeclaration<ParameterSyntax>(symbol);
+                    var parameterSyntax = await symbol.GetDeclaration<ParameterSyntax>(CancellationToken);
                     if (!(parameterSyntax is null))
                     {
                         initializer = parameterSyntax.Default;
@@ -85,7 +116,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                 {
                     builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.StringLiteral, null, $"\"{str}\""));
                 }
-                else if (IsNumber(evaluatedValue))
+                else if (evaluatedValue.IsNumber())
                 {
                     builder.Add(new SymbolDisplayPart(SymbolDisplayPartKind.NumericLiteral, null, evaluatedValue.ToString()));
                 }
@@ -95,39 +126,11 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             return GetInitializerParts(builder, initializer);
         }
 
-        protected override TaggedText ToTag(SymbolDisplayPart displayPart)
-        {
-            if (displayPart.Symbol is null) return default;
-
-            var classificationType = _classifier.GetClassification(displayPart.Symbol);
-            if (classificationType?.Classification is null) return default;
-
-            return new TaggedText(classificationType.Classification, displayPart.ToString());
-        }
-
-        /// <summary>
-        /// Returns the first declartation of type <typeparamref name="T"/>
-        /// </summary>
-        private async Task<T> GetDeclaration<T>(ISymbol symbol) where T : SyntaxNode
-        {
-            foreach (var reference in symbol.DeclaringSyntaxReferences)
-            {
-                var node = await reference.GetSyntaxAsync(CancellationToken);
-                if (node is T castedNode) return castedNode;
-            }
-            return null;
-        }
-
         private ImmutableArray<SymbolDisplayPart> GetInitializerParts(
             ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueClauseSyntax equalsValue)
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
             return parts.ToImmutable();
         }
-
-        private static bool IsNumber(object value) =>
-           value is sbyte || value is byte || value is short || value is ushort ||
-           value is int || value is uint || value is long || value is ulong ||
-           value is float || value is double || value is decimal;
     }
 }

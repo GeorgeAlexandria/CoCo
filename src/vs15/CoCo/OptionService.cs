@@ -148,8 +148,7 @@ namespace CoCo
         {
             var option = new QuickInfoOption();
 
-            // TODO: currently works for csharp
-            foreach (var language in new[] { Languages.CSharp/*, Languages.VisualBasic */})
+            foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
             {
                 var quickInfo = new QucikInfoData(language);
 

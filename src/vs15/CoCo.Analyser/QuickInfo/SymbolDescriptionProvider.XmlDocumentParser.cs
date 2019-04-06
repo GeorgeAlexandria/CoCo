@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using CoCo.Utils;
@@ -8,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace CoCo.Analyser.QuickInfo
 {
-    public partial class SymbolDescriptionProvider
+    internal partial class SymbolDescriptionProvider
     {
         private class XmlDocumentParser
         {
@@ -190,7 +189,7 @@ namespace CoCo.Analyser.QuickInfo
 
             private IEnumerable<SymbolDisplayPart> RefToParts(string elementName, string refValue)
             {
-                var semanticModel = _provider._semanticModel;
+                var semanticModel = _provider.SemanticModel;
                 if (!(semanticModel is null))
                 {
                     var symbol = DocumentationCommentId.GetFirstSymbolForDeclarationId(refValue, semanticModel.Compilation);
@@ -292,7 +291,7 @@ namespace CoCo.Analyser.QuickInfo
             /// </summary>
             private string Normalize(string text)
             {
-                var builder =  StringBuilderCache.Acquire();
+                var builder = StringBuilderCache.Acquire();
                 var currentIsWhiteSpace = false;
                 foreach (var item in text)
                 {

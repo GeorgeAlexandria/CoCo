@@ -9,8 +9,8 @@ namespace CoCo.Analyser.QuickInfo
         /// Try to reteive relevant <see cref="ClassificationTypeNames"/> for the <paramref name="part"/>
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the <see cref="SymbolDisplayPart.Kind"/> of <paramref name="part"/> 
-        /// is not one of keyword or punctuation types 
+        /// <see langword="true"/> if the <see cref="SymbolDisplayPart.Kind"/> of <paramref name="part"/>
+        /// is not one of keyword or punctuation types
         /// </returns>
         public static bool TryGetClassificationName(SymbolDisplayPart part, out string classification)
         {

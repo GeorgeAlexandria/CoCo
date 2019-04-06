@@ -70,10 +70,14 @@ namespace CoCo.Analyser.VisualBasic
                     if (node is ImportAliasClauseSyntax && node.Parent is SimpleImportsClauseSyntax importSyntax)
                     {
                         var aliasNameSymbol = semanticModel.GetSymbolInfo(importSyntax.Name).Symbol;
-                        var aliasType =
-                            aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
-                            aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
-                            null;
+                        IClassificationType aliasType = null;
+                        if (!(aliasNameSymbol is null))
+                        {
+                            aliasType =
+                                aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
+                                aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
+                                null;
+                        }
 
                         if (!(aliasType is null))
                         {
@@ -162,6 +166,65 @@ namespace CoCo.Analyser.VisualBasic
             }
 
             return spans;
+        }
+
+        public override IClassificationType GetClassification(ISymbol symbol)
+        {
+            IClassificationType GetClassification()
+            {
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Field:
+                        var fieldSymbol = symbol as IFieldSymbol;
+                        return
+                            fieldSymbol.Type.TypeKind == TypeKind.Enum ? _enumFieldType :
+                            fieldSymbol.IsConst ? _constantFieldType :
+                            _fieldType;
+
+                    case SymbolKind.RangeVariable:
+                        return _rangeVariableType;
+
+                    case SymbolKind.Local:
+                        var localSymbol = symbol as ILocalSymbol;
+                        return
+                            localSymbol.IsStatic ? _staticLocalVariableType :
+                            localSymbol.IsFunctionValue ? _functionVariableType :
+                            _localVariableType;
+
+                    case SymbolKind.Method:
+                        var methodSymbol = symbol as IMethodSymbol;
+                        return
+                            methodSymbol.IsExtensionMethod ? _extensionMethodType :
+                            methodSymbol.IsShared() || methodSymbol.ContainingType?.TypeKind == TypeKind.Module ? _sharedMethodType :
+                            methodSymbol.ReturnType.SpecialType == SpecialType.System_Void ? _subType :
+                            _functionType;
+
+                    case SymbolKind.Parameter:
+                        return _parameterType;
+
+                    case SymbolKind.Property:
+                        var propertySymbol = symbol as IPropertySymbol;
+                        return propertySymbol.IsWithEvents ? _withEventsPropertyType : _propertyType;
+
+                    case SymbolKind.Namespace:
+                        return _namespaceType;
+
+                    case SymbolKind.Event:
+                        return _eventType;
+
+                    case SymbolKind.TypeParameter:
+                        return _typeParameterType;
+
+                    case SymbolKind.NamedType:
+                        return GetTypeClassification(symbol as INamedTypeSymbol);
+                }
+                return null;
+            }
+
+            var classification = GetClassification();
+            return classification is null || options[classification].IsDisabled
+                ? null
+                : classification;
         }
 
         private IClassificationType GetTypeClassification(INamedTypeSymbol typeSymbol) =>

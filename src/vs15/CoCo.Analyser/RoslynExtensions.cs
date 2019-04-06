@@ -10,6 +10,20 @@ namespace CoCo.Analyser
 {
     public static class RoslynExtensions
     {
+        /// <summary>
+        /// Returns the first declartation of type <typeparamref name="T"/>
+        /// </summary>
+        public static async Task<T> GetDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken = default)
+            where T : SyntaxNode
+        {
+            foreach (var reference in symbol.DeclaringSyntaxReferences)
+            {
+                var node = await reference.GetSyntaxAsync(cancellationToken);
+                if (node is T castedNode) return castedNode;
+            }
+            return null;
+        }
+
         public static bool IsExtensionMethod(this IMethodSymbol method) =>
             method.IsExtensionMethod || method.MethodKind == MethodKind.ReducedExtension;
 

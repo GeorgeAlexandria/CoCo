@@ -71,10 +71,14 @@ namespace CoCo.Analyser.CSharp
                     if ((node.Parent as NameEqualsSyntax)?.Parent is UsingDirectiveSyntax usingSyntax)
                     {
                         var aliasNameSymbol = semanticModel.GetSymbolInfo(usingSyntax.Name).Symbol;
-                        var aliasType =
-                            aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
-                            aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
-                            null;
+                        IClassificationType aliasType = null;
+                        if (!(aliasNameSymbol is null))
+                        {
+                            aliasType =
+                                aliasNameSymbol.Kind == SymbolKind.Namespace ? _aliasNamespaceType :
+                                aliasNameSymbol.Kind == SymbolKind.NamedType ? GetTypeClassification(aliasNameSymbol as INamedTypeSymbol) :
+                                null;
+                        }
 
                         if (!(aliasType is null))
                         {
@@ -164,7 +168,7 @@ namespace CoCo.Analyser.CSharp
             return spans;
         }
 
-        public IClassificationType GetClassification(ISymbol symbol)
+        public override IClassificationType GetClassification(ISymbol symbol)
         {
             IClassificationType GetClassification()
             {
@@ -214,9 +218,7 @@ namespace CoCo.Analyser.CSharp
 
                     case SymbolKind.NamedType:
                         var typeSymbol = symbol as INamedTypeSymbol;
-                        var type = GetTypeClassification(typeSymbol);
-                        if (!(type is null)) return type;
-                        break;
+                        return GetTypeClassification(typeSymbol);
                 }
 
                 return null;

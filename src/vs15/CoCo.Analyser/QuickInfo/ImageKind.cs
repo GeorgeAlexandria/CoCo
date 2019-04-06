@@ -75,6 +75,7 @@
         Parameter = 56,
         TypeParameter = 57,
         RangeVariable = 58,
+        Keyword = 60,
 
         Error = 100,
     }

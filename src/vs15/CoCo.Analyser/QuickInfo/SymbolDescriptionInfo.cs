@@ -17,5 +17,7 @@ namespace CoCo.Analyser.QuickInfo
         public ImageKind Image { get; }
 
         public bool IsDefault => Descriptions is null || Image == ImageKind.None;
+
+        public bool HasDescriptions => !(Descriptions is null);
     }
 }

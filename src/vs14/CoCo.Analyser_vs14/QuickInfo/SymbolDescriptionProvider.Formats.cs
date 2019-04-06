@@ -2,7 +2,7 @@
 
 namespace CoCo.Analyser.QuickInfo
 {
-    public abstract partial class SymbolDescriptionProvider
+    internal abstract partial class SymbolDescriptionProvider
     {
         private static readonly SymbolDisplayFormat _typeParameterFormat = new SymbolDisplayFormat(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Omitted,
