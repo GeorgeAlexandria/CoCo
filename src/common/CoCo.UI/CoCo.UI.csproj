@@ -16,80 +16,14 @@
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <Compile Update="UI\QuickInfoControl.xaml.cs">
-      <DependentUpon>QuickInfoControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="UI\ClassificationsControl.xaml.cs">
-      <DependentUpon>ClassificationsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="UI\PresetsControl.xaml.cs">
-      <DependentUpon>PresetsControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="UI\VsToolTipControl.xaml.cs">
-      <DependentUpon>VsToolTipControl.xaml</DependentUpon>
-    </Compile>
-    <Page Include="UI\Resources\Templates\Buttons.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\Styles\GridView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Resources\Styles\ItemsControls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Resources\Styles\Controls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\Resources\Colors.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\ClassificationsControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\PresetsControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\ResourceDictionary.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\Templates\Controls.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\VsToolTipControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\QuickInfoControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
+
   <ItemGroup>
-    <None Update="UI\Resources\Styles\Controls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="UI\Resources\Styles\GridView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="UI\Resources\Styles\ItemsControls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="UI\Resources\Templates\Buttons.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="UI\Resources\Templates\Controls.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
+    <Page Include="UI\**\*.xaml" SubType="Designer" Generator="MSBuild:Compile" />
+    <Compile Update="UI\**\*.xaml.cs" SubType="Code" DependentUpon="%(Filename)" />
   </ItemGroup>
+
 </Project>
