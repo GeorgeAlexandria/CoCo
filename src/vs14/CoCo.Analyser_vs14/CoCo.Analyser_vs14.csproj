@@ -31,23 +31,15 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo.Analyser\QuickInfo\**\*.*" Link="QuickInfo\%(RecursiveDir)%(Filename)%(Extension)" Exclude="**\SymbolDescriptionProvider.Formats.cs;**\SymbolDisplayPartHelper.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationsChangedEventArgs.cs" Link="ClassificationsChangedEventArgs.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationService.cs" Link="ClassificationService.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\IClassificationChangingService.cs" Link="IClassificationChangingService.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ICodeClassifier.cs" Link="ICodeClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ImmutableExtensions.cs" Link="ImmutableExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\RoslynExtensions.cs" Link="RoslynExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicClassifier.cs" Link="VisualBasic\VisualBasicClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicNames.cs" Link="VisualBasic\VisualBasicNames.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicSyntaxNodeExtensions.cs" Link="VisualBasic\VisualBasicSyntaxNodeExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualStudioExtensions.cs" Link="VisualStudioExtensions.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\obj\**" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Properties\AssemblyInfo.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\ClassificationHelper.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpClassifier.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpNames.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDescriptionProvider.Formats.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDisplayPartHelper.cs" />
+
+    <Compile Include="..\..\vs15\CoCo.Analyser\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Log.cs" Link="Log.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpSyntaxNodeExtensions.cs" Link="CSharp\CSharpSyntaxNodeExtensions.cs" />
   </ItemGroup>
 </Project>
