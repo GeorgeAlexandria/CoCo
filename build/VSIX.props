@@ -1,6 +1,7 @@
 <Project>
 
   <PropertyGroup>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <UseCodebase>true</UseCodebase>
     <DeployExtension>True</DeployExtension>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>

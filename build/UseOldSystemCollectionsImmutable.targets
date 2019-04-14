@@ -1,4 +1,11 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>$(_DirectoryBuildTargetsBasePath)\build\lib\System.Collections.Immutable.dll</HintPath>
+      <SpecificVersion>True</SpecificVersion>
+    </Reference>
+  </ItemGroup>
+
   <!-- Swap reference on the System.Collections.Immutable.1.2.0.0 to System.Collections.Immutable.1.1.37.0 
   from the 'lib' folder. Look at the issue https://github.com/dotnet/roslyn/issues/15559-->
   <Target Name="UseOldSystemCollectionsImmutable" AfterTargets="_HandlePackageFileConflicts">
@@ -6,7 +13,7 @@
       <SystemCollectionsImmutableItem Include="@(Reference)"
                                       Condition="$([System.String]::new('%(FileName)').StartsWith('System.Collections.Immutable'))" />
       <Reference Remove="@(SystemCollectionsImmutableItem)" />
-      <Reference Include="$(MSBuildThisFileDirectory)System.Collections.Immutable.dll" />
+      <Reference Include="$(MSBuildThisFileDirectory)\lib\System.Collections.Immutable.dll" />
     </ItemGroup>
   </Target>
 </Project>
