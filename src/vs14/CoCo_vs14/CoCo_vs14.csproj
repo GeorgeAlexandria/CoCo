@@ -25,10 +25,10 @@
 
   <Target Name="ForceIncludeNewestAssemblies" BeforeTargets="GetVsixSourceItems">
     <ItemGroup>
-      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" ForceIncludeInVSIX="True"/>
+      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" ForceIncludeInVSIX="True" />
       <!--Workaround: currently PackageReference doesn't handle embed interop types => directly add reference. 
-      Look at isse https://github.com/NuGet/Home/issues/2365-->
-      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll'))" ForceIncludeInVSIX="True"/>
+      Look at issue https://github.com/NuGet/Home/issues/2365-->
+      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll'))" ForceIncludeInVSIX="True" />
     </ItemGroup>
   </Target>
 
@@ -40,8 +40,8 @@
     <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.7.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.7.71" PrivateAssets="All">
+    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.8.36" />
+    <PackageReference Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.9.23" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.3.25407" />
@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="15.7.17" />
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.0.102" />
     <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="14.3.25407" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
   </ItemGroup>

@@ -41,7 +41,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="15.8.525" />
     <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="15.8.209" />
     <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="15.9.28307" />
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.9.3039" PrivateAssets="all">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="15.9.3039" PrivateAssets="All">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
