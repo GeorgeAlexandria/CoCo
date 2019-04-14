@@ -1,0 +1,10 @@
+<Project>
+  <!-- Workaround: Microsoft.CodeAnalysis.Workspace.Common have been using sqlite libraries since v2.9.0 and this libraries actually are existing 
+  in the last version of Visual Studio 2017 and 2019, but them don't suppresed by Microsoft.VsSDK.targets from vssdk.buildtools. 
+  Look at the issue https://github.com/Microsoft/VSProjectSystem/issues/324 -->
+  <Target Name="RemoveSqliteLibraries" BeforeTargets="ValidateVsixParts" >
+    <ItemGroup>
+      <VSIXSourceItem Remove="@(VSIXSourceItem)" Condition="$([System.String]::new('%(FileName)').ToUpper().Contains('SQLITE'))" />
+    </ItemGroup>
+  </Target>  
+</Project>

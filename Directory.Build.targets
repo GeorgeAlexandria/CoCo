@@ -1,7 +1,4 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <GetVsixSourceItemsDependsOn>$(GetVsixSourceItemsDependsOn);IncludePackageReferenceAssets</GetVsixSourceItemsDependsOn>
-  </PropertyGroup>
   <Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">
     <ItemGroup>
       <ReferenceCopyLocalPaths Remove="@(ReferenceSatellitePaths)" />
@@ -10,12 +7,6 @@
   <Target Name="RemoveSatellitePackageAssets" AfterTargets="ResolvePackageAssets">
     <ItemGroup>
       <ResourceCopyLocalItems Remove="@(ResourceCopyLocalItems)" />
-    </ItemGroup>
-  </Target>
-  <Target Name="IncludePackageReferenceAssets">
-    <ItemGroup>
-      <VSIXCopyLocalReferenceSourceItem Include="@(ReferenceCopyLocalPaths)" Condition="'%(ReferenceCopyLocalPaths.Extension)' =='.dll'" />
-      <VSIXCopyLocalReferenceSourceItem Include="@(ReferenceCopyLocalPaths)" Condition="$(IncludeDebugSymbolsInVSIXContainer) And '%(ReferenceCopyLocalPaths.Extension)' =='.pdb'" />
     </ItemGroup>
   </Target>
 </Project>

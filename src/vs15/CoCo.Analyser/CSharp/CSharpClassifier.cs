@@ -201,7 +201,6 @@ namespace CoCo.Analyser.CSharp
 
                     case SymbolKind.Parameter:
                         return _parameterType;
-                        break;
 
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;

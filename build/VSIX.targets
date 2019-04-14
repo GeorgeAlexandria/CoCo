@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <GetVsixSourceItemsDependsOn>$(GetVsixSourceItemsDependsOn);IncludePackageReferenceAssetsToVSIX</GetVsixSourceItemsDependsOn>
+  </PropertyGroup>
+  <Target Name="IncludePackageReferenceAssetsToVSIX">
+    <ItemGroup>
+      <VSIXCopyLocalReferenceSourceItem Include="@(ReferenceCopyLocalPaths)" Condition="$(IncludeDebugSymbolsInVSIXContainer) And '%(ReferenceCopyLocalPaths.Extension)' =='.pdb'" />
+      <TempVSIXCopyLocalItems Include="@(ReferenceCopyLocalPaths)" Condition="$(IncludeCopyLocalReferencesInVSIXContainer) And '%(Extension)' =='.dll'" >
+        <!-- Workaround: package references don't contain `copylocal` when ptoject is sdk style project so CreateVsixSourceItemFromReferences task from vssdk.buildtools 
+        would append this items without filtering them by SuppressFromVsix list. Thereofere, set `copylocal` by hand to avoid this behavior -->
+        <CopyLocal Condition="'%(ReferenceCopyLocalPaths.CopyLocal)' == ''">True</CopyLocal>
+      </TempVSIXCopyLocalItems>
+      <VSIXCopyLocalReferenceSourceItem Include="@(TempVSIXCopyLocalItems)" Condition="%(TempVSIXCopyLocalItems.CopyLocal)" />
+    </ItemGroup>
+  </Target>
+</Project>

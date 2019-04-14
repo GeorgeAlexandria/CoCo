@@ -7,13 +7,13 @@
     <OutputPath>..\..\bin\CoCo.Analyser_vs14\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildProjectDirectory)\..\lib\UseOldSystemCollectionsImmutable.targets" />
+  <Import Project="..\..\..\build\UseOldSystemCollectionsImmutable.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition=" '$(Configuration)' != 'Release' " />
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="1.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="1.3.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="1.3.1" />
@@ -24,30 +24,18 @@
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <HintPath>..\lib\System.Collections.Immutable.dll</HintPath>
-      <SpecificVersion>true</SpecificVersion>
-    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo.Analyser\QuickInfo\**\*.*" Link="QuickInfo\%(RecursiveDir)%(Filename)%(Extension)" Exclude="**\SymbolDescriptionProvider.Formats.cs;**\SymbolDisplayPartHelper.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationsChangedEventArgs.cs" Link="ClassificationsChangedEventArgs.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ClassificationService.cs" Link="ClassificationService.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\IClassificationChangingService.cs" Link="IClassificationChangingService.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ICodeClassifier.cs" Link="ICodeClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\ImmutableExtensions.cs" Link="ImmutableExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Languages.cs" Link="Languages.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Names.cs" Link="Names.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\RoslynEditorClassifier.cs" Link="RoslynEditorClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\RoslynExtensions.cs" Link="RoslynExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicClassifier.cs" Link="VisualBasic\VisualBasicClassifier.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicNames.cs" Link="VisualBasic\VisualBasicNames.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualBasic\VisualBasicSyntaxNodeExtensions.cs" Link="VisualBasic\VisualBasicSyntaxNodeExtensions.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\VisualStudioExtensions.cs" Link="VisualStudioExtensions.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\obj\**" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Properties\AssemblyInfo.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\ClassificationHelper.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpClassifier.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpNames.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDescriptionProvider.Formats.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDisplayPartHelper.cs" />
+
+    <Compile Include="..\..\vs15\CoCo.Analyser\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\Log.cs" Link="Log.cs" />
-    <Compile Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpSyntaxNodeExtensions.cs" Link="CSharp\CSharpSyntaxNodeExtensions.cs" />
   </ItemGroup>
 </Project>
