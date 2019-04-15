@@ -1,0 +1,36 @@
+<Project>
+  <!-- This project must be imported after Microsoft.VsSDK.targets -->
+  <UsingTask TaskName="GetInstallationDirectoryForInstance" AssemblyFile="$(VsSDKAssemblyFile)" />
+  <UsingTask TaskName="GetExtensionsPath" AssemblyFile="$(VsSDKAssemblyFile)" />
+  <UsingTask TaskName="GetDeploymentPathFromVsixManifest" AssemblyFile="$(VsSDKAssemblyFile)" />
+
+  <Target
+    Name="CorrectVsixDeploymentPath"
+    Condition="'$(DeployExtension)'=='true' and '$(CreateVsixContainer)'=='true'"
+    AfterTargets="GetVsixDeploymentPath" BeforeTargets="FindExistingDeploymentPath">
+
+    <!-- Workaround: microsoft.vssdk.buildtask determines deployment path by the current launching version of visual studio, so 
+    to determine path which is relative by runnable visual studio version use run command or start program-->
+    <PropertyGroup>
+      <DeployTargetInstallationDirectory Condition="$(RunCommand)!=''">$([System.IO.Directory]::GetParent($(RunCommand)))</DeployTargetInstallationDirectory>
+      <DeployTargetInstallationDirectory Condition="$(StartProgram)!='' and $(RunCommand)==''">$([System.IO.Directory]::GetParent($(StartProgram)))</DeployTargetInstallationDirectory>
+    </PropertyGroup>
+
+    <GetExtensionsPath
+      DevenvInstallationDirectory="$(DeployTargetInstallationDirectory)"
+      RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)">
+      <Output TaskParameter="LocalExtensionsPath" PropertyName="ExtensionsPath" />
+    </GetExtensionsPath>
+
+    <GetDeploymentPathFromVsixManifest
+      Condition="Exists('$(IntermediateVsixManifest)')"
+      ExtensionsPath="$(ExtensionsPath)"
+      VsixManifest="$(IntermediateVsixManifest)"
+      DevenvInstallationDirectory="$(DeployTargetInstallationDirectory)"
+      RootSuffix="$(VSSDKTargetPlatformRegRootSuffix)">
+      <Output TaskParameter="DeploymentPath" PropertyName="VsixDeploymentPath" />
+      <Output TaskParameter="VsixID" PropertyName="VsixID" />
+      <Output TaskParameter="VsixVersion" PropertyName="VsixVersion" />
+    </GetDeploymentPathFromVsixManifest>
+  </Target>
+</Project>
