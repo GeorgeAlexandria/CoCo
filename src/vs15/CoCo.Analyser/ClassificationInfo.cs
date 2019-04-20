@@ -17,14 +17,20 @@ namespace CoCo.Analyser
 
     public struct ClassificationOption
     {
-        public ClassificationOption(bool isDisabled, bool isDisabledInXml)
+        public ClassificationOption(bool isDisabled, bool isDisabledInXml, bool isDisabledInEditor, bool isDisabledInQuickInfo)
         {
             IsDisabled = isDisabled;
             IsDisabledInXml = isDisabledInXml;
+            IsDisabledInEditor = isDisabledInEditor;
+            IsDisabledInQuickInfo = isDisabledInQuickInfo;
         }
 
         public bool IsDisabled { get; }
 
         public bool IsDisabledInXml { get; }
+
+        public bool IsDisabledInEditor { get; }
+
+        public bool IsDisabledInQuickInfo { get; }
     }
 }

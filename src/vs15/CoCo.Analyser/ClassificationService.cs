@@ -28,7 +28,7 @@ namespace CoCo.Analyser
         public static ClassificationOption GetDefaultInfo(IClassificationType type) => GetDefaultOption(type.Classification);
 
         public static ClassificationOption GetDefaultOption(string name) => _disabledClassifications.Contains(name)
-            ? new ClassificationOption(true, true)
-            : new ClassificationOption(false, false);
+            ? new ClassificationOption(true, true, true, true)
+            : new ClassificationOption(false, false, false, false);
     }
 }

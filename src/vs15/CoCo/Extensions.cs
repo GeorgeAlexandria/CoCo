@@ -33,6 +33,8 @@ namespace CoCo
                 IsBaseline = formatting.TextDecorations.Contains(TextDecorations.Baseline[0]),
                 IsDisabled = defaultOption.IsDisabled,
                 IsDisabledInXml = defaultOption.IsDisabledInXml,
+                IsDisabledInEditor = defaultOption.IsDisabledInEditor,
+                IsDisabledInQuickInfo = defaultOption.IsDisabledInQuickInfo,
             };
         }
 
@@ -53,7 +55,7 @@ namespace CoCo
         /// </summary>
         public static string GetFontFamily(this TextFormattingRunProperties formatting)
         {
-            string source = null;
+            string source;
             if (!formatting.TypefaceEmpty)
             {
                 source = formatting.Typeface.FontFamily.Source;

@@ -9,7 +9,6 @@ using CoCo.UI;
 using CoCo.UI.Data;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Text.Formatting;
-using QucikInfoData = CoCo.UI.Data.QuickInfo;
 
 namespace CoCo
 {
@@ -18,7 +17,7 @@ namespace CoCo
         /// <summary>
         /// Converts <paramref name="option"/> to <see cref="EditorSettings"/>
         /// </summary>
-        public static EditorSettings ToSettings(EditorOption option)
+        public static EditorSettings ToSettings(UI.Data.ClassificationData option)
         {
             List<ClassificationSettings> ToSettings(ICollection<Classification> classifications)
             {
@@ -63,30 +62,31 @@ namespace CoCo
         }
 
         /// <summary>
-        /// Converts <paramref name="option"/> to <see cref="QuickInfoSettings"/>
+        /// Converts <paramref name="option"/> to <see cref="GeneralSettings"/>
         /// </summary>
-        public static QuickInfoSettings ToSettings(QuickInfoOption option)
+        public static GeneralSettings ToSettings(GeneralData option)
         {
-            var languageSettings = new List<QuickInfoLanguageSettings>(option.Languages.Count);
+            var languageSettings = new List<GeneralLanguageSettings>(option.Languages.Count);
             foreach (var item in option.Languages)
             {
-                languageSettings.Add(new QuickInfoLanguageSettings
+                languageSettings.Add(new GeneralLanguageSettings
                 {
-                    Name = item.Language,
-                    State = item.State,
+                    Name = item.Name,
+                    QuickInfoState = item.QuickInfoState,
+                    EditorState = item.EditorState,
                 });
             }
-            return new QuickInfoSettings { Languages = languageSettings };
+            return new GeneralSettings { Languages = languageSettings };
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="EditorOption"/> using a default values
+        /// Converts <paramref name="settings"/> to <see cref="UI.Data.ClassificationData"/> using a default values
         /// </summary>
-        public static EditorOption ToOption(EditorSettings settings)
+        public static UI.Data.ClassificationData ToOption(EditorSettings settings)
         {
             var defaultPresets = PresetService.GetDefaultPresets();
 
-            var option = new EditorOption();
+            var option = new UI.Data.ClassificationData();
             foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
                 var language = new Language(languageName);
@@ -142,15 +142,15 @@ namespace CoCo
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="QuickInfoOption"/> using a default values
+        /// Converts <paramref name="settings"/> to <see cref="GeneralData"/> using a default values
         /// </summary>
-        public static QuickInfoOption ToOption(QuickInfoSettings settings)
+        public static GeneralData ToOption(GeneralSettings settings)
         {
-            var option = new QuickInfoOption();
+            var option = new GeneralData();
 
             foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
             {
-                var quickInfo = new QucikInfoData(language);
+                var generalLanguage = new GeneralLanguage(language);
 
                 var languageExists = false;
                 foreach (var item in settings.Languages)
@@ -159,18 +159,25 @@ namespace CoCo
                     {
                         languageExists = true;
 
-                        quickInfo.State = item.State.HasValue && QuickInfoStateService.SupportedState.ContainsKey(item.State.Value)
-                            ? item.State.Value
-                            : (int)QuickInfoChangingService.Instance.GetDefaultValue();
+                        generalLanguage.QuickInfoState = item.QuickInfoState.HasValue &&
+                            QuickInfoStateService.SupportedState.ContainsKey(item.QuickInfoState.Value)
+                                ? item.QuickInfoState.Value
+                                : (int)GeneralChangingService.Instance.GetDefaultQuickInfoState();
 
-                        option.Languages.Add(quickInfo);
+                        generalLanguage.EditorState = item.EditorState.HasValue &&
+                            EditorStateService.SupportedState.ContainsKey(item.EditorState.Value)
+                                ? item.EditorState.Value
+                                : (int)GeneralChangingService.Instance.GetDefaultEditorState();
+
+                        option.Languages.Add(generalLanguage);
                     }
                 }
 
                 if (!languageExists)
                 {
-                    quickInfo.State = (int)QuickInfoChangingService.Instance.GetDefaultValue();
-                    option.Languages.Add(quickInfo);
+                    generalLanguage.QuickInfoState = (int)GeneralChangingService.Instance.GetDefaultQuickInfoState();
+                    generalLanguage.EditorState = (int)GeneralChangingService.Instance.GetDefaultEditorState();
+                    option.Languages.Add(generalLanguage);
                 }
             }
 
@@ -268,7 +275,7 @@ namespace CoCo
             classification.IsBold = classificationSettings.IsBold ?? defaultFormatting.Bold;
 
             if (string.IsNullOrWhiteSpace(classificationSettings.FontStyle) ||
-                !FontStyleService.SupportedStyleByNames.TryGetValue(classificationSettings.FontStyle, out var fontStyle))
+                !FontStyleService.SupportedStyleByNames.ContainsKey(classificationSettings.FontStyle))
             {
                 classification.FontStyle = defaultFormatting.GetFontStyleName();
             }
@@ -300,6 +307,8 @@ namespace CoCo
 
             classification.IsDisabled = classificationSettings.IsDisabled ?? defaultOption.IsDisabled;
             classification.IsDisabledInXml = classificationSettings.IsDisabledInXml ?? defaultOption.IsDisabledInXml;
+            classification.IsDisabledInEditor = classificationSettings.IsDisabledInEditor ?? defaultOption.IsDisabledInEditor;
+            classification.IsDisabledInQuickInfo = classificationSettings.IsDisabledInQuickInfo ?? defaultOption.IsDisabledInQuickInfo;
 
             return classification;
         }
@@ -345,6 +354,8 @@ namespace CoCo
                 IsBaseline = classification.IsBaseline,
                 IsDisabled = classification.IsDisabled,
                 IsDisabledInXml = classification.IsDisabledInXml,
+                IsDisabledInEditor = classification.IsDisabledInEditor,
+                IsDisabledInQuickInfo = classification.IsDisabledInQuickInfo,
             };
 
             if (!classification.BackgroundWasReset)

@@ -35,16 +35,17 @@ namespace CoCo.Providers
                 [Languages.VisualBasic] = default
             };
 
-            QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
+            GeneralChangingService.Instance.GeneralChanged += OnGeneralChanged;
         }
 
         public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
             if (!_wereSettingsSet)
             {
-                var settings = Settings.SettingsManager.LoadQuickInfoSettings(Paths.CoCoQuickInfoSettingsFile);
+                MigrationService.MigrateSettingsTo_3_1_0();
+                var settings = Settings.SettingsManager.LoadGeneralSettings(Paths.CoCoGeneralSettingsFile, MigrationService.Instance);
                 var options = OptionService.ToOption(settings);
-                QuickInfoChangingService.SetQuickInfoOptions(options);
+                GeneralChangingService.SetGeneralOptions(options);
                 _wereSettingsSet = true;
             }
 
@@ -52,13 +53,13 @@ namespace CoCo.Providers
                 new QuickInfoSource(textBuffer, _quickInfoOptions, _textDocumentFactoryService));
         }
 
-        private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)
+        private void OnGeneralChanged(GeneralChangedEventArgs args)
         {
-            foreach (var (language, state) in args.Changes)
+            foreach (var (language, generalInfo) in args.Changes)
             {
                 if (_quickInfoOptions.ContainsKey(language))
                 {
-                    _quickInfoOptions[language] = state;
+                    _quickInfoOptions[language] = generalInfo.QuickInfoState;
                 }
             }
         }

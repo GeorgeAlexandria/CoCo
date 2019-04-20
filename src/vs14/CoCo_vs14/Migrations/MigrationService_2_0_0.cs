@@ -48,7 +48,7 @@ namespace CoCo
         /// </remarks>
         public static void MigrateSettingsTo_2_0_0()
         {
-            var cocoSettings = new FileInfo(Paths.CoCoSettingsFile);
+            var cocoSettings = new FileInfo(Paths.CoCoClassificationSettingsFile);
 
             // NOTE: create CoCo folder if it doesn't exist
             if (!cocoSettings.Directory.Exists)
@@ -155,7 +155,7 @@ namespace CoCo
                 }
             };
 
-            SettingsManager.SaveSettings(settings, Paths.CoCoSettingsFile);
+            SettingsManager.SaveSettings(settings, Paths.CoCoClassificationSettingsFile);
         }
 
         /// <summary>

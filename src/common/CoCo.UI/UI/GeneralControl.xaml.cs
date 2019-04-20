@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CoCo.UI
 {
     /// <summary>
-    /// Interaction logic for QuickInfoControl.xaml
+    /// Interaction logic for GeneralControl.xaml
     /// </summary>
-    public partial class QuickInfoControl : UserControl
+    public partial class GeneralControl : UserControl
     {
-        public QuickInfoControl()
+        public GeneralControl()
         {
             InitializeComponent();
         }

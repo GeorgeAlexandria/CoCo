@@ -5,11 +5,11 @@ using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
-    public class EditorOptionViewModel : BaseViewModel
+    public class ClassificationOptionViewModel : BaseViewModel
     {
         private readonly ObservableCollection<LanguageViewModel> _languages = new ObservableCollection<LanguageViewModel>();
 
-        public EditorOptionViewModel(EditorOption option, IResetValuesProvider resetValuesProvider)
+        public ClassificationOptionViewModel(ClassificationData option, IResetValuesProvider resetValuesProvider)
         {
             // TODO: it will invoke one event at invocation of clear and by one event per added item
             // Write custom BulkObservableCollection to avoid so many events
@@ -40,9 +40,9 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedLanguage, value);
         }
 
-        public EditorOption ExtractData()
+        public ClassificationData ExtractData()
         {
-            var option = new EditorOption();
+            var option = new ClassificationData();
             foreach (var languageViewModel in _languages)
             {
                 option.Languages.Add(languageViewModel.ExtractData());

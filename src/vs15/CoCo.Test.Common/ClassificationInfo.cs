@@ -2,11 +2,13 @@
 
 namespace CoCo.Test.Common
 {
-    public class SimplifiedClassificationInfo
+    public struct SimplifiedClassificationInfo
     {
         public string Name;
         public bool IsDisabled;
         public bool IsDisabledInXml;
+        public bool IsDisabledInEditor;
+        public bool IsDisabledInQuickInfo;
 
         private SimplifiedClassificationInfo(string name)
         {
@@ -14,6 +16,8 @@ namespace CoCo.Test.Common
             var info = ClassificationService.GetDefaultOption(name);
             IsDisabled = info.IsDisabled;
             IsDisabledInXml = info.IsDisabledInXml;
+            IsDisabledInEditor = info.IsDisabledInEditor;
+            IsDisabledInQuickInfo = info.IsDisabledInQuickInfo;
         }
 
         public SimplifiedClassificationInfo Disable() => new SimplifiedClassificationInfo(Name)
@@ -43,6 +47,6 @@ namespace CoCo.Test.Common
         public static implicit operator SimplifiedClassificationInfo(string name) => new SimplifiedClassificationInfo(name);
 
         public static implicit operator ClassificationOption(SimplifiedClassificationInfo info) =>
-            new ClassificationOption(info.IsDisabled, info.IsDisabledInXml);
+            new ClassificationOption(info.IsDisabled, info.IsDisabledInXml, info.IsDisabledInEditor, info.IsDisabledInQuickInfo);
     }
 }

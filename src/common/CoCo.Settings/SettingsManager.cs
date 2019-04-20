@@ -16,15 +16,19 @@ namespace CoCo.Settings
 
         private const string CurrentClassificationsName = "current";
 
-        public static void SaveSettings(QuickInfoSettings settings, string path)
+        public static void SaveSettings(GeneralSettings settings, string path)
         {
             var jSettings = new JObject();
             foreach (var language in settings.Languages)
             {
                 var jLanguage = new JObject();
-                if (language.State.HasValue)
+                if (language.QuickInfoState.HasValue)
                 {
-                    jLanguage.Add(nameof(QuickInfoLanguageSettings.State), new JValue(language.State));
+                    jLanguage.Add(nameof(GeneralLanguageSettings.QuickInfoState), language.QuickInfoState.Value);
+                }
+                if (language.EditorState.HasValue)
+                {
+                    jLanguage.Add(nameof(GeneralLanguageSettings.EditorState), language.EditorState.Value);
                 }
                 jSettings.Add(language.Name, jLanguage);
             }
@@ -59,11 +63,11 @@ namespace CoCo.Settings
             WriteToFile(jSettings, path);
         }
 
-        public static QuickInfoSettings LoadQuickInfoSettings(string path)
+        public static GeneralSettings LoadGeneralSettings(string path, IMigrationService service = null)
         {
             if (!File.Exists(path))
             {
-                return new QuickInfoSettings { Languages = new List<QuickInfoLanguageSettings>() };
+                return new GeneralSettings { Languages = new List<GeneralLanguageSettings>() };
             }
 
             JObject jSettings;
@@ -76,28 +80,29 @@ namespace CoCo.Settings
                 }
                 catch (JsonReaderException)
                 {
-                    return new QuickInfoSettings { Languages = new List<QuickInfoLanguageSettings>() };
+                    return new GeneralSettings { Languages = new List<GeneralLanguageSettings>() };
                 }
             }
 
-            var languages = new List<QuickInfoLanguageSettings>();
+            var languages = new List<GeneralLanguageSettings>();
             foreach (var jSetting in jSettings)
             {
                 if (!(jSetting.Value is JObject jLanguageSettings)) continue;
 
-                var language = new QuickInfoLanguageSettings
+                var language = new GeneralLanguageSettings
                 {
                     Name = jSetting.Key,
                 };
 
-                if (jLanguageSettings[nameof(QuickInfoLanguageSettings.State)] is JValue jValue && jValue.Value is long state)
+                ParseGeneralSettings(jLanguageSettings, ref language, out var properties);
+                if (!(service is null))
                 {
-                    language.State = (int)state;
+                    service.MigrateGeneral(properties, ref language);
                 }
                 languages.Add(language);
             }
 
-            return new QuickInfoSettings { Languages = languages };
+            return new GeneralSettings { Languages = languages };
         }
 
         public static EditorSettings LoadEditorSettings(string path, IMigrationService service = null)
@@ -191,10 +196,25 @@ namespace CoCo.Settings
             }
         }
 
+        private static void ParseGeneralSettings(
+           JObject jObject, ref GeneralLanguageSettings generalLanguage, out Dictionary<string, object> properties)
+        {
+            if (jObject.TryGetProperty(nameof(GeneralLanguageSettings.QuickInfoState), out long quickInfoState))
+            {
+                generalLanguage.QuickInfoState = (int)quickInfoState;
+            }
+            if (jObject.TryGetProperty(nameof(GeneralLanguageSettings.EditorState), out long state))
+            {
+                generalLanguage.EditorState = (int)state;
+            }
+
+            properties = jObject.GetProperties();
+        }
+
         private static bool TryParseClassification(
             JObject jObject, out ClassificationSettings classification, out IReadOnlyDictionary<string, object> properties)
         {
-            if (!(jObject[nameof(ClassificationSettings.Name)] is JValue jValue) || !(jValue.Value is string name))
+            if (!jObject.TryGetProperty(nameof(ClassificationSettings.Name), out string name))
             {
                 classification = default;
                 properties = _emptyProperties;
@@ -203,95 +223,45 @@ namespace CoCo.Settings
 
             classification = new ClassificationSettings { Name = name };
 
-            if (jObject[nameof(ClassificationSettings.Background)] is JValue jBackground &&
-                jBackground.Value is string background && TryParseColor(background, out Color color))
+            if (jObject.TryGetProperty(nameof(classification.Background), out string background) &&
+                background.TryParseColor(out Color color))
             {
                 classification.Background = color;
             }
-            if (jObject[nameof(ClassificationSettings.Foreground)] is JValue jForeground &&
-                jForeground.Value is string foreground && TryParseColor(foreground, out color))
+            if (jObject.TryGetProperty(nameof(classification.Foreground), out string foreground) &&
+                foreground.TryParseColor(out color))
             {
                 classification.Foreground = color;
             }
-            if (jObject[nameof(ClassificationSettings.FontFamily)] is JValue jFontFamily &&
-                jFontFamily.Value is string fontFamily)
+            if (jObject.TryGetProperty(nameof(classification.FontFamily), out string fontFamily))
             {
                 classification.FontFamily = fontFamily;
             }
-            if (jObject[nameof(ClassificationSettings.IsBold)] is JValue jBold &&
-                jBold.Value is bool isBold)
-            {
-                classification.IsBold = isBold;
-            }
-            if (jObject[nameof(ClassificationSettings.FontStyle)] is JValue jFontStyle &&
-                jFontStyle.Value is string fontStyle)
+            if (jObject.TryGetProperty(nameof(classification.FontStyle), out string fontStyle))
             {
                 classification.FontStyle = fontStyle;
             }
-            if (jObject[nameof(ClassificationSettings.FontStretch)] is JValue jFontStretch &&
-                jFontStretch.Value is long fontStretch && fontStretch < 10)
+            if (jObject.TryGetProperty(nameof(classification.FontStretch), out long fontStretch) && fontStretch < 10)
             {
                 classification.FontStretch = (int)fontStretch;
             }
-            if (jObject[nameof(ClassificationSettings.IsOverline)] is JValue jOverline &&
-                jOverline.Value is bool isOverline)
-            {
-                classification.IsOverline = isOverline;
-            }
-            if (jObject[nameof(ClassificationSettings.IsUnderline)] is JValue jUnderline &&
-                jUnderline.Value is bool isUnderline)
-            {
-                classification.IsUnderline = isUnderline;
-            }
-            if (jObject[nameof(ClassificationSettings.IsStrikethrough)] is JValue jStrikethrough &&
-                jStrikethrough.Value is bool isStrikethrough)
-            {
-                classification.IsStrikethrough = isStrikethrough;
-            }
-            if (jObject[nameof(ClassificationSettings.IsBaseline)] is JValue jBaseline &&
-                jBaseline.Value is bool isBaseline)
-            {
-                classification.IsBaseline = isBaseline;
-            }
-            if (jObject[nameof(ClassificationSettings.FontRenderingSize)] is JValue jRenderingSize &&
-                jRenderingSize.Value is long renderingSize && renderingSize < 512)
+            if (jObject.TryGetProperty(nameof(classification.FontRenderingSize), out long renderingSize) && renderingSize < 512)
             {
                 classification.FontRenderingSize = (int)renderingSize;
             }
-            if (jObject[nameof(ClassificationSettings.IsDisabled)] is JValue jDisabled &&
-                jDisabled.Value is bool isDisabled)
-            {
-                classification.IsDisabled = isDisabled;
-            }
-            if (jObject[nameof(ClassificationSettings.IsDisabledInXml)] is JValue jDisabledInXml &&
-                jDisabledInXml.Value is bool isDisabledInXml)
-            {
-                classification.IsDisabledInXml = isDisabledInXml;
-            }
 
-            var classificationProperties = new Dictionary<string, object>(jObject.Count);
-            foreach (var (propertyName, value) in jObject)
-            {
-                if (value is JValue jProperty)
-                {
-                    classificationProperties.Add(propertyName, jProperty.Value);
-                }
-            }
+            classification.IsBold = jObject.GetPropertyValue<bool>(nameof(classification.IsBold));
+            classification.IsOverline = jObject.GetPropertyValue<bool>(nameof(classification.IsOverline));
+            classification.IsUnderline = jObject.GetPropertyValue<bool>(nameof(classification.IsUnderline));
+            classification.IsStrikethrough = jObject.GetPropertyValue<bool>(nameof(classification.IsStrikethrough));
+            classification.IsBaseline = jObject.GetPropertyValue<bool>(nameof(classification.IsBaseline));
+            classification.IsDisabled = jObject.GetPropertyValue<bool>(nameof(classification.IsDisabled));
+            classification.IsDisabledInEditor = jObject.GetPropertyValue<bool>(nameof(classification.IsDisabledInEditor));
+            classification.IsDisabledInQuickInfo = jObject.GetPropertyValue<bool>(nameof(classification.IsDisabledInQuickInfo));
+            classification.IsDisabledInXml = jObject.GetPropertyValue<bool>(nameof(classification.IsDisabledInXml));
 
-            properties = classificationProperties;
+            properties = jObject.GetProperties();
             return true;
-        }
-
-        private static bool TryParseColor(string value, out Color color)
-        {
-            // NOTE: #ARGB – 9 chars
-            if (value.Length == 9)
-            {
-                return ColorHelpers.TryParseColor(value.Substring(1), out color);
-            }
-
-            color = new Color();
-            return false;
         }
 
         private static JObject ToJObject(ClassificationSettings classification)
@@ -310,47 +280,88 @@ namespace CoCo.Settings
             {
                 jClassification.Add(nameof(classification.FontFamily), new JValue(classification.FontFamily));
             }
-            if (classification.IsBold.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsBold), new JValue(classification.IsBold.Value));
-            }
             if (!string.IsNullOrWhiteSpace(classification.FontStyle))
             {
                 jClassification.Add(nameof(classification.FontStyle), new JValue(classification.FontStyle));
             }
-            if (classification.FontStretch.HasValue)
-            {
-                jClassification.Add(nameof(classification.FontStretch), new JValue(classification.FontStretch.Value));
-            }
-            if (classification.IsOverline.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsOverline), new JValue(classification.IsOverline.Value));
-            }
-            if (classification.IsUnderline.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsUnderline), new JValue(classification.IsUnderline.Value));
-            }
-            if (classification.IsStrikethrough.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsStrikethrough), new JValue(classification.IsStrikethrough.Value));
-            }
-            if (classification.IsBaseline.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsBaseline), new JValue(classification.IsBaseline.Value));
-            }
-            if (classification.FontRenderingSize.HasValue)
-            {
-                jClassification.Add(nameof(classification.FontRenderingSize), new JValue(classification.FontRenderingSize.Value));
-            }
-            if (classification.IsDisabled.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsDisabled), new JValue(classification.IsDisabled.Value));
-            }
-            if (classification.IsDisabledInXml.HasValue)
-            {
-                jClassification.Add(nameof(classification.IsDisabledInXml), new JValue(classification.IsDisabledInXml.Value));
-            }
+
+            jClassification
+                .AppendProperty(nameof(classification.IsBold), classification.IsBold)
+                .AppendProperty(nameof(classification.FontStretch), classification.FontStretch)
+                .AppendProperty(nameof(classification.IsOverline), classification.IsOverline)
+                .AppendProperty(nameof(classification.IsUnderline), classification.IsUnderline)
+                .AppendProperty(nameof(classification.IsStrikethrough), classification.IsStrikethrough)
+                .AppendProperty(nameof(classification.IsBaseline), classification.IsBaseline)
+                .AppendProperty(nameof(classification.FontRenderingSize), classification.FontRenderingSize)
+                .AppendProperty(nameof(classification.IsDisabled), classification.IsDisabled)
+                .AppendProperty(nameof(classification.IsDisabledInEditor), classification.IsDisabledInEditor)
+                .AppendProperty(nameof(classification.IsDisabledInQuickInfo), classification.IsDisabledInQuickInfo)
+                .AppendProperty(nameof(classification.IsDisabledInXml), classification.IsDisabledInXml);
+
             return jClassification;
+        }
+
+        private static bool TryParseColor(this string value, out Color color)
+        {
+            // NOTE: #ARGB – 9 chars
+            if (value.Length == 9)
+            {
+                return ColorHelpers.TryParseColor(value.Substring(1), out color);
+            }
+
+            color = new Color();
+            return false;
+        }
+
+        /// <summary>
+        /// Try to retrieves value for <paramref name="name"/> property under <paramref name="jObject"/> to <paramref name="value"/>
+        /// </summary>
+        private static bool TryGetProperty<T>(this JObject jObject, string name, out T value)
+        {
+            if (jObject[name] is JValue jValue && jValue.Value is T receivedValue)
+            {
+                value = receivedValue;
+                return true;
+            }
+            value = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Retrieves value for <paramref name="name"/> property under <paramref name="jObject"/>
+        /// </summary>
+        /// <returns></returns>
+        private static T? GetPropertyValue<T>(this JObject jObject, string name) where T : struct =>
+            jObject[name] is JValue jValue && jValue.Value is T receivedValue
+                ? receivedValue
+                : default;
+
+        /// <summary>
+        /// Appends property to <paramref name="jObject"/> if <paramref name="value"/> has value
+        /// </summary>
+        private static JObject AppendProperty<T>(this JObject jObject, string name, T? value) where T : struct
+        {
+            if (value.HasValue)
+            {
+                jObject.Add(name, new JValue(value.Value));
+            }
+            return jObject;
+        }
+
+        /// <summary>
+        /// Retrieves properties and their values
+        /// </summary>
+        private static Dictionary<string, object> GetProperties(this JObject jObject)
+        {
+            var properties = new Dictionary<string, object>(jObject.Count);
+            foreach (var (propertyName, value) in jObject)
+            {
+                if (value is JValue jProperty)
+                {
+                    properties.Add(propertyName, jProperty.Value);
+                }
+            }
+            return properties;
         }
     }
 }

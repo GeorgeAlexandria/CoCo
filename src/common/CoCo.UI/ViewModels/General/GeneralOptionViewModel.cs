@@ -5,42 +5,41 @@ using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
-    public class QuickInfoOptionViewModel : BaseViewModel
+    public class GeneralOptionViewModel : BaseViewModel
     {
-        private readonly ObservableCollection<QuickInfoViewModel> _languages = new ObservableCollection<QuickInfoViewModel>();
+        private readonly ObservableCollection<GeneralLanguageViewModel> _languages = new ObservableCollection<GeneralLanguageViewModel>();
 
-        public QuickInfoOptionViewModel(QuickInfoOption option)
+        public GeneralOptionViewModel(GeneralData option)
         {
-            _languages.Clear();
             foreach (var language in option.Languages)
             {
-                _languages.Add(new QuickInfoViewModel(language));
+                _languages.Add(new GeneralLanguageViewModel(language));
             }
 
             Languages = CollectionViewSource.GetDefaultView(_languages);
-            Languages.SortDescriptions.Add(new SortDescription(nameof(QuickInfoViewModel.Language), ListSortDirection.Ascending));
+            Languages.SortDescriptions.Add(new SortDescription(nameof(GeneralLanguageViewModel.Language), ListSortDirection.Ascending));
         }
 
         public ICollectionView Languages { get; }
 
-        private QuickInfoViewModel _selectedLanguage;
+        private GeneralLanguageViewModel _selectedLanguage;
 
-        public QuickInfoViewModel SelectedLanguage
+        public GeneralLanguageViewModel SelectedLanguage
         {
             get
             {
                 if (_selectedLanguage is null && Languages.MoveCurrentToFirst())
                 {
-                    SelectedLanguage = (QuickInfoViewModel)Languages.CurrentItem;
+                    SelectedLanguage = (GeneralLanguageViewModel)Languages.CurrentItem;
                 }
                 return _selectedLanguage;
             }
             set => SetProperty(ref _selectedLanguage, value);
         }
 
-        public QuickInfoOption ExtractData()
+        public GeneralData ExtractData()
         {
-            var option = new QuickInfoOption();
+            var option = new GeneralData();
             foreach (var languageViewModel in _languages)
             {
                 option.Languages.Add(languageViewModel.ExtractData());

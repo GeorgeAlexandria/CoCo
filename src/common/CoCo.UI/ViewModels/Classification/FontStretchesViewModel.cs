@@ -21,13 +21,7 @@ namespace CoCo.UI.ViewModels
             _stretches = new ObservableCollection<string>();
             InitializeStretches(_stretches, selectedFamily, selectedStyle);
 
-            /// NOTE: avoid redundant creation of <see cref="ListCollectionView"/>
-            if (!(CollectionViewSource.GetDefaultView(_stretches) is ListCollectionView listView))
-            {
-                listView = new ListCollectionView(_stretches);
-            }
-            listView.CustomSort = StringComparer.Ordinal;
-            Stretches = listView;
+            Stretches = _stretches.GetDefaultListView();
         }
 
         public ICollectionView Stretches { get; }

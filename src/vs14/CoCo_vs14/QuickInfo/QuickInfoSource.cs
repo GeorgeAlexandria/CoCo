@@ -36,10 +36,10 @@ namespace CoCo.QuickInfo
             _language = _textBuffer.GetLanguage();
             _state = !(_language is null) && quickInfoOptions.TryGetValue(_language, out var state)
                 ? state
-                : QuickInfoChangingService.Instance.GetDefaultValue();
+                : GeneralChangingService.Instance.GetDefaultQuickInfoState();
 
             _documentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
-            QuickInfoChangingService.Instance.QuickInfoChanged += OnQuickInfoChanged;
+            GeneralChangingService.Instance.GeneralChanged += OnGeneralChanged;
         }
 
         public void Dispose()
@@ -259,15 +259,15 @@ namespace CoCo.QuickInfo
             return textBlock;
         }
 
-        private void OnQuickInfoChanged(QuickInfoChangedEventArgs args)
+        private void OnGeneralChanged(GeneralChangedEventArgs args)
         {
             if (_language is null) return;
 
-            foreach (var (language, state) in args.Changes)
+            foreach (var (language, generakInfo) in args.Changes)
             {
                 if (_language.Equals(language))
                 {
-                    _state = state;
+                    _state = generakInfo.QuickInfoState;
                 }
             }
         }
@@ -276,7 +276,7 @@ namespace CoCo.QuickInfo
         {
             if (e.TextDocument.TextBuffer == _textBuffer)
             {
-                QuickInfoChangingService.Instance.QuickInfoChanged -= OnQuickInfoChanged;
+                GeneralChangingService.Instance.GeneralChanged -= OnGeneralChanged;
             }
         }
     }

@@ -5,7 +5,7 @@
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
-   d:DataContext="{d:DesignInstance viewModels:EditorOptionViewModel}"
+   d:DataContext="{d:DesignInstance viewModels:ClassificationOptionViewModel}"
    d:DesignHeight="200"
    d:DesignWidth="400"
    mc:Ignorable="d">

@@ -50,7 +50,7 @@ namespace CoCo.Providers
             MigrationService.MigrateSettingsTo_2_0_0();
             if (!_wereSettingsSet)
             {
-                var settings = SettingsManager.LoadEditorSettings(Paths.CoCoSettingsFile, MigrationService.Instance);
+                var settings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);
                 var option = OptionService.ToOption(settings);
                 FormattingService.SetFormattingOptions(option);
                 ClassificationChangingService.SetAnalyzingOptions(option);

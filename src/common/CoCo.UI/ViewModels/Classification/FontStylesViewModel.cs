@@ -18,13 +18,7 @@ namespace CoCo.UI.ViewModels
             _styles = new ObservableCollection<string>();
             InitializeStyles(_styles, selectedFamily);
 
-            /// NOTE: avoid redundant creation of <see cref="ListCollectionView"/>
-            if (!(CollectionViewSource.GetDefaultView(_styles) is ListCollectionView listView))
-            {
-                listView = new ListCollectionView(_styles);
-            }
-            listView.CustomSort = StringComparer.Ordinal;
-            Styles = listView;
+            Styles = _styles.GetDefaultListView();
         }
 
         public ICollectionView Styles { get; }

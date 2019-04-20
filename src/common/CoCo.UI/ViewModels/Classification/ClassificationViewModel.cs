@@ -12,6 +12,8 @@ namespace CoCo.UI.ViewModels
         {
             _classificationName = classification.Name;
             _isDisabled = classification.IsDisabled;
+            _IsDisabledInEditor = classification.IsDisabledInEditor;
+            _IsDisabledInQuickInfo = classification.IsDisabledInQuickInfo;
             _isDisabledInXml = classification.IsDisabledInXml;
             _isBold = classification.IsBold;
             _isOverline = classification.IsOverline;
@@ -63,6 +65,22 @@ namespace CoCo.UI.ViewModels
         {
             get => _isDisabled;
             set => SetProperty(ref _isDisabled, value);
+        }
+
+        private bool _IsDisabledInEditor;
+
+        public bool IsDisabledInEditor
+        {
+            get => _IsDisabledInEditor;
+            set => SetProperty(ref _IsDisabledInEditor, value);
+        }
+
+        private bool _IsDisabledInQuickInfo;
+
+        public bool IsDisabledInQuickInfo
+        {
+            get => _IsDisabledInQuickInfo;
+            set => SetProperty(ref _IsDisabledInQuickInfo, value);
         }
 
         private bool _isDisabledInXml;
@@ -148,6 +166,8 @@ namespace CoCo.UI.ViewModels
             FontRenderingSize = _fontRenderingSize,
 
             IsDisabled = IsDisabled,
+            IsDisabledInEditor = IsDisabledInEditor,
+            IsDisabledInQuickInfo = IsDisabledInQuickInfo,
             IsDisabledInXml = IsDisabledInXml,
 
             ForegroundWasReset = Foreground.ColorWasReset,

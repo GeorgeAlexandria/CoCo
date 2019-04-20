@@ -7,7 +7,7 @@
    xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
-   d:DataContext="{d:DesignInstance viewModels:EditorOptionViewModel}"
+   d:DataContext="{d:DesignInstance viewModels:ClassificationOptionViewModel}"
    d:DesignHeight="450"
    d:DesignWidth="800"
    mc:Ignorable="d">
@@ -78,12 +78,11 @@
          </ListView>
          <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-               <RowDefinition Height="Auto" />
                <RowDefinition Height="*" />
+               <RowDefinition Height="2.5*" />
             </Grid.RowDefinitions>
             <GroupBox
                Grid.Row="0"
-               Width="Auto"
                BorderBrush="{StaticResource SoftGrey3}"
                BorderThickness="2"
                Template="{StaticResource groupBoxControlTemplate}">
@@ -95,31 +94,47 @@
                         Text="Analyze settings" />
                   </DataTemplate>
                </GroupBox.HeaderTemplate>
-               <WrapPanel
-                  Width="Auto"
-                  MinHeight="50"
-                  MaxWidth="270"
-                  Margin="5,0,0,0"
-                  HorizontalAlignment="Left"
-                  DataContext="{Binding ElementName=listView, Path=SelectedItem}">
-                  <CheckBox
-                     Content="Disable classification"
-                     IsChecked="{Binding IsDisabled}"
-                     Style="{StaticResource checkBoxFlatStyle}" />
-                  <CheckBox IsChecked="{Binding IsDisabledInXml}" Style="{StaticResource checkBoxFlatStyle}">
-                     <TextBlock
-                        VerticalAlignment="Bottom"
-                        Background="Transparent"
-                        LineHeight="13"
-                        LineStackingStrategy="BlockLineHeight"
-                        Text="Disable classification inside xml doc comment"
-                        TextWrapping="Wrap" />
-                  </CheckBox>
-               </WrapPanel>
+               <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
+                  <WrapPanel
+                     MinHeight="50"
+                     MaxWidth="270"
+                     Margin="5,0,0,0"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+                     <CheckBox
+                        Content="Disable classification"
+                        IsChecked="{Binding IsDisabled}"
+                        Style="{StaticResource checkBoxFlatStyle}" />
+                     <CheckBox IsChecked="{Binding IsDisabledInEditor}" Style="{StaticResource checkBoxFlatStyle}">
+                        <TextBlock
+                           VerticalAlignment="Bottom"
+                           Background="Transparent"
+                           LineStackingStrategy="BlockLineHeight"
+                           Text="Disable classification in editor"
+                           TextWrapping="Wrap" />
+                     </CheckBox>
+                     <CheckBox IsChecked="{Binding IsDisabledInQuickInfo}" Style="{StaticResource checkBoxFlatStyle}">
+                        <TextBlock
+                           VerticalAlignment="Bottom"
+                           Background="Transparent"
+                           LineStackingStrategy="BlockLineHeight"
+                           Text="Disable classification in quick info"
+                           TextWrapping="Wrap" />
+                     </CheckBox>
+                     <CheckBox IsChecked="{Binding IsDisabledInXml}" Style="{StaticResource checkBoxFlatStyle}">
+                        <TextBlock
+                           VerticalAlignment="Bottom"
+                           Background="Transparent"
+                           LineHeight="14"
+                           LineStackingStrategy="BlockLineHeight"
+                           Text="Disable classification inside xml doc comment"
+                           TextWrapping="Wrap" />
+                     </CheckBox>
+                  </WrapPanel>
+               </ScrollViewer>
             </GroupBox>
             <GroupBox
                Grid.Row="1"
-               Width="Auto"
                BorderBrush="{StaticResource SoftGrey3}"
                BorderThickness="2"
                Template="{StaticResource groupBoxControlTemplate}">
@@ -131,7 +146,7 @@
                         Text="Decoration settings" />
                   </DataTemplate>
                </GroupBox.HeaderTemplate>
-               <ScrollViewer Height="200" Template="{StaticResource scrollViewerTemplate}">
+               <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
                   <WrapPanel
                      Width="250"
                      HorizontalAlignment="Left"

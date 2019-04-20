@@ -46,6 +46,10 @@ namespace CoCo.UI.Data
 
         public bool IsDisabled { get; set; }
 
+        public bool IsDisabledInEditor { get; set; }
+
+        public bool IsDisabledInQuickInfo { get; set; }
+
         public bool IsDisabledInXml { get; set; }
     }
 }

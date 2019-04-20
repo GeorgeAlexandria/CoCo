@@ -15,7 +15,7 @@ namespace CoCo.Editor
 
         public event ClassificationChangedEventHandler ClassificationChanged;
 
-        public static void SetAnalyzingOptions(EditorOption option)
+        public static void SetAnalyzingOptions(ClassificationData option)
         {
             var classificationTypes = new Dictionary<string, IClassificationType>(Names.All.Count);
             foreach (var languageClassifications in ClassificationManager.GetClassifications().Values)
@@ -33,7 +33,11 @@ namespace CoCo.Editor
                 {
                     if (classificationTypes.TryGetValue(classification.Name, out var type))
                     {
-                        classifications.Add(type, new ClassificationOption(classification.IsDisabled, classification.IsDisabledInXml));
+                        classifications.Add(type, new ClassificationOption(
+                            classification.IsDisabled,
+                            classification.IsDisabledInXml,
+                            classification.IsDisabledInEditor,
+                            classification.IsDisabledInQuickInfo));
                     }
                 }
             }

@@ -34,5 +34,9 @@ namespace CoCo.Settings
         public bool? IsDisabled { get; set; }
 
         public bool? IsDisabledInXml { get; set; }
+
+        public bool? IsDisabledInEditor { get; set; }
+
+        public bool? IsDisabledInQuickInfo { get; set; }
     }
 }

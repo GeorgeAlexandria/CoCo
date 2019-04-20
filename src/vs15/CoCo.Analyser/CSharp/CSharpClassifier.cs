@@ -224,7 +224,10 @@ namespace CoCo.Analyser.CSharp
             }
 
             var classification = GetClassification();
-            return classification is null || options[classification].IsDisabled
+            if (classification is null) return null;
+
+            var info = options[classification];
+            return info.IsDisabled || info.IsDisabledInQuickInfo
                 ? null
                 : classification;
         }
@@ -238,11 +241,10 @@ namespace CoCo.Analyser.CSharp
             null;
 
         private void AppendClassificationSpan(
-           List<ClassificationSpan> spans, ITextSnapshot snapshot,
-            TextSpan span, IClassificationType type, SyntaxNode node = null)
+           List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
         {
             var info = options[type];
-            if (info.IsDisabled) return;
+            if (info.IsDisabled || info.IsDisabledInEditor) return;
 
             if (node is null || !info.IsDisabledInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment())
             {
