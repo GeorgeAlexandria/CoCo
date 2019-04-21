@@ -17,15 +17,19 @@ namespace CoCo.Analyser.Editor
         }
 
         internal CSharpTextBufferClassifier(
-             Dictionary<string, ClassificationInfo> classifications,
-             IClassificationChangingService analyzingService,
-             ITextDocumentFactoryService textDocumentFactoryService,
-             ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            Dictionary<string, ClassificationInfo> classifications,
+            IClassificationChangingService classificationChangingService,
+            bool isEnable,
+            IEditorChangingService editorChangingService,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            ITextBuffer buffer) : base(isEnable, editorChangingService, textDocumentFactoryService, buffer)
         {
-            _service = CSharpClassifierService.GetClassifier(classifications, analyzingService);
+            _service = CSharpClassifierService.GetClassifier(classifications, classificationChangingService);
         }
 
         internal override ICodeClassifier CodeClassifier => _service;
+
+        protected override string Language => Languages.CSharp;
 
         internal override List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)

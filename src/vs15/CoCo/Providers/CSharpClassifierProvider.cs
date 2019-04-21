@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using CoCo.Analyser;
 using CoCo.Analyser.Classifications;
 using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Analyser.Editor;
@@ -22,12 +23,17 @@ namespace CoCo.Providers
     //[ContentType("text")]
     internal class CSharpClassifierProvider : IClassifierProvider
     {
+        private readonly Dictionary<string, ClassificationInfo> _classificationsInfo;
+
         /// <summary>
         /// Determines that settings was set to avoid a many sets settings from the classifier
         /// </summary>
-        private static bool _wereSettingsSet;
+        private bool _wereSettingsSet;
 
-        private readonly Dictionary<string, ClassificationInfo> _classificationsInfo;
+        /// <summary>
+        /// Determines that classifications in editor is enable or not
+        /// </summary>
+        private bool _isEnable;
 
         public CSharpClassifierProvider()
         {
@@ -36,7 +42,8 @@ namespace CoCo.Providers
             {
                 _classificationsInfo[item] = default;
             }
-            ClassificationChangingService.Instance.ClassificationChanged += OnAnalyzeOptionChanged;
+            ClassificationChangingService.Instance.ClassificationChanged += OnClassificationsChanged;
+            GeneralChangingService.Instance.EditorOptionsChanged += OnEditorOptionsChanged;
         }
 
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
@@ -55,18 +62,25 @@ namespace CoCo.Providers
             MigrationService.MigrateSettingsTo_2_0_0();
             if (!_wereSettingsSet)
             {
-                var settings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);
-                var option = OptionService.ToOption(settings);
-                FormattingService.SetFormattingOptions(option);
-                ClassificationChangingService.SetAnalyzingOptions(option);
+                var editorSettings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);
+                var editorOption = OptionService.ToOption(editorSettings);
+                FormattingService.SetFormattingOptions(editorOption);
+                ClassificationChangingService.SetAnalyzingOptions(editorOption);
+
+                var generalSettings = SettingsManager.LoadGeneralSettings(Paths.CoCoGeneralSettingsFile, MigrationService.Instance);
+                var generalOption = OptionService.ToOption(generalSettings);
+                GeneralChangingService.SetGeneralOptions(generalOption);
+
                 _wereSettingsSet = true;
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() => new CSharpTextBufferClassifier(
-                _classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
+                _classificationsInfo, ClassificationChangingService.Instance,
+                _isEnable, GeneralChangingService.Instance,
+                _textDocumentFactoryService, textBuffer));
         }
 
-        private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)
+        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
         {
             foreach (var (classificationType, info) in args.ChangedClassifications)
             {
@@ -74,6 +88,14 @@ namespace CoCo.Providers
                 {
                     _classificationsInfo[classificationType.Classification] = new ClassificationInfo(classificationType, info);
                 }
+            }
+        }
+
+        private void OnEditorOptionsChanged(EditorChangedEventArgs args)
+        {
+            if (args.Changes.TryGetValue(Languages.CSharp, out var isEnable))
+            {
+                _isEnable = isEnable;
             }
         }
     }

@@ -17,13 +17,17 @@ namespace CoCo.Analyser.Editor
         }
 
         internal VisualBasicTextBufferClassifier(
-             Dictionary<string, ClassificationInfo> classifications,
-             IClassificationChangingService analyzingService,
-             ITextDocumentFactoryService textDocumentFactoryService,
-             ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
+            Dictionary<string, ClassificationInfo> classifications,
+            IClassificationChangingService classificationChangingService,
+            bool isEnable,
+            IEditorChangingService editorChangingService,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            ITextBuffer buffer) : base(isEnable, editorChangingService, textDocumentFactoryService, buffer)
         {
-            _service = VisualBasicClassifierService.GetClassifier(classifications, analyzingService);
+            _service = VisualBasicClassifierService.GetClassifier(classifications, classificationChangingService);
         }
+
+        protected override string Language => Languages.VisualBasic;
 
         internal override ICodeClassifier CodeClassifier => _service;
 

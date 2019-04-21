@@ -11,6 +11,9 @@ using Microsoft.VisualStudio.Text.Classification;
 namespace CoCo.Analyser.Classifications.VisualBasic
 {
     // TODO: Do we need to write visual basic classifier on VB?
+    /// <summary>
+    /// Classifies visual basic code
+    /// </summary>
     internal class VisualBasicClassifierService : ICodeClassifier
     {
         private IClassificationType _localVariableType;
