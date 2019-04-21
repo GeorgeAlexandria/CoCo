@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
+using CoCo.Analyser.Classifications;
 using CoCo.Editor;
 using CoCo.Settings;
 using CoCo.UI;

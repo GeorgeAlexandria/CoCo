@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser;
+﻿using CoCo.Analyser.Classifications;
 
 namespace CoCo.Test.Common
 {

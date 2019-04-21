@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace CoCo.Analyser.VisualBasic
+namespace CoCo.Analyser.Classifications.VisualBasic
 {
     public static class VisualBasicNames
     {
@@ -63,7 +63,7 @@ namespace CoCo.Analyser.VisualBasic
                 builder.Add(EnumName);
                 builder.Add(TypeParameterName);
 
-                return _all = builder.ToImmutable();
+                return _all = builder.TryMoveToImmutable();
             }
         }
     }

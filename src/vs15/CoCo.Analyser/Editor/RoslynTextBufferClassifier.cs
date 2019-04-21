@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using CoCo.Analyser.Classifications;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Editor
 {
     /// <summary>
     /// Common editor classifier for roslyn based languages.

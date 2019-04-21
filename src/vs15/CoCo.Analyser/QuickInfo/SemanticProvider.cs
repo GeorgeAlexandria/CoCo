@@ -162,7 +162,7 @@ namespace CoCo.Analyser.QuickInfo
             Append(descriptionsMap, SymbolDescriptionKind.AnonymousTypes, sections);
             Append(descriptionsMap, SymbolDescriptionKind.Exceptions, sections);
 
-            return new QuickInfoItem(token.Span, descriptionInfo.Image, sections.ToImmutable());
+            return new QuickInfoItem(token.Span, descriptionInfo.Image, sections.TryMoveToImmutable());
         }
 
         private ImmutableArray<ISymbol> GetSymbolsByTokenAsync(
@@ -198,7 +198,7 @@ namespace CoCo.Analyser.QuickInfo
             {
                 symbols.AddRange(overloads);
             }
-            return symbols.ToImmutable();
+            return symbols.TryMoveToImmutable();
         }
 
         private ImmutableArray<ISymbol> GetSymbolsByToken(
@@ -239,7 +239,7 @@ namespace CoCo.Analyser.QuickInfo
             }
             AddToBuilder(type);
             AddToBuilder(convertedType);
-            return builder.ToImmutable();
+            return builder.TryMoveToImmutable();
         }
 
         private ISymbol GetRelevantSymbol(ISymbol symbol)

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Editor;
 using CoCo.Editor;
 using CoCo.Settings;
 using CoCo.Utils;

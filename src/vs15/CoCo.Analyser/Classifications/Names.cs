@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Classifications
 {
     public static class Names
     {

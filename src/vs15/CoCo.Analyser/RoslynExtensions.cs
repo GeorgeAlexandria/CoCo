@@ -52,7 +52,7 @@ namespace CoCo.Analyser
                 }
             }
 
-            return builder.ToImmutable();
+            return builder.TryMoveToImmutable();
         }
 
         /// <summary>

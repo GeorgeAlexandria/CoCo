@@ -122,7 +122,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
                 }
             }
 
-            if (initializer is null) return builder.ToImmutable();
+            if (initializer is null) return builder.TryMoveToImmutable();
             return GetInitializerParts(builder, initializer);
         }
 
@@ -130,7 +130,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueClauseSyntax equalsValue)
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
-            return parts.ToImmutable();
+            return parts.TryMoveToImmutable();
         }
     }
 }

@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
+using CoCo.Analyser.Editor;
 using CoCo.Logging;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;

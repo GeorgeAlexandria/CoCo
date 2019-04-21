@@ -320,7 +320,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
                 }
             }
 
-            if (initializer is null) return builder.ToImmutable();
+            if (initializer is null) return builder.TryMoveToImmutable();
             return GetInitializerParts(builder, initializer);
         }
 
@@ -328,7 +328,7 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
             ImmutableArray<SymbolDisplayPart>.Builder parts, EqualsValueSyntax equalsValue)
         {
             // TODO: use Microsoft.CodeAnalysis.Classification.Classifier to get parts from equalsValue
-            return parts.ToImmutable();
+            return parts.TryMoveToImmutable();
         }
 
         private SymbolDescriptionInfo GetCastDescription<T>(

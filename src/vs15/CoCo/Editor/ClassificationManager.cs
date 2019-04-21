@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
 using CoCo.Utils;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text.Classification;

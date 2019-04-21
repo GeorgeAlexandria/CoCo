@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Classifications
 {
     public struct ClassificationInfo
     {

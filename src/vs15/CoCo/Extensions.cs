@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using CoCo.Analyser;
+using CoCo.Analyser.Classifications;
 using CoCo.Settings;
 using CoCo.UI;
 using Microsoft.VisualStudio.Text.Formatting;

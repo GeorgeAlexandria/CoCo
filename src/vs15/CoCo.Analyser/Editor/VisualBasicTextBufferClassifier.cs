@@ -1,27 +1,28 @@
 ﻿using System.Collections.Generic;
-using CoCo.Analyser.CSharp;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.VisualBasic;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Editor
 {
-    internal class CSharpTextBufferClassifier : RoslynTextBufferClassifier
+    internal class VisualBasicTextBufferClassifier : RoslynTextBufferClassifier
     {
-        private readonly CSharpClassifierService _service;
+        private readonly VisualBasicClassifierService _service;
 
-        internal CSharpTextBufferClassifier(Dictionary<string, ClassificationInfo> classifications) : base()
+        internal VisualBasicTextBufferClassifier(Dictionary<string, ClassificationInfo> classifications) : base()
         {
-            _service = CSharpClassifierService.GetClassifier(classifications);
+            _service = VisualBasicClassifierService.GetClassifier(classifications);
         }
 
-        internal CSharpTextBufferClassifier(
+        internal VisualBasicTextBufferClassifier(
              Dictionary<string, ClassificationInfo> classifications,
              IClassificationChangingService analyzingService,
              ITextDocumentFactoryService textDocumentFactoryService,
              ITextBuffer buffer) : base(textDocumentFactoryService, buffer)
         {
-            _service = CSharpClassifierService.GetClassifier(classifications, analyzingService);
+            _service = VisualBasicClassifierService.GetClassifier(classifications, analyzingService);
         }
 
         internal override ICodeClassifier CodeClassifier => _service;

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Classifications
 {
     internal static class ClassificationService
     {

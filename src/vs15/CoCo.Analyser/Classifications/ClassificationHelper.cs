@@ -1,4 +1,4 @@
-﻿namespace CoCo.Analyser
+﻿namespace CoCo.Analyser.Classifications
 {
     public static class ClassificationHelper
     {

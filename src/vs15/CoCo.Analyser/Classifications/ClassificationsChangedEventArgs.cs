@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser
+namespace CoCo.Analyser.Classifications
 {
     public delegate void ClassificationChangedEventHandler(ClassificationsChangedEventArgs args);
 

@@ -23,5 +23,8 @@ namespace CoCo.Analyser
                 builder.Insert(index++, item);
             }
         }
+
+        public static ImmutableArray<T> TryMoveToImmutable<T>(this ImmutableArray<T>.Builder builder) =>
+            builder.Count == builder.Capacity ? builder.MoveToImmutable() : builder.ToImmutable();
     }
 }

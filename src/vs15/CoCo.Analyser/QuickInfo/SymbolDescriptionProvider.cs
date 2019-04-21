@@ -82,7 +82,7 @@ namespace CoCo.Analyser.QuickInfo
             var result = new Dictionary<SymbolDescriptionKind, ImmutableArray<TaggedText>>();
             foreach (var item in _description)
             {
-                result[item.Key] = item.Value.ToImmutable();
+                result[item.Key] = item.Value.TryMoveToImmutable();
             }
 
             return new SymbolDescriptionInfo(result, _image);

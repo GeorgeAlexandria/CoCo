@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser.VisualBasic
+namespace CoCo.Analyser.Classifications.VisualBasic
 {
     // TODO: Do we need to write visual basic classifier on VB?
     internal class VisualBasicClassifierService : ICodeClassifier
@@ -324,7 +324,7 @@ namespace CoCo.Analyser.VisualBasic
             InitializeClassification(VisualBasicNames.EnumName, ref _enumType);
             InitializeClassification(VisualBasicNames.TypeParameterName, ref _typeParameterType);
 
-            _classifications = builder.ToImmutable();
+            _classifications = builder.TryMoveToImmutable();
         }
     }
 }

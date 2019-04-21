@@ -1,10 +1,10 @@
-﻿using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
 namespace CoCo.Test.CSharpIdentifiers.Access
 {
-    class Types : CSharpIdentifierTests
+    internal class Types : CSharpIdentifierTests
     {
         [Test]
         public void ClassTest()

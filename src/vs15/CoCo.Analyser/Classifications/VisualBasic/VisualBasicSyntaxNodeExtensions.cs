@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
+using CoCo.Utils;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.VisualBasic;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
-namespace CoCo.Analyser.CSharp
+namespace CoCo.Analyser.Classifications.VisualBasic
 {
-    public static class CSharpSyntaxNodeExtensions
+    internal static class VisualBasicSyntaxNodeExtensions
     {
         /// <summary>
-        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it, 
+        /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it,
         /// else returns <paramref name="node"/>
         /// </summary>
         public static SyntaxNode HandleNode(this SyntaxNode node) =>
-            node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression :
-            node.IsKind(SyntaxKind.NameMemberCref) ? (node as NameMemberCrefSyntax).Name :
+            node.IsKind(SyntaxKind.SimpleArgument) ? (node as SimpleArgumentSyntax).GetExpression() :
+            node.IsKind(SyntaxKind.SimpleImportsClause) ? (node as SimpleImportsClauseSyntax).Name :
+            node.IsKind(SyntaxKind.CrefReference) ? (node as CrefReferenceSyntax).Name :
             node;
 
         public static bool IsDescendantXmlDocComment(this SyntaxNode node)
@@ -50,28 +52,21 @@ namespace CoCo.Analyser.CSharp
             var identifierText = identifierName.Identifier.ValueText;
 
             // NOTE: identifier doesn't equal the last level namespace => alias
-            if (namespaceText.Length != identifierText.Length || !namespaceText.Equals(identifierText)) return true;
+            if (namespaceText.Length != identifierText.Length || !namespaceText.EqualsNoCase(identifierText)) return true;
 
+            // NOTE: identifier is a part of X.Y => namespace
             switch (identifierName.Parent)
             {
                 case QualifiedNameSyntax qualifiedName when qualifiedName.Left != identifierName: return false;
                 case MemberAccessExpressionSyntax memberAccess when memberAccess.Expression != identifierName: return false;
-
-                // NOTE: handle in a xml doc comments, because 
-                // cref="A.B.C.D" => (QualifiedCref).(NameMemberCref) => (QualifiedName).(Name) => (A.B.C).(D)
-                case NameMemberCrefSyntax nameCref: return false;
-                case QualifiedCrefSyntax qualifiedCref when !(qualifiedCref.Container is IdentifierNameSyntax): return false;
             }
 
             // NOTE: collect all namespaces which members are reachibille from the current context
-            var namespaces = new HashSet<INamespaceSymbol> { semanticModel.Compilation.GlobalNamespace };
-
-            // NOTE: global namespace has a couple of constituent global namespaces and in the C# a some namespaces can have on
-            // of these constituent namespaces as containing namespaces, not the outer global => add them to
-            foreach (var item in semanticModel.Compilation.GlobalNamespace.ConstituentNamespaces)
+            var namespaces = new HashSet<INamespaceSymbol>
             {
-                namespaces.Add(item);
-            }
+                semanticModel.Compilation.RootNamespace(),
+                semanticModel.Compilation.GlobalNamespace
+            };
 
             var enclosingNamespace = semanticModel.GetEnclosingSymbol(node.Span.Start)?.ContainingNamespace;
             while (!(enclosingNamespace is null))

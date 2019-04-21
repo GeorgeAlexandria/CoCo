@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace CoCo.Analyser.CSharp
+namespace CoCo.Analyser.Classifications.CSharp
 {
     public static class CSharpNames
     {
@@ -18,7 +18,6 @@ namespace CoCo.Analyser.CSharp
         public const string AliasNamespaceName = "CoCo csharp alias namespace name";
         public const string ConstructorName = "CoCo csharp constructor method name";
         public const string LabelName = "CoCo csharp label name";
-        public const string LocalMethodName = "CoCo csharp local method name";
         public const string ConstantFieldName = "CoCo csharp constant field name";
         public const string DestructorName = "CoCo csharp destructor method name";
         public const string TypeParameterName = "CoCo csharp type parameter name";
@@ -36,7 +35,7 @@ namespace CoCo.Analyser.CSharp
             {
                 if (!_all.IsDefaultOrEmpty) return _all;
 
-                var builder = ImmutableArray.CreateBuilder<string>();
+                var builder = ImmutableArray.CreateBuilder<string>(17);
                 builder.Add(LocalVariableName);
                 builder.Add(ParameterName);
                 builder.Add(NamespaceName);
@@ -51,7 +50,6 @@ namespace CoCo.Analyser.CSharp
                 builder.Add(AliasNamespaceName);
                 builder.Add(ConstructorName);
                 builder.Add(LabelName);
-                builder.Add(LocalMethodName);
                 builder.Add(ConstantFieldName);
                 builder.Add(DestructorName);
                 builder.Add(TypeParameterName);
@@ -60,7 +58,7 @@ namespace CoCo.Analyser.CSharp
                 builder.Add(InterfaceName);
                 builder.Add(EnumName);
                 builder.Add(DelegateName);
-                return _all = builder.ToImmutable();
+                return _all = builder.TryMoveToImmutable();
             }
         }
     }

@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser.CSharp
+namespace CoCo.Analyser.Classifications.CSharp
 {
     /// <summary>
     /// Classifies csharp code
@@ -27,10 +27,11 @@ namespace CoCo.Analyser.CSharp
         private IClassificationType _staticMethodType;
         private IClassificationType _enumFieldType;
         private IClassificationType _aliasNamespaceType;
-        private IClassificationType _constructorMethodType;
+        private IClassificationType _constructorType;
         private IClassificationType _labelType;
+        private IClassificationType _localMethodType;
         private IClassificationType _constantFieldType;
-        private IClassificationType _destructorMethodType;
+        private IClassificationType _destructorType;
         private IClassificationType _typeParameterType;
         private IClassificationType _classType;
         private IClassificationType _structureType;
@@ -161,8 +162,9 @@ namespace CoCo.Analyser.CSharp
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
-                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
@@ -174,7 +176,8 @@ namespace CoCo.Analyser.CSharp
                         break;
 
                     case SymbolKind.NamedType:
-                        var type = GetTypeClassification(symbol as INamedTypeSymbol);
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        var type = GetTypeClassification(typeSymbol);
                         if (!(type is null))
                         {
                             AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, type, node);
@@ -228,8 +231,9 @@ namespace CoCo.Analyser.CSharp
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         return
-                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
@@ -238,8 +242,10 @@ namespace CoCo.Analyser.CSharp
                         return _typeParameterType;
 
                     case SymbolKind.NamedType:
-                        return GetTypeClassification(symbol as INamedTypeSymbol);
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        return GetTypeClassification(typeSymbol);
                 }
+
                 return null;
             }
 
@@ -306,10 +312,11 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.StaticMethodName, ref _staticMethodType);
             InitializeClassification(CSharpNames.EnumFieldName, ref _enumFieldType);
             InitializeClassification(CSharpNames.AliasNamespaceName, ref _aliasNamespaceType);
-            InitializeClassification(CSharpNames.ConstructorName, ref _constructorMethodType);
+            InitializeClassification(CSharpNames.ConstructorName, ref _constructorType);
             InitializeClassification(CSharpNames.LabelName, ref _labelType);
+            InitializeClassification(CSharpNames.LocalMethodName, ref _localMethodType);
             InitializeClassification(CSharpNames.ConstantFieldName, ref _constantFieldType);
-            InitializeClassification(CSharpNames.DestructorName, ref _destructorMethodType);
+            InitializeClassification(CSharpNames.DestructorName, ref _destructorType);
             InitializeClassification(CSharpNames.TypeParameterName, ref _typeParameterType);
             InitializeClassification(CSharpNames.ClassName, ref _classType);
             InitializeClassification(CSharpNames.StructureName, ref _structureType);
@@ -317,7 +324,7 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.EnumName, ref _enumType);
             InitializeClassification(CSharpNames.DelegateName, ref _delegateType);
 
-            _classifications = builder.ToImmutable();
+            _classifications = builder.TryMoveToImmutable();
         }
     }
 }
