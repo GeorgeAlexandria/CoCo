@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo.Providers
 {
     /// <summary>
-    /// Classifier provider which adds <see cref="VisualBasicClassifier"/> to the set of classifiers.
+    /// Classifier provider which adds <see cref="VisualBasicTextBufferClassifier"/> to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("Basic")]
@@ -57,8 +57,8 @@ namespace CoCo.Providers
                 _wereSettingsSet = true;
             }
 
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new VisualBasicClassifier(_classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new VisualBasicTextBufferClassifier(
+                _classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
         }
 
         private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)

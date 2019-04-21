@@ -85,9 +85,9 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             ImmutableArray<ISymbol> symbols,
             CancellationToken cancellationToken)
         {
-            if (textBuffer.Properties.TryGetProperty<CSharpClassifier>(typeof(CSharpClassifier), out var classifier))
+            if (textBuffer.Properties.TryGetProperty<CSharpTextBufferClassifier>(typeof(CSharpTextBufferClassifier), out var classifier))
             {
-                var converter = new SymbolDisplayPartConverter(classifier);
+                var converter = new SymbolDisplayPartConverter(classifier.CodeClassifier);
                 return new CSharpSymbolDescriptionProvider(converter, semanticModel, position, cancellationToken)
                     .GetDescriptionAsync(symbols);
             }

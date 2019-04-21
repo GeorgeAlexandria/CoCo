@@ -4,6 +4,6 @@ namespace CoCo.UI.Data
 {
     public sealed class ClassificationData
     {
-        public ICollection<Language> Languages { get; } = new List<Language>();
+        public ICollection<ClassificationLanguage> Languages { get; } = new List<ClassificationLanguage>();
     }
 }

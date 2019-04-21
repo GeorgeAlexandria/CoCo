@@ -2,7 +2,7 @@
 
 namespace CoCo.UI.Data
 {
-    public sealed class GeneralData
+    public sealed class GeneralOption
     {
         public ICollection<GeneralLanguage> Languages { get; } = new List<GeneralLanguage>();
     }

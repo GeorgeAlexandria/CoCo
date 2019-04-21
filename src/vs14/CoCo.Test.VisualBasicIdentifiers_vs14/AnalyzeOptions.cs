@@ -18,7 +18,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         {
             GetContext(@"AnalyzeOptions\LocalVariable.vb")
                 .AddInfo(
-                    VisualBasicNames.LocalVariableName.Disable())
+                    VisualBasicNames.LocalVariableName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     VisualBasicNames.LocalVariableName.ClassifyAt(61, 5));
         }
@@ -36,7 +36,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         {
             GetContext(@"AnalyzeOptions\Member.vb")
                 .AddInfo(
-                    VisualBasicNames.PropertyName.Disable())
+                    VisualBasicNames.PropertyName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     VisualBasicNames.PropertyName.ClassifyAt(57, 4),
                     VisualBasicNames.PropertyName.ClassifyAt(102, 4));
@@ -65,7 +65,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         {
             GetContext(@"AnalyzeOptions\Method.vb")
                 .AddInfo(
-                    VisualBasicNames.FunctionName.Disable())
+                    VisualBasicNames.FunctionName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     VisualBasicNames.FunctionName.ClassifyAt(57, 8),
                     VisualBasicNames.FunctionName.ClassifyAt(135, 8));
@@ -94,7 +94,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         {
             GetContext(@"AnalyzeOptions\Namespace.vb")
                 .AddInfo(
-                    VisualBasicNames.NamespaceName.Disable())
+                    VisualBasicNames.NamespaceName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     VisualBasicNames.NamespaceName.ClassifyAt(10, 14),
                     VisualBasicNames.NamespaceName.ClassifyAt(62, 14));
@@ -123,7 +123,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
         {
             GetContext(@"AnalyzeOptions\ParameterOption.vb")
                 .AddInfo(
-                    VisualBasicNames.ParameterName.Disable())
+                    VisualBasicNames.ParameterName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     VisualBasicNames.ParameterName.ClassifyAt(51, 5),
                     VisualBasicNames.ParameterName.ClassifyAt(88, 5));

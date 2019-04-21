@@ -4,9 +4,9 @@ using System.Diagnostics;
 namespace CoCo.UI.Data
 {
     [DebuggerDisplay("{Name}")]
-    public sealed class Language
+    public sealed class ClassificationLanguage
     {
-        public Language(string name)
+        public ClassificationLanguage(string name)
         {
             Name = name;
         }

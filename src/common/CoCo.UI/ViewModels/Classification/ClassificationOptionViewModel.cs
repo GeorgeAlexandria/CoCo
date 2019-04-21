@@ -7,7 +7,7 @@ namespace CoCo.UI.ViewModels
 {
     public class ClassificationOptionViewModel : BaseViewModel
     {
-        private readonly ObservableCollection<LanguageViewModel> _languages = new ObservableCollection<LanguageViewModel>();
+        private readonly ObservableCollection<ClassificationLanguageViewModel> _languages = new ObservableCollection<ClassificationLanguageViewModel>();
 
         public ClassificationOptionViewModel(ClassificationData option, IResetValuesProvider resetValuesProvider)
         {
@@ -16,24 +16,24 @@ namespace CoCo.UI.ViewModels
             _languages.Clear();
             foreach (var language in option.Languages)
             {
-                _languages.Add(new LanguageViewModel(language, resetValuesProvider));
+                _languages.Add(new ClassificationLanguageViewModel(language, resetValuesProvider));
             }
 
             Languages = CollectionViewSource.GetDefaultView(_languages);
-            Languages.SortDescriptions.Add(new SortDescription(nameof(LanguageViewModel.Name), ListSortDirection.Ascending));
+            Languages.SortDescriptions.Add(new SortDescription(nameof(ClassificationLanguageViewModel.Name), ListSortDirection.Ascending));
         }
 
         public ICollectionView Languages { get; }
 
-        private LanguageViewModel _selectedLanguage;
+        private ClassificationLanguageViewModel _selectedLanguage;
 
-        public LanguageViewModel SelectedLanguage
+        public ClassificationLanguageViewModel SelectedLanguage
         {
             get
             {
                 if (_selectedLanguage is null && Languages.MoveCurrentToFirst())
                 {
-                    SelectedLanguage = (LanguageViewModel)Languages.CurrentItem;
+                    SelectedLanguage = (ClassificationLanguageViewModel)Languages.CurrentItem;
                 }
                 return _selectedLanguage;
             }

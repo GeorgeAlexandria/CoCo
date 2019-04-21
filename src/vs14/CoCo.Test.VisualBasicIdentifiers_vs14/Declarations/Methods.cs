@@ -31,7 +31,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         public void MethodTest_Constructor()
         {
             GetContext(@"Declarations\Methods\Constructor.vb")
-                .AddInfo(VisualBasicNames.ClassName.Disable())
+                .AddInfo(VisualBasicNames.ClassName.DisableInEditor())
                 .GetClassifications().AssertIsEmpty();
         }
 
@@ -39,7 +39,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Declarations
         public void MethodTest_SharedConstructor()
         {
             GetContext(@"Declarations\Methods\StaticConstructor.vb")
-                .AddInfo(VisualBasicNames.ClassName.Disable())
+                .AddInfo(VisualBasicNames.ClassName.DisableInEditor())
                 .GetClassifications().AssertIsEmpty();
         }
 

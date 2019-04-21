@@ -13,7 +13,7 @@ namespace CoCo.Analyser.CSharp
     /// <summary>
     /// Classifies csharp code
     /// </summary>
-    internal class CSharpClassifier : RoslynEditorClassifier
+    internal class CSharpClassifierService : ICodeClassifier
     {
         private IClassificationType _localVariableType;
         private IClassificationType _rangeVariableType;
@@ -27,10 +27,11 @@ namespace CoCo.Analyser.CSharp
         private IClassificationType _staticMethodType;
         private IClassificationType _enumFieldType;
         private IClassificationType _aliasNamespaceType;
-        private IClassificationType _constructorMethodType;
+        private IClassificationType _constructorType;
         private IClassificationType _labelType;
+        private IClassificationType _localMethodType;
         private IClassificationType _constantFieldType;
-        private IClassificationType _destructorMethodType;
+        private IClassificationType _destructorType;
         private IClassificationType _typeParameterType;
         private IClassificationType _classType;
         private IClassificationType _structureType;
@@ -38,21 +39,47 @@ namespace CoCo.Analyser.CSharp
         private IClassificationType _enumType;
         private IClassificationType _delegateType;
 
-        internal CSharpClassifier(
-            IReadOnlyDictionary<string, ClassificationInfo> classifications,
-            IClassificationChangingService analyzingService,
-            ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
+        private static CSharpClassifierService _instance;
+
+        private readonly Dictionary<IClassificationType, ClassificationOption> _classificationOptions =
+            new Dictionary<IClassificationType, ClassificationOption>();
+
+        private ImmutableArray<IClassificationType> _classifications;
+
+        private CSharpClassifierService(
+            IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService)
+        {
+            InitializeClassifications(classifications);
+            analyzingService.ClassificationChanged += OnClassificationsChanged;
+        }
+
+        private CSharpClassifierService(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             InitializeClassifications(classifications);
         }
 
-        internal CSharpClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
+        internal static CSharpClassifierService GetClassifier(
+            IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService)
         {
-            InitializeClassifications(classifications);
+            if (_instance is null)
+            {
+                _instance = new CSharpClassifierService(classifications, analyzingService);
+            }
+            return _instance;
         }
 
-        internal override List<ClassificationSpan> GetClassificationSpans(
+        internal static CSharpClassifierService GetClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
+        {
+            if (_instance is null)
+            {
+                _instance = new CSharpClassifierService(classifications);
+            }
+            return _instance;
+        }
+
+        internal static void Reset() => _instance = null;
+
+        internal List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
             var spans = new List<ClassificationSpan>();
@@ -135,8 +162,9 @@ namespace CoCo.Analyser.CSharp
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         var methodType =
-                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
@@ -148,7 +176,8 @@ namespace CoCo.Analyser.CSharp
                         break;
 
                     case SymbolKind.NamedType:
-                        var type = GetTypeClassification(symbol as INamedTypeSymbol);
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        var type = GetTypeClassification(typeSymbol);
                         if (!(type is null))
                         {
                             AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, type, node);
@@ -165,7 +194,7 @@ namespace CoCo.Analyser.CSharp
             return spans;
         }
 
-        public override IClassificationType GetClassification(ISymbol symbol)
+        public IClassificationType GetClassification(ISymbol symbol)
         {
             IClassificationType GetClassification()
             {
@@ -202,8 +231,9 @@ namespace CoCo.Analyser.CSharp
                     case SymbolKind.Method:
                         var methodSymbol = symbol as IMethodSymbol;
                         return
-                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorMethodType :
-                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorMethodType :
+                            methodSymbol.MethodKind == MethodKind.Constructor ? _constructorType :
+                            methodSymbol.MethodKind == MethodKind.Destructor ? _destructorType :
+                            methodSymbol.MethodKind == MethodKind.LocalFunction ? _localMethodType :
                             methodSymbol.IsExtensionMethod ? _extensionMethodType :
                             methodSymbol.IsStatic ? _staticMethodType :
                             _methodType;
@@ -212,15 +242,17 @@ namespace CoCo.Analyser.CSharp
                         return _typeParameterType;
 
                     case SymbolKind.NamedType:
-                        return GetTypeClassification(symbol as INamedTypeSymbol);
+                        var typeSymbol = symbol as INamedTypeSymbol;
+                        return GetTypeClassification(typeSymbol);
                 }
+
                 return null;
             }
 
             var classification = GetClassification();
             if (classification is null) return null;
 
-            var info = options[classification];
+            var info = _classificationOptions[classification];
             return info.IsDisabled || info.IsDisabledInQuickInfo
                 ? null
                 : classification;
@@ -237,12 +269,23 @@ namespace CoCo.Analyser.CSharp
         private void AppendClassificationSpan(
            List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
         {
-            var info = options[type];
+            var info = _classificationOptions[type];
             if (info.IsDisabled || info.IsDisabledInEditor) return;
 
             if (node is null || !info.IsDisabledInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment())
             {
                 spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
+        }
+
+        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
+        {
+            foreach (var classification in _classifications)
+            {
+                if (args.ChangedClassifications.TryGetValue(classification, out var option))
+                {
+                    _classificationOptions[classification] = option;
+                }
             }
         }
 
@@ -253,7 +296,7 @@ namespace CoCo.Analyser.CSharp
             {
                 var info = classifications[name];
                 type = info.ClassificationType;
-                options[type] = info.Option;
+                _classificationOptions[type] = info.Option;
                 builder.Add(type);
             }
 
@@ -269,10 +312,11 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.StaticMethodName, ref _staticMethodType);
             InitializeClassification(CSharpNames.EnumFieldName, ref _enumFieldType);
             InitializeClassification(CSharpNames.AliasNamespaceName, ref _aliasNamespaceType);
-            InitializeClassification(CSharpNames.ConstructorName, ref _constructorMethodType);
+            InitializeClassification(CSharpNames.ConstructorName, ref _constructorType);
             InitializeClassification(CSharpNames.LabelName, ref _labelType);
+            InitializeClassification(CSharpNames.LocalMethodName, ref _localMethodType);
             InitializeClassification(CSharpNames.ConstantFieldName, ref _constantFieldType);
-            InitializeClassification(CSharpNames.DestructorName, ref _destructorMethodType);
+            InitializeClassification(CSharpNames.DestructorName, ref _destructorType);
             InitializeClassification(CSharpNames.TypeParameterName, ref _typeParameterType);
             InitializeClassification(CSharpNames.ClassName, ref _classType);
             InitializeClassification(CSharpNames.StructureName, ref _structureType);
@@ -280,7 +324,7 @@ namespace CoCo.Analyser.CSharp
             InitializeClassification(CSharpNames.EnumName, ref _enumType);
             InitializeClassification(CSharpNames.DelegateName, ref _delegateType);
 
-            base.classifications = builder.ToImmutable();
+            _classifications = builder.ToImmutable();
         }
     }
 }

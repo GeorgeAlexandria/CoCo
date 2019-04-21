@@ -5,9 +5,9 @@ namespace CoCo.UI.ViewModels
 {
     // TODO: at this moment it's a bad design to have one parent view model for two differents view models
     // to pass a changings from the one to another, instead of raising events and correct handled them.
-    public class LanguageViewModel : BaseViewModel, IClassificationProvider
+    public class ClassificationLanguageViewModel : BaseViewModel, IClassificationProvider
     {
-        public LanguageViewModel(Language language, IResetValuesProvider resetValuesProvider)
+        public ClassificationLanguageViewModel(ClassificationLanguage language, IResetValuesProvider resetValuesProvider)
         {
             Name = language.Name;
             ClassificationsContainer = new ClassificationsViewModel(language.Classifications, resetValuesProvider);
@@ -20,9 +20,9 @@ namespace CoCo.UI.ViewModels
 
         public PresetsViewModel PresetsContainer { get; }
 
-        public Language ExtractData()
+        public ClassificationLanguage ExtractData()
         {
-            var language = new Language(Name);
+            var language = new ClassificationLanguage(Name);
             foreach (var item in ClassificationsContainer.Classifications)
             {
                 language.Classifications.Add(item.ExtractData());

@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Text.Classification;
 namespace CoCo.Analyser.VisualBasic
 {
     // TODO: Do we need to write visual basic classifier on VB?
-    internal class VisualBasicClassifier : RoslynEditorClassifier
+    internal class VisualBasicClassifierService : ICodeClassifier
     {
         private IClassificationType _localVariableType;
         private IClassificationType _rangeVariableType;
@@ -38,21 +38,47 @@ namespace CoCo.Analyser.VisualBasic
         private IClassificationType _enumType;
         private IClassificationType _typeParameterType;
 
-        internal VisualBasicClassifier(
-            IReadOnlyDictionary<string, ClassificationInfo> classifications,
-            IClassificationChangingService analyzingService,
-            ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer) : base(analyzingService, textDocumentFactoryService, buffer)
+        private static VisualBasicClassifierService _instance;
+
+        private readonly Dictionary<IClassificationType, ClassificationOption> _classificationOptions =
+            new Dictionary<IClassificationType, ClassificationOption>();
+
+        private ImmutableArray<IClassificationType> _classifications;
+
+        private VisualBasicClassifierService(
+           IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService)
+        {
+            InitializeClassifications(classifications);
+            analyzingService.ClassificationChanged += OnClassificationsChanged;
+        }
+
+        private VisualBasicClassifierService(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             InitializeClassifications(classifications);
         }
 
-        internal VisualBasicClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
+        internal static VisualBasicClassifierService GetClassifier(
+            IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService)
         {
-            InitializeClassifications(classifications);
+            if (_instance is null)
+            {
+                _instance = new VisualBasicClassifierService(classifications, analyzingService);
+            }
+            return _instance;
         }
 
-        internal override List<ClassificationSpan> GetClassificationSpans(
+        internal static VisualBasicClassifierService GetClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications)
+        {
+            if (_instance is null)
+            {
+                _instance = new VisualBasicClassifierService(classifications);
+            }
+            return _instance;
+        }
+
+        internal static void Reset() => _instance = null;
+
+        internal List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span)
         {
             var spans = new List<ClassificationSpan>();
@@ -168,7 +194,7 @@ namespace CoCo.Analyser.VisualBasic
             return spans;
         }
 
-        public override IClassificationType GetClassification(ISymbol symbol)
+        public IClassificationType GetClassification(ISymbol symbol)
         {
             IClassificationType GetClassification()
             {
@@ -224,7 +250,7 @@ namespace CoCo.Analyser.VisualBasic
             var classification = GetClassification();
             if (classification is null) return null;
 
-            var info = options[classification];
+            var info = _classificationOptions[classification];
             return info.IsDisabled || info.IsDisabledInQuickInfo
                 ? null
                 : classification;
@@ -242,12 +268,23 @@ namespace CoCo.Analyser.VisualBasic
         private void AppendClassificationSpan(
            List<ClassificationSpan> spans, ITextSnapshot snapshot, TextSpan span, IClassificationType type, SyntaxNode node = null)
         {
-            var info = options[type];
+            var info = _classificationOptions[type];
             if (info.IsDisabled || info.IsDisabledInEditor) return;
 
             if (node is null || !info.IsDisabledInXml || !node.IsPartOfStructuredTrivia() || !node.IsDescendantXmlDocComment())
             {
                 spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+            }
+        }
+
+        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
+        {
+            foreach (var classification in _classifications)
+            {
+                if (args.ChangedClassifications.TryGetValue(classification, out var option))
+                {
+                    _classificationOptions[classification] = option;
+                }
             }
         }
 
@@ -258,7 +295,7 @@ namespace CoCo.Analyser.VisualBasic
             {
                 var info = classifications[name];
                 type = info.ClassificationType;
-                options[type] = info.Option;
+                _classificationOptions[type] = info.Option;
                 builder.Add(type);
             }
 
@@ -287,7 +324,7 @@ namespace CoCo.Analyser.VisualBasic
             InitializeClassification(VisualBasicNames.EnumName, ref _enumType);
             InitializeClassification(VisualBasicNames.TypeParameterName, ref _typeParameterType);
 
-            base.classifications = builder.ToImmutable();
+            _classifications = builder.ToImmutable();
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows;
 using CoCo.Analyser;
 using CoCo.Editor;
-using CoCo.QuickInfo;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.UI.Data;
@@ -64,7 +63,7 @@ namespace CoCo
         /// <summary>
         /// Converts <paramref name="option"/> to <see cref="GeneralSettings"/>
         /// </summary>
-        public static GeneralSettings ToSettings(GeneralData option)
+        public static GeneralSettings ToSettings(GeneralOption option)
         {
             var languageSettings = new List<GeneralLanguageSettings>(option.Languages.Count);
             foreach (var item in option.Languages)
@@ -89,7 +88,7 @@ namespace CoCo
             var option = new UI.Data.ClassificationData();
             foreach (var (languageName, classifications) in ClassificationManager.GetClassifications())
             {
-                var language = new Language(languageName);
+                var language = new ClassificationLanguage(languageName);
                 var languageClassifications = new List<(string, string)>(17);
                 foreach (var item in classifications)
                 {
@@ -142,11 +141,11 @@ namespace CoCo
         }
 
         /// <summary>
-        /// Converts <paramref name="settings"/> to <see cref="GeneralData"/> using a default values
+        /// Converts <paramref name="settings"/> to <see cref="GeneralOption"/> using a default values
         /// </summary>
-        public static GeneralData ToOption(GeneralSettings settings)
+        public static GeneralOption ToOption(GeneralSettings settings)
         {
-            var option = new GeneralData();
+            var option = new GeneralOption();
 
             foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
             {

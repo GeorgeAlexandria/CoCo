@@ -9,7 +9,7 @@ namespace CoCo.UI.ViewModels
     {
         private readonly ObservableCollection<GeneralLanguageViewModel> _languages = new ObservableCollection<GeneralLanguageViewModel>();
 
-        public GeneralOptionViewModel(GeneralData option)
+        public GeneralOptionViewModel(GeneralOption option)
         {
             foreach (var language in option.Languages)
             {
@@ -37,9 +37,9 @@ namespace CoCo.UI.ViewModels
             set => SetProperty(ref _selectedLanguage, value);
         }
 
-        public GeneralData ExtractData()
+        public GeneralOption ExtractData()
         {
-            var option = new GeneralData();
+            var option = new GeneralOption();
             foreach (var languageViewModel in _languages)
             {
                 option.Languages.Add(languageViewModel.ExtractData());

@@ -13,7 +13,7 @@ namespace CoCo
         {
         }
 
-        public static void SetGeneralOptions(GeneralData option)
+        public static void SetGeneralOptions(GeneralOption option)
         {
             var changes = new Dictionary<string, GeneralInfo>();
             foreach (var item in option.Languages)

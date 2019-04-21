@@ -13,6 +13,7 @@ namespace CoCo.Test.Common
         private SimplifiedClassificationInfo(string name)
         {
             Name = name;
+
             var info = ClassificationService.GetDefaultOption(name);
             IsDisabled = info.IsDisabled;
             IsDisabledInXml = info.IsDisabledInXml;
@@ -20,28 +21,36 @@ namespace CoCo.Test.Common
             IsDisabledInQuickInfo = info.IsDisabledInQuickInfo;
         }
 
-        public SimplifiedClassificationInfo Disable() => new SimplifiedClassificationInfo(Name)
+        public SimplifiedClassificationInfo DisableInEditor() => new SimplifiedClassificationInfo(Name)
         {
             IsDisabled = true,
-            IsDisabledInXml = IsDisabledInXml
+            IsDisabledInXml = IsDisabledInXml,
+            IsDisabledInEditor = false,
+            IsDisabledInQuickInfo = IsDisabledInQuickInfo,
         };
 
         public SimplifiedClassificationInfo DisableInXml() => new SimplifiedClassificationInfo(Name)
         {
             IsDisabled = IsDisabled,
-            IsDisabledInXml = true
+            IsDisabledInXml = true,
+            IsDisabledInEditor = IsDisabledInEditor,
+            IsDisabledInQuickInfo = IsDisabledInQuickInfo,
         };
 
-        public SimplifiedClassificationInfo Enable() => new SimplifiedClassificationInfo(Name)
+        public SimplifiedClassificationInfo EnableInEditor() => new SimplifiedClassificationInfo(Name)
         {
             IsDisabled = false,
-            IsDisabledInXml = IsDisabledInXml
+            IsDisabledInXml = IsDisabledInXml,
+            IsDisabledInEditor = false,
+            IsDisabledInQuickInfo = IsDisabledInQuickInfo,
         };
 
         public SimplifiedClassificationInfo EnableInXml() => new SimplifiedClassificationInfo(Name)
         {
             IsDisabled = IsDisabled,
-            IsDisabledInXml = false
+            IsDisabledInXml = false,
+            IsDisabledInEditor = IsDisabledInEditor,
+            IsDisabledInQuickInfo = IsDisabledInQuickInfo,
         };
 
         public static implicit operator SimplifiedClassificationInfo(string name) => new SimplifiedClassificationInfo(name);

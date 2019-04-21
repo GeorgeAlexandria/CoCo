@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace CoCo.Providers
 {
     /// <summary>
-    /// Classifier provider which adds <see cref="CSharpClassifier"/> to the set of classifiers.
+    /// Classifier provider which adds <see cref="CSharpTextBufferClassifier"/> to the set of classifiers.
     /// </summary>
     [Export(typeof(IClassifierProvider))]
     [ContentType("CSharp")]
@@ -61,8 +61,8 @@ namespace CoCo.Providers
                 _wereSettingsSet = true;
             }
 
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() =>
-                new CSharpClassifier(_classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new CSharpTextBufferClassifier(
+                _classificationsInfo, ClassificationChangingService.Instance, _textDocumentFactoryService, textBuffer));
         }
 
         private void OnAnalyzeOptionChanged(ClassificationsChangedEventArgs args)

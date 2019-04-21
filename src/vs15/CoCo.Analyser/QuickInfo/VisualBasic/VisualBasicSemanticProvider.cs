@@ -172,8 +172,8 @@ namespace CoCo.Analyser.QuickInfo.VisualBasic
         }
 
         private SymbolDisplayPartConverter GetConverter(ITextBuffer textBuffer) =>
-            textBuffer.Properties.TryGetProperty<VisualBasicClassifier>(typeof(VisualBasicClassifier), out var classifier)
-                ? new SymbolDisplayPartConverter(classifier)
+            textBuffer.Properties.TryGetProperty<VisualBasicTextBufferClassifier>(typeof(VisualBasicTextBufferClassifier), out var classifier)
+                ? new SymbolDisplayPartConverter(classifier.CodeClassifier)
                 : new SymbolDisplayPartConverter();
     }
 }

@@ -18,22 +18,22 @@ namespace CoCo
     [Guid(Guids.Package)]
     public sealed class VsPackage : AsyncPackage
     {
-        private static ClassificationOptionViewModel _editorOptionViewModel;
+        private static ClassificationOptionViewModel _classificationOptionViewModel;
         private static GeneralOptionViewModel _generalOptionViewModel;
 
-        private static int _receivedEditorCount;
-        private static bool _editorOptionsWereApplied;
+        private static int _receivedClassificationCount;
+        private static bool _classificationOptionsWereApplied;
         private static bool _generalOptionsWereApplied;
 
-        internal static ClassificationOptionViewModel ReceiveEditorContext()
+        internal static ClassificationOptionViewModel ReceiveClassificationContext()
         {
-            ++_receivedEditorCount;
-            if (!(_editorOptionViewModel is null)) return _editorOptionViewModel;
+            ++_receivedClassificationCount;
+            if (!(_classificationOptionViewModel is null)) return _classificationOptionViewModel;
 
-            return _editorOptionViewModel = new ClassificationOptionViewModel(ReceiveEditorOption(), ResetValuesProvider.Instance);
+            return _classificationOptionViewModel = new ClassificationOptionViewModel(ReceiveClassificationOption(), ResetValuesProvider.Instance);
         }
 
-        internal static GeneralOptionViewModel ReceiveQuickInfoContext()
+        internal static GeneralOptionViewModel ReceiveGeneralContext()
         {
             if (!(_generalOptionViewModel is null)) return _generalOptionViewModel;
 
@@ -41,25 +41,26 @@ namespace CoCo
         }
 
         internal static void SaveOption(ClassificationOptionViewModel optionViewModel) =>
-            _editorOptionsWereApplied |= ReferenceEquals(optionViewModel, _editorOptionViewModel);
+            _classificationOptionsWereApplied |= ReferenceEquals(optionViewModel, _classificationOptionViewModel);
 
-        internal static void SaveOption(GeneralOptionViewModel generalOptionViewModel) =>
-            _generalOptionsWereApplied |= ReferenceEquals(_generalOptionViewModel, generalOptionViewModel);
+        internal static void SaveOption(GeneralOptionViewModel optionViewModel) =>
+            _generalOptionsWereApplied |= ReferenceEquals(_generalOptionViewModel, optionViewModel);
 
         internal static void ReleaseOption(ClassificationOptionViewModel optionViewModel)
         {
-            if (_receivedEditorCount <= 0 || ReferenceEquals(optionViewModel, _editorOptionViewModel) && --_receivedEditorCount != 0)
+            if (_receivedClassificationCount <= 0 || ReferenceEquals(optionViewModel, _classificationOptionViewModel) && 
+                --_receivedClassificationCount != 0)
             {
                 return;
             }
 
-            if (_editorOptionsWereApplied)
+            if (_classificationOptionsWereApplied)
             {
-                Release(_editorOptionViewModel.ExtractData());
-                _editorOptionsWereApplied = false;
+                Release(_classificationOptionViewModel.ExtractData());
+                _classificationOptionsWereApplied = false;
             }
 
-            _editorOptionViewModel = null;
+            _classificationOptionViewModel = null;
         }
 
         internal static void ReleaseOption(GeneralOptionViewModel optionViewModel)
@@ -75,7 +76,7 @@ namespace CoCo
             _generalOptionViewModel = null;
         }
 
-        private static GeneralData ReceiveGeneralOption()
+        private static GeneralOption ReceiveGeneralOption()
         {
             MigrationService.MigrateSettingsTo_3_1_0();
             var settings = SettingsManager.LoadGeneralSettings(Paths.CoCoGeneralSettingsFile, MigrationService.Instance);
@@ -83,7 +84,7 @@ namespace CoCo
             return option;
         }
 
-        private static ClassificationData ReceiveEditorOption()
+        private static ClassificationData ReceiveClassificationOption()
         {
             MigrationService.MigrateSettingsTo_2_0_0();
             var settings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);
@@ -100,7 +101,7 @@ namespace CoCo
             SettingsManager.SaveSettings(settings, Paths.CoCoClassificationSettingsFile);
         }
 
-        private static void Release(GeneralData option)
+        private static void Release(GeneralOption option)
         {
             GeneralChangingService.SetGeneralOptions(option);
             var settings = OptionService.ToSettings(option);
@@ -158,7 +159,7 @@ namespace CoCo
     {
         protected override FrameworkElement GetChild() => new ClassificationsControl();
 
-        protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveEditorContext();
+        protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveClassificationContext();
 
         protected override void ReleaseChildContext(ClassificationOptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
 
@@ -169,7 +170,7 @@ namespace CoCo
     {
         protected override FrameworkElement GetChild() => new PresetsControl();
 
-        protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveEditorContext();
+        protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveClassificationContext();
 
         protected override void ReleaseChildContext(ClassificationOptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
 
@@ -180,7 +181,7 @@ namespace CoCo
     {
         protected override FrameworkElement GetChild() => new GeneralControl();
 
-        protected override GeneralOptionViewModel GetChildContext() => VsPackage.ReceiveQuickInfoContext();
+        protected override GeneralOptionViewModel GetChildContext() => VsPackage.ReceiveGeneralContext();
 
         protected override void ReleaseChildContext(GeneralOptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
 

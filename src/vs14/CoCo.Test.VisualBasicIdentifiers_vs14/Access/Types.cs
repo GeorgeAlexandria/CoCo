@@ -10,7 +10,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void TypeParameterTest()
         {
             GetContext(@"Access\Types\TypeParameter.vb")
-                .AddInfo(VisualBasicNames.TypeParameterName.Enable())
+                .AddInfo(VisualBasicNames.TypeParameterName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.TypeParameterName.ClassifyAt(87, 6));
         }
@@ -19,7 +19,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void ClassTest()
         {
             GetContext(@"Access\Types\ClassType.vb")
-                .AddInfo(VisualBasicNames.ClassName.Enable())
+                .AddInfo(VisualBasicNames.ClassName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.ClassName.ClassifyAt(74, 9));
         }
@@ -28,7 +28,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void StructureTest()
         {
             GetContext(@"Access\Types\StructureType.vb")
-                .AddInfo(VisualBasicNames.StructureName.Enable())
+                .AddInfo(VisualBasicNames.StructureName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.StructureName.ClassifyAt(102, 13));
         }
@@ -37,7 +37,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void ModuleTest()
         {
             GetContext(@"Access\Types\ModuleType.vb")
-                .AddInfo(VisualBasicNames.ModuleName.Enable())
+                .AddInfo(VisualBasicNames.ModuleName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.ModuleName.ClassifyAt(121, 10));
         }
@@ -46,7 +46,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void InterfaceTest()
         {
             GetContext(@"Access\Types\InterfaceType.vb")
-                .AddInfo(VisualBasicNames.InterfaceName.Enable())
+                .AddInfo(VisualBasicNames.InterfaceName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.InterfaceName.ClassifyAt(138, 14));
         }
@@ -55,7 +55,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void EnumTest()
         {
             GetContext(@"Access\Types\EnumType.vb")
-                .AddInfo(VisualBasicNames.EnumName.Enable())
+                .AddInfo(VisualBasicNames.EnumName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.EnumName.ClassifyAt(122, 6));
         }
@@ -64,7 +64,7 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void DelegateTest()
         {
             GetContext(@"Access\Types\DelegateType.vb")
-                .AddInfo(VisualBasicNames.DelegateName.Enable())
+                .AddInfo(VisualBasicNames.DelegateName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     VisualBasicNames.DelegateName.ClassifyAt(113, 6));
         }

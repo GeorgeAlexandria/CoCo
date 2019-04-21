@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
@@ -11,33 +10,24 @@ namespace CoCo.Analyser
     /// <summary>
     /// Common editor classifier for roslyn based languages.
     /// </summary>
-    internal abstract class RoslynEditorClassifier : IClassifier, ICodeClassifier
+    internal abstract class RoslynTextBufferClassifier : IClassifier
     {
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
-        private readonly IClassificationChangingService _analyzingService;
 
         private SemanticModel _semanticModel;
 
-        protected readonly Dictionary<IClassificationType, ClassificationOption> options =
-            new Dictionary<IClassificationType, ClassificationOption>();
-
-        protected ImmutableArray<IClassificationType> classifications;
-
-        protected RoslynEditorClassifier()
+        protected RoslynTextBufferClassifier()
         {
         }
 
-        protected RoslynEditorClassifier(
-            IClassificationChangingService analyzingService, ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
+        protected RoslynTextBufferClassifier(ITextDocumentFactoryService textDocumentFactoryService, ITextBuffer buffer)
         {
             _textBuffer = buffer;
             _textDocumentFactoryService = textDocumentFactoryService;
-            _analyzingService = analyzingService;
 
             _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
-            _analyzingService.ClassificationChanged += OnClassificationsChanged;
         }
 
         /// <remarks>
@@ -45,7 +35,7 @@ namespace CoCo.Analyser
         /// for example typing /* would cause the classification to change in C# without directly
         /// affecting the span.
         /// </remarks>
-        public event EventHandler<Microsoft.VisualStudio.Text.Classification.ClassificationChangedEventArgs> ClassificationChanged;
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         /// <summary>
         /// Gets all the <see cref="ClassificationSpan"/> objects that intersect with the given range of text.
@@ -70,21 +60,10 @@ namespace CoCo.Analyser
             return GetClassificationSpans(workspace, semanticModel, span);
         }
 
-        public abstract IClassificationType GetClassification(ISymbol symbol);
+        internal abstract ICodeClassifier CodeClassifier { get; }
 
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
-
-        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
-        {
-            foreach (var classification in classifications)
-            {
-                if (args.ChangedClassifications.TryGetValue(classification, out var option))
-                {
-                    options[classification] = option;
-                }
-            }
-        }
 
         private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
 
@@ -97,7 +76,6 @@ namespace CoCo.Analyser
                 _semanticModel = null;
                 _textBuffer.Changed -= OnTextBufferChanged;
                 _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
-                _analyzingService.ClassificationChanged -= OnClassificationsChanged;
             }
         }
     }

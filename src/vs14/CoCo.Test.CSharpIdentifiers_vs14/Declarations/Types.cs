@@ -10,7 +10,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void TypeParameterTest()
         {
             GetContext(@"Declarations\Types\TypeParameter.cs")
-                .AddInfo(CSharpNames.TypeParameterName.Enable())
+                .AddInfo(CSharpNames.TypeParameterName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.TypeParameterName.ClassifyAt(84, 3),
                     CSharpNames.TypeParameterName.ClassifyAt(124, 6));
@@ -20,7 +20,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void ClassTest()
         {
             GetContext(@"Declarations\Types\ClassType.cs")
-                .AddInfo(CSharpNames.ClassName.Enable())
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.ClassName.ClassifyAt(70, 9));
         }
@@ -29,7 +29,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void StructureTest()
         {
             GetContext(@"Declarations\Types\StructureType.cs")
-                .AddInfo(CSharpNames.StructureName.Enable())
+                .AddInfo(CSharpNames.StructureName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.StructureName.ClassifyAt(71, 13));
         }
@@ -38,7 +38,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void InterfaceTest()
         {
             GetContext(@"Declarations\Types\InterfaceType.cs")
-                .AddInfo(CSharpNames.InterfaceName.Enable())
+                .AddInfo(CSharpNames.InterfaceName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.InterfaceName.ClassifyAt(74, 13));
         }
@@ -47,7 +47,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void EnumTest()
         {
             GetContext(@"Declarations\Types\EnumType.cs")
-                .AddInfo(CSharpNames.EnumName.Enable())
+                .AddInfo(CSharpNames.EnumName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.EnumName.ClassifyAt(69, 8));
         }
@@ -56,7 +56,7 @@ namespace CoCo.Test.CSharpIdentifiers.Declarations
         public void DelegateTest()
         {
             GetContext(@"Declarations\Types\DelegateType.cs")
-                .AddInfo(CSharpNames.DelegateName.Enable())
+                .AddInfo(CSharpNames.DelegateName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.DelegateName.ClassifyAt(78, 6));
         }
