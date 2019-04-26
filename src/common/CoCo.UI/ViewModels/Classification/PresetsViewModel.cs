@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using CoCo.UI.Data;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
-using CoCo.UI.Data;
 
 namespace CoCo.UI.ViewModels
 {
@@ -33,6 +33,13 @@ namespace CoCo.UI.ViewModels
         public IEnumerable<PresetViewModel> Presets => _presets;
 
         public DelegateCommand CreatePreset { get; }
+
+        private bool _isActive;
+        public bool IsActive
+        {
+            get => _isActive;
+            set => SetProperty(ref _isActive, value);
+        }
 
         private string _createdName;
 

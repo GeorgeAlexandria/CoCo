@@ -2,12 +2,11 @@
    x:Class="CoCo.UI.ClassificationsControl"
    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-   xmlns:converters="clr-namespace:CoCo.UI.Converters"
    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
    xmlns:local="clr-namespace:CoCo.UI"
    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
    xmlns:viewModels="clr-namespace:CoCo.UI.ViewModels"
-   d:DataContext="{d:DesignInstance viewModels:ClassificationOptionViewModel}"
+   d:DataContext="{d:DesignInstance viewModels:ClassificationsViewModel}"
    d:DesignHeight="450"
    d:DesignWidth="800"
    mc:Ignorable="d">
@@ -18,347 +17,319 @@
          </ResourceDictionary.MergedDictionaries>
       </ResourceDictionary>
    </UserControl.Resources>
-   <Grid>
-      <Grid.RowDefinitions>
-         <RowDefinition Height="Auto" />
-         <RowDefinition Height="5*" />
-      </Grid.RowDefinitions>
-      <StackPanel
-         Grid.Row="0"
-         Width="Auto"
-         HorizontalAlignment="Left"
-         Orientation="Horizontal">
-         <Label
-            Margin="5,0,0,5"
-            Content="Language:"
-            FontSize="14"
-            Style="{StaticResource labelStyle}" />
-         <ComboBox
-            Width="100"
-            Margin="5,0,0,5"
-            DisplayMemberPath="Name"
-            ItemsSource="{Binding Languages}"
-            SelectedItem="{Binding SelectedLanguage}"
-            Style="{StaticResource comboBoxFlatStyle}" />
-      </StackPanel>
-      <Grid
-         Grid.Row="1"
-         HorizontalAlignment="Stretch"
-         VerticalAlignment="Stretch">
-         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="130" />
-            <ColumnDefinition Width="Auto" />
-         </Grid.ColumnDefinitions>
-         <ListView
-            Name="listView"
-            Grid.Column="0"
-            BorderBrush="{StaticResource SoftBlue}"
-            DataContext="{Binding SelectedLanguage.ClassificationsContainer}"
-            ItemsSource="{Binding ClassificationsView}"
-            ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
-            SelectedItem="{Binding SelectedClassification}"
-            Style="{StaticResource listViewFlatStyle}">
-            <ListView.View>
-               <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeaderWithoutGripper}">
-                  <GridViewColumn>
-                     <GridViewColumnHeader MinWidth="172" HorizontalContentAlignment="Left">
-                        <TextBlock
-                           Margin="6,0,0,0"
-                           Text="Name"
-                           TextAlignment="Center" />
-                     </GridViewColumnHeader>
-                     <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                           <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" />
-                        </DataTemplate>
-                     </GridViewColumn.CellTemplate>
-                  </GridViewColumn>
-               </GridView>
-            </ListView.View>
-         </ListView>
-         <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-               <RowDefinition Height="*" />
-               <RowDefinition Height="2.5*" />
-            </Grid.RowDefinitions>
-            <GroupBox
-               Grid.Row="0"
-               BorderBrush="{StaticResource SoftGrey3}"
-               BorderThickness="2"
-               Template="{StaticResource groupBoxControlTemplate}">
-               <GroupBox.HeaderTemplate>
-                  <DataTemplate>
+   <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+      <Grid.ColumnDefinitions>
+         <ColumnDefinition MinWidth="130" />
+         <ColumnDefinition Width="Auto" />
+      </Grid.ColumnDefinitions>
+      <ListView
+         Name="listView"
+         Grid.Column="0"
+         BorderBrush="{StaticResource SoftBlue}"
+         ItemsSource="{Binding ClassificationsView}"
+         ListView.ItemContainerStyle="{StaticResource listViewItemFlatStyle}"
+         SelectedItem="{Binding SelectedClassification}"
+         Style="{StaticResource listViewFlatStyle}">
+         <ListView.View>
+            <GridView ColumnHeaderContainerStyle="{StaticResource gridViewColumnHeaderWithoutGripper}">
+               <GridViewColumn>
+                  <GridViewColumnHeader MinWidth="172" HorizontalContentAlignment="Left">
                      <TextBlock
-                        Height="18"
-                        FontWeight="Medium"
-                        Text="Analyze settings" />
-                  </DataTemplate>
-               </GroupBox.HeaderTemplate>
-               <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
+                        Margin="6,0,0,0"
+                        Text="Name"
+                        TextAlignment="Center" />
+                  </GridViewColumnHeader>
+                  <GridViewColumn.CellTemplate>
+                     <DataTemplate>
+                        <TextBlock Text="{Binding DisplayName}" TextAlignment="Left" />
+                     </DataTemplate>
+                  </GridViewColumn.CellTemplate>
+               </GridViewColumn>
+            </GridView>
+         </ListView.View>
+      </ListView>
+      <Grid Grid.Column="1">
+         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="2.5*" />
+         </Grid.RowDefinitions>
+         <GroupBox
+            Grid.Row="0"
+            BorderBrush="{StaticResource SoftGrey3}"
+            BorderThickness="2"
+            Template="{StaticResource groupBoxControlTemplate}">
+            <GroupBox.HeaderTemplate>
+               <DataTemplate>
+                  <TextBlock
+                     Height="18"
+                     FontWeight="Medium"
+                     Text="Analyze settings" />
+               </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
+               <WrapPanel
+                  MinHeight="50"
+                  MaxWidth="270"
+                  Margin="5,0,0,0"
+                  HorizontalAlignment="Left"
+                  DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+                  <CheckBox
+                     Content="Disable classification"
+                     IsChecked="{Binding IsDisabled}"
+                     Style="{StaticResource checkBoxFlatStyle}" />
+                  <CheckBox IsChecked="{Binding IsDisabledInEditor}" Style="{StaticResource checkBoxFlatStyle}">
+                     <TextBlock
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        LineStackingStrategy="BlockLineHeight"
+                        Text="Disable classification in editor"
+                        TextWrapping="Wrap" />
+                  </CheckBox>
+                  <CheckBox IsChecked="{Binding IsDisabledInQuickInfo}" Style="{StaticResource checkBoxFlatStyle}">
+                     <TextBlock
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        LineStackingStrategy="BlockLineHeight"
+                        Text="Disable classification in quick info"
+                        TextWrapping="Wrap" />
+                  </CheckBox>
+                  <CheckBox IsChecked="{Binding IsDisabledInXml}" Style="{StaticResource checkBoxFlatStyle}">
+                     <TextBlock
+                        VerticalAlignment="Bottom"
+                        Background="Transparent"
+                        LineHeight="14"
+                        LineStackingStrategy="BlockLineHeight"
+                        Text="Disable classification inside xml doc comment"
+                        TextWrapping="Wrap" />
+                  </CheckBox>
+               </WrapPanel>
+            </ScrollViewer>
+         </GroupBox>
+         <GroupBox
+            Grid.Row="1"
+            BorderBrush="{StaticResource SoftGrey3}"
+            BorderThickness="2"
+            Template="{StaticResource groupBoxControlTemplate}">
+            <GroupBox.HeaderTemplate>
+               <DataTemplate>
+                  <TextBlock
+                     Height="18"
+                     FontWeight="Medium"
+                     Text="Decoration settings" />
+               </DataTemplate>
+            </GroupBox.HeaderTemplate>
+            <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
+               <WrapPanel
+                  Width="250"
+                  HorizontalAlignment="Left"
+                  DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+                  <StackPanel
+                     Width="Auto"
+                     Height="26"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding FontFamiliesContainer}"
+                     Orientation="Horizontal">
+                     <Label
+                        Content="Font family:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <ComboBox
+                        Width="150"
+                        ItemsSource="{Binding Families}"
+                        SelectedItem="{Binding SelectedFamily}"
+                        Style="{StaticResource comboBoxFlatStyle}" />
+                  </StackPanel>
+                  <StackPanel
+                     Width="Auto"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     Orientation="Horizontal">
+                     <Label
+                        Width="98"
+                        Content="Rendering Size:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <TextBox
+                        Width="50"
+                        HorizontalAlignment="Left"
+                        VerticalContentAlignment="Center"
+                        MaxLength="3"
+                        Style="{StaticResource textBoxFlatStyle}"
+                        Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
+                        TextAlignment="Left" />
+                     <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding ResetFontRenderingSize}"
+                        Style="{StaticResource commonButtonStyle}"
+                        Template="{StaticResource ResetButton}" />
+                  </StackPanel>
+                  <StackPanel
+                     Width="Auto"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding Foreground}"
+                     Orientation="Horizontal">
+                     <Label
+                        Width="78"
+                        Content="Foreground:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <Border
+                        Width="110"
+                        HorizontalAlignment="Left"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1,1,1,1">
+                        <StackPanel Background="White" Orientation="Horizontal">
+                           <Border
+                              Width="20"
+                              Height="12"
+                              Margin="5,0,0,0"
+                              BorderBrush="{StaticResource SoftBlue}"
+                              BorderThickness="1.2">
+                              <Rectangle>
+                                 <Rectangle.Fill>
+                                    <SolidColorBrush Color="{Binding Color}" />
+                                 </Rectangle.Fill>
+                              </Rectangle>
+                           </Border>
+                           <TextBox
+                              Margin="5,0,0,0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              VerticalContentAlignment="Center"
+                              local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
+                              BorderThickness="0"
+                              Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                     </Border>
+                     <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding CustomizeColor}"
+                        Style="{StaticResource commonButtonStyle}"
+                        Template="{StaticResource CustomizeButton}" />
+                     <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding ResetColor}"
+                        Style="{StaticResource commonButtonStyle}"
+                        Template="{StaticResource ResetButton}" />
+                  </StackPanel>
+                  <StackPanel
+                     Width="Auto"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding Background}"
+                     Orientation="Horizontal">
+                     <Label
+                        Width="78"
+                        Content="Background:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <Border
+                        Width="110"
+                        HorizontalAlignment="Left"
+                        BorderBrush="{StaticResource SoftBlue}"
+                        BorderThickness="1,1,1,1">
+                        <StackPanel Background="White" Orientation="Horizontal">
+                           <Border
+                              Width="20"
+                              Height="12"
+                              Margin="5,0,0,0"
+                              BorderBrush="{StaticResource SoftBlue}"
+                              BorderThickness="1.2">
+                              <Rectangle>
+                                 <Rectangle.Fill>
+                                    <SolidColorBrush Color="{Binding Color}" />
+                                 </Rectangle.Fill>
+                              </Rectangle>
+                           </Border>
+                           <TextBox
+                              Margin="5,0,0,0"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              VerticalContentAlignment="Center"
+                              local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
+                              BorderThickness="0"
+                              Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                     </Border>
+                     <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding CustomizeColor}"
+                        Style="{StaticResource commonButtonStyle}"
+                        Template="{StaticResource CustomizeButton}" />
+                     <Button
+                        Margin="8,0,0,0"
+                        Command="{Binding ResetColor}"
+                        Style="{StaticResource commonButtonStyle}"
+                        Template="{StaticResource ResetButton}" />
+                  </StackPanel>
+                  <StackPanel
+                     Width="Auto"
+                     Height="26"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding FontStylesContainer}"
+                     Orientation="Horizontal">
+                     <Label
+                        Content="Font style:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <ComboBox
+                        Width="80"
+                        ItemsSource="{Binding Styles}"
+                        SelectedItem="{Binding SelectedStyle}"
+                        Style="{StaticResource comboBoxFlatStyle}" />
+                  </StackPanel>
+                  <StackPanel
+                     Width="Auto"
+                     Height="26"
+                     Margin="0,0,0,4"
+                     HorizontalAlignment="Left"
+                     DataContext="{Binding FontStretchesContainer}"
+                     Orientation="Horizontal">
+                     <Label
+                        Content="Font stretch:"
+                        FontSize="12"
+                        Style="{StaticResource labelStyle}" />
+                     <ComboBox
+                        Width="120"
+                        ItemsSource="{Binding Stretches}"
+                        SelectedItem="{Binding SelectedStretch}"
+                        Style="{StaticResource comboBoxFlatStyle}" />
+                  </StackPanel>
                   <WrapPanel
-                     MinHeight="50"
+                     Width="Auto"
                      MaxWidth="270"
-                     Margin="5,0,0,0"
-                     HorizontalAlignment="Left"
-                     DataContext="{Binding ElementName=listView, Path=SelectedItem}">
+                     Margin="0,2,0,0"
+                     HorizontalAlignment="Left">
                      <CheckBox
-                        Content="Disable classification"
-                        IsChecked="{Binding IsDisabled}"
+                        Content="Bold"
+                        IsChecked="{Binding IsBold}"
                         Style="{StaticResource checkBoxFlatStyle}" />
-                     <CheckBox IsChecked="{Binding IsDisabledInEditor}" Style="{StaticResource checkBoxFlatStyle}">
-                        <TextBlock
-                           VerticalAlignment="Bottom"
-                           Background="Transparent"
-                           LineStackingStrategy="BlockLineHeight"
-                           Text="Disable classification in editor"
-                           TextWrapping="Wrap" />
-                     </CheckBox>
-                     <CheckBox IsChecked="{Binding IsDisabledInQuickInfo}" Style="{StaticResource checkBoxFlatStyle}">
-                        <TextBlock
-                           VerticalAlignment="Bottom"
-                           Background="Transparent"
-                           LineStackingStrategy="BlockLineHeight"
-                           Text="Disable classification in quick info"
-                           TextWrapping="Wrap" />
-                     </CheckBox>
-                     <CheckBox IsChecked="{Binding IsDisabledInXml}" Style="{StaticResource checkBoxFlatStyle}">
-                        <TextBlock
-                           VerticalAlignment="Bottom"
-                           Background="Transparent"
-                           LineHeight="14"
-                           LineStackingStrategy="BlockLineHeight"
-                           Text="Disable classification inside xml doc comment"
-                           TextWrapping="Wrap" />
-                     </CheckBox>
+                     <CheckBox
+                        Margin="10,0,0,0"
+                        Content="Overline"
+                        IsChecked="{Binding IsOverline}"
+                        Style="{StaticResource checkBoxFlatStyle}" />
+                     <CheckBox
+                        Margin="10,0,0,0"
+                        Content="Underline"
+                        IsChecked="{Binding IsUnderline}"
+                        Style="{StaticResource checkBoxFlatStyle}" />
+                     <CheckBox
+                        Content="Strikethrough"
+                        IsChecked="{Binding IsStrikethrough}"
+                        Style="{StaticResource checkBoxFlatStyle}" />
+                     <CheckBox
+                        Margin="10,0,0,0"
+                        Content="Baseline"
+                        IsChecked="{Binding IsBaseline}"
+                        Style="{StaticResource checkBoxFlatStyle}" />
                   </WrapPanel>
-               </ScrollViewer>
-            </GroupBox>
-            <GroupBox
-               Grid.Row="1"
-               BorderBrush="{StaticResource SoftGrey3}"
-               BorderThickness="2"
-               Template="{StaticResource groupBoxControlTemplate}">
-               <GroupBox.HeaderTemplate>
-                  <DataTemplate>
-                     <TextBlock
-                        Height="18"
-                        FontWeight="Medium"
-                        Text="Decoration settings" />
-                  </DataTemplate>
-               </GroupBox.HeaderTemplate>
-               <ScrollViewer Template="{StaticResource scrollViewerTemplate}">
-                  <WrapPanel
-                     Width="250"
-                     HorizontalAlignment="Left"
-                     DataContext="{Binding ElementName=listView, Path=SelectedItem}">
-                     <StackPanel
-                        Width="Auto"
-                        Height="26"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        DataContext="{Binding FontFamiliesContainer}"
-                        Orientation="Horizontal">
-                        <Label
-                           Content="Font family:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <ComboBox
-                           Width="150"
-                           ItemsSource="{Binding Families}"
-                           SelectedItem="{Binding SelectedFamily}"
-                           Style="{StaticResource comboBoxFlatStyle}" />
-                     </StackPanel>
-                     <StackPanel
-                        Width="Auto"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        Orientation="Horizontal">
-                        <Label
-                           Width="98"
-                           Content="Rendering Size:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <TextBox
-                           Width="50"
-                           HorizontalAlignment="Left"
-                           VerticalContentAlignment="Center"
-                           MaxLength="3"
-                           Style="{StaticResource textBoxFlatStyle}"
-                           Text="{Binding Size, UpdateSourceTrigger=PropertyChanged}"
-                           TextAlignment="Left" />
-                        <Button
-                           Margin="8,0,0,0"
-                           Command="{Binding ResetFontRenderingSize}"
-                           Style="{StaticResource commonButtonStyle}"
-                           Template="{StaticResource ResetButton}" />
-                     </StackPanel>
-                     <StackPanel
-                        Width="Auto"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        DataContext="{Binding Foreground}"
-                        Orientation="Horizontal">
-                        <Label
-                           Width="78"
-                           Content="Foreground:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <Border
-                           Width="110"
-                           HorizontalAlignment="Left"
-                           BorderBrush="{StaticResource SoftBlue}"
-                           BorderThickness="1,1,1,1">
-                           <StackPanel Background="White" Orientation="Horizontal">
-                              <Border
-                                 Width="20"
-                                 Height="12"
-                                 Margin="5,0,0,0"
-                                 BorderBrush="{StaticResource SoftBlue}"
-                                 BorderThickness="1.2">
-                                 <Rectangle>
-                                    <Rectangle.Fill>
-                                       <SolidColorBrush Color="{Binding Color}" />
-                                    </Rectangle.Fill>
-                                 </Rectangle>
-                              </Border>
-                              <TextBox
-                                 Margin="5,0,0,0"
-                                 HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Stretch"
-                                 VerticalContentAlignment="Center"
-                                 local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
-                                 BorderThickness="0"
-                                 Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
-                           </StackPanel>
-                        </Border>
-                        <Button
-                           Margin="8,0,0,0"
-                           Command="{Binding CustomizeColor}"
-                           Style="{StaticResource commonButtonStyle}"
-                           Template="{StaticResource CustomizeButton}" />
-                        <Button
-                           Margin="8,0,0,0"
-                           Command="{Binding ResetColor}"
-                           Style="{StaticResource commonButtonStyle}"
-                           Template="{StaticResource ResetButton}" />
-                     </StackPanel>
-                     <StackPanel
-                        Width="Auto"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        DataContext="{Binding Background}"
-                        Orientation="Horizontal">
-                        <Label
-                           Width="78"
-                           Content="Background:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <Border
-                           Width="110"
-                           HorizontalAlignment="Left"
-                           BorderBrush="{StaticResource SoftBlue}"
-                           BorderThickness="1,1,1,1">
-                           <StackPanel Background="White" Orientation="Horizontal">
-                              <Border
-                                 Width="20"
-                                 Height="12"
-                                 Margin="5,0,0,0"
-                                 BorderBrush="{StaticResource SoftBlue}"
-                                 BorderThickness="1.2">
-                                 <Rectangle>
-                                    <Rectangle.Fill>
-                                       <SolidColorBrush Color="{Binding Color}" />
-                                    </Rectangle.Fill>
-                                 </Rectangle>
-                              </Border>
-                              <TextBox
-                                 Margin="5,0,0,0"
-                                 HorizontalAlignment="Stretch"
-                                 VerticalAlignment="Stretch"
-                                 VerticalContentAlignment="Center"
-                                 local:FocusExtension.LostFocusCommand="{Binding ColorLostFocus}"
-                                 BorderThickness="0"
-                                 Text="{Binding ColorText, UpdateSourceTrigger=PropertyChanged}" />
-                           </StackPanel>
-                        </Border>
-                        <Button
-                           Margin="8,0,0,0"
-                           Command="{Binding CustomizeColor}"
-                           Style="{StaticResource commonButtonStyle}"
-                           Template="{StaticResource CustomizeButton}" />
-                        <Button
-                           Margin="8,0,0,0"
-                           Command="{Binding ResetColor}"
-                           Style="{StaticResource commonButtonStyle}"
-                           Template="{StaticResource ResetButton}" />
-                     </StackPanel>
-                     <StackPanel
-                        Width="Auto"
-                        Height="26"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        DataContext="{Binding FontStylesContainer}"
-                        Orientation="Horizontal">
-                        <Label
-                           Content="Font style:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <ComboBox
-                           Width="80"
-                           ItemsSource="{Binding Styles}"
-                           SelectedItem="{Binding SelectedStyle}"
-                           Style="{StaticResource comboBoxFlatStyle}" />
-                     </StackPanel>
-                     <StackPanel
-                        Width="Auto"
-                        Height="26"
-                        Margin="0,0,0,4"
-                        HorizontalAlignment="Left"
-                        DataContext="{Binding FontStretchesContainer}"
-                        Orientation="Horizontal">
-                        <Label
-                           Content="Font stretch:"
-                           FontSize="12"
-                           Style="{StaticResource labelStyle}" />
-                        <ComboBox
-                           Width="120"
-                           ItemsSource="{Binding Stretches}"
-                           SelectedItem="{Binding SelectedStretch}"
-                           Style="{StaticResource comboBoxFlatStyle}" />
-                     </StackPanel>
-                     <WrapPanel
-                        Width="Auto"
-                        MaxWidth="270"
-                        Margin="0,2,0,0"
-                        HorizontalAlignment="Left">
-                        <CheckBox
-                           Content="Bold"
-                           IsChecked="{Binding IsBold}"
-                           Style="{StaticResource checkBoxFlatStyle}" />
-                        <CheckBox
-                           Margin="10,0,0,0"
-                           Content="Overline"
-                           IsChecked="{Binding IsOverline}"
-                           Style="{StaticResource checkBoxFlatStyle}" />
-                        <CheckBox
-                           Margin="10,0,0,0"
-                           Content="Underline"
-                           IsChecked="{Binding IsUnderline}"
-                           Style="{StaticResource checkBoxFlatStyle}" />
-                        <CheckBox
-                           Content="Strikethrough"
-                           IsChecked="{Binding IsStrikethrough}"
-                           Style="{StaticResource checkBoxFlatStyle}" />
-                        <CheckBox
-                           Margin="10,0,0,0"
-                           Content="Baseline"
-                           IsChecked="{Binding IsBaseline}"
-                           Style="{StaticResource checkBoxFlatStyle}" />
-                     </WrapPanel>
-                  </WrapPanel>
-               </ScrollViewer>
-            </GroupBox>
-         </Grid>
+               </WrapPanel>
+            </ScrollViewer>
+         </GroupBox>
       </Grid>
    </Grid>
 </UserControl>

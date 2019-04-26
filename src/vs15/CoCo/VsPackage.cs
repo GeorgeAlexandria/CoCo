@@ -13,24 +13,22 @@ namespace CoCo
 {
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [ProvideOptionPage(typeof(GeneralOptionPage), "CoCo", "General", 0, 0, true)]
-    [ProvideOptionPage(typeof(ClassificationsOption), "CoCo", "Classifications", 0, 0, true)]
-    [ProvideOptionPage(typeof(PresetsOption), "CoCo", "Presets", 0, 0, true)]
+    [ProvideOptionPage(typeof(ClassificationsOptionPage), "CoCo", "Classifications", 0, 0, true)]
     [Guid(Guids.Package)]
     public sealed class VsPackage : AsyncPackage
     {
         private static ClassificationOptionViewModel _classificationOptionViewModel;
         private static GeneralOptionViewModel _generalOptionViewModel;
 
-        private static int _receivedClassificationCount;
         private static bool _classificationOptionsWereApplied;
         private static bool _generalOptionsWereApplied;
 
         internal static ClassificationOptionViewModel ReceiveClassificationContext()
         {
-            ++_receivedClassificationCount;
             if (!(_classificationOptionViewModel is null)) return _classificationOptionViewModel;
 
-            return _classificationOptionViewModel = new ClassificationOptionViewModel(ReceiveClassificationOption(), ResetValuesProvider.Instance);
+            return _classificationOptionViewModel = new ClassificationOptionViewModel(ReceiveClassificationOption(),
+                ResetValuesProvider.Instance);
         }
 
         internal static GeneralOptionViewModel ReceiveGeneralContext()
@@ -48,11 +46,7 @@ namespace CoCo
 
         internal static void ReleaseOption(ClassificationOptionViewModel optionViewModel)
         {
-            if (_receivedClassificationCount <= 0 || ReferenceEquals(optionViewModel, _classificationOptionViewModel) && 
-                --_receivedClassificationCount != 0)
-            {
-                return;
-            }
+            if (!ReferenceEquals(optionViewModel, _classificationOptionViewModel)) return;
 
             if (_classificationOptionsWereApplied)
             {
@@ -155,20 +149,9 @@ namespace CoCo
         }
     }
 
-    public class ClassificationsOption : DialogPage<ClassificationOptionViewModel>
+    public class ClassificationsOptionPage : DialogPage<ClassificationOptionViewModel>
     {
-        protected override FrameworkElement GetChild() => new ClassificationsControl();
-
-        protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveClassificationContext();
-
-        protected override void ReleaseChildContext(ClassificationOptionViewModel childContext) => VsPackage.ReleaseOption(childContext);
-
-        protected override void SaveChildContext(ClassificationOptionViewModel childContext) => VsPackage.SaveOption(childContext);
-    }
-
-    public class PresetsOption : DialogPage<ClassificationOptionViewModel>
-    {
-        protected override FrameworkElement GetChild() => new PresetsControl();
+        protected override FrameworkElement GetChild() => new ClassificationsOptionControl();
 
         protected override ClassificationOptionViewModel GetChildContext() => VsPackage.ReceiveClassificationContext();
 
@@ -179,7 +162,7 @@ namespace CoCo
 
     public class GeneralOptionPage : DialogPage<GeneralOptionViewModel>
     {
-        protected override FrameworkElement GetChild() => new GeneralControl();
+        protected override FrameworkElement GetChild() => new GeneralOptionControl();
 
         protected override GeneralOptionViewModel GetChildContext() => VsPackage.ReceiveGeneralContext();
 

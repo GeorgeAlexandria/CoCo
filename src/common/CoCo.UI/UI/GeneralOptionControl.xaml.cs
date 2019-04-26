@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CoCo.UI
 {
     /// <summary>
-    /// Interaction logic for GeneralControl.xaml
+    /// Interaction logic for GeneralOptionControl.xaml
     /// </summary>
-    public partial class GeneralControl : UserControl
+    public partial class GeneralOptionControl : UserControl
     {
-        public GeneralControl()
+        public GeneralOptionControl()
         {
             InitializeComponent();
         }

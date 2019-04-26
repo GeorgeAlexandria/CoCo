@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CoCo.UI.Data;
+﻿using CoCo.UI.Data;
+using System.Collections.Generic;
 
 namespace CoCo.UI.ViewModels
 {
@@ -12,9 +12,25 @@ namespace CoCo.UI.ViewModels
             Name = language.Name;
             ClassificationsContainer = new ClassificationsViewModel(language.Classifications, resetValuesProvider);
             PresetsContainer = new PresetsViewModel(language.Presets, this, resetValuesProvider);
+
+            ClassificationsContainer.IsActive = true;
+            ActivateClassifications = new DelegateCommand(() =>
+            {
+                PresetsContainer.IsActive = false;
+                ClassificationsContainer.IsActive = true;
+            });
+            ActivatePresets = new DelegateCommand(() =>
+            {
+                ClassificationsContainer.IsActive = false;
+                PresetsContainer.IsActive = true;
+            });
         }
 
         public string Name { get; }
+
+        public DelegateCommand ActivateClassifications { get; }
+
+        public DelegateCommand ActivatePresets { get; }
 
         public ClassificationsViewModel ClassificationsContainer { get; }
 
