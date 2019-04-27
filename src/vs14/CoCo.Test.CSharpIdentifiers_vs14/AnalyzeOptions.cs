@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -18,7 +18,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\LocalVariable.cs")
                 .AddInfo(
-                    CSharpNames.LocalVariableName.Disable())
+                    CSharpNames.LocalVariableName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.LocalVariableName.ClassifyAt(145, 5));
         }
@@ -36,7 +36,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\Member.cs")
                 .AddInfo(
-                    CSharpNames.PropertyName.Disable())
+                    CSharpNames.PropertyName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.PropertyName.ClassifyAt(127, 4),
                     CSharpNames.PropertyName.ClassifyAt(182, 4));
@@ -65,7 +65,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\Method.cs")
                 .AddInfo(
-                    CSharpNames.MethodName.Disable())
+                    CSharpNames.MethodName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.MethodName.ClassifyAt(127, 8),
                     CSharpNames.MethodName.ClassifyAt(184, 8));
@@ -96,7 +96,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\Namespace.cs")
                 .AddInfo(
-                    CSharpNames.NamespaceName.Disable())
+                    CSharpNames.NamespaceName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.NamespaceName.ClassifyAt(30, 17),
                     CSharpNames.NamespaceName.ClassifyAt(48, 14),
@@ -128,7 +128,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\AliasNamespace.cs")
                 .AddInfo(
-                    CSharpNames.AliasNamespaceName.Disable())
+                    CSharpNames.AliasNamespaceName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.AliasNamespaceName.ClassifyAt(6, 2),
                     CSharpNames.AliasNamespaceName.ClassifyAt(63, 2));
@@ -157,7 +157,7 @@ namespace CoCo.Test.CSharpIdentifiers
         {
             GetContext(@"AnalyzeOptions\Parameter.cs")
                 .AddInfo(
-                    CSharpNames.ParameterName.Disable())
+                    CSharpNames.ParameterName.DisableInEditor())
                 .GetClassifications().AssertNotContains(
                     CSharpNames.ParameterName.ClassifyAt(109, 9),
                     CSharpNames.ParameterName.ClassifyAt(164, 9));

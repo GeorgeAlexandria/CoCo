@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
@@ -11,7 +11,7 @@ namespace CoCo.Test.CSharpIdentifiers
         public void CommonTest()
         {
             GetContext(@"SimpleExample.cs")
-                .AddInfo(CSharpNames.ClassName.Enable())
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
                 .GetClassifications().AssertIsEquivalent(
                     CSharpNames.NamespaceName.ClassifyAt(10, 17),
                     CSharpNames.ClassName.ClassifyAt(51, 13),

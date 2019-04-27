@@ -29,9 +29,9 @@
   <ItemGroup>
     <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\obj\**" />
     <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Properties\AssemblyInfo.cs" />
-    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\ClassificationHelper.cs" />
-    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpClassifier.cs" />
-    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\CSharp\CSharpNames.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Classifications\ClassificationHelper.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Classifications\CSharp\CSharpClassifierService.cs" />
+    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\Classifications\CSharp\CSharpNames.cs" />
     <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDescriptionProvider.Formats.cs" />
     <LinkedItemsToExclude Include="..\..\vs15\CoCo.Analyser\QuickInfo\SymbolDisplayPartHelper.cs" />
 

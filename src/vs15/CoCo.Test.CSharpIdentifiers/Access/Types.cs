@@ -1,16 +1,16 @@
-﻿using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 
 namespace CoCo.Test.CSharpIdentifiers.Access
 {
-    class Types : CSharpIdentifierTests
+    internal class Types : CSharpIdentifierTests
     {
         [Test]
         public void ClassTest()
         {
             GetContext(@"Access\Types\ClassType.cs")
-                .AddInfo(CSharpNames.ClassName.Enable())
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.ClassName.ClassifyAt(152, 9));
         }
@@ -19,7 +19,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void StructureTest()
         {
             GetContext(@"Access\Types\StructureType.cs")
-                .AddInfo(CSharpNames.StructureName.Enable())
+                .AddInfo(CSharpNames.StructureName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.StructureName.ClassifyAt(157, 13));
         }
@@ -28,7 +28,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void InterfaceTest()
         {
             GetContext(@"Access\Types\InterfaceType.cs")
-                .AddInfo(CSharpNames.InterfaceName.Enable())
+                .AddInfo(CSharpNames.InterfaceName.EnableInEditor())
                 .GetClassifications().AssertContains(
                 CSharpNames.InterfaceName.ClassifyAt(166, 14));
         }
@@ -37,7 +37,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void EnumTest()
         {
             GetContext(@"Access\Types\EnumType.cs")
-                .AddInfo(CSharpNames.EnumName.Enable())
+                .AddInfo(CSharpNames.EnumName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.EnumName.ClassifyAt(160, 6));
         }
@@ -46,7 +46,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void DelegateTest()
         {
             GetContext(@"Access\Types\DelegateType.cs")
-                .AddInfo(CSharpNames.DelegateName.Enable())
+                .AddInfo(CSharpNames.DelegateName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.DelegateName.ClassifyAt(144, 6));
         }
@@ -55,7 +55,7 @@ namespace CoCo.Test.CSharpIdentifiers.Access
         public void TypeParameterTest()
         {
             GetContext(@"Access\Types\TypeParameter.cs")
-                .AddInfo(CSharpNames.TypeParameterName.Enable())
+                .AddInfo(CSharpNames.TypeParameterName.EnableInEditor())
                 .GetClassifications().AssertContains(
                     CSharpNames.TypeParameterName.ClassifyAt(92, 6),
                     CSharpNames.TypeParameterName.ClassifyAt(131, 6),

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using CoCo.Analyser.Classifications;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Classification;
 
@@ -27,7 +28,7 @@ namespace CoCo.Analyser.QuickInfo
                     builder.Add(tag);
                 }
             }
-            return builder.ToImmutable();
+            return builder.TryMoveToImmutable();
         }
 
         public TaggedText ToTag(SymbolDisplayPart displayPart)

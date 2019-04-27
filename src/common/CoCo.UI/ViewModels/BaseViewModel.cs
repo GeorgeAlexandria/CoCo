@@ -11,6 +11,7 @@ namespace CoCo.UI.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // TODO: avoid boxing for value types
         protected void SetProperty<T>(ref T oldValue, T newValue, [CallerMemberName]string propertyName = null)
         {
             if (EqualityComparer<T>.Default.Equals(oldValue, default) || !oldValue.Equals(newValue))

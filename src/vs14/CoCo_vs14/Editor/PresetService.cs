@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
 using CoCo.Settings;
 
 namespace CoCo.Editor

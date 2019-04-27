@@ -43,7 +43,7 @@ namespace CoCo.Editor
             return GetDefaultFormatting(classificationFormatMap, classification);
         }
 
-        public static void SetFormattingOptions(EditorOption option)
+        public static void SetFormattingOptions(ClassificationData option)
         {
             var classificationTypes = ClassificationManager.GetClassifications();
             var classificationFormatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");

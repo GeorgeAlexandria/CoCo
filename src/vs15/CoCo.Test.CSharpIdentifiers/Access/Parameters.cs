@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser.CSharp;
+﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
 

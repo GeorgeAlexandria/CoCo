@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
-using CoCo.Analyser.VisualBasic;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.VisualBasic;
+using CoCo.Analyser.Editor;
 using CoCo.Logging;
 using CoCo.Utils;
 using Microsoft.CodeAnalysis;
@@ -25,18 +26,18 @@ namespace CoCo.Test.Common
             ? throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names")
             : new SimplifiedClassificationSpan(new Span(start, length), new ClassificationType(name));
 
-        public static SimplifiedClassificationInfo Enable(this string name)
+        public static SimplifiedClassificationInfo EnableInEditor(this string name)
         {
             if (IsUnknownClassification(name)) throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
             SimplifiedClassificationInfo info = name;
-            return info.Enable();
+            return info.EnableInEditor();
         }
 
-        public static SimplifiedClassificationInfo Disable(this string name)
+        public static SimplifiedClassificationInfo DisableInEditor(this string name)
         {
             if (IsUnknownClassification(name)) throw new ArgumentOutOfRangeException(nameof(name), "Argument must be one of constant names");
             SimplifiedClassificationInfo info = name;
-            return info.Disable();
+            return info.DisableInEditor();
         }
 
         public static SimplifiedClassificationInfo DisableInXml(this string name)
@@ -97,7 +98,7 @@ namespace CoCo.Test.Common
             }
         }
 
-        private static RoslynEditorClassifier GetClassifier(
+        private static RoslynTextBufferClassifier GetClassifier(
             ProgrammingLanguage language, IReadOnlyList<SimplifiedClassificationInfo> infos)
         {
             var dictionary = infos?.ToDictionary(x => x.Name);
@@ -111,9 +112,14 @@ namespace CoCo.Test.Common
                 classificationTypes.Add(name, new ClassificationInfo(new ClassificationType(name), option));
             }
 
-            return language == ProgrammingLanguage.VisualBasic
-                ? new VisualBasicClassifier(classificationTypes)
-                : (RoslynEditorClassifier)new CSharpClassifier(classificationTypes);
+            if (language == ProgrammingLanguage.VisualBasic)
+            {
+                VisualBasicClassifierService.Reset();
+                return new VisualBasicTextBufferClassifier(classificationTypes);
+            }
+
+            CSharpClassifierService.Reset();
+            return new CSharpTextBufferClassifier(classificationTypes);
         }
 
         private static ContentType GetContentType(ProgrammingLanguage language) =>

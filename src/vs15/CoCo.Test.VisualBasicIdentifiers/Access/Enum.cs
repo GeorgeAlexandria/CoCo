@@ -1,4 +1,4 @@
-﻿using CoCo.Analyser.VisualBasic;
+﻿using CoCo.Analyser.Classifications.VisualBasic;
 using CoCo.Test.Common;
 using NUnit.Framework;
 

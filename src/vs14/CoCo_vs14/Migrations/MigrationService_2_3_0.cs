@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CoCo.Analyser;
-using CoCo.Analyser.CSharp;
+using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Settings;
 using CoCo.UI;
 using CoCo.Utils;
