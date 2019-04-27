@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/apm/l/vim-mode.svg?style=flat-square)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs14-v3.0.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs15-v3.0.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
+[![License](https://img.shields.io/apm/l/vim-mode.svg?style=flat-square)](LICENSE.txt) [![VS14](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs14-v3.1.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) [![VS15](https://img.shields.io/badge/Visual%20Studio%20Marketplace%20%7C%20vs15-v3.1.0-orange.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226)
 
 # CoCo
 A Visual Studio [2015](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo) (vs14) and [2017](https://marketplace.visualstudio.com/items?itemName=GeorgeAleksandria.CoCo-19226) (vs15) extension that is analyzing source code to colorize and decorate appropriate syntax nodes to different colors and different styles. It makes easily to read and understand sources, to find sought entities and to navigate by code. 
@@ -15,48 +15,52 @@ Extension can apply the following decorations to analyzed elements:
 * Changing font rendering size
 * Using overline, underline, strikethrough and baseline font
 
-supports the following analyze options:
-* Disable classification a current item
-* Disable classification a current item inside a xml doc comments
+supports the following analyze options of elements:
+* Disable element classification at all
+* Disable element classification in editor text
+* Disable element classification inside xml doc comments in editor text
+* Disable element classification in quick info tooltip
 
 and can apply the chosen settings to:
 * Editor text
-* Quick info
+* Quick info tooltip
 
 ## Examples
 
 The following screenshots show a different applying decorations and colors to the code:
 
-![](https://user-images.githubusercontent.com/13402478/44617734-03017c80-a871-11e8-86ac-5cc4e0c4d73f.png)
+![](https://user-images.githubusercontent.com/13402478/56852109-658aab00-691f-11e9-9a2a-311bb47cac99.png)
 
-![](https://user-images.githubusercontent.com/13402478/44617735-04cb4000-a871-11e8-9f69-52caf1210996.png)
+![](https://user-images.githubusercontent.com/13402478/56852108-658aab00-691f-11e9-97a2-dda4988235bc.png)
 
-![](https://user-images.githubusercontent.com/13402478/48673969-722cfb00-eb58-11e8-9896-6caa1188ee1d.png)
+![](https://user-images.githubusercontent.com/13402478/56852110-658aab00-691f-11e9-98c4-32a5b7eb3767.png)
 
-![](https://user-images.githubusercontent.com/13402478/54866283-d23fe200-4d82-11e9-84c0-e9eb4b3b4de2.png)
+![](https://user-images.githubusercontent.com/13402478/56852111-66234180-691f-11e9-8f9b-093d9b429811.png)
 
 ## How to use 
-Use **CoCo/Classifications** option page in the Visual Studio options to change decorations of items or their analyze options:
+In **CoCo/General** option page of the Visual Studio you can fully enable or disable editor and quick info classification:
 
-![](https://user-images.githubusercontent.com/13402478/54866265-a6246100-4d82-11e9-9450-8e466c4c067e.png)
+![](https://user-images.githubusercontent.com/13402478/56852160-2ad54280-6920-11e9-836e-0051b743394b.png)
+
+In **CoCo/Classifications** you can manage all supported classifications. 
+
+In the ***Classifications*** tab you can set decorations and analyze options for classification item:
+
+![](https://user-images.githubusercontent.com/13402478/56852159-2ad54280-6920-11e9-93f9-bfb74d802188.png)
 
 
-You can disable classification of the chosen item in the **Analyze settings** sections to allow the other similar extensions or Visual Studio classify this item.
 
-use **CoCo/Presets** option page to save your current settings as preset and to apply or delete existing presets:
+and in the ***Presets*** tab you can save your current settings from **Classifications** tab as preset and apply or delete existing presets:
 
-![](https://user-images.githubusercontent.com/13402478/54866264-a6246100-4d82-11e9-8d7a-6ba7ececfac8.png)
+![](https://user-images.githubusercontent.com/13402478/56852238-4d1b9000-6921-11e9-91ad-d535e92d326e.png)
 
-and use **CoCo/Quick Info** to choose the behavior of the quick info feature:
-
-![](https://user-images.githubusercontent.com/13402478/54866263-a58bca80-4d82-11e9-91ee-3a2d40112771.png)
 
 You need to click **OK** button to confirm your changes on the all CoCo options pages. If you will not click the **OK** button 
-extension will use the previous (or default) settings for all of pages. Settings are stored under **%localappdata%\CoCo\CoCo.config**.
+extension will use the previous (or default) settings for all of pages. All settings are stored under **%localappdata%\CoCo\\**.
 
 
 ### Installation
-Extension doesn't apply the one of **default presets** after the **first installation** on a system. Therefore, you need to set colors and decorations manually or **apply existing presets** as pointed out above. After **updating extension** to a new version it will use the stored settings from the config fie on your system if it exists otherwise you still need to apply some colors and decorations.
+Extension doesn't apply the one of **default presets** after the **first installation** on a system. Therefore, you need to set colors and decorations manually or **apply existing presets** as pointed out above. After **updating extension** to a new version it will use the stored settings files on your system if they exist otherwise you still need to apply some colors and decorations.
 
 ### Presets
 You can look at the screenshot below where code was colorized and decorate after applying the **CoCo dark theme** preset:
