@@ -1,5 +1,16 @@
 # Release notes
 
+## 3.1.0
+
+**2019-04-27**
+
+- [x] Release issue [#59](https://github.com/GeorgeAlexandria/CoCo/issues/53) – support **Visual Basic** quick info classification
+- [x] Release issue [#60](https://github.com/GeorgeAlexandria/CoCo/issues/60) – allow to disable editor classification at all
+- [x] Release issue [#54](https://github.com/GeorgeAlexandria/CoCo/issues/54) – allow to disable item classification in quick info
+- [x] Release issue [#59](https://github.com/GeorgeAlexandria/CoCo/issues/59) – allow to disable item classification in editor
+- [x] Fix issue [#56](https://github.com/GeorgeAlexandria/CoCo/issues/56) – fix exceptions on non .cs and .vb files
+- [x] Improve a couple **C#** elements classification in quick info
+
 ## 3.0.0
 
 **2019-03-23**
