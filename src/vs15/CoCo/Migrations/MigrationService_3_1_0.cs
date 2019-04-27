@@ -19,14 +19,32 @@ namespace CoCo
             if (!classificationsFileIsExist)
             {
                 var oldFileName = Path.Combine(Paths.CoCoFolder, "CoCo.config");
-                File.Move(oldFileName, Paths.CoCoClassificationSettingsFile);
+                if (File.Exists(oldFileName))
+                {
+                    try
+                    {
+                        File.Move(oldFileName, Paths.CoCoClassificationSettingsFile);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                    }
+                }
             }
 
             // NOTE: migrate `CoCo quick info.config` to `CoCo general.config`
             if (!generalFileIsExist)
             {
                 var oldFileName = Path.Combine(Paths.CoCoFolder, "CoCo quick info.config");
-                File.Move(oldFileName, Paths.CoCoGeneralSettingsFile);
+                if (File.Exists(oldFileName))
+                {
+                    try
+                    {
+                        File.Move(oldFileName, Paths.CoCoGeneralSettingsFile);
+                    }
+                    catch (FileNotFoundException)
+                    {
+                    }
+                }
             }
         }
 

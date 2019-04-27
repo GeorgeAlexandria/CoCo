@@ -17,7 +17,7 @@ namespace CoCo.Providers
         /// <summary>
         /// Determines that settings were set to avoid a many sets settings from the classifier
         /// </summary>
-        private static bool _wereSettingsSet;
+        private bool _wereSettingsSet;
 
         private readonly Dictionary<string, QuickInfoState> _quickInfoOptions;
 
@@ -37,9 +37,9 @@ namespace CoCo.Providers
 
         public IToolTipPresenter Create(ITextView textView, ToolTipParameters parameters)
         {
+            MigrationService.MigrateSettingsTo_3_1_0();
             if (!_wereSettingsSet)
             {
-                MigrationService.MigrateSettingsTo_3_1_0();
                 var settings = Settings.SettingsManager.LoadGeneralSettings(Paths.CoCoGeneralSettingsFile, MigrationService.Instance);
                 var options = OptionService.ToOption(settings);
                 GeneralChangingService.SetGeneralOptions(options);

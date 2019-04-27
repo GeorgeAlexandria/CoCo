@@ -263,11 +263,11 @@ namespace CoCo.QuickInfo
         {
             if (_language is null) return;
 
-            foreach (var (language, generakInfo) in args.Changes)
+            foreach (var (language, generalInfo) in args.Changes)
             {
                 if (_language.Equals(language))
                 {
-                    _state = generakInfo.QuickInfoState;
+                    _state = generalInfo.QuickInfoState;
                 }
             }
         }
@@ -277,6 +277,7 @@ namespace CoCo.QuickInfo
             if (e.TextDocument.TextBuffer == _textBuffer)
             {
                 GeneralChangingService.Instance.GeneralChanged -= OnGeneralChanged;
+                _documentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
             }
         }
     }

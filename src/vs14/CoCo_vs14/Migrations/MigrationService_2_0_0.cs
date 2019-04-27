@@ -38,6 +38,9 @@ namespace CoCo
         /// </remarks>
         private static readonly string _tempCurrenSettings = Path.Combine(Path.GetTempPath(), "coco_temp_current_settings.vssettings");
 
+        // NOTE: avoid creating redundant CoCo.config file after migrating to 3.1.0
+        private static bool _settingsWereMigrate;
+
         /// <summary>
         /// Try to migrate an existing CoCo classifications from the previous version of vsix to the current format
         /// </summary>
@@ -48,7 +51,7 @@ namespace CoCo
         /// </remarks>
         public static void MigrateSettingsTo_2_0_0()
         {
-            var cocoSettings = new FileInfo(Paths.CoCoClassificationSettingsFile);
+            var cocoSettings = new FileInfo(Path.Combine(Paths.CoCoFolder, "CoCo.config"));
 
             // NOTE: create CoCo folder if it doesn't exist
             if (!cocoSettings.Directory.Exists)
@@ -57,7 +60,11 @@ namespace CoCo
             }
 
             // NOTE: assumes that if the configuration file exists, the migration is complete
-            if (cocoSettings.Exists || ServicesProvider.Instance.DTE is null) return;
+            if (cocoSettings.Exists || ServicesProvider.Instance.DTE is null)
+            {
+                _settingsWereMigrate = true;
+                return;
+            }
 
             /// NOTE: <see cref="Microsoft.VisualStudio.Shell.Interop.IVsCommandWindow.ExecuteCommand"/> just posts message
             /// of execution command to shell's queue, that doesn't match the current synchronous model,
@@ -97,6 +104,7 @@ namespace CoCo
             }
 
             MigateSettings(existingSettings);
+            _settingsWereMigrate = true;
         }
 
         private static void MigateSettings(XmlNodeList existingSettings)
@@ -155,7 +163,7 @@ namespace CoCo
                 }
             };
 
-            SettingsManager.SaveSettings(settings, Paths.CoCoClassificationSettingsFile);
+            SettingsManager.SaveSettings(settings, Path.Combine(Paths.CoCoFolder, "CoCo.config"));
         }
 
         /// <summary>

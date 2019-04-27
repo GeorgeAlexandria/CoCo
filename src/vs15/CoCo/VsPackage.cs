@@ -81,6 +81,7 @@ namespace CoCo
         private static ClassificationData ReceiveClassificationOption()
         {
             MigrationService.MigrateSettingsTo_2_0_0();
+            MigrationService.MigrateSettingsTo_3_1_0();
             var settings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);
             var option = OptionService.ToOption(settings);
             FormattingService.SetFormattingOptions(option);

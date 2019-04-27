@@ -2,7 +2,7 @@
 
 namespace CoCo.UI.Data
 {
-    [DebuggerDisplay("{Language}")]
+    [DebuggerDisplay("{Name}")]
     public sealed class GeneralLanguage
     {
         public GeneralLanguage(string name)

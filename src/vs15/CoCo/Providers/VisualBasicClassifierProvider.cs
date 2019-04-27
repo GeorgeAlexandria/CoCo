@@ -56,6 +56,7 @@ namespace CoCo.Providers
         public IClassifier GetClassifier(ITextBuffer textBuffer)
         {
             MigrationService.MigrateSettingsTo_2_0_0();
+            MigrationService.MigrateSettingsTo_3_1_0();
             if (!_wereSettingsSet)
             {
                 var editorSettings = SettingsManager.LoadEditorSettings(Paths.CoCoClassificationSettingsFile, MigrationService.Instance);

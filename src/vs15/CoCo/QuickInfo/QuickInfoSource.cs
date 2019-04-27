@@ -196,6 +196,7 @@ namespace CoCo.QuickInfo
             if (e.TextDocument.TextBuffer == _textBuffer)
             {
                 GeneralChangingService.Instance.GeneralChanged -= OnGeneralChanged;
+                _documentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
             }
         }
     }

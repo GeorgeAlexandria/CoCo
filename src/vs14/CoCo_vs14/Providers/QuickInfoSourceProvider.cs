@@ -42,9 +42,9 @@ namespace CoCo.Providers
 
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
+            MigrationService.MigrateSettingsTo_3_1_0();
             if (!_wereSettingsSet)
             {
-                MigrationService.MigrateSettingsTo_3_1_0();
                 var settings = Settings.SettingsManager.LoadGeneralSettings(Paths.CoCoGeneralSettingsFile, MigrationService.Instance);
                 var options = OptionService.ToOption(settings);
                 GeneralChangingService.SetGeneralOptions(options);
