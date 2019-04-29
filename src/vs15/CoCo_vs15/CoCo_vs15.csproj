@@ -14,7 +14,7 @@
     <LangVersion>latest</LangVersion>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <OutputPath>..\..\bin\CoCo\$(Configuration)\</OutputPath>
+    <OutputPath>..\..\bin\CoCo_vs15\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
   <!--Workaround: to correctly build vsix project in sdk style sdk targets must be loaded directly and must be loaded before vssdk targets-->
@@ -59,11 +59,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoCo.Analyser\CoCo.Analyser.csproj" />
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition="'$(Configuration)' != 'Release'" />
     <ProjectReference Include="..\..\common\CoCo.Settings\CoCo.Settings.csproj" />
     <ProjectReference Include="..\..\common\CoCo.UI\CoCo.UI.csproj" />
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
+    <ProjectReference Include="..\CoCo.Analyser_vs15\CoCo.Analyser_vs15.csproj" />
   </ItemGroup>
 
   <ItemGroup>

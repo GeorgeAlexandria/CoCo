@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo", "vs15\CoCo\CoCo.csproj", "{A6B65155-538E-4558-B18E-E9534FCC1F4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo_vs15", "vs15\CoCo_vs15\CoCo_vs15.csproj", "{A6B65155-538E-4558-B18E-E9534FCC1F4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoCo_vs14", "vs14\CoCo_vs14\CoCo_vs14.csproj", "{A8FA0172-2477-434F-B60A-1DE5AD28B8EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo_vs14", "vs14\CoCo_vs14\CoCo_vs14.csproj", "{A8FA0172-2477-434F-B60A-1DE5AD28B8EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.Common", "vs15\CoCo.Test.Common\CoCo.Test.Common.csproj", "{0B57BF2D-6001-4317-9527-96C7CF4B20D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.Common_vs15", "vs15\CoCo.Test.Common_vs15\CoCo.Test.Common_vs15.csproj", "{0B57BF2D-6001-4317-9527-96C7CF4B20D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Logging", "common\CoCo.Logging\CoCo.Logging.csproj", "{A64F3639-B51D-4C8E-A680-75310FFDA8F9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.CSharpIdentifiers", "vs15\CoCo.Test.CSharpIdentifiers\CoCo.Test.CSharpIdentifiers.csproj", "{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.CSharpIdentifiers_vs15", "vs15\CoCo.Test.CSharpIdentifiers_vs15\CoCo.Test.CSharpIdentifiers_vs15.csproj", "{88E6F8AA-72D4-46BD-BCA2-F5CA22A67E86}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Utils", "common\CoCo.Utils\CoCo.Utils.csproj", "{601A2A25-2348-4F00-9858-70FF10B39DAB}"
 EndProject
@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.UI", "common\CoCo.UI\C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Settings", "common\CoCo.Settings\CoCo.Settings.csproj", "{425B6593-2587-4AB2-A844-EDA72C0BB060}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser", "vs15\CoCo.Analyser\CoCo.Analyser.csproj", "{98E40CFE-9133-4A71-9160-76FC16A723C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser_vs15", "vs15\CoCo.Analyser_vs15\CoCo.Analyser_vs15.csproj", "{98E40CFE-9133-4A71-9160-76FC16A723C9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Analyser_vs14", "vs14\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj", "{1BDAAC0F-3448-4CF5-A740-B5367ACC8FE6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers", "vs15\CoCo.Test.VisualBasicIdentifiers\CoCo.Test.VisualBasicIdentifiers.csproj", "{3947C041-178C-4338-8ED3-66196E529753}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers_vs15", "vs15\CoCo.Test.VisualBasicIdentifiers_vs15\CoCo.Test.VisualBasicIdentifiers_vs15.csproj", "{3947C041-178C-4338-8ED3-66196E529753}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoCo.Test.VisualBasicIdentifiers_vs14", "vs14\CoCo.Test.VisualBasicIdentifiers_vs14\CoCo.Test.VisualBasicIdentifiers_vs14.csproj", "{71F544A5-6CDE-442F-875B-DA42037DDD44}"
 EndProject

@@ -34,21 +34,21 @@
     <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo.Test.Common\AssertionHelper.cs" Link="AssertionHelper.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\CompilationUnit.cs" Link="CompilationUnit.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\ProgrammingLanguage.cs" Link="ProgrammingLanguage.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\TestExecutionContext.cs" Link="TestExecutionContext.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\AssertionHelper.cs" Link="AssertionHelper.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\ClassificationInfo.cs" Link="ClassificationInfo.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\CompilationUnit.cs" Link="CompilationUnit.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\ProgrammingLanguage.cs" Link="ProgrammingLanguage.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\TestExecutionContext.cs" Link="TestExecutionContext.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationComparer.cs" Link="ClassificationComparer.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\ClassificationHelper.cs" Link="ClassificationHelper.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\CommonTests.cs" Link="CommonTests.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\SimplifiedClassificationSpan.cs" Link="SimplifiedClassificationSpan.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\ClassificationType.cs" Link="Stubs\ClassificationType.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\ContentType.cs" Link="Stubs\ContentType.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\LineSeparators.cs" Link="Stubs\LineSeparators.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\StringOperand.cs" Link="Stubs\StringOperand.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\Stubs\TrackingPoint.cs" Link="Stubs\TrackingPoint.cs" />
-    <Compile Include="..\..\vs15\CoCo.Test.Common\TestHelper.cs" Link="TestHelper.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\ClassificationComparer.cs" Link="ClassificationComparer.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\ClassificationHelper.cs" Link="ClassificationHelper.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\CommonTests.cs" Link="CommonTests.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\SimplifiedClassificationSpan.cs" Link="SimplifiedClassificationSpan.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\Stubs\ClassificationType.cs" Link="Stubs\ClassificationType.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\Stubs\ContentType.cs" Link="Stubs\ContentType.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\Stubs\LineSeparators.cs" Link="Stubs\LineSeparators.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\Stubs\StringOperand.cs" Link="Stubs\StringOperand.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\Stubs\TrackingPoint.cs" Link="Stubs\TrackingPoint.cs" />
+    <Compile Include="..\..\vs15\CoCo.Test.Common_vs15\TestHelper.cs" Link="TestHelper.cs" />
   </ItemGroup>
 </Project>
