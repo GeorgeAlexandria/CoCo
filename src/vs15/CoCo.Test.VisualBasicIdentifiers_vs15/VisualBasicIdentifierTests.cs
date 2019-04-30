@@ -5,7 +5,7 @@ namespace CoCo.Test.VisualBasicIdentifiers
 {
     internal class VisualBasicIdentifierTests : CommonTests
     {
-        private static readonly string _projectPath = @"Tests\Identifiers\VisualBasicIdentifiers\VisualBasicIdentifiers.vbproj";
+        private static readonly string _projectPath = @"tests\Identifiers\VisualBasicIdentifiers\VisualBasicIdentifiers.vbproj";
 
         private static readonly ProjectInfo _projectInfo;
 

@@ -5,7 +5,7 @@ namespace CoCo.Test.CSharpIdentifiers
 {
     internal class CSharpIdentifierTests : CommonTests
     {
-        private static readonly string _projectPath = @"Tests\Identifiers\CSharpIdentifiers\CSharpIdentifiers.csproj";
+        private static readonly string _projectPath = @"tests\Identifiers\CSharpIdentifiers\CSharpIdentifiers.csproj";
 
         private static readonly ProjectInfo _projectInfo;
 
