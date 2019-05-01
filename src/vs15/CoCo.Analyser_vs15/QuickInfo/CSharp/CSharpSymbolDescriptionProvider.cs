@@ -75,10 +75,10 @@ namespace CoCo.Analyser.QuickInfo.CSharp
             {
                 case IFieldSymbol field:
                     evaluatedValue = field.ConstantValue;
-                    var fieldDeclarator = await symbol.GetDeclaration<VariableDeclaratorSyntax>(CancellationToken);
+                    var fieldDeclarator = await symbol.GetDeclarationAsync<VariableDeclaratorSyntax>(CancellationToken);
                     if (fieldDeclarator is null)
                     {
-                        var enumMemberDeclaration = await symbol.GetDeclaration<EnumMemberDeclarationSyntax>(CancellationToken);
+                        var enumMemberDeclaration = await symbol.GetDeclarationAsync<EnumMemberDeclarationSyntax>(CancellationToken);
                         if (!(enumMemberDeclaration is null))
                         {
                             initializer = enumMemberDeclaration.EqualsValue;
@@ -92,7 +92,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 
                 case ILocalSymbol local:
                     evaluatedValue = local.ConstantValue;
-                    var localDeclarator = await symbol.GetDeclaration<VariableDeclaratorSyntax>(CancellationToken);
+                    var localDeclarator = await symbol.GetDeclarationAsync<VariableDeclaratorSyntax>(CancellationToken);
                     if (!(localDeclarator is null))
                     {
                         initializer = localDeclarator.Initializer;
@@ -101,7 +101,7 @@ namespace CoCo.Analyser.QuickInfo.CSharp
 
                 case IParameterSymbol parameter:
                     evaluatedValue = parameter.ExplicitDefaultValue;
-                    var parameterSyntax = await symbol.GetDeclaration<ParameterSyntax>(CancellationToken);
+                    var parameterSyntax = await symbol.GetDeclarationAsync<ParameterSyntax>(CancellationToken);
                     if (!(parameterSyntax is null))
                     {
                         initializer = parameterSyntax.Default;

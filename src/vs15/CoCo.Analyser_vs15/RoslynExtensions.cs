@@ -13,7 +13,7 @@ namespace CoCo.Analyser
         /// <summary>
         /// Returns the first declartation of type <typeparamref name="T"/>
         /// </summary>
-        public static async Task<T> GetDeclaration<T>(this ISymbol symbol, CancellationToken cancellationToken = default)
+        public static async Task<T> GetDeclarationAsync<T>(this ISymbol symbol, CancellationToken cancellationToken = default)
             where T : SyntaxNode
         {
             foreach (var reference in symbol.DeclaringSyntaxReferences)

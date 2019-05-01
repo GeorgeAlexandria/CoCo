@@ -166,7 +166,7 @@ namespace CoCo.Analyser.QuickInfo
                     break;
 
                 case INamedTypeSymbol namedType:
-                    AppendNamedTypePartsAsync(namedType);
+                    AppendNamedTypeParts(namedType);
 
                     var (start, accessibility) =
                         namedType.TypeKind == TypeKind.Class ? (1, namedType.DeclaredAccessibility) :
@@ -290,7 +290,7 @@ namespace CoCo.Analyser.QuickInfo
         protected void AppendPropertyParts(IPropertySymbol symbol) =>
             AppendParts(SymbolDescriptionKind.Main, ToMinimalDisplayParts(symbol, _memberFormat));
 
-        protected void AppendNamedTypePartsAsync(INamedTypeSymbol symbol)
+        protected void AppendNamedTypeParts(INamedTypeSymbol symbol)
         {
             if (symbol.IsAwaitable())
             {

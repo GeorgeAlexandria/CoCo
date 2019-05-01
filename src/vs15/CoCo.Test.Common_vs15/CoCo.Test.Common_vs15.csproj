@@ -3,7 +3,8 @@
     <TargetFramework>net46</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\..\bin\CoCo.Test\$(Configuration)\</OutputPath>
+    <RootNamespace>CoCo.Test.Common</RootNamespace>
+    <OutputPath>..\..\bin\CoCo.Test_vs15\$(Configuration)\</OutputPath>
     <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
