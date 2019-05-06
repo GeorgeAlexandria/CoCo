@@ -19,10 +19,4 @@
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.10.1" />
   </ItemGroup>
-  <ItemGroup>
-    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Test.VisualBasicIdentifiers_vs15\obj\**" />
-    <LinkedItemsToExclude Include="..\..\vs15\CoCo.Test.VisualBasicIdentifiers_vs15\Properties\AssemblyInfo.cs" />
-
-    <Compile Include="..\..\vs15\CoCo.Test.VisualBasicIdentifiers_vs15\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
-  </ItemGroup>
 </Project>
