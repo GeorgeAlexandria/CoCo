@@ -15,14 +15,11 @@ namespace CoCo.Analyser.Classifications
             classification == ClassificationTypeNames.FieldName ||
             classification == ClassificationTypeNames.Identifier ||
             classification == ClassificationTypeNames.InterfaceName ||
-            classification == ClassificationTypeNames.LabelName ||
             classification == ClassificationTypeNames.LocalName ||
             classification == ClassificationTypeNames.MethodName ||
             classification == ClassificationTypeNames.ModuleName ||
-            classification == ClassificationTypeNames.NamespaceName ||
             classification == ClassificationTypeNames.ParameterName ||
             classification == ClassificationTypeNames.PropertyName ||
-            classification == ClassificationTypeNames.StaticSymbol ||
             classification == ClassificationTypeNames.StructName ||
             classification == ClassificationTypeNames.TypeParameterName;
     }

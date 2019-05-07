@@ -1,10 +1,17 @@
-﻿namespace CoCo.Analyser.Classifications
+﻿using Microsoft.CodeAnalysis.Classification;
+
+namespace CoCo.Analyser.Classifications
 {
     public static class ClassificationHelper
     {
         public static bool IsSupportedClassification(string classification) =>
-            classification == "identifier" || classification == "class name" || classification == "delegate name" ||
-            classification == "enum name" || classification == "interface name" || classification == "module name" ||
-            classification == "struct name" || classification == "type parameter name";
+            classification == ClassificationTypeNames.ClassName ||
+            classification == ClassificationTypeNames.DelegateName ||
+            classification == ClassificationTypeNames.EnumName ||
+            classification == ClassificationTypeNames.Identifier ||
+            classification == ClassificationTypeNames.InterfaceName ||
+            classification == ClassificationTypeNames.ModuleName ||
+            classification == ClassificationTypeNames.StructName ||
+            classification == ClassificationTypeNames.TypeParameterName;
     }
 }
