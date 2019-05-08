@@ -67,6 +67,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo_vs16\obj\**" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo_vs16\Properties\AssemblyInfo.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo_vs16\Guids.cs" />
+
+    <Compile Include="..\..\vs16\CoCo_vs16\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
+
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <None Include="source.extension.vsixmanifest" SubType="Designer" />
   </ItemGroup>

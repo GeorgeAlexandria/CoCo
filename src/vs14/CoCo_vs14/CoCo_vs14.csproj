@@ -69,20 +69,20 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Include="..\..\vs15\CoCo_vs15\Editor\ClassificationChangingService.cs" Link="Editor\ClassificationChangingService.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Migrations\MigrationService_3_1_0.cs" Link="Migrations\MigrationService_3_1_0.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Paths.cs" Link="Paths.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Editor\ResetValuesProvider.cs" Link="Editor\ResetValuesProvider.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\GeneralChangedEventArgs.cs" Link="GeneralChangedEventArgs.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\GeneralChangingService.cs" Link="GeneralChangingService.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\ServicesProvider.cs" Link="ServicesProvider.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Providers\VisualBasicClassifierProvider.cs" Link="Providers\VisualBasicClassifierProvider.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\VsPackage.cs" Link="VsPackage.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Editor\ClassificationManager.cs" Link="Editor\ClassificationManager.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Providers\CSharpClassifierProvider.cs" Link="Providers\CSharpClassifierProvider.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Extensions.cs" Link="Extensions.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\Editor\FormattingService.cs" Link="Editor\FormattingService.cs" />
-    <Compile Include="..\..\vs15\CoCo_vs15\OptionService.cs" Link="OptionService.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Editor\ClassificationChangingService.cs" Link="Editor\ClassificationChangingService.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Migrations\MigrationService_3_1_0.cs" Link="Migrations\MigrationService_3_1_0.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Paths.cs" Link="Paths.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Editor\ResetValuesProvider.cs" Link="Editor\ResetValuesProvider.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\GeneralChangedEventArgs.cs" Link="GeneralChangedEventArgs.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\GeneralChangingService.cs" Link="GeneralChangingService.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\ServicesProvider.cs" Link="ServicesProvider.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Providers\VisualBasicClassifierProvider.cs" Link="Providers\VisualBasicClassifierProvider.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\VsPackage.cs" Link="VsPackage.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Editor\ClassificationManager.cs" Link="Editor\ClassificationManager.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Providers\CSharpClassifierProvider.cs" Link="Providers\CSharpClassifierProvider.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Extensions.cs" Link="Extensions.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\Editor\FormattingService.cs" Link="Editor\FormattingService.cs" />
+    <Compile Include="..\..\vs16\CoCo_vs16\OptionService.cs" Link="OptionService.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <None Include="source.extension.vsixmanifest" />
   </ItemGroup>
