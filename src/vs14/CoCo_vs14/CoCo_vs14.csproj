@@ -10,7 +10,6 @@
   <PropertyGroup>
     <VsixType>v3</VsixType>
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{A8FA0172-2477-434F-B60A-1DE5AD28B8EE}</ProjectGuid>
     <RootNamespace>CoCo</RootNamespace>
     <TargetFramework>net46</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -35,29 +34,21 @@
   <ItemGroup>
     <PackageReference Include="EnvDTE" Version="8.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="14.0.25424" />
-    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="15.8.36" />
     <PackageReference Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.9.23" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Shell.14.0" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.UI" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.0.102" />
-    <PackageReference Include="Microsoft.VisualStudio.Utilities" Version="14.3.25407" />
     <PackageReference Include="System.ValueTuple" Version="4.3.1" />
   </ItemGroup>
   
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
