@@ -20,11 +20,11 @@ namespace CoCo.Editor
 
             _defaultPresets = new Dictionary<string, IReadOnlyDictionary<string, PresetSettings>>();
 
-            var defaulltIdentifierFormatting = FormattingService.GetDefaultIdentifierFormatting();
+            var defaultIdentifierFormatting = FormattingService.GetDefaultIdentifierFormatting();
 
             ClassificationSettings CreateClassification(string name, byte r, byte g, byte b)
             {
-                var defaultFormatting = defaulltIdentifierFormatting;
+                var defaultFormatting = defaultIdentifierFormatting;
                 if (ClassificationManager.TryGetDefaultNonIdentifierClassification(name, out var defaultClassification))
                 {
                     defaultFormatting = FormattingService.GetDefaultFormatting(defaultClassification);

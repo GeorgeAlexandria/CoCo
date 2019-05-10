@@ -74,6 +74,7 @@
     <Compile Include="..\..\vs16\CoCo_vs16\Extensions.cs" Link="Extensions.cs" />
     <Compile Include="..\..\vs16\CoCo_vs16\Editor\FormattingService.cs" Link="Editor\FormattingService.cs" />
     <Compile Include="..\..\vs16\CoCo_vs16\OptionService.cs" Link="OptionService.cs" />
+    <Compile Include="..\..\vs15\CoCo_vs15\Editor\ClassificationManager.Classifications.cs" Link="Editor\ClassificationManager.Classifications.cs" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
     <None Include="source.extension.vsixmanifest" />
   </ItemGroup>
