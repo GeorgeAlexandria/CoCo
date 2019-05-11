@@ -78,5 +78,16 @@ namespace CoCo.Test.CSharpIdentifiers
                 CSharpNames.LocalVariableName.ClassifyAt(235, 5),
                 CSharpNames.LocalVariableName.ClassifyAt(337, 4));
         }
+
+        [Test]
+        public void ConstructionTest_Inheritance()
+        {
+            GetContext(@"Constructions\Inheritance.cs")
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
+                .AddInfo(CSharpNames.InterfaceName.EnableInEditor())
+                .GetClassifications().AssertContains(
+                    CSharpNames.ClassName.ClassifyAt(114, 6),
+                    CSharpNames.InterfaceName.ClassifyAt(122, 11));
+        }
     }
 }

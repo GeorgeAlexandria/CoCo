@@ -18,11 +18,12 @@ namespace CoCo.Test.VisualBasicIdentifiers.Access
         public void NamespaceTest_Alias()
         {
             GetContext(@"Access\Namespaces\AliasNamespace.vb").GetClassifications().AssertContains(
-                VisualBasicNames.AliasNamespaceName.ClassifyAt(293, 7),
-                VisualBasicNames.AliasNamespaceName.ClassifyAt(341, 11),
-                VisualBasicNames.NamespaceName.ClassifyAt(353, 7),
-                VisualBasicNames.AliasNamespaceName.ClassifyAt(403, 3),
-                VisualBasicNames.AliasNamespaceName.ClassifyAt(442, 3));
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(358, 6),
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(404, 13),
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(453, 6),
+                VisualBasicNames.NamespaceName.ClassifyAt(460, 13),
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(512, 3),
+                VisualBasicNames.AliasNamespaceName.ClassifyAt(551, 3));
         }
 
         [Test]

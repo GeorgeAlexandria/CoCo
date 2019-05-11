@@ -68,6 +68,14 @@ namespace CoCo.Analyser.Classifications.VisualBasic
                 semanticModel.Compilation.GlobalNamespace
             };
 
+            foreach (var item in semanticModel.Compilation.MemberImports())
+            {
+                if (item is INamespaceSymbol @namespace)
+                {
+                    namespaces.Add(@namespace);
+                }
+            }
+
             var enclosingNamespace = semanticModel.GetEnclosingSymbol(node.Span.Start)?.ContainingNamespace;
             while (!(enclosingNamespace is null))
             {
