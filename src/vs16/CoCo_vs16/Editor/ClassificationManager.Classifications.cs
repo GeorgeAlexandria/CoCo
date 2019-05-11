@@ -16,7 +16,10 @@ namespace CoCo.Editor
             [CSharpNames.TypeParameterName] = "type parameter name",
 
             [CSharpNames.ConstantFieldName] = "constant name",
-            [CSharpNames.ConstructorName] = "class name",
+
+            // NOTE: ctor name must be after MaxPriority("class name", "struct name"). 
+            // Currently "struct name" has more priority
+            [CSharpNames.ConstructorName] = "struct name", 
             [CSharpNames.DestructorName] = "class name",
             [CSharpNames.EnumFieldName] = "enum member name",
             [CSharpNames.EventName] = "event name",

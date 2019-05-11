@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
 
   <!--Workaround: to correctly build vsix project in sdk style sdk props must be loaded directly-->
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
