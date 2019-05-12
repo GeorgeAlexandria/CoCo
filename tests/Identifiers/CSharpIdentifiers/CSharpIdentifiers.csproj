@@ -61,6 +61,7 @@
     <Compile Include="AnalyzeOptions\Namespace.cs" />
     <Compile Include="AnalyzeOptions\Parameter.cs" />
     <Compile Include="Constructions\CatchVariable.cs" />
+    <Compile Include="Constructions\TypeConstraints.cs" />
     <Compile Include="Constructions\Inheritance.cs" />
     <Compile Include="Constructions\Return.cs" />
     <Compile Include="Constructions\Throw.cs" />

@@ -15,6 +15,7 @@ namespace CoCo.Analyser.Classifications.CSharp
             node.IsKind(SyntaxKind.Argument) ? (node as ArgumentSyntax).Expression :
             node.IsKind(SyntaxKind.NameMemberCref) ? (node as NameMemberCrefSyntax).Name :
             node.IsKind(SyntaxKind.SimpleBaseType) ? (node as SimpleBaseTypeSyntax).Type :
+            node.IsKind(SyntaxKind.TypeConstraint) ? (node as TypeConstraintSyntax).Type :
             node;
 
         public static bool IsDescendantXmlDocComment(this SyntaxNode node)

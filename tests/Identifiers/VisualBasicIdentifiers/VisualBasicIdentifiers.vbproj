@@ -101,6 +101,7 @@
     <Compile Include="AnalyzeOptions\Method.vb" />
     <Compile Include="AnalyzeOptions\Namespace.vb" />
     <Compile Include="AnalyzeOptions\ParameterOption.vb" />
+    <Compile Include="Constructions\TypeConstraints.vb" />
     <Compile Include="Constructions\If.vb" />
     <Compile Include="Constructions\Nameof.vb" />
     <Compile Include="Constructions\Throw.vb" />
