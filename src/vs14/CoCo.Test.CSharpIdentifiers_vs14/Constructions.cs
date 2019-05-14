@@ -63,5 +63,30 @@ namespace CoCo.Test.CSharpIdentifiers
                 CSharpNames.LocalVariableName.ClassifyAt(235, 5),
                 CSharpNames.LocalVariableName.ClassifyAt(337, 4));
         }
+
+        [Test]
+        public void ConstructionTest_Inheritance()
+        {
+            GetContext(@"Constructions\Inheritance.cs")
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
+                .AddInfo(CSharpNames.InterfaceName.EnableInEditor())
+                .GetClassifications().AssertContains(
+                    CSharpNames.ClassName.ClassifyAt(114, 6),
+                    CSharpNames.InterfaceName.ClassifyAt(122, 11));
+        }
+
+        [Test]
+        public void ConstructionTest_TypeConstraints()
+        {
+            GetContext(@"Constructions\TypeConstraints.cs")
+                .AddInfo(CSharpNames.ClassName.EnableInEditor())
+                .AddInfo(CSharpNames.InterfaceName.EnableInEditor())
+                .GetClassifications().AssertContains(
+                    CSharpNames.InterfaceName.ClassifyAt(147, 11),
+                    CSharpNames.InterfaceName.ClassifyAt(159, 11),
+                    CSharpNames.ClassName.ClassifyAt(243, 9),
+                    CSharpNames.NamespaceName.ClassifyAt(319, 6),
+                    CSharpNames.ClassName.ClassifyAt(326, 9));
+        }
     }
 }

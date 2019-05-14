@@ -1,0 +1,59 @@
+﻿<Project>
+
+  <!--Workaround: to correctly build vsix project in sdk style sdk props must be loaded directly-->
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <Import Project="..\..\..\build\VSIX.props" />
+  <Import Project="..\..\..\build\VSIX.targets" />
+
+  <PropertyGroup>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RootNamespace>CoCo</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <OutputPath>..\..\bin\CoCo_vs16\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+
+  <!--Workaround: to correctly build vsix project in sdk style sdk targets must be loaded directly and must be loaded before vssdk targets-->
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+
+  <!--Workaround: avoid determination of deployment path by the current launching version of visual studio-->
+  <Import Project="..\..\..\build\CorrectVsixDeploymentPath.targets" />
+  <Target Name="ForceIncludeNewestAssemblies" BeforeTargets="GetVsixSourceItems">
+    <ItemGroup>
+      <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" ForceIncludeInVSIX="True" />
+    </ItemGroup>
+  </Target>
+  
+  <ItemGroup>
+    <PackageReference Include="EnvDTE100" Version="10.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="16.0.467" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="16.0.467" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="16.0.467" />
+    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="16.0.28729" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="16.0.467" />
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="16.0.2264" PrivateAssets="All">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Xaml" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition="'$(Configuration)' != 'Release'" />
+    <ProjectReference Include="..\..\common\CoCo.Settings\CoCo.Settings.csproj" />
+    <ProjectReference Include="..\..\common\CoCo.UI\CoCo.UI.csproj" />
+    <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
+    <ProjectReference Include="..\CoCo.Analyser_vs16\CoCo.Analyser_vs16.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
+    <None Include="source.extension.vsixmanifest" SubType="Designer" />
+  </ItemGroup>
+</Project>

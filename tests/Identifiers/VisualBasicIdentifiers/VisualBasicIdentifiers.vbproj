@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{62BE863F-8774-47DB-A8C9-AAA94094BCA0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>VisualBasicIdentifiers</RootNamespace>
+    <AssemblyName>VisualBasicIdentifiers</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <OptionExplicit>Off</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>Off</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>VisualBasicIdentifiers.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>VisualBasicIdentifiers.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyInfoCommon.vb">
+      <Link>My Project\AssemblyInfoCommon.vb</Link>
+    </Compile>
+    <Compile Include="Access\EnumAccess.vb" />
+    <Compile Include="Access\Locals\FunctionVariable.vb" />
+    <Compile Include="Access\Locals\SimpleVariable.vb" />
+    <Compile Include="Access\Locals\StaticVariable.vb" />
+    <Compile Include="Access\Locals\ValueTupleVariable.vb" />
+    <Compile Include="Access\Members\ConstantMember.vb" />
+    <Compile Include="Access\Members\InstanceEvent.vb" />
+    <Compile Include="Access\Members\InstanceField.vb" />
+    <Compile Include="Access\Members\InstanceProperty.vb" />
+    <Compile Include="Access\Members\ModuleEvent.vb" />
+    <Compile Include="Access\Members\ModuleField.vb" />
+    <Compile Include="Access\Members\ModuleProperty.vb" />
+    <Compile Include="Access\Members\TypeEvent.vb" />
+    <Compile Include="Access\Members\TypeField.vb" />
+    <Compile Include="Access\Members\TypeProperty.vb" />
+    <Compile Include="Access\Members\WithEventsProperty.vb" />
+    <Compile Include="Access\Methods\ModuleMethod.vb" />
+    <Compile Include="Access\Methods\SharedMethod.vb" />
+    <Compile Include="Access\Namespaces\AliasNamespace.vb" />
+    <Compile Include="Access\Namespaces\CustomNamespace.vb" />
+    <Compile Include="Access\Namespaces\Namespace.vb" />
+    <Compile Include="Access\Parameters\ByValRef.vb" />
+    <Compile Include="Access\Methods\ExtensionMethod.vb" />
+    <Compile Include="Access\Methods\FunctionMethod.vb" />
+    <Compile Include="Access\Methods\SubMethod.vb" />
+    <Compile Include="Access\Parameters\DelegateParameter.vb" />
+    <Compile Include="Access\Parameters\OptionalParameter.vb" />
+    <Compile Include="Access\Parameters\Variable.vb" />
+    <Compile Include="Access\Types\ClassType.vb" />
+    <Compile Include="Access\Types\DelegateType.vb" />
+    <Compile Include="Access\Types\EnumType.vb" />
+    <Compile Include="Access\Types\InterfaceType.vb" />
+    <Compile Include="Access\Types\ModuleType.vb" />
+    <Compile Include="Access\Types\StructureType.vb" />
+    <Compile Include="Access\Types\TypeParameter.vb" />
+    <Compile Include="AnalyzeOptions\LocalVariable.vb" />
+    <Compile Include="AnalyzeOptions\Member.vb" />
+    <Compile Include="AnalyzeOptions\Method.vb" />
+    <Compile Include="AnalyzeOptions\Namespace.vb" />
+    <Compile Include="AnalyzeOptions\ParameterOption.vb" />
+    <Compile Include="Constructions\TypeConstraints.vb" />
+    <Compile Include="Constructions\If.vb" />
+    <Compile Include="Constructions\Nameof.vb" />
+    <Compile Include="Constructions\Throw.vb" />
+    <Compile Include="Constructions\Using.vb" />
+    <Compile Include="Constructions\With.vb" />
+    <Compile Include="Declarations\EnumDeclaration.vb" />
+    <Compile Include="Declarations\Locals\CatchVariable.vb" />
+    <Compile Include="Declarations\Locals\StaticVariable.vb" />
+    <Compile Include="Declarations\Locals\ForeachVariable.vb" />
+    <Compile Include="Declarations\Locals\ForVariable.vb" />
+    <Compile Include="Declarations\Locals\FunctionVariable.vb" />
+    <Compile Include="Declarations\Locals\RangeVariable.vb" />
+    <Compile Include="Declarations\Locals\SimpleVariable.vb" />
+    <Compile Include="Declarations\Locals\UsingVariable.vb" />
+    <Compile Include="Declarations\Locals\ValueTupleVariable.vb" />
+    <Compile Include="Declarations\Locals\WithVariable.vb" />
+    <Compile Include="Declarations\Members\ConstantMember.vb" />
+    <Compile Include="Declarations\Members\CustomEvent.vb" />
+    <Compile Include="Declarations\Members\InstanceEvent.vb" />
+    <Compile Include="Declarations\Members\InstanceField.vb" />
+    <Compile Include="Declarations\Members\InstanceProperty.vb" />
+    <Compile Include="Declarations\Members\ModuleEvent.vb" />
+    <Compile Include="Declarations\Members\ModuleField.vb" />
+    <Compile Include="Declarations\Members\ModuleProperty.vb" />
+    <Compile Include="Declarations\Members\TypeEvent.vb" />
+    <Compile Include="Declarations\Members\TypeField.vb" />
+    <Compile Include="Declarations\Members\TypeProperty.vb" />
+    <Compile Include="Declarations\Members\WithEventsProperty.vb" />
+    <Compile Include="Declarations\Methods\Constructor.vb" />
+    <Compile Include="Declarations\Methods\ExtensionMethod.vb" />
+    <Compile Include="Declarations\Methods\FunctionMethod.vb" />
+    <Compile Include="Declarations\Methods\ModuleMethod.vb" />
+    <Compile Include="Declarations\Methods\SharedMethod.vb" />
+    <Compile Include="Declarations\Methods\StaticConstructor.vb" />
+    <Compile Include="Declarations\Methods\SubMethod.vb" />
+    <Compile Include="Declarations\Namespaces\Alias.vb" />
+    <Compile Include="Declarations\Namespaces\CustomAlias.vb" />
+    <Compile Include="Declarations\Namespaces\Simple.vb" />
+    <Compile Include="Declarations\Namespaces\SimpleImport.vb" />
+    <Compile Include="Declarations\Namespaces\StaticType.vb" />
+    <Compile Include="Declarations\Namespaces\TypeAlias.vb" />
+    <Compile Include="Declarations\Parameters\ByValRef.vb" />
+    <Compile Include="Declarations\Parameters\DelegateParameter.vb" />
+    <Compile Include="Declarations\Parameters\OptionalParameter.vb" />
+    <Compile Include="Declarations\Parameters\SimpleParameter.vb" />
+    <Compile Include="Declarations\Parameters\TypeCharacter.vb" />
+    <Compile Include="Declarations\Parameters\Variable.vb" />
+    <Compile Include="Declarations\Types\ClassType.vb" />
+    <Compile Include="Declarations\Types\DelegateType.vb" />
+    <Compile Include="Declarations\Types\EnumType.vb" />
+    <Compile Include="Declarations\Types\InterfaceType.vb" />
+    <Compile Include="Declarations\Types\ModuleType.vb" />
+    <Compile Include="Declarations\Types\StructureType.vb" />
+    <Compile Include="Declarations\Types\TypeParameter.vb" />
+    <Compile Include="Example.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="XmlDocComment\CrefAttribute.vb" />
+    <Compile Include="XmlDocComment\Exception.vb" />
+    <Compile Include="XmlDocComment\NameAttribute.vb" />
+    <Compile Include="XmlDocComment\Param.vb" />
+    <Compile Include="XmlDocComment\ParamRef.vb" />
+    <Compile Include="XmlDocComment\Permission.vb" />
+    <Compile Include="XmlDocComment\See.vb" />
+    <Compile Include="XmlDocComment\SeeAlso.vb" />
+    <Compile Include="XmlDocComment\TypeParam.vb" />
+    <Compile Include="XmlDocComment\TypeParamRef.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>
