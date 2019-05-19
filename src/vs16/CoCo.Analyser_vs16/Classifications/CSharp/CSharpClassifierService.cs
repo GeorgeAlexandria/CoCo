@@ -38,6 +38,7 @@ namespace CoCo.Analyser.Classifications.CSharp
         private IClassificationType _interfaceType;
         private IClassificationType _enumType;
         private IClassificationType _delegateType;
+        private IClassificationType _controlFlowType;
 
         private static CSharpClassifierService _instance;
 
@@ -89,6 +90,17 @@ namespace CoCo.Analyser.Classifications.CSharp
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
                 if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
+
+                if (item.ClassificationType == ClassificationTypeNames.ControlKeyword)
+                {
+                    var keywordToken = root.FindToken(item.TextSpan.Start, true);
+                    // NOTE: doesn't classify `in` in `foreach` as cfg keyword
+                    if (keywordToken.ValueText != "in")
+                    {
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
+                    }
+                    continue;
+                }
 
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
@@ -323,6 +335,7 @@ namespace CoCo.Analyser.Classifications.CSharp
             InitializeClassification(CSharpNames.InterfaceName, ref _interfaceType);
             InitializeClassification(CSharpNames.EnumName, ref _enumType);
             InitializeClassification(CSharpNames.DelegateName, ref _delegateType);
+            InitializeClassification(CSharpNames.ControlFlowName, ref _controlFlowType);
 
             _classifications = builder.TryMoveToImmutable();
         }
