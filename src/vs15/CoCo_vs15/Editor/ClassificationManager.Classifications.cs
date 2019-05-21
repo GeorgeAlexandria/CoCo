@@ -14,6 +14,7 @@ namespace CoCo.Editor
             [CSharpNames.EnumName] = "enum name",
             [CSharpNames.DelegateName] = "delegate name",
             [CSharpNames.TypeParameterName] = "type parameter name",
+            [CSharpNames.ControlFlowName] = "keyword",
 
             [VisualBasicNames.ClassName] = "class name",
             [VisualBasicNames.StructureName] = "struct name",

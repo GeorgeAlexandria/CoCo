@@ -88,6 +88,7 @@
     <Compile Include="Access\Parameters\RefInOut.cs" />
     <Compile Include="Access\Parameters\Variable.cs" />
     <Compile Include="Constructions\YieldReturn.cs" />
+    <Compile Include="ControlFlows\Default.cs" />
     <Compile Include="ControlFlows\For.cs" />
     <Compile Include="ControlFlows\Foreach.cs" />
     <Compile Include="ControlFlows\Goto.cs" />
