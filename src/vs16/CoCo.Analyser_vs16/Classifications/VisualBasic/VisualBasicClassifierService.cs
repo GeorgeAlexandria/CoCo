@@ -40,6 +40,7 @@ namespace CoCo.Analyser.Classifications.VisualBasic
         private IClassificationType _delegateType;
         private IClassificationType _enumType;
         private IClassificationType _typeParameterType;
+        private IClassificationType _controlFlowType;
 
         private static VisualBasicClassifierService _instance;
 
@@ -90,7 +91,26 @@ namespace CoCo.Analyser.Classifications.VisualBasic
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
+                if (!IsSupportedClassification(item.ClassificationType)) continue;
+
+                var isControlKeyword = item.ClassificationType == ClassificationTypeNames.ControlKeyword;
+                if (isControlKeyword || item.ClassificationType == ClassificationTypeNames.Keyword)
+                {
+                    var keywordToken = root.FindToken(item.TextSpan.Start, true);
+                    if (isControlKeyword)
+                    {
+                        // NOTE: doesn't classify `In` in `For Each`, 'To' and 'Step' in `For` as cfg keyword
+                        if (keywordToken.ValueText != "To" && keywordToken.ValueText != "Step" && keywordToken.ValueText != "In")
+                        {
+                            AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
+                        }
+                    }
+                    else if (keywordToken.ValueText == "Throw" || keywordToken.ValueText == "Else")
+                    {
+                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
+                    }
+                    continue;
+                }
 
                 var node = root.FindNode(item.TextSpan, true).HandleNode();
                 if (!semanticModel.TryGetSymbolInfo(node, out var symbol, out var reason))
@@ -280,6 +300,9 @@ namespace CoCo.Analyser.Classifications.VisualBasic
             }
         }
 
+        private bool IsSupportedClassification(string classification) =>
+            ClassificationHelper.IsSupportedClassification(classification) || classification == ClassificationTypeNames.Keyword;
+
         private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
         {
             foreach (var classification in _classifications)
@@ -326,6 +349,7 @@ namespace CoCo.Analyser.Classifications.VisualBasic
             InitializeClassification(VisualBasicNames.DelegateName, ref _delegateType);
             InitializeClassification(VisualBasicNames.EnumName, ref _enumType);
             InitializeClassification(VisualBasicNames.TypeParameterName, ref _typeParameterType);
+            InitializeClassification(VisualBasicNames.ControlFlowName, ref _controlFlowType);
 
             _classifications = builder.TryMoveToImmutable();
         }

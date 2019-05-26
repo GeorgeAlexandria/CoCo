@@ -28,6 +28,7 @@ namespace CoCo.Analyser.Classifications.VisualBasic
         public const string DelegateName = "CoCo visual basic delegate name";
         public const string EnumName = "CoCo visual basic enum name";
         public const string TypeParameterName = "CoCo visual basic type parameter name";
+        public const string ControlFlowName = "CoCo visual basic control flow keyword name";
 
         private static ImmutableArray<string> _all;
 
@@ -62,6 +63,7 @@ namespace CoCo.Analyser.Classifications.VisualBasic
                 builder.Add(DelegateName);
                 builder.Add(EnumName);
                 builder.Add(TypeParameterName);
+                builder.Add(ControlFlowName);
 
                 return _all = builder.TryMoveToImmutable();
             }

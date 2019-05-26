@@ -106,7 +106,8 @@ namespace CoCo.Editor
                         CreateClassification(VisualBasicNames.SharedMethodName, 154, 82, 0),
                         CreateClassification(VisualBasicNames.StaticLocalVariableName, 64, 128, 0),
                         CreateClassification(VisualBasicNames.SubName, 187, 34, 0),
-                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128)
+                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128),
+                        CreateClassification(VisualBasicNames.ControlFlowName, 255, 54, 157),
                     }
                 },
 
@@ -131,7 +132,8 @@ namespace CoCo.Editor
                         CreateClassification(VisualBasicNames.SharedMethodName, 163, 86, 0),
                         CreateClassification(VisualBasicNames.StaticLocalVariableName, 64, 128, 0),
                         CreateClassification(VisualBasicNames.SubName, 187, 34, 0),
-                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128)
+                        CreateClassification(VisualBasicNames.WithEventsPropertyName, 255, 0, 128),
+                        CreateClassification(VisualBasicNames.ControlFlowName, 255, 54, 157),
                     }
                 }
             };

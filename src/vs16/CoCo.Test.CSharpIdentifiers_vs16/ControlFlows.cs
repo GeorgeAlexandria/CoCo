@@ -1,9 +1,10 @@
 ﻿using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Test.Common;
 using NUnit.Framework;
+
 namespace CoCo.Test.CSharpIdentifiers
 {
-    class ControlFlows : CSharpIdentifierTests
+    internal class ControlFlows : CSharpIdentifierTests
     {
         [Test]
         public void ControlFlowsTest_For()

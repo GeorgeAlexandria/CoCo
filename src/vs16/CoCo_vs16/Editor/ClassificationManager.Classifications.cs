@@ -60,6 +60,7 @@ namespace CoCo.Editor
             [VisualBasicNames.StaticLocalVariableName] = "local name",
             [VisualBasicNames.SubName] = "method name",
             [VisualBasicNames.WithEventsPropertyName] = "property name",
+            [VisualBasicNames.ControlFlowName] = "keyword - control",
         };
     }
 }

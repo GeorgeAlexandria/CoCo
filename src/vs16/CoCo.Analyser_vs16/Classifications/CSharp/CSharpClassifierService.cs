@@ -93,7 +93,7 @@ namespace CoCo.Analyser.Classifications.CSharp
 
                 if (item.ClassificationType == ClassificationTypeNames.ControlKeyword)
                 {
-                    var keywordToken = root.FindToken(item.TextSpan.Start, true);
+                    var keywordToken = root.FindToken(item.TextSpan.Start, true);   
                     // NOTE: doesn't classify `in` in `foreach` as cfg keyword
                     if (keywordToken.ValueText != "in")
                     {
