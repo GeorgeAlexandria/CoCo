@@ -31,10 +31,13 @@
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Properties\AssemblyInfo.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\ClassificationHelper.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\CSharp\CSharpClassifierService.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\VisualBasic\VisualBasicClassifierService.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\CSharp\CSharpNames.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\QuickInfo\SymbolDescriptionProvider.Formats.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\QuickInfo\SymbolDisplayPartHelper.cs" />
 
+    <Compile Include="..\..\vs15\CoCo.Analyser_vs15\Classifications\VisualBasic\VisualBasicClassifierService.cs" 
+             Link="Classifications\VisualBasic\VisualBasicClassifierService.cs" />
     <Compile Include="..\..\vs16\CoCo.Analyser_vs16\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
   </ItemGroup>

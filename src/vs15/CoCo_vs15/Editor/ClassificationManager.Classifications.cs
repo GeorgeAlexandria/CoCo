@@ -23,6 +23,7 @@ namespace CoCo.Editor
             [VisualBasicNames.DelegateName] = "delegate name",
             [VisualBasicNames.TypeParameterName] = "type parameter name",
             [VisualBasicNames.ModuleName] = "module name",
+            [VisualBasicNames.ControlFlowName] = "keyword",
         };
     }
 }
