@@ -26,6 +26,7 @@ namespace CoCo.Analyser.Classifications.CSharp
         public const string EnumName = "CoCo csharp enum name";
         public const string InterfaceName = "CoCo csharp interface name";
         public const string DelegateName = "CoCo csharp delegate name";
+        public const string ControlFlowName = "CoCo csharp control flow keyword name";
 
         private static ImmutableArray<string> _all;
 
@@ -58,6 +59,7 @@ namespace CoCo.Analyser.Classifications.CSharp
                 builder.Add(InterfaceName);
                 builder.Add(EnumName);
                 builder.Add(DelegateName);
+                builder.Add(ControlFlowName);
                 return _all = builder.TryMoveToImmutable();
             }
         }

@@ -107,6 +107,17 @@
     <Compile Include="Constructions\Throw.vb" />
     <Compile Include="Constructions\Using.vb" />
     <Compile Include="Constructions\With.vb" />
+    <Compile Include="ControlFlows\DoLoop.vb" />
+    <Compile Include="ControlFlows\Exit.vb" />
+    <Compile Include="ControlFlows\For.vb" />
+    <Compile Include="ControlFlows\ForEach.vb" />
+    <Compile Include="ControlFlows\Goto.vb" />
+    <Compile Include="ControlFlows\If.vb" />
+    <Compile Include="ControlFlows\Iterator.vb" />
+    <Compile Include="ControlFlows\Return.vb" />
+    <Compile Include="ControlFlows\Select.vb" />
+    <Compile Include="ControlFlows\Throw.vb" />
+    <Compile Include="ControlFlows\While.vb" />
     <Compile Include="Declarations\EnumDeclaration.vb" />
     <Compile Include="Declarations\Locals\CatchVariable.vb" />
     <Compile Include="Declarations\Locals\StaticVariable.vb" />

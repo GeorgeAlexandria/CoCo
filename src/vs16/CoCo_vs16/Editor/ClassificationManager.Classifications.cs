@@ -19,7 +19,7 @@ namespace CoCo.Editor
 
             // NOTE: ctor name must be after MaxPriority("class name", "struct name"). 
             // Currently "struct name" has more priority
-            [CSharpNames.ConstructorName] = "struct name", 
+            [CSharpNames.ConstructorName] = "struct name",
             [CSharpNames.DestructorName] = "class name",
             [CSharpNames.EnumFieldName] = "enum member name",
             [CSharpNames.EventName] = "event name",
@@ -34,6 +34,7 @@ namespace CoCo.Editor
             [CSharpNames.PropertyName] = "property name",
             [CSharpNames.RangeVariableName] = "local name",
             [CSharpNames.StaticMethodName] = "method name",
+            [CSharpNames.ControlFlowName] = "keyword - control",
 
             [VisualBasicNames.ClassName] = "class name",
             [VisualBasicNames.StructureName] = "struct name",
@@ -59,6 +60,7 @@ namespace CoCo.Editor
             [VisualBasicNames.StaticLocalVariableName] = "local name",
             [VisualBasicNames.SubName] = "method name",
             [VisualBasicNames.WithEventsPropertyName] = "property name",
+            [VisualBasicNames.ControlFlowName] = "keyword - control",
         };
     }
 }

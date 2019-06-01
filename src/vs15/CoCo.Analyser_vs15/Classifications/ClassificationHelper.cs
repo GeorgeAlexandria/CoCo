@@ -21,6 +21,7 @@ namespace CoCo.Analyser.Classifications
             classification == ClassificationTypeNames.ParameterName ||
             classification == ClassificationTypeNames.PropertyName ||
             classification == ClassificationTypeNames.StructName ||
-            classification == ClassificationTypeNames.TypeParameterName;
+            classification == ClassificationTypeNames.TypeParameterName ||
+            classification == ClassificationTypeNames.Keyword;
     }
 }

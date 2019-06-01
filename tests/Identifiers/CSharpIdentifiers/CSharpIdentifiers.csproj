@@ -88,6 +88,16 @@
     <Compile Include="Access\Parameters\RefInOut.cs" />
     <Compile Include="Access\Parameters\Variable.cs" />
     <Compile Include="Constructions\YieldReturn.cs" />
+    <Compile Include="ControlFlows\Default.cs" />
+    <Compile Include="ControlFlows\For.cs" />
+    <Compile Include="ControlFlows\Foreach.cs" />
+    <Compile Include="ControlFlows\Goto.cs" />
+    <Compile Include="ControlFlows\If.cs" />
+    <Compile Include="ControlFlows\Iterator.cs" />
+    <Compile Include="ControlFlows\Return.cs" />
+    <Compile Include="ControlFlows\Switch.cs" />
+    <Compile Include="ControlFlows\Throw.cs" />
+    <Compile Include="ControlFlows\While.cs" />
     <Compile Include="Declarations\Label.cs" />
     <Compile Include="Declarations\EnumDeclaration.cs" />
     <Compile Include="Declarations\Locals\CatchVariable.cs" />

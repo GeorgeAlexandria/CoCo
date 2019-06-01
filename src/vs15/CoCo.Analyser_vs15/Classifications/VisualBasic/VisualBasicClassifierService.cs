@@ -91,23 +91,41 @@ namespace CoCo.Analyser.Classifications.VisualBasic
             var textSpan = new TextSpan(span.Start.Position, span.Length);
             foreach (var item in Classifier.GetClassifiedSpans(semanticModel, textSpan, workspace))
             {
-                if (!IsSupportedClassification(item.ClassificationType)) continue;
+                if (!ClassificationHelper.IsSupportedClassification(item.ClassificationType)) continue;
 
-                var isControlKeyword = item.ClassificationType == ClassificationTypeNames.ControlKeyword;
-                if (isControlKeyword || item.ClassificationType == ClassificationTypeNames.Keyword)
+                if (item.ClassificationType == ClassificationTypeNames.Keyword)
                 {
                     var keywordToken = root.FindToken(item.TextSpan.Start, true);
-                    if (isControlKeyword)
+                    switch (keywordToken.ValueText)
                     {
-                        // NOTE: doesn't classify `In` in `For Each`, 'To' and 'Step' in `For` as cfg keyword
-                        if (keywordToken.ValueText != "To" && keywordToken.ValueText != "Step" && keywordToken.ValueText != "In")
-                        {
+                        case "GoTo":
+                        case "Else":
+                        case "ElseIf":
+                        case "Then":
+                        case "Throw":
+                        case "Do":
+                        case "Loop":
+                        case "While":
+                        case "Until":
+                        case "Continue":
+                        case "For":
+                        case "Next":
+                        case "Each":
+                        case "Yield":
+                        case "Return":
+                        case "Select":
+                        case "Case":
+                        case "Exit":
+                        case "Try":
+                        case "Catch":
+                        case "Finally":
+                        case "Function" when keywordToken.IsExitStatementKeyword():
+                        case "Sub" when keywordToken.IsExitStatementKeyword():
+                        case "Property" when keywordToken.IsExitStatementKeyword():
+                        case "End" when keywordToken.IsEndStatementKeyword():
+                        case "If" when keywordToken.IsIfStatementKeyword() || keywordToken.IsEndStatementKeyword():
                             AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
-                        }
-                    }
-                    else if (keywordToken.ValueText == "Throw" || keywordToken.ValueText == "Else")
-                    {
-                        AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
+                            break;
                     }
                     continue;
                 }
@@ -299,9 +317,6 @@ namespace CoCo.Analyser.Classifications.VisualBasic
                 spans.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
             }
         }
-
-        private bool IsSupportedClassification(string classification) =>
-            ClassificationHelper.IsSupportedClassification(classification) || classification == ClassificationTypeNames.Keyword;
 
         private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
         {

@@ -9,6 +9,55 @@ namespace CoCo.Analyser.Classifications.VisualBasic
     internal static class VisualBasicSyntaxNodeExtensions
     {
         /// <summary>
+        /// Determines if the <paramref name="token"/> is a child of Exit statement
+        /// </summary>
+        public static bool IsExitStatementKeyword(this SyntaxToken token)
+        {
+            if (token.Parent is ExitStatementSyntax exitStatement)
+            {
+                switch ((SyntaxKind)exitStatement.RawKind)
+                {
+                    case SyntaxKind.ExitDoStatement:
+                    case SyntaxKind.ExitForStatement:
+                    case SyntaxKind.ExitFunctionStatement:
+                    case SyntaxKind.ExitOperatorStatement:
+                    case SyntaxKind.ExitPropertyStatement:
+                    case SyntaxKind.ExitSelectStatement:
+                    case SyntaxKind.ExitSubStatement:
+                    case SyntaxKind.ExitTryStatement:
+                    case SyntaxKind.ExitWhileStatement:
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the <paramref name="token"/> is a child of End statement
+        /// </summary>
+        public static bool IsEndStatementKeyword(this SyntaxToken token)
+        {
+            if (token.Parent is EndBlockStatementSyntax exitStatement)
+            {
+                switch ((SyntaxKind)exitStatement.RawKind)
+                {
+                    case SyntaxKind.EndIfStatement:
+                    case SyntaxKind.EndSelectStatement:
+                    case SyntaxKind.EndWhileStatement:
+                    case SyntaxKind.EndTryStatement:
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the <paramref name="token"/> is a child of one If statements
+        /// </summary>
+        public static bool IsIfStatementKeyword(this SyntaxToken token) =>
+            token.Parent is IfStatementSyntax || token.Parent is SingleLineIfStatementSyntax;
+
+        /// <summary>
         /// If <paramref name="node"/> is one of a few special types then extracts a specific sub node and returns it,
         /// else returns <paramref name="node"/>
         /// </summary>
