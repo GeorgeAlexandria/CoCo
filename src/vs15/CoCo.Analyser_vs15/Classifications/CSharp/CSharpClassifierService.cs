@@ -110,6 +110,9 @@ namespace CoCo.Analyser.Classifications.CSharp
                         case "continue":
                         case "throw":
                         case "yield":
+                        case "try":
+                        case "catch":
+                        case "finally":
                         case "default" when keywordToken.Parent is DefaultSwitchLabelSyntax:
                             AppendClassificationSpan(spans, span.Snapshot, item.TextSpan, _controlFlowType);
                             break;
