@@ -1,5 +1,13 @@
 # Release notes
 
+## 3.2.0
+
+**2019-06-02**
+
+- [x] Release issue [#55](https://github.com/GeorgeAlexandria/CoCo/issues/55) – support Visual Studio 2019
+- [x] Release issue [#62](https://github.com/GeorgeAlexandria/CoCo/issues/62) – support classification of control flow graph keywords
+- [x] Fix a couple **C#** and **VisualBasic** elements classification
+
 ## 3.1.0
 
 **2019-04-27**
