@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using CoCo.Utils;
-using Microsoft.CodeAnalysis;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Framework;
 
 namespace CoCo.Analyser.Classifications.FSharp
 {
@@ -13,24 +15,39 @@ namespace CoCo.Analyser.Classifications.FSharp
         private static readonly char[] _defineConstsDelimeters = new[] { ';' };
         private static readonly char[] _warningAsErrorDelimeters = new[] { ' ', ';', ',' };
 
-        private readonly Project _project;
+        private readonly Microsoft.CodeAnalysis.Project _project;
 
-        private Microsoft.Build.Evaluation.Project _msbuildProject;
+        private ProjectCollection _projectCollection;
+        private Project _msbuildProject;
         private List<string> _options;
 
-        public FscOptionsBuilder(Project project)
+        public FscOptionsBuilder(Microsoft.CodeAnalysis.Project project)
         {
             _project = project;
         }
 
         /// <remarks>
-        /// Generates fsc command options the similar with 
+        /// Generates fsc command options the similar with
         /// https://github.com/dotnet/fsharp/blob/master/src/fsharp/FSharp.Build/Fsc.fs#L86 and retrieves options as
         /// https://github.com/dotnet/fsharp/blob/master/src/fsharp/FSharp.Build/Microsoft.FSharp.Targets#L277
         /// </remarks>
         public string[] Build()
         {
-            _msbuildProject = new Microsoft.Build.Evaluation.Project(_project.FilePath);
+            var projectWasLoadedBefore = false;
+            var loadedProjects = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(_project.FilePath);
+            if (loadedProjects is null || loadedProjects.Count == 0)
+            {
+                InitializeProjectCollection();
+
+                _msbuildProject = new Project(
+                    _project.FilePath, _projectCollection.GlobalProperties, _projectCollection.DefaultToolsVersion, _projectCollection);
+            }
+            else
+            {
+                _msbuildProject = loadedProjects.First();
+                projectWasLoadedBefore = true;
+            }
+
             _options = new List<string>();
 
             AppendProperty("TargetProfile", "--targetprofile:");
@@ -99,12 +116,29 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
             }
 
-            Microsoft.Build.Evaluation.ProjectCollection.GlobalProjectCollection.TryUnloadProject(_msbuildProject.Xml);
+            if (!projectWasLoadedBefore)
+            {
+                _projectCollection.UnloadAllProjects();
+            }
             var result = _options.ToArray();
             _msbuildProject = null;
             _options = null;
 
             return result;
+        }
+
+        private void InitializeProjectCollection()
+        {
+            if (!(_projectCollection is null)) return;
+
+            var globalCollection = ProjectCollection.GlobalProjectCollection;
+            var globalProperties = new Dictionary<string, string>();
+            foreach (var (key, value) in globalCollection.GlobalProperties)
+            {
+                globalProperties[key] = value;
+            }
+
+            _projectCollection = new ProjectCollection(globalProperties, Array.Empty<ILogger>(), globalCollection.ToolsetLocations);
         }
 
         private void AppendProperty(string name, string key)
@@ -176,10 +210,10 @@ namespace CoCo.Analyser.Classifications.FSharp
     /// </remarks>
     internal class FscOptionsBuilder2
     {
-        private readonly Workspace workspace;
-        private readonly Project project;
+        private readonly Microsoft.CodeAnalysis.Workspace workspace;
+        private readonly Microsoft.CodeAnalysis.Project project;
 
-        public FscOptionsBuilder2(Workspace workspace, Project project)
+        public FscOptionsBuilder2(Microsoft.CodeAnalysis.Workspace workspace, Microsoft.CodeAnalysis.Project project)
         {
             this.workspace = workspace;
             this.project = project;
@@ -187,9 +221,9 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         public string[] Build()
         {
-            var projectIdParameter = Expression.Parameter(typeof(ProjectId));
+            var projectIdParameter = Expression.Parameter(typeof(Microsoft.CodeAnalysis.ProjectId));
             var call = Expression.Call(Expression.Constant(workspace), "GetHierarchy", Array.Empty<Type>(), projectIdParameter);
-            var vsHierarchy = Expression.Lambda<Func<ProjectId, object>>(call, projectIdParameter).Compile()(project.Id);
+            var vsHierarchy = Expression.Lambda<Func<Microsoft.CodeAnalysis.ProjectId, object>>(call, projectIdParameter).Compile()(project.Id);
 
             if (vsHierarchy is null) return Array.Empty<string>();
 
