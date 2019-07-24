@@ -14,29 +14,40 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser.Classifications.FSharp
 {
-    public partial class FSharpTextBufferClassifier : IClassifier
+    public class FSharpTextBufferClassifier : IClassifier
     {
-        private static readonly List<ClassificationSpan> _empty = new List<ClassificationSpan>();
+        private (VersionStamp Version, IList<ClassificationSpan> Spans) _cache;
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
-            if (workspace is null) return _empty;
+            if (workspace is null) return Array.Empty<ClassificationSpan>();
 
             var document = workspace.GetDocument(span.Snapshot.AsText());
-            var sourceText = document.GetTextAsync().Result;
-            var vesrionStamp = document.GetTextVersionAsync().Result;
+            var versionStamp = document.GetTextVersionAsync().Result;
+            if (versionStamp.Equals(_cache.Version)) return _cache.Spans;
 
+            var sourceText = document.GetTextAsync().Result;
             var projectOptions = GetOptions(workspace, document.Project);
 
             // TODO: would be better to use a custom ReferenceResolver implementaion?
             var checker = FSharpChecker.Create(null, null, null, null, null, null);
-            var result = checker.ParseAndCheckFileInProject(document.FilePath, vesrionStamp.GetHashCode(),
-                new SourceTextWrapper(sourceText), projectOptions, null, "Classification");
+            var result = checker.ParseAndCheckFileInProject(document.FilePath, versionStamp.GetHashCode(),
+                new SourceTextWrapper(sourceText), projectOptions, null, "CoCo_Classifications");
             var (parseResult, checkAnswer) = FSharpAsync.RunSynchronously(result, null, null).ToValueTuple();
-            return _empty;
+
+            if (checkAnswer.IsSucceeded && checkAnswer is FSharpCheckFileAnswer.Succeeded succeeded)
+            {
+                var checkResult = succeeded.Item;
+                // TODO: append classification options
+                var spans = FSharpClassifierService.Instance.GetClassificationSpans(parseResult, checkResult);
+
+                _cache = (versionStamp, spans);
+                return spans;
+            }
+            return Array.Empty<ClassificationSpan>();
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Project project)
