@@ -6,7 +6,7 @@ namespace CoCo.Editor
 {
     partial class ClassificationManager
     {
-        private static readonly IReadOnlyDictionary<string, string> _nonIdentifierClassifications = new Dictionary<string, string>
+        private static IReadOnlyDictionary<string, string> NonIdentifierClassifications { get; } = new Dictionary<string, string>
         {
             [CSharpNames.ClassName] = "class name",
             [CSharpNames.StructureName] = "struct name",

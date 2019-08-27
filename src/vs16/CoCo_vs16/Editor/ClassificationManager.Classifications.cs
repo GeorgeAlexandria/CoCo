@@ -1,66 +1,99 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using CoCo.Analyser.Classifications.CSharp;
 using CoCo.Analyser.Classifications.VisualBasic;
+using CoCo.Utils;
 
 namespace CoCo.Editor
 {
     partial class ClassificationManager
     {
-        private static readonly IReadOnlyDictionary<string, string> _nonIdentifierClassifications = new Dictionary<string, string>
+        private static Dictionary<string, IEnumerable<string>> _classificationDependents = new Dictionary<string, IEnumerable<string>>
         {
-            [CSharpNames.ClassName] = "class name",
-            [CSharpNames.StructureName] = "struct name",
-            [CSharpNames.InterfaceName] = "interface name",
-            [CSharpNames.EnumName] = "enum name",
-            [CSharpNames.DelegateName] = "delegate name",
-            [CSharpNames.TypeParameterName] = "type parameter name",
+            [CSharpNames.ClassName] = new[] { "class name", "static symbol" },
+            [CSharpNames.StructureName] = "struct name".Enumerate(),
+            [CSharpNames.InterfaceName] = "interface name".Enumerate(),
+            [CSharpNames.EnumName] = "enum name".Enumerate(),
+            [CSharpNames.DelegateName] = "delegate name".Enumerate(),
+            [CSharpNames.TypeParameterName] = "type parameter name".Enumerate(),
 
-            [CSharpNames.ConstantFieldName] = "constant name",
+            [CSharpNames.ConstantFieldName] = new[] { "constant name", "static symbol" },
+            [CSharpNames.ConstructorName] = new[] { "class name", "struct name" },
+            [CSharpNames.DestructorName] = "class name".Enumerate(),
+            [CSharpNames.EnumFieldName] = "enum member name".Enumerate(),
+            [CSharpNames.EventName] = new[] { "event name", "static symbol" },
+            [CSharpNames.ExtensionMethodName] = new[] { "extension method name", "static symbol" },
+            [CSharpNames.FieldName] = new[] { "field name", "static symbol" },
+            [CSharpNames.LabelName] = "label name".Enumerate(),
+            [CSharpNames.LocalMethodName] = "method name".Enumerate(),
+            [CSharpNames.LocalVariableName] = "local name".Enumerate(),
+            [CSharpNames.MethodName] = new[] { "method name", "static symbol" },
+            [CSharpNames.NamespaceName] = "namespace name".Enumerate(),
+            [CSharpNames.ParameterName] = "parameter name".Enumerate(),
+            [CSharpNames.PropertyName] = new[] { "property name", "static symbol" },
+            [CSharpNames.RangeVariableName] = "local name".Enumerate(),
+            [CSharpNames.StaticMethodName] = new[] { "method name", "static symbol" },
+            [CSharpNames.ControlFlowName] = "keyword - control".Enumerate(),
 
-            // NOTE: ctor name must be after MaxPriority("class name", "struct name"). 
-            // Currently "struct name" has more priority
-            [CSharpNames.ConstructorName] = "struct name",
-            [CSharpNames.DestructorName] = "class name",
-            [CSharpNames.EnumFieldName] = "enum member name",
-            [CSharpNames.EventName] = "event name",
-            [CSharpNames.ExtensionMethodName] = "extension method name",
-            [CSharpNames.FieldName] = "field name",
-            [CSharpNames.LabelName] = "label name",
-            [CSharpNames.LocalMethodName] = "method name",
-            [CSharpNames.LocalVariableName] = "local name",
-            [CSharpNames.MethodName] = "method name",
-            [CSharpNames.NamespaceName] = "namespace name",
-            [CSharpNames.ParameterName] = "parameter name",
-            [CSharpNames.PropertyName] = "property name",
-            [CSharpNames.RangeVariableName] = "local name",
-            [CSharpNames.StaticMethodName] = "method name",
-            [CSharpNames.ControlFlowName] = "keyword - control",
+            [VisualBasicNames.ClassName] = new[] { "class name", "static symbol" },
+            [VisualBasicNames.StructureName] = "struct name".Enumerate(),
+            [VisualBasicNames.InterfaceName] = "interface name".Enumerate(),
+            [VisualBasicNames.EnumName] = "enum name".Enumerate(),
+            [VisualBasicNames.DelegateName] = "delegate name".Enumerate(),
+            [VisualBasicNames.TypeParameterName] = "type parameter name".Enumerate(),
+            [VisualBasicNames.ModuleName] = "module name".Enumerate(),
 
-            [VisualBasicNames.ClassName] = "class name",
-            [VisualBasicNames.StructureName] = "struct name",
-            [VisualBasicNames.InterfaceName] = "interface name",
-            [VisualBasicNames.EnumName] = "enum name",
-            [VisualBasicNames.DelegateName] = "delegate name",
-            [VisualBasicNames.TypeParameterName] = "type parameter name",
-            [VisualBasicNames.ModuleName] = "module name",
-
-            [VisualBasicNames.ConstantFieldName] = "constant name",
-            [VisualBasicNames.EnumFieldName] = "enum member name",
-            [VisualBasicNames.EventName] = "event name",
-            [VisualBasicNames.ExtensionMethodName] = "extension method name",
-            [VisualBasicNames.FieldName] = "field name",
-            [VisualBasicNames.FunctionName] = "method name",
-            [VisualBasicNames.FunctionVariableName] = "local name",
-            [VisualBasicNames.LocalVariableName] = "local name",
-            [VisualBasicNames.NamespaceName] = "namespace name",
-            [VisualBasicNames.ParameterName] = "parameter name",
-            [VisualBasicNames.PropertyName] = "property name",
-            [VisualBasicNames.RangeVariableName] = "local name",
-            [VisualBasicNames.SharedMethodName] = "method name",
-            [VisualBasicNames.StaticLocalVariableName] = "local name",
-            [VisualBasicNames.SubName] = "method name",
-            [VisualBasicNames.WithEventsPropertyName] = "property name",
-            [VisualBasicNames.ControlFlowName] = "keyword - control",
+            [VisualBasicNames.ConstantFieldName] = new[] { "constant name", "static symbol" },
+            [VisualBasicNames.EnumFieldName] = "enum member name".Enumerate(),
+            [VisualBasicNames.EventName] = new[] { "event name", "static symbol" },
+            [VisualBasicNames.ExtensionMethodName] = new[] { "extension method name", "static symbol" },
+            [VisualBasicNames.FieldName] = new[] { "field name", "static symbol" },
+            [VisualBasicNames.FunctionName] = new[] { "method name", "static symbol" },
+            [VisualBasicNames.FunctionVariableName] = "local name".Enumerate(),
+            [VisualBasicNames.LocalVariableName] = "local name".Enumerate(),
+            [VisualBasicNames.NamespaceName] = "namespace name".Enumerate(),
+            [VisualBasicNames.ParameterName] = "parameter name".Enumerate(),
+            [VisualBasicNames.PropertyName] = new[] { "property name", "static symbol" },
+            [VisualBasicNames.RangeVariableName] = "local name".Enumerate(),
+            [VisualBasicNames.SharedMethodName] = new[] { "method name", "static symbol" },
+            [VisualBasicNames.StaticLocalVariableName] = "local name".Enumerate(),
+            [VisualBasicNames.SubName] = new[] { "method name", "static symbol" },
+            [VisualBasicNames.WithEventsPropertyName] = new[] { "property name", "static symbol" },
+            [VisualBasicNames.ControlFlowName] = "keyword - control".Enumerate(),
         };
+
+        private static Dictionary<string, string> _nonIdentifierClassifications;
+        private static IReadOnlyDictionary<string, string> NonIdentifierClassifications
+        {
+            get
+            {
+                if (_nonIdentifierClassifications is null)
+                {
+                    var registryService = ServicesProvider.Instance.RegistryService;
+                    var formatMap = ServicesProvider.Instance.FormatMapService.GetClassificationFormatMap(category: "text");
+
+                    _nonIdentifierClassifications = new Dictionary<string, string>();
+
+                    // NOTE: get max priority from all of dependent classifications 
+                    foreach (var (name, classifications) in _classificationDependents)
+                    {
+                        var maxPriority = -1;
+                        string maxName = null;
+                        foreach (var classification in classifications)
+                        {
+                            var position = GetClassificationPosition(registryService, formatMap, classification);
+                            if (maxPriority < position)
+                            {
+                                maxPriority = position;
+                                maxName = classification;
+                            }
+                        }
+                        _nonIdentifierClassifications[name] = maxName;
+                    }
+                    _classificationDependents = null;
+                }
+                return _nonIdentifierClassifications;
+            }
+        }
     }
 }
