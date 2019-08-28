@@ -19,7 +19,7 @@ namespace CoCo.Editor
         /// </summary>
         public static bool TryGetDefaultNonIdentifierClassification(string name, out IClassificationType classification)
         {
-            if (_nonIdentifierClassifications.TryGetValue(name, out var classificationName))
+            if (NonIdentifierClassifications.TryGetValue(name, out var classificationName))
             {
                 classification = ServicesProvider.Instance.RegistryService.GetClassificationType(classificationName);
                 return !(classification is null);
@@ -51,7 +51,7 @@ namespace CoCo.Editor
                 foreach (var name in names)
                 {
                     var classificationPosition = identifierPosition;
-                    if (_nonIdentifierClassifications.TryGetValue(name, out var relevantClassification))
+                    if (NonIdentifierClassifications.TryGetValue(name, out var relevantClassification))
                     {
                         classificationPosition = GetClassificationPosition(registryService, formatMap, relevantClassification);
                     }
