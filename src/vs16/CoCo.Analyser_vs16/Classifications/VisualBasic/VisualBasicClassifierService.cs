@@ -10,6 +10,8 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser.Classifications.VisualBasic
 {
+    using ClassificationOptions = Dictionary<IClassificationType, ClassificationOption>;
+
     // TODO: Do we need to write visual basic classifier on VB?
     /// <summary>
     /// Classifies visual basic code
@@ -43,10 +45,7 @@ namespace CoCo.Analyser.Classifications.VisualBasic
         private IClassificationType _controlFlowType;
 
         private static VisualBasicClassifierService _instance;
-
-        private readonly Dictionary<IClassificationType, ClassificationOption> _classificationOptions =
-            new Dictionary<IClassificationType, ClassificationOption>();
-
+        private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
         private ImmutableArray<IClassificationType> _classifications;
 
         private VisualBasicClassifierService(

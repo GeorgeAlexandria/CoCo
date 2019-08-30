@@ -139,6 +139,18 @@ namespace CoCo.Editor
             };
             _defaultPresets[Languages.VisualBasic] = presets;
 
+            // TODO: append presets
+            presets = new Dictionary<string, PresetSettings>
+            {
+                ["CoCo light|blue theme"] = new PresetSettings
+                {
+                    Name = "CoCo light|blue theme",
+                    Classifications = new List<ClassificationSettings>()
+                },
+
+            };
+            _defaultPresets[Languages.FSharp] = presets;
+
             return _defaultPresets;
         }
     }

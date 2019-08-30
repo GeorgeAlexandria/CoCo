@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.FSharp;
 using CoCo.Analyser.Classifications.VisualBasic;
 
 namespace CoCo.Analyser.Classifications
@@ -19,7 +20,8 @@ namespace CoCo.Analyser.Classifications
 
                 return _all = ImmutableDictionary<string, ImmutableArray<string>>.Empty
                     .Add(Languages.CSharp, CSharpNames.All)
-                    .Add(Languages.VisualBasic, VisualBasicNames.All);
+                    .Add(Languages.VisualBasic, VisualBasicNames.All)
+                    .Add(Languages.FSharp, FSharpNames.All);
             }
         }
     }

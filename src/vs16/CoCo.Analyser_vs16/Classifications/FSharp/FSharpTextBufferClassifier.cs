@@ -16,7 +16,16 @@ namespace CoCo.Analyser.Classifications.FSharp
 {
     public class FSharpTextBufferClassifier : IClassifier
     {
+        private readonly FSharpClassifierService _service;
+
         private (VersionStamp Version, IList<ClassificationSpan> Spans) _cache;
+
+        internal FSharpTextBufferClassifier(
+            Dictionary<string, ClassificationInfo> classifications,
+            IClassificationChangingService classificationChangingService)
+        {
+            _service = FSharpClassifierService.GetClassifier(classifications);
+        }
 
         public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
 
@@ -42,7 +51,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 var checkResult = succeeded.Item;
                 // TODO: append classification options
-                var spans = FSharpClassifierService.Instance.GetClassificationSpans(parseResult, checkResult);
+                var spans = _service.GetClassificationSpans(parseResult, checkResult, span);
 
                 _cache = (versionStamp, spans);
                 return spans;

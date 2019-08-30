@@ -10,6 +10,8 @@ using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser.Classifications.CSharp
 {
+    using ClassificationOptions = Dictionary<IClassificationType, ClassificationOption>;
+
     /// <summary>
     /// Classifies csharp code
     /// </summary>
@@ -41,10 +43,7 @@ namespace CoCo.Analyser.Classifications.CSharp
         private IClassificationType _controlFlowType;
 
         private static CSharpClassifierService _instance;
-
-        private readonly Dictionary<IClassificationType, ClassificationOption> _classificationOptions =
-            new Dictionary<IClassificationType, ClassificationOption>();
-
+        private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
         private ImmutableArray<IClassificationType> _classifications;
 
         private CSharpClassifierService(
