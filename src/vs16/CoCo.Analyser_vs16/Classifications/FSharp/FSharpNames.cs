@@ -13,6 +13,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         public const string TypeParameterName = "CoCo fsharp type parameter name";
         public const string ClassName = "CoCo fsharp class name";
         public const string StructureName = "CoCo fsharp structure name";
+        public const string ModuleName = "CoCo fsharp module name";
         public const string EnumName = "CoCo fsharp enum name";
         public const string InterfaceName = "CoCo fsharp interface name";
 
@@ -34,6 +35,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 builder.Add(TypeParameterName);
                 builder.Add(ClassName);
                 builder.Add(StructureName);
+                builder.Add(ModuleName);
                 builder.Add(InterfaceName);
                 builder.Add(EnumName);
                 return _all = builder.TryMoveToImmutable();

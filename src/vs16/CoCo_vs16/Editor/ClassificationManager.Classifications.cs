@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using CoCo.Analyser.Classifications.CSharp;
+using CoCo.Analyser.Classifications.FSharp;
 using CoCo.Analyser.Classifications.VisualBasic;
 using CoCo.Utils;
 
@@ -60,6 +61,14 @@ namespace CoCo.Editor
             [VisualBasicNames.SubName] = new[] { "method name", "static symbol" },
             [VisualBasicNames.WithEventsPropertyName] = new[] { "property name", "static symbol" },
             [VisualBasicNames.ControlFlowName] = "keyword - control".Enumerate(),
+
+            [FSharpNames.ClassName] = "class name".Enumerate(),
+            [FSharpNames.StructureName] = "struct name".Enumerate(),
+            [FSharpNames.UnionName] = "class name".Enumerate(),
+            [FSharpNames.RecordName] = "class name".Enumerate(),
+            [FSharpNames.ModuleName] = "module name".Enumerate(),
+
+            [FSharpNames.NamespaceName] = "namespace name".Enumerate(),
         };
 
         private static Dictionary<string, string> _nonIdentifierClassifications;

@@ -13,10 +13,28 @@ namespace CoCo.Analyser.Classifications.FSharp
 
     internal class FSharpClassifierService
     {
+        private readonly struct Context
+        {
+            // TODO: naming
+            public readonly IReadOnlyDictionary<Range.range, FSharpSymbolUse> Cache;
+
+            public readonly List<ClassificationSpan> Result;
+            public readonly SnapshotSpan SnapshotSpan;
+
+            public Context(IReadOnlyDictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result, SnapshotSpan snapshotSpan)
+            {
+                Cache = cache;
+                Result = result;
+                SnapshotSpan = snapshotSpan;
+            }
+        }
+
         private IClassificationType _namespaceType;
         private IClassificationType _classType;
         private IClassificationType _recordType;
         private IClassificationType _unionType;
+        private IClassificationType _moduleType;
+        private IClassificationType _structureType;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -45,17 +63,12 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
             }
 
+            var context = new Context(cache, result, span);
             if (parseResults.ParseTree.Value is Ast.ParsedInput.ImplFile implFile)
             {
                 foreach (var moduleOrNamespace in implFile.Item.modules)
                 {
-                    // TODO: Handle moduleOrNamespace as namespace separate
-                    foreach (var item in moduleOrNamespace.decls)
-                    {
-                        Visit(item, cache, result, span);
-                    }
-
-                    System.Console.WriteLine();
+                    Visit(moduleOrNamespace, context);
                 }
             }
 
@@ -99,46 +112,70 @@ namespace CoCo.Analyser.Classifications.FSharp
             return result;
         }
 
-        private void Visit(Ast.SynModuleDecl moduleDecl, Dictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result, SnapshotSpan snapshotSpan)
+        private void Visit(Ast.SynModuleOrNamespace moduleOrNamespace, Context context)
         {
+            // TODO: Handle moduleOrNamespace as namespace separate
+            foreach (var item in moduleOrNamespace.decls)
+            {
+                Visit(item, context);
+            }
+        }
+
+        private void Visit(Ast.SynModuleDecl moduleDecl, Context context)
+        {
+            Range.range range;
+            Span span;
+            var snapshot = context.SnapshotSpan.Snapshot;
             switch (moduleDecl)
             {
                 case Ast.SynModuleDecl.Open openSyntax:
-                    foreach (var item in openSyntax.longDotId.Lid)
-                    {
-                        var span = item.idRange.ToSpan(snapshotSpan.Snapshot);
-                        result.Add(new ClassificationSpan(new SnapshotSpan(snapshotSpan.Snapshot, span.Start, span.Length), _namespaceType));
-                    }
+                    AddIdents(openSyntax.longDotId.Lid, _namespaceType, context);
                     break;
 
                 case Ast.SynModuleDecl.Types typeSyntax:
                     foreach (var typeDefinition in typeSyntax.Item1)
                     {
-                        var range = typeDefinition.Item1.longId.Head.idRange;
-                        var span = range.ToSpan(snapshotSpan.Snapshot);
-                        if (cache.TryGetValue(range, out var symbolUse) && symbolUse.Symbol is FSharpEntity entity)
+                        foreach (var ident in typeDefinition.Item1.longId)
                         {
-                            var type =
-                                entity.IsFSharpUnion ? _unionType :
-                                entity.IsFSharpRecord ? _recordType :
-                                entity.IsClass ? _classType :
-                                null;
-
-                            if (!(type is null))
+                            span = ident.idRange.ToSpan(snapshot);
+                            if (context.Cache.TryGetValue(ident.idRange, out var symbolUse) && symbolUse.Symbol is FSharpEntity entity)
                             {
-                                result.Add(new ClassificationSpan(new SnapshotSpan(snapshotSpan.Snapshot, span.Start, span.Length), _classType));
+                                var type =
+                                    entity.IsFSharpUnion ? _unionType :
+                                    entity.IsFSharpRecord ? _recordType :
+                                    entity.IsValueType ? _structureType :
+                                    entity.IsClass ? _classType :
+                                    null;
+
+                                if (!(type is null))
+                                {
+                                    context.Result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+                                }
                             }
                         }
 
                         foreach (var item in typeDefinition.members)
                         {
-                            Visit(item, cache, result, snapshotSpan);
+                            Visit(item, context);
                         }
                     }
                     break;
 
+                case Ast.SynModuleDecl.NestedModule nestedModule:
+                    AddIdents(nestedModule.Item1.longId, _moduleType, context);
+                    foreach (var item in nestedModule.Item3)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
                 case Ast.SynModuleDecl.Let letSyntax:
-                    Visit(letSyntax.Item2.Head.headPat, cache, result);
+                    // TODO:
+                    Visit(letSyntax.Item2.Head.headPat, context);
+                    break;
+
+                case Ast.SynModuleDecl.NamespaceFragment fragment:
+                    Visit(fragment.Item, context);
                     break;
 
                 default:
@@ -146,17 +183,17 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
-        private void Visit(Ast.SynMemberDefn member, Dictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result, SnapshotSpan snapshotSpan)
+        private void Visit(Ast.SynMemberDefn member, Context context)
         {
             // TODO:
         }
 
-        private void Visit(Ast.SynPat pattern, Dictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result)
+        private void Visit(Ast.SynPat pattern, Context context)
         {
             switch (pattern)
             {
                 case Ast.SynPat.Named nameSyntax:
-                    if (cache.TryGetValue(nameSyntax.range, out var symbolUse))
+                    if (context.Cache.TryGetValue(nameSyntax.range, out var symbolUse))
                     {
                         switch (symbolUse.Symbol)
                         {
@@ -171,6 +208,16 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 default:
                     break;
+            }
+        }
+
+        private void AddIdents<T>(T longIds, IClassificationType classificationType, Context context) where T : IEnumerable<Ast.Ident>
+        {
+            var snapshot = context.SnapshotSpan.Snapshot;
+            foreach (var item in longIds)
+            {
+                var span = item.idRange.ToSpan(snapshot);
+                context.Result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
             }
         }
 
@@ -189,6 +236,8 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.ClassName, ref _classType);
             InitializeClassification(FSharpNames.RecordName, ref _recordType);
             InitializeClassification(FSharpNames.UnionName, ref _unionType);
+            InitializeClassification(FSharpNames.ModuleName, ref _moduleType);
+            InitializeClassification(FSharpNames.StructureName, ref _structureType);
 
             _classifications = builder.TryMoveToImmutable();
         }
