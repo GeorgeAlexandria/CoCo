@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CoCo.69edb42a-941a-4cf8-b6fc-264946141393" Version="3.2.0" Language="en-US" Publisher="George Aleksandria" />
+        <Identity Id="CoCo.69edb42a-941a-4cf8-b6fc-264946141393" Version="3.2.1" Language="en-US" Publisher="George Aleksandria" />
         <DisplayName>CoCo</DisplayName>
         <Description xml:space="preserve">An open source extension that colors and decorates code to make it easily recognizable. Supports C# and VisualBasic</Description>
         <MoreInfo>https://github.com/GeorgeAlexandria/CoCo</MoreInfo>
