@@ -1,5 +1,11 @@
 # Release notes
 
+## 3.2.1
+
+**2019-08-31**
+
+- [x] Fix issue [#65](https://github.com/GeorgeAlexandria/CoCo/issues/65) – fix decorations for a couple classifications in the Visual Studio 2019
+
 ## 3.2.0
 
 **2019-06-02**
