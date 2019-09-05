@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using CoCo.Utils;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
@@ -20,13 +21,18 @@ namespace CoCo.Analyser.Classifications.FSharp
 
             public readonly List<ClassificationSpan> Result;
             public readonly SnapshotSpan SnapshotSpan;
+            public readonly object Parent;
 
-            public Context(IReadOnlyDictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result, SnapshotSpan snapshotSpan)
+            public Context(IReadOnlyDictionary<Range.range, FSharpSymbolUse> cache, List<ClassificationSpan> result,
+                SnapshotSpan snapshotSpan, object parent)
             {
                 Cache = cache;
                 Result = result;
                 SnapshotSpan = snapshotSpan;
+                Parent = parent;
             }
+
+            public Context WithParent(object parent) => new Context(Cache, Result, SnapshotSpan, parent);
         }
 
         private IClassificationType _namespaceType;
@@ -35,6 +41,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _unionType;
         private IClassificationType _moduleType;
         private IClassificationType _structureType;
+        private IClassificationType _propertyType;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -63,7 +70,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
             }
 
-            var context = new Context(cache, result, span);
+            var context = new Context(cache, result, span, null);
             if (parseResults.ParseTree.Value is Ast.ParsedInput.ImplFile implFile)
             {
                 foreach (var moduleOrNamespace in implFile.Item.modules)
@@ -123,8 +130,6 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynModuleDecl moduleDecl, Context context)
         {
-            Range.range range;
-            Span span;
             var snapshot = context.SnapshotSpan.Snapshot;
             switch (moduleDecl)
             {
@@ -137,7 +142,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         foreach (var ident in typeDefinition.Item1.longId)
                         {
-                            span = ident.idRange.ToSpan(snapshot);
+                            var span = ident.idRange.ToSpan(snapshot);
+                            // TODO: if the one id from longId was, for example, a class, does it mean that the all id from longId would be a class?
                             if (context.Cache.TryGetValue(ident.idRange, out var symbolUse) && symbolUse.Symbol is FSharpEntity entity)
                             {
                                 var type =
@@ -158,6 +164,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                         {
                             Visit(item, context);
                         }
+                        Visit(typeDefinition.Item2, context);
                     }
                     break;
 
@@ -170,8 +177,14 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynModuleDecl.Let letSyntax:
-                    // TODO:
-                    Visit(letSyntax.Item2.Head.headPat, context);
+                    foreach (var item in letSyntax.Item2)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynModuleDecl.DoExpr doExpression:
+                    Visit(doExpression.Item2, context);
                     break;
 
                 case Ast.SynModuleDecl.NamespaceFragment fragment:
@@ -183,13 +196,131 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
-        private void Visit(Ast.SynMemberDefn member, Context context)
+        private void Visit(Ast.SynMemberDefn memberDefn, Context context)
         {
-            // TODO:
+            switch (memberDefn)
+            {
+                case Ast.SynMemberDefn.Open open:
+                    // TODO: what is it case?
+                    // AddIdents(open.longId, );
+                    Debug.Fail("");
+                    break;
+
+                case Ast.SynMemberDefn.LetBindings letBinndings:
+                    foreach (var item in letBinndings.Item1)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynMemberDefn.Inherit inherit:
+                    // AddIdents(inherit.Item2, );
+                    Visit(inherit.Item1, context);
+                    break;
+
+                case Ast.SynMemberDefn.ImplicitInherit inherit:
+                    // AddIdents(inherit.inheritAlias, );
+                    Visit(inherit.inheritType, context);
+                    Visit(inherit.inheritArgs, context);
+                    break;
+
+                case Ast.SynMemberDefn.NestedType typeDef:
+                    Visit(typeDef.typeDefn, context);
+                    break;
+
+                case Ast.SynMemberDefn.Member member:
+                    Visit(member.memberDefn, context);
+                    break;
+
+                case Ast.SynMemberDefn.AutoProperty property:
+                    AddIndent(property.ident, _propertyType, context);
+                    Visit(property.synExpr, context);
+                    break;
+
+                case Ast.SynMemberDefn.ValField field:
+                    Visit(field.Item1, context);
+                    break;
+
+                case Ast.SynMemberDefn.AbstractSlot slot:
+                    Visit(slot.Item1, context.WithParent(slot));
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynTypeDefnRepr typeDefnRepr, Context context)
+        {
+            switch (typeDefnRepr)
+            {
+                case Ast.SynTypeDefnRepr.ObjectModel objectModel:
+                    foreach (var item in objectModel.Item2)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynTypeDefnRepr.Simple _:
+                    // TODO: what is it case?
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynType type, Context context)
+        {
+            // todo:
+        }
+
+        private void Visit(Ast.SynTypeDefn typeDef, Context context)
+        {
+            // todo:
+        }
+
+        private void Visit(Ast.SynField field, Context context)
+        {
+            // todo:
+        }
+
+        private void Visit(Ast.SynValSig valSig, Context context)
+        {
+            if (!(valSig.synExpr is null))
+            {
+                Visit(valSig.synExpr.Value, context);
+            }
+
+            if (context.Cache.TryGetValue(valSig.ident.idRange, out var use))
+            {
+                if (context.Parent is Ast.SynMemberDefn)
+                {
+                    switch (use.Symbol)
+                    {
+                        case FSharpMemberOrFunctionOrValue some:
+                            if (some.IsMember && (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod))
+                            {
+                                AddIndent(valSig.ident, _propertyType, context);
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        private void Visit(Ast.SynBinding binding, Context context)
+        {
+            Visit(binding.headPat, context);
+            Visit(binding.expr, context);
         }
 
         private void Visit(Ast.SynPat pattern, Context context)
         {
+            // TODO:
             switch (pattern)
             {
                 case Ast.SynPat.Named nameSyntax:
@@ -211,6 +342,11 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
+        private void Visit(Ast.SynExpr expression, Context context)
+        {
+            // TODO:
+        }
+
         private void AddIdents<T>(T longIds, IClassificationType classificationType, Context context) where T : IEnumerable<Ast.Ident>
         {
             var snapshot = context.SnapshotSpan.Snapshot;
@@ -219,6 +355,13 @@ namespace CoCo.Analyser.Classifications.FSharp
                 var span = item.idRange.ToSpan(snapshot);
                 context.Result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
             }
+        }
+
+        private void AddIndent(Ast.Ident ident, IClassificationType classificationType, Context context)
+        {
+            var snapshot = context.SnapshotSpan.Snapshot;
+            var span = ident.idRange.ToSpan(snapshot);
+            context.Result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
         }
 
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)
@@ -238,6 +381,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.UnionName, ref _unionType);
             InitializeClassification(FSharpNames.ModuleName, ref _moduleType);
             InitializeClassification(FSharpNames.StructureName, ref _structureType);
+            InitializeClassification(FSharpNames.PropertyName, ref _propertyType);
 
             _classifications = builder.TryMoveToImmutable();
         }
