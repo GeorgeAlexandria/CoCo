@@ -42,6 +42,8 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _moduleType;
         private IClassificationType _structureType;
         private IClassificationType _propertyType;
+        private IClassificationType _fieldType;
+        private IClassificationType _selfIdentifierName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -261,8 +263,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
-                case Ast.SynTypeDefnRepr.Simple _:
-                    // TODO: what is it case?
+                case Ast.SynTypeDefnRepr.Simple simple:
+                    Visit(simple.Item1, context);
                     break;
 
                 default:
@@ -280,14 +282,38 @@ namespace CoCo.Analyser.Classifications.FSharp
             // todo:
         }
 
+        private void Visit(Ast.SynTypeDefnSimpleRepr synTypeDefn, Context context)
+        {
+            // TODO:
+            switch (synTypeDefn)
+            {
+                case Ast.SynTypeDefnSimpleRepr.Record record:
+                    foreach (var item in record.recordFields)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynTypeDefnSimpleRepr.Union union:
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
         private void Visit(Ast.SynField field, Context context)
         {
-            // todo:
+            if (field.Item3.IsSome())
+            {
+                AddIndent(field.Item3.Value, _fieldType, context);
+            }
+            Visit(field.Item4, context);
         }
 
         private void Visit(Ast.SynValSig valSig, Context context)
         {
-            if (!(valSig.synExpr is null))
+            if (valSig.synExpr.IsSome())
             {
                 Visit(valSig.synExpr.Value, context);
             }
@@ -337,8 +363,42 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynPat.LongIdent longIndent:
+                    // TODO: what's about another items?
+                    Visit(longIndent.longDotId, context);
+                    break;
+
                 default:
                     break;
+            }
+        }
+
+        private void Visit(Ast.LongIdentWithDots identWithDots, Context context)
+        {
+            if (identWithDots.Lid.IsEmpty) return;
+
+            var idents = identWithDots.Lid;
+            var first = identWithDots.Lid.Head;
+            if (context.Cache.TryGetValue(first.idRange, out var use))
+            {
+                if (use.Symbol is FSharpMemberOrFunctionOrValue some && some.IsMemberThisValue)
+                {
+                    AddIndent(first, _selfIdentifierName, context);
+                    idents = idents.Tail;
+                }
+            }
+
+            // TODO: if the one id from idents was, for example, a field, does it mean that the all id from idents would be a field?
+            foreach (var item in idents)
+            {
+                if (context.Cache.TryGetValue(item.idRange, out use) && use.Symbol is FSharpMemberOrFunctionOrValue some)
+                {
+                    // TODO:
+                    if (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod)
+                    {
+                        AddIndent(item, _propertyType, context);
+                    }
+                }
             }
         }
 
@@ -382,6 +442,8 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.ModuleName, ref _moduleType);
             InitializeClassification(FSharpNames.StructureName, ref _structureType);
             InitializeClassification(FSharpNames.PropertyName, ref _propertyType);
+            InitializeClassification(FSharpNames.FieldName, ref _fieldType);
+            InitializeClassification(FSharpNames.SelfIdentifierName, ref _selfIdentifierName);
 
             _classifications = builder.TryMoveToImmutable();
         }

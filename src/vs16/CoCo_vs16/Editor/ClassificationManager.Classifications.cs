@@ -70,6 +70,7 @@ namespace CoCo.Editor
 
             [FSharpNames.NamespaceName] = "namespace name".Enumerate(),
             [FSharpNames.PropertyName] = new[] { "property name", "FSharp.Property", "static symbol" },
+            [FSharpNames.FieldName] = new[] { "field name", "static symbol" },
         };
 
         private static Dictionary<string, string> _nonIdentifierClassifications;

@@ -17,6 +17,8 @@ namespace CoCo.Analyser.Classifications.FSharp
         public const string EnumName = "CoCo fsharp enum name";
         public const string InterfaceName = "CoCo fsharp interface name";
         public const string PropertyName = "CoCo fsharp property name";
+        public const string FieldName = "CoCo fsharp field name";
+        public const string SelfIdentifierName = "CoCo fsharp self identifier name";
 
         private static ImmutableArray<string> _all;
 
@@ -40,6 +42,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                 builder.Add(InterfaceName);
                 builder.Add(EnumName);
                 builder.Add(PropertyName);
+                builder.Add(FieldName);
+                builder.Add(SelfIdentifierName);
 
                 return _all = builder.TryMoveToImmutable();
             }
