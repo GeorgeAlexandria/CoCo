@@ -17,8 +17,6 @@ namespace CoCo.Analyser.Editor
         private readonly ITextBuffer _textBuffer;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
 
-        private static readonly List<ClassificationSpan> _emptyClassifications = new List<ClassificationSpan>();
-
         private bool _isEnable;
 
         protected RoslynTextBufferClassifier()
@@ -54,7 +52,7 @@ namespace CoCo.Analyser.Editor
         /// </summary>
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            if (!_isEnable) return _emptyClassifications;
+            if (!_isEnable) return Array.Empty<ClassificationSpan>();
 
             Log.Debug("Span start position is={0} and end position is={1}", span.Start.Position, span.End.Position);
 
@@ -64,8 +62,8 @@ namespace CoCo.Analyser.Editor
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
             if (workspace is null)
             {
-                // TODO: Add supporting a files that doesn't included to the current solution
-                return _emptyClassifications;
+                // TODO: Add supporting a files that isn't included to the current solution
+                return Array.Empty<ClassificationSpan>();
             }
 
             // NOTE: to use the previously classified result as a cached result classifier must correctly determine
@@ -87,10 +85,10 @@ namespace CoCo.Analyser.Editor
             return GetClassificationSpans(workspace, semanticModel, span);
         }
 
-        internal abstract ICodeClassifier CodeClassifier { get; }
-
         internal abstract List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
+
+        internal abstract ICodeClassifier CodeClassifier { get; }
 
         protected abstract string Language { get; }
 

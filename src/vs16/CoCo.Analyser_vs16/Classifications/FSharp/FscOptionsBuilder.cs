@@ -15,15 +15,15 @@ namespace CoCo.Analyser.Classifications.FSharp
         private static readonly char[] _defineConstsDelimeters = new[] { ';' };
         private static readonly char[] _warningAsErrorDelimeters = new[] { ' ', ';', ',' };
 
-        private readonly Microsoft.CodeAnalysis.Project _project;
+        private readonly string _projectFilePath;
 
         private ProjectCollection _projectCollection;
         private Project _msbuildProject;
         private List<string> _options;
 
-        public FscOptionsBuilder(Microsoft.CodeAnalysis.Project project)
+        public FscOptionsBuilder(string projectFilePath)
         {
-            _project = project;
+            _projectFilePath = projectFilePath;
         }
 
         /// <remarks>
@@ -34,13 +34,13 @@ namespace CoCo.Analyser.Classifications.FSharp
         public string[] Build()
         {
             var projectWasLoadedBefore = false;
-            var loadedProjects = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(_project.FilePath);
+            var loadedProjects = ProjectCollection.GlobalProjectCollection.GetLoadedProjects(_projectFilePath);
             if (loadedProjects is null || loadedProjects.Count == 0)
             {
                 InitializeProjectCollection();
 
                 _msbuildProject = new Project(
-                    _project.FilePath, _projectCollection.GlobalProperties, _projectCollection.DefaultToolsVersion, _projectCollection);
+                    _projectFilePath, _projectCollection.GlobalProperties, _projectCollection.DefaultToolsVersion, _projectCollection);
             }
             else
             {

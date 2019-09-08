@@ -2,7 +2,9 @@
 {
     public enum ProgrammingLanguage
     {
+        None,
         CSharp,
+        FSharp,
         VisualBasic
     }
 }

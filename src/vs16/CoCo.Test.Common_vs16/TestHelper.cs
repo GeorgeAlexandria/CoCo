@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Runtime.CompilerServices;
-using CoCo.Utils;
 
 namespace CoCo.Test.Common
 {

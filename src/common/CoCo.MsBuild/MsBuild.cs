@@ -58,8 +58,11 @@ namespace CoCo.MsBuild
             // TODO: strict should be retrieved using "warning as error", because Rolsyn has a three states for the strict option
             var optionStrict = project.GetPropertyValue("OptionStrict").IsOn();
 
+            var outputFilePath = project.GetPropertyValue("TargetPath");
+            var language = project.GetPropertyValue("Language");
+
             return new ProjectInfo(
-                projectPath, references, projects, compileItems, imports, rootNamespace,
+                projectPath, references, projects, compileItems, imports, outputFilePath, rootNamespace, language,
                 optionCompare, optionExplicit, optionInfer, optionStrict);
         }
 

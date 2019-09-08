@@ -57,7 +57,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         internal static FSharpClassifierService GetClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications) =>
             _instance ?? (_instance = new FSharpClassifierService(classifications));
 
-        public IList<ClassificationSpan> GetClassificationSpans(FSharpParseFileResults parseResults, FSharpCheckFileResults checkResults, SnapshotSpan span)
+        public List<ClassificationSpan> GetClassificationSpans(FSharpParseFileResults parseResults, FSharpCheckFileResults checkResults, SnapshotSpan span)
         {
             var result = new List<ClassificationSpan>();
             var symbolsUse = FSharpAsync.RunSynchronously(checkResults.GetAllUsesOfAllSymbolsInFile(), null, null);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CoCo.Analyser.Editor;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
@@ -18,7 +19,7 @@ namespace CoCo.Analyser.Classifications.FSharp
     {
         private readonly FSharpClassifierService _service;
 
-        private (VersionStamp Version, IList<ClassificationSpan> Spans) _cache;
+        private (VersionStamp Version, List<ClassificationSpan> Spans) _cache;
 
         internal FSharpTextBufferClassifier(
             Dictionary<string, ClassificationInfo> classifications,
@@ -34,6 +35,11 @@ namespace CoCo.Analyser.Classifications.FSharp
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
             if (workspace is null) return Array.Empty<ClassificationSpan>();
 
+            return GetClassificationSpans(workspace, span);
+        }
+
+        public List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SnapshotSpan span)
+        {
             var document = workspace.GetDocument(span.Snapshot.AsText());
             var versionStamp = document.GetTextVersionAsync().Result;
             if (versionStamp.Equals(_cache.Version)) return _cache.Spans;
@@ -56,7 +62,9 @@ namespace CoCo.Analyser.Classifications.FSharp
                 _cache = (versionStamp, spans);
                 return spans;
             }
-            return Array.Empty<ClassificationSpan>();
+
+            // TODO: cache
+            return new List<ClassificationSpan>();
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Project project)
@@ -73,7 +81,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
 
             var options = new List<string>();
-            foreach (var item in new FscOptionsBuilder(project).Build())
+            foreach (var item in new FscOptionsBuilder(project.FilePath).Build())
             {
                 if (!item.StartsWith("-r:"))
                 {

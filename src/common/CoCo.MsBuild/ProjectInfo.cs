@@ -5,7 +5,7 @@ using System.IO;
 namespace CoCo.MsBuild
 {
     [DebuggerDisplay("{ProjectName}")]
-    public class ProjectInfo
+    public sealed class ProjectInfo
     {
         internal ProjectInfo(
             string projectPath,
@@ -13,7 +13,9 @@ namespace CoCo.MsBuild
             ImmutableArray<ProjectInfo> projectReferences,
             ImmutableArray<string> compileItems,
             ImmutableArray<string> imports,
+            string outputFilePath,
             string rootNamespace,
+            string language,
             bool optionCompare,
             bool optionExplicit,
             bool optionInfer,
@@ -25,7 +27,9 @@ namespace CoCo.MsBuild
             ProjectPath = projectPath;
             ProjectName = Path.GetFileNameWithoutExtension(projectPath);
             Imports = imports;
+            OutputFilePath = outputFilePath;
             RootNamespace = rootNamespace;
+            Language = language;
             OptionCompare = optionCompare;
             OptionExplicit = optionExplicit;
             OptionInfer = optionInfer;
@@ -45,6 +49,10 @@ namespace CoCo.MsBuild
         public string ProjectName { get; }
 
         public string RootNamespace { get; }
+
+        public string OutputFilePath { get; }
+
+        public string Language { get; }
 
         /// <summary>
         /// It's true when compare set to "Text"
