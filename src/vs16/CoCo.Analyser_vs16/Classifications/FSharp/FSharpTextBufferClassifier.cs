@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoCo.Analyser.Editor;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
@@ -47,23 +46,27 @@ namespace CoCo.Analyser.Classifications.FSharp
             var sourceText = document.GetTextAsync().Result;
             var projectOptions = GetOptions(workspace, document.Project);
 
+            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp);
+        }
+
+        public List<ClassificationSpan> GetClassificationSpans(FSharpProjectOptions projectOptions, SnapshotSpan snapshotSpan, 
+            string itemPath, SourceText itemContent, VersionStamp itemVersion)
+        {
             // TODO: would be better to use a custom ReferenceResolver implementaion?
             var checker = FSharpChecker.Create(null, null, null, null, null, null);
-            var result = checker.ParseAndCheckFileInProject(document.FilePath, versionStamp.GetHashCode(),
-                new SourceTextWrapper(sourceText), projectOptions, null, "CoCo_Classifications");
+            var result = checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(),
+                new SourceTextWrapper(itemContent), projectOptions, null, "CoCo_Classifications");
             var (parseResult, checkAnswer) = FSharpAsync.RunSynchronously(result, null, null).ToValueTuple();
 
             if (checkAnswer.IsSucceeded && checkAnswer is FSharpCheckFileAnswer.Succeeded succeeded)
             {
                 var checkResult = succeeded.Item;
                 // TODO: append classification options
-                var spans = _service.GetClassificationSpans(parseResult, checkResult, span);
+                var spans = _service.GetClassificationSpans(parseResult, checkResult, snapshotSpan);
 
-                _cache = (versionStamp, spans);
+                _cache = (itemVersion, spans);
                 return spans;
             }
-
-            // TODO: cache
             return new List<ClassificationSpan>();
         }
 

@@ -7,6 +7,6 @@ namespace CoCo.Test.Common
 {
     internal interface ITestFileClassifier
     {
-        List<ClassificationSpan> GetClassificationSpans(Workspace workspace, string itemPath, SnapshotSpan snapshotSpan);
+        List<ClassificationSpan> GetClassificationSpans(Workspace workspace, string itemPath, string code, SnapshotSpan snapshotSpan);
     }
 }

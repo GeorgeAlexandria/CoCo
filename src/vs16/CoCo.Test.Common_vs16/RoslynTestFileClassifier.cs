@@ -18,7 +18,8 @@ namespace CoCo.Test.Common
             _textBufferClassifier = textBufferClassifier;
         }
 
-        public List<ClassificationSpan> GetClassificationSpans(Workspace workspace, string itemPath, SnapshotSpan snapshotSpan)
+        public List<ClassificationSpan> GetClassificationSpans(
+            Workspace workspace, string itemPath, string code, SnapshotSpan snapshotSpan)
         {
             foreach (var item in _compilationUnit.Compilation.SyntaxTrees)
             {

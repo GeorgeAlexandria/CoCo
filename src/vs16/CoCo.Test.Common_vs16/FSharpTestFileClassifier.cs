@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CoCo.Analyser.Classifications.FSharp;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -17,9 +18,11 @@ namespace CoCo.Test.Common
             _textBufferClassifier = textBufferClassifier;
         }
 
-        public List<ClassificationSpan> GetClassificationSpans(Workspace workspace, string itemPath, SnapshotSpan snapshotSpan)
+        public List<ClassificationSpan> GetClassificationSpans(
+            Workspace workspace, string itemPath, string code, SnapshotSpan snapshotSpan)
         {
-            return _textBufferClassifier.GetClassificationSpans(workspace, snapshotSpan);
+            return _textBufferClassifier.GetClassificationSpans(
+                _compilationUnit.Options, snapshotSpan, itemPath, SourceText.From(code), VersionStamp.Default);
         }
     }
 }

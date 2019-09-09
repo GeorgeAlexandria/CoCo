@@ -93,7 +93,7 @@ namespace CoCo.Test.Common
                     var newDocument = workspace.AddDocument(newProject.Id, Path.GetFileName(path), snapshotSpan.Snapshot.AsText());
 
                     var classifier = GetClassifier(compilation, infos);
-                    actualSpans = classifier.GetClassificationSpans(workspace, path, snapshotSpan);
+                    actualSpans = classifier.GetClassificationSpans(workspace, path, code, snapshotSpan);
                 }
                 return actualSpans.Select(x => new SimplifiedClassificationSpan(x.Span.Span, x.ClassificationType)).ToList();
             }
@@ -175,7 +175,7 @@ namespace CoCo.Test.Common
                     {
                         visualBasicTrees.Add(VisualBasicSyntaxTree.ParseText(code, VisualBasicParseOptions.Default, item));
                     }
-                    else
+                    else if (!extension.EqualsNoCase(".fs"))
                     {
                         // NOTE: currently is assumed that all this files is C#
                         // TODO: fix it in the future

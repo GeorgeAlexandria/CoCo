@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.CodeAnalysis.Text;
-using FSharpISourceText = FSharp.Compiler.Text.ISourceText;
+using IFSharpSourceText = FSharp.Compiler.Text.ISourceText;
 
 namespace CoCo.Analyser.Classifications.FSharp
 {
-    internal sealed class SourceTextWrapper : FSharpISourceText
+    internal sealed class SourceTextWrapper : IFSharpSourceText
     {
         private readonly SourceText sourceText;
 
@@ -17,7 +17,7 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         public int Length => sourceText.Length;
 
-        public bool ContentEquals(FSharpISourceText sourceText) =>
+        public bool ContentEquals(IFSharpSourceText sourceText) =>
             sourceText is SourceTextWrapper wrapper && wrapper.sourceText.ContentEquals(this.sourceText);
 
         public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) =>
