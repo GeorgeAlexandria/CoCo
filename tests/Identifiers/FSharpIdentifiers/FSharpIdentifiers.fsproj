@@ -45,6 +45,10 @@
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="packages.config" />
     <Compile Include="Declarations\Members\AutoPropertyWithWildIdentifier.fs" />
+    <Compile Include="Declarations\Members\AutoPropertyWithSelfIdentifier.fs" />
+    <Compile Include="Declarations\Members\AutoPropertyWithPrimaryCtor.fs" />
+    <Compile Include="Declarations\Members\RecordField.fs" />
+    <Compile Include="Declarations\Members\AbstractProperty.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

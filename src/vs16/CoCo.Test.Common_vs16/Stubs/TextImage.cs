@@ -20,7 +20,7 @@ namespace CoCo.Test.Common
 
         public int Length => _sourceOperand.Length;
 
-        public int LineCount => _sourceOperand.LineBreakCount;
+        public int LineCount => _sourceOperand.LineBreakCount + 1;
 
         public void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count) => throw new NotImplementedException();
 
