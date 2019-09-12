@@ -43,5 +43,14 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Members\AbstractProperty.fs").GetClassifications().AssertContains(
                 FSharpNames.PropertyName.ClassifyAt(85, 5));
         }
+
+        [Test]
+        public void FieldTest()
+        {
+            GetContext(@"Declarations\Members\Field.fs").GetClassifications().AssertContains(
+                FSharpNames.FieldName.ClassifyAt(37, 5),
+                // TODO: classify as mutable field
+                FSharpNames.FieldName.ClassifyAt(66, 11));
+        }
     }
 }

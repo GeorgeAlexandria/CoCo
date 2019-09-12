@@ -123,7 +123,16 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynModuleOrNamespace moduleOrNamespace, Context context)
         {
-            // TODO: Handle moduleOrNamespace as namespace separate
+            var type =
+                moduleOrNamespace.kind.IsDeclaredNamespace ? _namespaceType :
+                moduleOrNamespace.kind.IsNamedModule ? _moduleType :
+                null;
+
+            if (type.IsNotNull())
+            {
+                AddIdents(moduleOrNamespace.longId, type, context);
+            }
+
             foreach (var item in moduleOrNamespace.decls)
             {
                 Visit(item, context);
@@ -235,7 +244,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynMemberDefn.AutoProperty property:
-                    AddIndent(property.ident, _propertyType, context);
+                    AddIdent(property.ident, _propertyType, context);
                     Visit(property.synExpr, context);
                     break;
 
@@ -306,7 +315,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         {
             if (field.Item3.IsSome())
             {
-                AddIndent(field.Item3.Value, _fieldType, context);
+                AddIdent(field.Item3.Value, _fieldType, context);
             }
             Visit(field.Item4, context);
         }
@@ -327,7 +336,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                         case FSharpMemberOrFunctionOrValue some:
                             if (some.IsMember && (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod))
                             {
-                                AddIndent(valSig.ident, _propertyType, context);
+                                AddIdent(valSig.ident, _propertyType, context);
                             }
                             break;
 
@@ -383,7 +392,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 if (use.Symbol is FSharpMemberOrFunctionOrValue some && some.IsMemberThisValue)
                 {
-                    AddIndent(first, _selfIdentifierName, context);
+                    AddIdent(first, _selfIdentifierName, context);
                     idents = idents.Tail;
                 }
             }
@@ -396,7 +405,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     // TODO:
                     if (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod)
                     {
-                        AddIndent(item, _propertyType, context);
+                        AddIdent(item, _propertyType, context);
                     }
                 }
             }
@@ -417,7 +426,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
-        private void AddIndent(Ast.Ident ident, IClassificationType classificationType, Context context)
+        private void AddIdent(Ast.Ident ident, IClassificationType classificationType, Context context)
         {
             var snapshot = context.SnapshotSpan.Snapshot;
             var span = ident.idRange.ToSpan(snapshot);

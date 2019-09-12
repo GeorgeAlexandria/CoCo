@@ -49,6 +49,19 @@
     <Compile Include="Declarations\Members\AutoPropertyWithPrimaryCtor.fs" />
     <Compile Include="Declarations\Members\RecordField.fs" />
     <Compile Include="Declarations\Members\AbstractProperty.fs" />
+    <Compile Include="Declarations\Members\Field.fs" />
+    <Compile Include="Declarations\Types\TopLevelModule.fs" />
+    <Compile Include="Declarations\Types\LocalModule.fs" />
+    <Compile Include="Declarations\Types\NestedModule.fs" />
+    <Compile Include="Declarations\Types\RecursiveModule.fs" />
+    <Compile Include="Declarations\Types\ClassType.fs" />
+    <Compile Include="Declarations\Types\RecursiveClassType.fs" />
+    <Compile Include="Declarations\Types\StructureType.fs" />
+    <Compile Include="Declarations\Types\RecordType.fs" />
+    <Compile Include="Declarations\Types\UnionType.fs" />
+    <Compile Include="Declarations\Namespaces\Simple.fs" />
+    <Compile Include="Declarations\Namespaces\Recursive.fs" />
+    <Compile Include="Declarations\Namespaces\Nested.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
