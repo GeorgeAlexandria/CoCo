@@ -32,7 +32,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 Parent = parent;
             }
 
-            public Context WithParent(object parent) => new Context(Cache, Result, SnapshotSpan, parent);
+            public Context WithParent<T>(T parent) where T : class => new Context(Cache, Result, SnapshotSpan, parent);
         }
 
         private IClassificationType _namespaceType;
@@ -141,7 +141,6 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynModuleDecl moduleDecl, Context context)
         {
-            var snapshot = context.SnapshotSpan.Snapshot;
             switch (moduleDecl)
             {
                 case Ast.SynModuleDecl.Open openSyntax:
@@ -153,7 +152,6 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         foreach (var ident in typeDefinition.Item1.longId)
                         {
-                            var span = ident.idRange.ToSpan(snapshot);
                             // TODO: if the one id from longId was, for example, a class, does it mean that the all id from longId would be a class?
                             if (context.Cache.TryGetValue(ident.idRange, out var symbolUse) && symbolUse.Symbol is FSharpEntity entity)
                             {
@@ -164,9 +162,9 @@ namespace CoCo.Analyser.Classifications.FSharp
                                     entity.IsClass ? _classType :
                                     null;
 
-                                if (!(type is null))
+                                if (type.IsNotNull())
                                 {
-                                    context.Result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), type));
+                                    AddIdent(ident, type, context);
                                 }
                             }
                         }
@@ -203,6 +201,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
+                    Log.Debug("Ast type {0} doesn't support in module declaration", moduleDecl.GetType());
                     break;
             }
         }
@@ -257,6 +256,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
+                    Log.Debug("Ast type {0} doesn't support in member definition", memberDefn.GetType());
                     break;
             }
         }
@@ -277,18 +277,98 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
+                    Log.Debug("Ast type {0} doesn't support in type definition", typeDefnRepr.GetType());
                     break;
             }
         }
 
         private void Visit(Ast.SynType type, Context context)
         {
-            // todo:
+            switch (type)
+            {
+                case Ast.SynType.AnonRecd record:
+                    foreach (var (ident, fieldType) in record.typeNames)
+                    {
+                        AddIdent(ident, _fieldType, context);
+                        Visit(fieldType, context);
+                    }
+                    break;
+
+                case Ast.SynType.Array array:
+                    Visit(array.elementType, context);
+                    break;
+
+                case Ast.SynType.Fun fun:
+                    Visit(fun.argType, context);
+                    Visit(fun.returnType, context);
+                    break;
+
+                case Ast.SynType.LongIdent ident:
+                    foreach (var item in ident.longDotId.Lid)
+                    {
+                        if (context.Cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity)
+                        {
+                            var classification =
+                                entity.IsNamespace ? _namespaceType :
+                                entity.IsFSharpModule ? _moduleType :
+                                entity.IsFSharpRecord ? _recordType :
+                                entity.IsFSharpUnion ? _unionType :
+                                entity.IsValueType ? _structureType :
+                                entity.IsClass ? _classType :
+                                null;
+                            if (classification.IsNotNull())
+                            {
+                                AddIdent(item, classification, context);
+                            }
+                        }
+                    }
+                    break;
+
+                case Ast.SynType.Tuple tuple:
+                    foreach (var (_, typeName) in tuple.typeNames)
+                    {
+                        Visit(typeName, context);
+                    }
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in type", type.GetType());
+                    break;
+            }
         }
 
         private void Visit(Ast.SynTypeDefn typeDef, Context context)
         {
-            // todo:
+            Visit(typeDef.Item1, context);
+            Visit(typeDef.Item2, context);
+
+            foreach (var item in typeDef.members)
+            {
+                Visit(item, context);
+            }
+        }
+
+        private void Visit(Ast.SynComponentInfo componentInfo, Context context)
+        {
+            // TODO: attributes, type parameters
+            foreach (var item in componentInfo.longId)
+            {
+                if (context.Cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity)
+                {
+                    var type =
+                        entity.IsNamespace ? _namespaceType :
+                        entity.IsFSharpModule ? _moduleType :
+                        entity.IsFSharpRecord ? _recordType :
+                        entity.IsFSharpUnion ? _unionType :
+                        entity.IsValueType ? _structureType :
+                        entity.IsClass ? _classType :
+                        null;
+                    if (type.IsNotNull())
+                    {
+                        AddIdent(item, type, context);
+                    }
+                }
+            }
         }
 
         private void Visit(Ast.SynTypeDefnSimpleRepr synTypeDefn, Context context)
@@ -304,16 +384,45 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynTypeDefnSimpleRepr.Union union:
+                    foreach (var item in union.unionCases)
+                    {
+                        Visit(item, context);
+                    }
                     break;
 
                 default:
+                    Log.Debug("Ast type {0} doesn't support in simple type definition", synTypeDefn.GetType());
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynUnionCase unionCase, Context context)
+        {
+            AddIdent(unionCase.ident, _unionType, context);
+            Visit(unionCase.Item3, context);
+        }
+
+        private void Visit(Ast.SynUnionCaseType unionCaseType, Context context)
+        {
+            switch (unionCaseType)
+            {
+                case Ast.SynUnionCaseType.UnionCaseFields unionCaseFields:
+                    foreach (var item in unionCaseFields.cases)
+                    {
+                        Visit(item, context.WithParent(unionCaseFields));
+                    }
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in union case type", unionCaseType.GetType());
                     break;
             }
         }
 
         private void Visit(Ast.SynField field, Context context)
         {
-            if (field.Item3.IsSome())
+            // NOTE: doesn't classify argument in union case declaration
+            if (field.Item3.IsSome() && !(context.Parent is Ast.SynUnionCaseType.UnionCaseFields))
             {
                 AddIdent(field.Item3.Value, _fieldType, context);
             }
@@ -341,6 +450,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                             break;
 
                         default:
+                            Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
                             break;
                     }
                 }
@@ -367,6 +477,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 break;
 
                             default:
+                                Log.Debug("Symbol type {0} doesn't support in pattern", symbolUse.Symbol.GetType());
                                 break;
                         }
                     }
@@ -378,6 +489,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
+                    Log.Debug("Ast type {0} doesn't support in pattern", pattern.GetType());
                     break;
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace CoCo.Utils
 {
@@ -11,5 +12,14 @@ namespace CoCo.Utils
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNotNull<T>(this T obj) where T : class => !(obj is null);
+
+        /// <summary>
+        /// Deconstructs input <paramref name="tuple"/> to (<paramref name="first"/>, <paramref name="second"/>)
+        /// </summary>
+        public static void Deconstruct<K, V>(this Tuple<K, V> tuple, out K first, out V second)
+        {
+            first = tuple.Item1;
+            second = tuple.Item2;
+        }
     }
 }

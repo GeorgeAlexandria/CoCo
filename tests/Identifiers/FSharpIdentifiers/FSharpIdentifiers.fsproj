@@ -59,6 +59,7 @@
     <Compile Include="Declarations\Types\StructureType.fs" />
     <Compile Include="Declarations\Types\RecordType.fs" />
     <Compile Include="Declarations\Types\UnionType.fs" />
+    <Compile Include="Declarations\Types\UnionTypeWithArgument.fs" />
     <Compile Include="Declarations\Namespaces\Simple.fs" />
     <Compile Include="Declarations\Namespaces\Recursive.fs" />
     <Compile Include="Declarations\Namespaces\Nested.fs" />

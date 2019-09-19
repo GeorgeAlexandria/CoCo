@@ -64,7 +64,7 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.RecordName.ClassifyAt(26, 4));
         }
 
-        [Test, Ignore("Union case currently isn't supported")]
+        [Test]
         public void UnionTest()
         {
             GetContext(@"Declarations\Types\UnionType.fs").GetClassifications().AssertContains(
@@ -73,6 +73,16 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.UnionName.ClassifyAt(58, 4),
                 FSharpNames.UnionName.ClassifyAt(66, 4),
                 FSharpNames.UnionName.ClassifyAt(73, 4));
+        }
+
+        [Test]
+        public void UnionTestWithArgument()
+        {
+            // NOTE: check that the argument in union case will not classified
+            GetContext(@"Declarations\Types\UnionTypeWithArgument.fs").GetClassifications().AssertIsEquivalent(
+                FSharpNames.ModuleName.ClassifyAt(7, 21),
+                FSharpNames.UnionName.ClassifyAt(37, 4),
+                FSharpNames.UnionName.ClassifyAt(51, 4));
         }
     }
 }
