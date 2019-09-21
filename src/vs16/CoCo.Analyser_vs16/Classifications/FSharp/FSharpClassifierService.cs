@@ -44,6 +44,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _propertyType;
         private IClassificationType _fieldType;
         private IClassificationType _selfIdentifierName;
+        private IClassificationType _parameterName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -255,8 +256,58 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Visit(slot.Item1, context.WithParent(slot));
                     break;
 
+                case Ast.SynMemberDefn.ImplicitCtor ctor:
+                    Visit(ctor.ctorArgs, context);
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in member definition", memberDefn.GetType());
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynSimplePats simplePats, Context context)
+        {
+            switch (simplePats)
+            {
+                case Ast.SynSimplePats.SimplePats pats:
+                    foreach (var item in pats.Item1)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynSimplePats.Typed typed:
+                    Visit(typed.Item1, context);
+                    Visit(typed.Item2, context);
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in simple pats", simplePats.GetType());
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynSimplePat simplePat, Context  context)
+        {
+            switch (simplePat)
+            {
+                case Ast.SynSimplePat.Id id:
+                    AddIdent(id.ident, _parameterName, context);
+                    break;
+
+                case Ast.SynSimplePat.Attrib attribute:
+                    Visit(attribute.Item1, context);
+                    // TODO: attributes
+                    break;
+
+                case Ast.SynSimplePat.Typed typed:
+                    Visit(typed.Item1, context);
+                    Visit(typed.Item2, context);
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in simple pat", simplePat.GetType());
                     break;
             }
         }
@@ -565,6 +616,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.PropertyName, ref _propertyType);
             InitializeClassification(FSharpNames.FieldName, ref _fieldType);
             InitializeClassification(FSharpNames.SelfIdentifierName, ref _selfIdentifierName);
+            InitializeClassification(FSharpNames.ParameterName, ref _parameterName);
 
             _classifications = builder.TryMoveToImmutable();
         }

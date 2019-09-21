@@ -64,7 +64,7 @@ namespace CoCo.Editor
 
             [FSharpNames.ClassName] = "class name".Enumerate(),
             [FSharpNames.StructureName] = "struct name".Enumerate(),
-            [FSharpNames.UnionName] = "class name".Enumerate(),
+            [FSharpNames.UnionName] = new[] { "class name", "enum name" },
             [FSharpNames.RecordName] = "class name".Enumerate(),
             [FSharpNames.ModuleName] = "module name".Enumerate(),
 
