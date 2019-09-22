@@ -84,5 +84,14 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.UnionName.ClassifyAt(37, 4),
                 FSharpNames.UnionName.ClassifyAt(51, 4));
         }
+
+        [Test]
+        public void EnumTest()
+        {
+            GetContext(@"Declarations\Types\EnumType.fs").GetClassifications().AssertContains(
+                FSharpNames.EnumName.ClassifyAt(24, 5),
+                FSharpNames.EnumFieldName.ClassifyAt(40, 3),
+                FSharpNames.EnumFieldName.ClassifyAt(56, 5));
+        }
     }
 }

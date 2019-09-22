@@ -67,10 +67,12 @@ namespace CoCo.Editor
             [FSharpNames.UnionName] = new[] { "class name", "enum name" },
             [FSharpNames.RecordName] = "class name".Enumerate(),
             [FSharpNames.ModuleName] = "module name".Enumerate(),
+            [FSharpNames.EnumName] = new[] { "enum name", "struct name" },
 
             [FSharpNames.NamespaceName] = "namespace name".Enumerate(),
             [FSharpNames.PropertyName] = new[] { "property name", "FSharp.Property", "static symbol" },
             [FSharpNames.FieldName] = new[] { "field name", "static symbol" },
+            [FSharpNames.EnumFieldName] = new[] { "enum member name", "enum name" },
         };
 
         private static Dictionary<string, string> _nonIdentifierClassifications;
@@ -85,7 +87,7 @@ namespace CoCo.Editor
 
                     _nonIdentifierClassifications = new Dictionary<string, string>();
 
-                    // NOTE: get max priority from all of dependent classifications 
+                    // NOTE: get max priority from all of dependent classifications
                     foreach (var (name, classifications) in _classificationDependents)
                     {
                         var maxPriority = -1;

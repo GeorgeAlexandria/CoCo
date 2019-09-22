@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using CoCo.Utils;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
@@ -45,6 +44,8 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _fieldType;
         private IClassificationType _selfIdentifierName;
         private IClassificationType _parameterName;
+        private IClassificationType _enumType;
+        private IClassificationType _enumFieldName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -159,6 +160,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 var type =
                                     entity.IsFSharpUnion ? _unionType :
                                     entity.IsFSharpRecord ? _recordType :
+                                    entity.IsEnum ? _enumType :
                                     entity.IsValueType ? _structureType :
                                     entity.IsClass ? _classType :
                                     null;
@@ -214,7 +216,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynMemberDefn.Open open:
                     // TODO: what is it case?
                     // AddIdents(open.longId, );
-                    Debug.Fail("");
+                    Log.Debug("Open was met as member definition");
                     break;
 
                 case Ast.SynMemberDefn.LetBindings letBinndings:
@@ -288,7 +290,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
-        private void Visit(Ast.SynSimplePat simplePat, Context  context)
+        private void Visit(Ast.SynSimplePat simplePat, Context context)
         {
             switch (simplePat)
             {
@@ -441,6 +443,13 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynTypeDefnSimpleRepr.Enum @enum:
+                    foreach (var item in @enum.Item1)
+                    {
+                        AddIdent(item.ident, _enumFieldName, context);
+                    }
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in simple type definition", synTypeDefn.GetType());
                     break;
@@ -520,7 +529,8 @@ namespace CoCo.Analyser.Classifications.FSharp
             switch (pattern)
             {
                 case Ast.SynPat.Named nameSyntax:
-                    if (context.Cache.TryGetValue(nameSyntax.range, out var symbolUse))
+                    Visit(nameSyntax.Item1, context);
+                    if (context.Cache.TryGetValue(nameSyntax.Item2.idRange, out var symbolUse))
                     {
                         switch (symbolUse.Symbol)
                         {
@@ -537,6 +547,37 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynPat.LongIdent longIndent:
                     // TODO: what's about another items?
                     Visit(longIndent.longDotId, context);
+                    break;
+
+                case Ast.SynPat.Ands ands:
+                    foreach (var item in ands.Item1)
+                    {
+                        Visit(item, context);
+                    }
+                    break;
+
+                case Ast.SynPat.IsInst isInst:
+                    Visit(isInst, context);
+                    break;
+
+                case Ast.SynPat.Or or:
+                    Visit(or.Item1, context);
+                    Visit(or.Item2, context);
+                    break;
+
+                case Ast.SynPat.Paren paren:
+                    Visit(paren.Item1, context);
+                    break;
+
+                case Ast.SynPat.QuoteExpr quoteExpr:
+                    Visit(quoteExpr.Item1, context);
+                    break;
+
+                case Ast.SynPat.Tuple tuple:
+                    foreach (var item in tuple.Item2)
+                    {
+                        Visit(item, context);
+                    }
                     break;
 
                 default:
@@ -617,6 +658,8 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.FieldName, ref _fieldType);
             InitializeClassification(FSharpNames.SelfIdentifierName, ref _selfIdentifierName);
             InitializeClassification(FSharpNames.ParameterName, ref _parameterName);
+            InitializeClassification(FSharpNames.EnumName, ref _enumType);
+            InitializeClassification(FSharpNames.EnumFieldName, ref _enumFieldName);
 
             _classifications = builder.TryMoveToImmutable();
         }
