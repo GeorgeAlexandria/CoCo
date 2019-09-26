@@ -534,7 +534,11 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         switch (symbolUse.Symbol)
                         {
-                            case FSharpMemberOrFunctionOrValue memberOrFunctionOrValue:
+                            case FSharpMemberOrFunctionOrValue some:
+                                if (IsParameter(some, context))
+                                {
+                                    AddIdent(nameSyntax.Item2, _parameterName, context);
+                                }
                                 break;
 
                             default:
@@ -546,6 +550,19 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynPat.LongIdent longIndent:
                     // TODO: what's about another items?
+                    switch (longIndent.Item4)
+                    {
+                        case Ast.SynConstructorArgs.Pats pats:
+                            foreach (var item in pats.Item)
+                            {
+                                Visit(item, context.WithParent(pats));
+                            }
+                            break;
+
+                        default:
+                            Log.Debug("Ast type {0} doesn't support in constructor args", longIndent.Item4.GetType());
+                            break;
+                    }
                     Visit(longIndent.longDotId, context);
                     break;
 
@@ -578,6 +595,11 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         Visit(item, context);
                     }
+                    break;
+
+                case Ast.SynPat.Typed typed:
+                    Visit(typed.Item1, context);
+                    Visit(typed.Item2, context);
                     break;
 
                 default:
@@ -619,6 +641,10 @@ namespace CoCo.Analyser.Classifications.FSharp
         {
             // TODO:
         }
+
+        // TODO:
+        private bool IsParameter(FSharpMemberOrFunctionOrValue some, Context context) =>
+            some.IsValue && context.Parent is Ast.SynConstructorArgs;
 
         private void AddIdents<T>(T longIds, IClassificationType classificationType, Context context) where T : IEnumerable<Ast.Ident>
         {

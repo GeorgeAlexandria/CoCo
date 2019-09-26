@@ -65,6 +65,9 @@
     <Compile Include="Declarations\Namespaces\Recursive.fs" />
     <Compile Include="Declarations\Namespaces\Nested.fs" />
     <Compile Include="Declarations\Parameters\ImplicitCtorParams.fs" />
+    <Compile Include="Declarations\Parameters\ModuleFunctionParams.fs" />
+    <Compile Include="Declarations\Parameters\TypeFunctionParams.fs" />
+    <Compile Include="Declarations\Parameters\TypeMethodParams.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
