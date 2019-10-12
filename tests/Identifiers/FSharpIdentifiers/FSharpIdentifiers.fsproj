@@ -68,6 +68,8 @@
     <Compile Include="Declarations\Parameters\ModuleFunctionParams.fs" />
     <Compile Include="Declarations\Parameters\TypeFunctionParams.fs" />
     <Compile Include="Declarations\Parameters\TypeMethodParams.fs" />
+    <Compile Include="Access\Parameters\ImplicitCtorParams.fs" />
+    <Compile Include="Access\Parameters\ImplicitCtorParamsShadowing.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
