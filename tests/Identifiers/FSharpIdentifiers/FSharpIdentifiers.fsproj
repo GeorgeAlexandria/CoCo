@@ -70,6 +70,9 @@
     <Compile Include="Declarations\Parameters\TypeMethodParams.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParams.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParamsShadowing.fs" />
+    <Compile Include="Access\Parameters\FunctionParams.fs" />
+    <Compile Include="Access\Parameters\MethodParams.fs" />
+    <Compile Include="Access\Parameters\LambdaExpressionParams.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

@@ -712,6 +712,21 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Visit(letOrUse.body);
                     break;
 
+                case Ast.SynExpr.Typed typed:
+                    Visit(typed.typeName);
+                    Visit(typed.expr);
+                    break;
+
+                case Ast.SynExpr.Lambda lambda:
+                    Visit(lambda.args);
+                    Visit(lambda.body);
+                    break;
+
+                case Ast.SynExpr.App app:
+                    Visit(app.argExpr);
+                    Visit(app.funcExpr);
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in expression", expression.GetType());
                     break;

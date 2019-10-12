@@ -20,10 +20,34 @@ namespace CoCo.Test.FSharpIdentifiers.Access
             var classifications = GetContext(@"Access\Parameters\ImplicitCtorParamsShadowing.fs").GetClassifications();
             classifications.AssertContains(
                 FSharpNames.ParameterName.ClassifyAt(99, 3),
-                FSharpNames.ParameterName.ClassifyAt(132, 3),
-                FSharpNames.ParameterName.ClassifyAt(249, 1));
+                FSharpNames.ParameterName.ClassifyAt(132, 3));
 
             classifications.AssertNotContains(FSharpNames.ParameterName.ClassifyAt(199, 3));
+        }
+
+        [Test]
+        public void FunctionParameterTest()
+        {
+            GetContext(@"Access\Parameters\FunctionParams.fs").GetClassifications().AssertContains(
+               FSharpNames.ParameterName.ClassifyAt(58, 3),
+               FSharpNames.ParameterName.ClassifyAt(136, 3),
+               FSharpNames.LocalBindingValueName.ClassifyAt(71, 3),
+               FSharpNames.ParameterName.ClassifyAt(201, 3));
+        }
+
+        [Test]
+        public void MethodParameterTest()
+        {
+            GetContext(@"Access\Parameters\MethodParams.fs").GetClassifications().AssertContains(
+               FSharpNames.ParameterName.ClassifyAt(81, 3),
+               FSharpNames.LocalBindingValueName.ClassifyAt(98, 3));
+        }
+
+        [Test]
+        public void LambdaExpressionParamTest()
+        {
+            GetContext(@"Access\Parameters\LambdaExpressionParams.fs").GetClassifications().AssertContains(
+               FSharpNames.ParameterName.ClassifyAt(52, 3));
         }
     }
 }
