@@ -42,6 +42,9 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _enumType;
         private IClassificationType _enumFieldName;
         private IClassificationType _localBindingValueName;
+        private IClassificationType _moduleFunctionName;
+        private IClassificationType _methodName;
+        private IClassificationType _staticMethodName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -681,9 +684,16 @@ namespace CoCo.Analyser.Classifications.FSharp
                 if (_cache.TryGetValue(item.idRange, out use) && use.Symbol is FSharpMemberOrFunctionOrValue some)
                 {
                     // TODO:
-                    if (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod)
+                    var classification =
+                        some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                        some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
+                        some.IsMember && some.FullType.IsFunctionType ? _staticMethodName :
+                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
+                        null;
+
+                    if (classification.IsNotNull())
                     {
-                        AddIdent(item, _propertyType);
+                        AddIdent(item, classification);
                     }
                 }
             }
@@ -782,6 +792,9 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.EnumName, ref _enumType);
             InitializeClassification(FSharpNames.EnumFieldName, ref _enumFieldName);
             InitializeClassification(FSharpNames.LocalBindingValueName, ref _localBindingValueName);
+            InitializeClassification(FSharpNames.ModuleFunctionName, ref _moduleFunctionName);
+            InitializeClassification(FSharpNames.MethodName, ref _methodName);
+            InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodName);
 
             _classifications = builder.TryMoveToImmutable();
         }
