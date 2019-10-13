@@ -23,6 +23,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         public const string ModuleFunctionName = "CoCo fsharp module function name";
         public const string MethodName = "CoCo fsharp method name";
         public const string StaticMethodName = "CoCo fsharp static method name";
+        public const string ExtensionMethodName = "CoCo fsharp extension method name";
 
         private static ImmutableArray<string> _all;
 
@@ -52,6 +53,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 builder.Add(ModuleFunctionName);
                 builder.Add(MethodName);
                 builder.Add(StaticMethodName);
+                builder.Add(ExtensionMethodName);
 
                 return _all = builder.TryMoveToImmutable();
             }

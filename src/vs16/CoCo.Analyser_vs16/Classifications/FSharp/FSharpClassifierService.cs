@@ -45,6 +45,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _moduleFunctionName;
         private IClassificationType _methodName;
         private IClassificationType _staticMethodName;
+        private IClassificationType _extensionMethodName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -686,6 +687,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                     // TODO:
                     var classification =
                         some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                        some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodName :
+                        IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodName :
                         some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
                         some.IsMember && some.FullType.IsFunctionType ? _staticMethodName :
                         some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
@@ -768,6 +771,21 @@ namespace CoCo.Analyser.Classifications.FSharp
             _result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
         }
 
+        private bool IsExtension(FSharpMemberOrFunctionOrValue some)
+        {
+            bool HasExtensionAttribute(IEnumerable<FSharpAttribute> attributes)
+            {
+                foreach (var item in attributes)
+                {
+                    if (item.AttributeType.FullName.EqualsNoCase("System.Runtime.CompilerServices.ExtensionAttribute")) return true;
+                }
+                return false;
+            }
+
+            return HasExtensionAttribute(some.Attributes) && some.DeclaringEntity.IsSome() && 
+                HasExtensionAttribute(some.DeclaringEntity.Value.Attributes);
+        }
+
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
             var builder = ImmutableArray.CreateBuilder<IClassificationType>(7);
@@ -795,6 +813,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.ModuleFunctionName, ref _moduleFunctionName);
             InitializeClassification(FSharpNames.MethodName, ref _methodName);
             InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodName);
+            InitializeClassification(FSharpNames.ExtensionMethodName, ref _extensionMethodName);
 
             _classifications = builder.TryMoveToImmutable();
         }

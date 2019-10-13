@@ -26,5 +26,26 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Methods\StaticMethod.fs").GetClassifications().AssertContains(
                 FSharpNames.StaticMethodName.ClassifyAt(56, 3));
         }
+
+        [Test, Ignore("Classify as extension or as regular?")]
+        public void IntrinsicExtensionMethodTest()
+        {
+            GetContext(@"Declarations\Methods\IntrinsicExtensionMethod.fs").GetClassifications().AssertContains(
+                FSharpNames.StaticMethodName.ClassifyAt(56, 3));
+        }
+
+        [Test]
+        public void OptionalExtensionMethodTest()
+        {
+            GetContext(@"Declarations\Methods\OptionalExtensionMethod.fs").GetClassifications().AssertContains(
+                FSharpNames.ExtensionMethodName.ClassifyAt(97, 3));
+        }
+
+        [Test]
+        public void ExtensionMethodTest()
+        {
+            GetContext(@"Declarations\Methods\ExtensionMethod.fs").GetClassifications().AssertContains(
+                FSharpNames.ExtensionMethodName.ClassifyAt(167, 4));
+        }
     }
 }

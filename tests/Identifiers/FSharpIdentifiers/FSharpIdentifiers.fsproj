@@ -71,6 +71,9 @@
     <Compile Include="Declarations\Methods\ModuleFunction.fs" />
     <Compile Include="Declarations\Methods\Method.fs" />
     <Compile Include="Declarations\Methods\StaticMethod.fs" />
+    <Compile Include="Declarations\Methods\IntrinsicExtensionMethod.fs" />
+    <Compile Include="Declarations\Methods\OptionalExtensionMethod.fs" />
+    <Compile Include="Declarations\Methods\ExtensionMethod.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParams.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParamsShadowing.fs" />
     <Compile Include="Access\Parameters\FunctionParams.fs" />
