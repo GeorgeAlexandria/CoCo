@@ -1,5 +1,11 @@
 # Release notes
 
+## 3.2.2
+
+**2019-10-26**
+
+- [x] Fix issue [#67](https://github.com/GeorgeAlexandria/CoCo/issues/67) – fix classifications when solution, project, source code files or configurations were changed
+
 ## 3.2.1
 
 **2019-08-31**
