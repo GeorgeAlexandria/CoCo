@@ -19,7 +19,6 @@ namespace CoCo.Analyser.Editor
 
         private static readonly List<ClassificationSpan> _emptyClassifications = new List<ClassificationSpan>();
 
-        private SemanticModel _semanticModel;
         private bool _isEnable;
 
         protected RoslynTextBufferClassifier()
@@ -40,7 +39,6 @@ namespace CoCo.Analyser.Editor
             _editorChangingService = editorChangingService;
 
             _editorChangingService.EditorOptionsChanged += OnEditorOptionsChanged;
-            _textBuffer.Changed += OnTextBufferChanged;
             _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
         }
 
@@ -70,9 +68,22 @@ namespace CoCo.Analyser.Editor
                 return _emptyClassifications;
             }
 
-            var document = workspace.GetDocument(span.Snapshot.AsText());
-            var semanticModel = _semanticModel ?? (_semanticModel = document.GetSemanticModelAsync().Result);
+            // NOTE: to use the previously classified result as a cached result classifier must correctly determine
+            // when it can use it or not. To correctly determine it, classifier must handle all bellow events:
+            //
+            // * All source code files changing
+            // * Source file appending/removing/including/excluding to projects
+            // * All project files changing
+            // * Project file appending/removing/including/excluding to solution
+            // * Solution changing
+            // * Solution/projects current configuration changing
+            //
+            // because all of them may affect to a semantic model of code. Subscribing and unsubscribing on all of them is expensive
+            // and all of them are raised very often that make subscribing non effective. So much better way
+            // is the get actual data to the everyone requests
 
+            var document = workspace.GetDocument(span.Snapshot.AsText());
+            var semanticModel = document.GetSemanticModelAsync().Result;
             return GetClassificationSpans(workspace, semanticModel, span);
         }
 
@@ -82,8 +93,6 @@ namespace CoCo.Analyser.Editor
             Workspace workspace, SemanticModel semanticModel, SnapshotSpan span);
 
         protected abstract string Language { get; }
-
-        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e) => _semanticModel = null;
 
         private void OnEditorOptionsChanged(EditorChangedEventArgs args)
         {
@@ -103,8 +112,6 @@ namespace CoCo.Analyser.Editor
         {
             if (e.TextDocument.TextBuffer == _textBuffer)
             {
-                _semanticModel = null;
-                _textBuffer.Changed -= OnTextBufferChanged;
                 _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
                 _editorChangingService.EditorOptionsChanged -= OnEditorOptionsChanged;
             }
