@@ -684,7 +684,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 if (_cache.TryGetValue(item.idRange, out use) && use.Symbol is FSharpMemberOrFunctionOrValue some)
                 {
-                    // TODO:
+                    // TODO: fields?
                     var classification =
                         some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
                         some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodName :
@@ -740,8 +740,344 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Visit(app.funcExpr);
                     break;
 
+                case Ast.SynExpr.DotSet dotSet:
+                    Visit(dotSet.Item1);
+                    Visit(dotSet.longDotId);
+                    Visit(dotSet.Item3);
+                    break;
+
+                case Ast.SynExpr.DotIndexedGet indexedGet:
+                    Visit(indexedGet.Item1);
+                    foreach (var item in indexedGet.Item2)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.DotIndexedSet indexedSet:
+                    Visit(indexedSet.objectExpr);
+                    foreach (var item in indexedSet.indexExprs)
+                    {
+                        Visit(item);
+                    }
+                    Visit(indexedSet.valueExpr);
+                    break;
+
+                case Ast.SynExpr.Set set:
+                    Visit(set.Item1);
+                    Visit(set.Item2);
+                    break;
+
+                case Ast.SynExpr.NamedIndexedPropertySet namedSet:
+                    Visit(namedSet.longDotId);
+                    Visit(namedSet.Item2);
+                    Visit(namedSet.Item3);
+                    break;
+
+                case Ast.SynExpr.DotNamedIndexedPropertySet dotNamedSet:
+                    Visit(dotNamedSet.longDotId);
+                    Visit(dotNamedSet.Item1);
+                    Visit(dotNamedSet.Item3);
+                    Visit(dotNamedSet.Item4);
+                    break;
+
+                case Ast.SynExpr.TypeTest typeTest:
+                    Visit(typeTest.expr);
+                    Visit(typeTest.typeName);
+                    break;
+
+                case Ast.SynExpr.Upcast upcast:
+                    Visit(upcast.expr);
+                    Visit(upcast.typeName);
+                    break;
+
+                case Ast.SynExpr.Downcast downcast:
+                    Visit(downcast.expr);
+                    Visit(downcast.typeName);
+                    break;
+
+                case Ast.SynExpr.InferredUpcast inferredUpcast:
+                    Visit(inferredUpcast.expr);
+                    break;
+
+                case Ast.SynExpr.InferredDowncast inferredDowncast:
+                    Visit(inferredDowncast.expr);
+                    break;
+
+                case Ast.SynExpr.AddressOf addresOf:
+                    Visit(addresOf.Item2);
+                    break;
+
+                case Ast.SynExpr.JoinIn joinIn:
+                    Visit(joinIn.Item1);
+                    Visit(joinIn.Item3);
+                    break;
+
+                case Ast.SynExpr.YieldOrReturn yieldOrReturn:
+                    Visit(yieldOrReturn.expr);
+                    break;
+
+                case Ast.SynExpr.YieldOrReturnFrom yieldOrReturnFrom:
+                    Visit(yieldOrReturnFrom.expr);
+                    break;
+
+                case Ast.SynExpr.LetOrUseBang letBang:
+                    Visit(letBang.Item4);
+                    Visit(letBang.Item5);
+                    Visit(letBang.Item6);
+                    break;
+
+                case Ast.SynExpr.MatchBang matchBang:
+                    Visit(matchBang.expr);
+                    foreach (var item in matchBang.clauses)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.DoBang doBang:
+                    Visit(doBang.expr);
+                    break;
+
+                case Ast.SynExpr.DotGet dotGet:
+                    Visit(dotGet.expr);
+                    Visit(dotGet.longDotId);
+                    break;
+
+                case Ast.SynExpr.TraitCall traitCall:
+                    foreach (var item in traitCall.Item1)
+                    {
+                        Visit(item);
+                    }
+                    Visit(traitCall.Item2);
+                    Visit(traitCall.Item3);
+                    break;
+
+                case Ast.SynExpr.LongIdentSet identSet:
+                    Visit(identSet.longDotId);
+                    Visit(identSet.expr);
+                    break;
+
+                case Ast.SynExpr.Paren paren:
+                    Visit(paren.expr);
+                    break;
+
+                case Ast.SynExpr.Quote quote:
+                    Visit(quote.@operator);
+                    Visit(quote.quotedSynExpr);
+                    break;
+
+                case Ast.SynExpr.Tuple tuple:
+                    foreach (var item in tuple.exprs)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.AnonRecd anonRecord:
+                    // TODO: what is copy info?
+                    foreach (var (field, expr) in anonRecord.recordFields)
+                    {
+                        AddIdent(field, _fieldType);
+                        Visit(expr);
+                    }
+                    break;
+
+                case Ast.SynExpr.ArrayOrList arrayOrList:
+                    foreach (var item in arrayOrList.exprs)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.Record record:
+                    foreach (var ((ident, _), expr, _) in record.recordFields)
+                    {
+                        // TODO: classify them as fields
+                        Visit(ident);
+                        if (expr.IsSome())
+                        {
+                            Visit(expr.Value);
+                        }
+                    }
+                    break;
+
+                case Ast.SynExpr.New @new:
+                    Visit(@new.typeName);
+                    Visit(@new.expr);
+                    break;
+
+                case Ast.SynExpr.ObjExpr objExpr:
+                    Visit(objExpr.objType);
+                    // TODO: argoptions?
+                    foreach (var item in objExpr.bindings)
+                    {
+                        Visit(item);
+                    }
+                    foreach (var item in objExpr.extraImpls)
+                    {
+                        Visit(item.Item1);
+                        foreach (var binding in item.Item2)
+                        {
+                            Visit(binding);
+                        }
+                    }
+                    break;
+
+                case Ast.SynExpr.While @while:
+                    Visit(@while.whileExpr);
+                    Visit(@while.doExpr);
+                    break;
+
+                case Ast.SynExpr.For @for:
+                    AddIdent(@for.ident, _localBindingValueName);
+                    Visit(@for.identBody);
+                    Visit(@for.toBody);
+                    Visit(@for.doBody);
+                    break;
+
+                case Ast.SynExpr.ForEach @foreach:
+                    Visit(@foreach.pat);
+                    Visit(@foreach.enumExpr);
+                    Visit(@foreach.bodyExpr);
+                    break;
+
+                case Ast.SynExpr.LongIdent longIdent:
+                    // TODO: altNameRefCell?
+                    Visit(longIdent.longDotId);
+                    break;
+
+                case Ast.SynExpr.ArrayOrListOfSeqExpr some:
+                    Visit(some.expr);
+                    break;
+
+                case Ast.SynExpr.MatchLambda lambda:
+                    foreach (var item in lambda.Item3)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.Match match:
+                    Visit(match.expr);
+                    foreach (var item in match.clauses)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.Do @do:
+                    Visit(@do.expr);
+                    break;
+
+                case Ast.SynExpr.Assert assert:
+                    Visit(assert.expr);
+                    break;
+
+                case Ast.SynExpr.TryWith tryWith:
+                    Visit(tryWith.tryExpr);
+                    foreach (var item in tryWith.withCases)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynExpr.TryFinally tryFinally:
+                    Visit(tryFinally.tryExpr);
+                    Visit(tryFinally.finallyExpr);
+                    break;
+
+                case Ast.SynExpr.Lazy lazy:
+                    Visit(lazy.Item1);
+                    break;
+
+                case Ast.SynExpr.Sequential sequential:
+                    Visit(sequential.expr1);
+                    Visit(sequential.expr2);
+                    break;
+
+                case Ast.SynExpr.IfThenElse ifThenElse:
+                    Visit(ifThenElse.ifExpr);
+                    Visit(ifThenElse.thenExpr);
+                    if (ifThenElse.elseExpr.IsSome())
+                    {
+                        Visit(ifThenElse.elseExpr.Value);
+                    }
+                    break;
+
+                case Ast.SynExpr.CompExpr comp:
+                    Visit(comp.expr);
+                    break;
+
+                case Ast.SynExpr.Fixed @fixed:
+                    Visit(@fixed);
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in expression", expression.GetType());
+                    break;
+            }
+        }
+
+        private void Visit(Ast.SynTypar synTypar)
+        {
+            if (_cache.TryGetValue(synTypar.ident.idRange, out var use) && use.Symbol is FSharpEntity entity)
+            {
+                var type =
+                    entity.IsNamespace ? _namespaceType :
+                    entity.IsFSharpModule ? _moduleType :
+                    entity.IsFSharpRecord ? _recordType :
+                    entity.IsFSharpUnion ? _unionType :
+                    entity.IsValueType ? _structureType :
+                    entity.IsClass ? _classType :
+                    null;
+                if (type.IsNotNull())
+                {
+                    AddIdent(synTypar.ident, type);
+                    return;
+                }
+            }
+            Log.Debug("Ast type {0} wasn't handled as typar", synTypar.GetType());
+        }
+
+        private void Visit(Ast.SynMemberSig memberSig)
+        {
+            Log.Debug("Ast type {0} doesn't support in member sig", memberSig.GetType());
+        }
+
+        private void Visit(Ast.SynMatchClause clause)
+        {
+            Visit(clause.Item1);
+            if (clause.whenExpr.IsSome())
+            {
+                Visit(clause.whenExpr.Value);
+            }
+            Visit(clause.Item3);
+        }
+
+        private void Visit(Ast.SynIndexerArg arg)
+        {
+            switch (arg)
+            {
+                case Ast.SynIndexerArg.One one:
+                    foreach (var item in one.Exprs)
+                    {
+                        Visit(item);
+                    }
+                    Visit(one.Item);
+                    break;
+
+                case Ast.SynIndexerArg.Two two:
+                    foreach (var item in two.Exprs)
+                    {
+                        Visit(item);
+                    }
+                    Visit(two.Item1);
+                    Visit(two.Item2);
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in indexer arg", arg.GetType());
                     break;
             }
         }
@@ -782,7 +1118,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 return false;
             }
 
-            return HasExtensionAttribute(some.Attributes) && some.DeclaringEntity.IsSome() && 
+            return HasExtensionAttribute(some.Attributes) && some.DeclaringEntity.IsSome() &&
                 HasExtensionAttribute(some.DeclaringEntity.Value.Attributes);
         }
 
