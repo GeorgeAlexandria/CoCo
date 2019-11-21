@@ -46,6 +46,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _methodName;
         private IClassificationType _staticMethodName;
         private IClassificationType _extensionMethodName;
+        private IClassificationType _moduleBindingValue;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -566,7 +567,12 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynBinding binding)
         {
+            // TODO: context should be reset by per function. Is it must be here?
+            var oldContext = _context;
+            _context = _context.WithParent(binding);
             Visit(binding.headPat);
+            _context = oldContext.WithParams(_context.Params);
+
             Visit(binding.expr);
         }
 
@@ -592,6 +598,23 @@ namespace CoCo.Analyser.Classifications.FSharp
                                     _context = _context.WithParams(_context.Params.Remove(some.LogicalName));
                                     AddIdent(nameSyntax.Item2, _localBindingValueName);
                                 }
+                                else
+                                {
+                                    // TODO: another types
+                                    var classification =
+                                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
+                                        some.IsModuleValueOrMember ? _moduleBindingValue :
+                                        some.FullType.IsFunctionType ? _localBindingValueName :
+                                        some.IsValue ? _localBindingValueName :
+                                        null;
+
+                                    if (classification.IsNotNull())
+                                    {
+                                        AddIdent(nameSyntax.Item2, classification);
+                                        break;
+                                    }
+                                    Log.Debug("Symbol type {0} doesn't support in pattern", symbolUse.Symbol.GetType());
+                                }
                                 break;
 
                             default:
@@ -606,8 +629,15 @@ namespace CoCo.Analyser.Classifications.FSharp
                     switch (longIndent.Item4)
                     {
                         case Ast.SynConstructorArgs.Pats pats:
+                            var isParentSynBinding = _context.Parent is Ast.SynBinding;
                             foreach (var item in pats.Item)
                             {
+                                if (!isParentSynBinding)
+                                {
+                                    Visit(item);
+                                    continue;
+                                }
+
                                 var oldContext = _context;
                                 _context = _context.WithParent(pats);
                                 Visit(item);
@@ -630,7 +660,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynPat.IsInst isInst:
-                    Visit(isInst);
+                    Visit(isInst.Item1);
                     break;
 
                 case Ast.SynPat.Or or:
@@ -692,6 +722,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                         some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
                         some.IsMember && some.FullType.IsFunctionType ? _staticMethodName :
                         some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
+                        some.FullType.IsFunctionType ? _localBindingValueName :
                         null;
 
                     if (classification.IsNotNull())
@@ -713,6 +744,10 @@ namespace CoCo.Analyser.Classifications.FSharp
                         if (use.Symbol is FSharpMemberOrFunctionOrValue some && IsParameterByUse(some))
                         {
                             AddIdent(ident.Item, _parameterName);
+                        }
+                        else
+                        {
+                            Log.Debug("Symbol type {0} doesn't support in ident expression", use.Symbol.GetType());
                         }
                     }
                     break;
@@ -1150,6 +1185,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.MethodName, ref _methodName);
             InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodName);
             InitializeClassification(FSharpNames.ExtensionMethodName, ref _extensionMethodName);
+            InitializeClassification(FSharpNames.ModuleBindingValueName, ref _moduleBindingValue);
 
             _classifications = builder.TryMoveToImmutable();
         }
