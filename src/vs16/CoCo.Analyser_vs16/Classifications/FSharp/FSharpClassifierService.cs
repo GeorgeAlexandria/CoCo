@@ -551,9 +551,18 @@ namespace CoCo.Analyser.Classifications.FSharp
                     switch (use.Symbol)
                     {
                         case FSharpMemberOrFunctionOrValue some:
-                            if (some.IsMember && (some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod))
+                            var classification =
+                                some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
+                                null;
+
+                            if (classification.IsNotNull())
                             {
-                                AddIdent(valSig.ident, _propertyType);
+                                AddIdent(valSig.ident, classification);
+                            }
+                            else
+                            {
+                                Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
                             }
                             break;
 

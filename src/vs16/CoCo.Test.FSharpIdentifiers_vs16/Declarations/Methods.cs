@@ -47,5 +47,14 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Methods\ExtensionMethod.fs").GetClassifications().AssertContains(
                 FSharpNames.ExtensionMethodName.ClassifyAt(167, 4));
         }
+
+        [Test]
+        public void VirtualMethodsTest()
+        {
+            GetContext(@"Declarations\Methods\VirtualMethods.fs").GetClassifications().AssertContains(
+                FSharpNames.MethodName.ClassifyAt(79, 3),
+                FSharpNames.MethodName.ClassifyAt(134, 3),
+                FSharpNames.MethodName.ClassifyAt(164, 3));
+        }
     }
 }

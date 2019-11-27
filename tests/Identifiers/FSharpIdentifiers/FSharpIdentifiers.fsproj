@@ -50,6 +50,9 @@
     <Compile Include="Declarations\Members\RecordField.fs" />
     <Compile Include="Declarations\Members\AbstractProperty.fs" />
     <Compile Include="Declarations\Members\Field.fs" />
+    <Compile Include="Declarations\Members\AnonymousRecordField.fs" />
+    <Compile Include="Declarations\Members\Properties.fs" />
+    <Compile Include="Declarations\Members\IndexedProperties.fs" />
     <Compile Include="Declarations\Types\TopLevelModule.fs" />
     <Compile Include="Declarations\Types\LocalModule.fs" />
     <Compile Include="Declarations\Types\NestedModule.fs" />
@@ -74,6 +77,13 @@
     <Compile Include="Declarations\Methods\IntrinsicExtensionMethod.fs" />
     <Compile Include="Declarations\Methods\OptionalExtensionMethod.fs" />
     <Compile Include="Declarations\Methods\ExtensionMethod.fs" />
+    <Compile Include="Declarations\Methods\VirtualMethods.fs" />
+    <Compile Include="Declarations\Locals\LocalValueBinding.fs" />
+    <Compile Include="Declarations\Locals\LocalFunction.fs" />
+    <Compile Include="Declarations\Locals\Match.fs" />
+    <Compile Include="Declarations\Locals\ForValue.fs" />
+    <Compile Include="Declarations\Locals\ForeachValue.fs" />
+    <Compile Include="Declarations\Locals\TryWithValue.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParams.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParamsShadowing.fs" />
     <Compile Include="Access\Parameters\FunctionParams.fs" />

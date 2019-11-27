@@ -52,5 +52,34 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 // TODO: classify as mutable field
                 FSharpNames.FieldName.ClassifyAt(66, 11));
         }
+
+        [Test]
+        public void AnonymousRecordFieldTest()
+        {
+            GetContext(@"Declarations\Members\AnonymousRecordField.fs").GetClassifications().AssertContains(
+                FSharpNames.FieldName.ClassifyAt(45, 5));
+        }
+
+        [Test]
+        public void PropertiesTest()
+        {
+            GetContext(@"Declarations\Members\Properties.fs").GetClassifications().AssertContains(
+                FSharpNames.PropertyName.ClassifyAt(63, 5),
+                FSharpNames.PropertyName.ClassifyAt(194, 5),
+                FSharpNames.PropertyName.ClassifyAt(278, 5),
+                FSharpNames.PropertyName.ClassifyAt(366, 5),
+                FSharpNames.PropertyName.ClassifyAt(445, 5),
+                FSharpNames.PropertyName.ClassifyAt(479, 5),
+                FSharpNames.PropertyName.ClassifyAt(572, 5));
+        }
+
+        [Test]
+        public void IndexedPropertiesTest()
+        {
+            GetContext(@"Declarations\Members\IndexedProperties.fs").GetClassifications().AssertContains(
+                FSharpNames.PropertyName.ClassifyAt(70, 5),
+                FSharpNames.PropertyName.ClassifyAt(218, 5),
+                FSharpNames.PropertyName.ClassifyAt(309, 5));
+        }
     }
 }
