@@ -47,6 +47,9 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _staticMethodName;
         private IClassificationType _extensionMethodName;
         private IClassificationType _moduleBindingValue;
+        private IClassificationType _interfaceType;
+        private IClassificationType _delegateType;
+        private IClassificationType _typeParammeterName;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -172,26 +175,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynModuleDecl.Types typeSyntax:
                     foreach (var typeDefinition in typeSyntax.Item1)
                     {
-                        foreach (var ident in typeDefinition.Item1.longId)
-                        {
-                            // TODO: if the one id from longId was, for example, a class, does it mean that the all id from longId would be a class?
-                            if (_cache.TryGetValue(ident.idRange, out var symbolUse) && symbolUse.Symbol is FSharpEntity entity)
-                            {
-                                var type =
-                                    entity.IsFSharpUnion ? _unionType :
-                                    entity.IsFSharpRecord ? _recordType :
-                                    entity.IsEnum ? _enumType :
-                                    entity.IsValueType ? _structureType :
-                                    entity.IsClass ? _classType :
-                                    null;
-
-                                if (type.IsNotNull())
-                                {
-                                    AddIdent(ident, type);
-                                }
-                            }
-                        }
-
+                        Visit(typeDefinition.Item1);
                         foreach (var item in typeDefinition.members)
                         {
                             Visit(item);
@@ -404,20 +388,10 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynType.LongIdent ident:
                     foreach (var item in ident.longDotId.Lid)
                     {
-                        if (_cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity)
+                        if (_cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity &&
+                            TryClassifyType(entity, out var classificationType))
                         {
-                            var classification =
-                                entity.IsNamespace ? _namespaceType :
-                                entity.IsFSharpModule ? _moduleType :
-                                entity.IsFSharpRecord ? _recordType :
-                                entity.IsFSharpUnion ? _unionType :
-                                entity.IsValueType ? _structureType :
-                                entity.IsClass ? _classType :
-                                null;
-                            if (classification.IsNotNull())
-                            {
-                                AddIdent(item, classification);
-                            }
+                            AddIdent(item, classificationType);
                         }
                     }
                     break;
@@ -451,21 +425,17 @@ namespace CoCo.Analyser.Classifications.FSharp
             // TODO: attributes, type parameters
             foreach (var item in componentInfo.longId)
             {
-                if (_cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity)
+                // TODO: if the one id from longId was, for example, a class, does it mean that the all id from longId would be a class?
+                if (_cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity &&
+                    TryClassifyType(entity, out var type))
                 {
-                    var type =
-                        entity.IsNamespace ? _namespaceType :
-                        entity.IsFSharpModule ? _moduleType :
-                        entity.IsFSharpRecord ? _recordType :
-                        entity.IsFSharpUnion ? _unionType :
-                        entity.IsValueType ? _structureType :
-                        entity.IsClass ? _classType :
-                        null;
-                    if (type.IsNotNull())
-                    {
-                        AddIdent(item, type);
-                    }
+                    AddIdent(item, type);
                 }
+            }
+
+            foreach (var item in componentInfo.typeParams)
+            {
+                Visit(item);
             }
         }
 
@@ -740,6 +710,12 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                 }
             }
+        }
+
+        private void Visit(Ast.SynTyparDecl typarDecl)
+        {
+            // TODO: Attributes
+            Visit(typarDecl.Item2);
         }
 
         private void Visit(Ast.SynExpr expression)
@@ -1065,19 +1041,16 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynTypar synTypar)
         {
-            if (_cache.TryGetValue(synTypar.ident.idRange, out var use) && use.Symbol is FSharpEntity entity)
+            if (_cache.TryGetValue(synTypar.ident.idRange, out var use))
             {
-                var type =
-                    entity.IsNamespace ? _namespaceType :
-                    entity.IsFSharpModule ? _moduleType :
-                    entity.IsFSharpRecord ? _recordType :
-                    entity.IsFSharpUnion ? _unionType :
-                    entity.IsValueType ? _structureType :
-                    entity.IsClass ? _classType :
-                    null;
-                if (type.IsNotNull())
+                if (use.Symbol is FSharpEntity entity && TryClassifyType(entity, out var type))
                 {
                     AddIdent(synTypar.ident, type);
+                    return;
+                }
+                if (use.Symbol is FSharpGenericParameter)
+                {
+                    AddIdent(synTypar.ident, _typeParammeterName);
                     return;
                 }
             }
@@ -1151,6 +1124,23 @@ namespace CoCo.Analyser.Classifications.FSharp
             _result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
         }
 
+        private bool TryClassifyType(FSharpEntity entity, out IClassificationType type)
+        {
+            type =
+                entity.IsNamespace ? _namespaceType :
+                entity.IsFSharpModule ? _moduleType :
+                entity.IsFSharpRecord ? _recordType :
+                entity.IsFSharpUnion ? _unionType :
+                entity.IsInterface ? _interfaceType :
+                entity.IsDelegate ? _delegateType :
+                entity.IsEnum ? _enumType :
+                entity.IsValueType ? _structureType :
+                entity.IsClass ? _classType :
+                null;
+
+            return type.IsNotNull();
+        }
+
         private bool IsExtension(FSharpMemberOrFunctionOrValue some)
         {
             bool HasExtensionAttribute(IEnumerable<FSharpAttribute> attributes)
@@ -1195,6 +1185,9 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodName);
             InitializeClassification(FSharpNames.ExtensionMethodName, ref _extensionMethodName);
             InitializeClassification(FSharpNames.ModuleBindingValueName, ref _moduleBindingValue);
+            InitializeClassification(FSharpNames.InterfaceName, ref _interfaceType);
+            InitializeClassification(FSharpNames.DelegateName, ref _delegateType);
+            InitializeClassification(FSharpNames.TypeParameterName, ref _typeParammeterName);
 
             _classifications = builder.TryMoveToImmutable();
         }

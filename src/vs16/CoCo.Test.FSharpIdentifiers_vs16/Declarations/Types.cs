@@ -93,5 +93,26 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.EnumFieldName.ClassifyAt(40, 3),
                 FSharpNames.EnumFieldName.ClassifyAt(56, 5));
         }
+
+        [Test]
+        public void InterfaceTest()
+        {
+            GetContext(@"Declarations\Types\InterfaceType.fs").GetClassifications().AssertContains(
+                FSharpNames.InterfaceName.ClassifyAt(33, 10));
+        }
+
+        [Test]
+        public void DelegateTest()
+        {
+            GetContext(@"Declarations\Types\DelegateType.fs").GetClassifications().AssertContains(
+                FSharpNames.DelegateName.ClassifyAt(28, 12));
+        }
+
+        [Test]
+        public void TypeParameterTest()
+        {
+            GetContext(@"Declarations\Types\TypeParameterType.fs").GetClassifications().AssertContains(
+                FSharpNames.TypeParameterName.ClassifyAt(38, 7));
+        }
     }
 }
