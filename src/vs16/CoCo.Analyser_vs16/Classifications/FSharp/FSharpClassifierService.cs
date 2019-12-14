@@ -29,6 +29,112 @@ namespace CoCo.Analyser.Classifications.FSharp
             public Context WithParams(ImmutableHashSet<string> @params) => new Context(Parent, @params);
         }
 
+        private class SymbolUseMap
+        {
+            private readonly Dictionary<Range.range, FSharpSymbolUse> _map;
+            private readonly List<Range.range> _ranges;
+
+            public SymbolUseMap(FSharpCheckFileResults checkResults)
+            {
+                SymbolsUse = FSharpAsync.RunSynchronously(checkResults.GetAllUsesOfAllSymbolsInFile(), null, null);
+
+                var capacity = (SymbolsUse.Length >> 1) + 1;
+                _map = new Dictionary<Range.range, FSharpSymbolUse>(capacity);
+                _ranges = new List<Range.range>(capacity);
+                foreach (var use in SymbolsUse)
+                {
+                    if (_map.TryAdd(use.RangeAlternate, use))
+                    {
+                        Insert(_ranges, use.RangeAlternate);
+                        continue;
+                    }
+                    Log.Debug($"Item already exist in the cache by range {use.RangeAlternate}");
+                }
+
+                Log.Debug("Range of usages:");
+                foreach (var item in _ranges)
+                {
+                    Log.Debug(item.ToShortString());
+                }
+            }
+
+            public FSharpSymbolUse[] SymbolsUse { get; }
+
+            private void Insert(List<Range.range> list, Range.range range)
+            {
+                // NOTE: try to keep sorting of items and move to the firstly positions an item that contains another items
+                var left = 0;
+                var right = list.Count - 1;
+                while (left <= right)
+                {
+                    var position = left + ((right - left) >> 1);
+                    var item = list[position];
+                    if (item.Equals(range))
+                    {
+                        list.Insert(position + 1, range);
+                        return;
+                    }
+
+                    if (item.StartLine < range.StartLine || item.StartLine == range.StartLine && item.StartColumn < range.StartColumn)
+                    {
+                        left = position + 1;
+                        continue;
+                    }
+                    right = position - 1;
+                }
+
+                list.Insert(left, range);
+            }
+
+            public bool TryGetValue(Range.range range, out FSharpSymbolUse use)
+            {
+                if (_map.TryGetValue(range, out use))
+                {
+                    return true;
+                }
+
+                Log.Debug("Try to find minimal containing range for {0}", range.ToShortString());
+
+                // NOTE: try to find the minimal range of symboluse that contains input range
+                var left = 0;
+                var right = _ranges.Count - 1;
+                while (left <= right)
+                {
+                    var position = left + ((right - left) >> 1);
+                    var minimalContaining = Range.range.Zero;
+                    var item = Range.range.Zero;
+                    do
+                    {
+                        item = _ranges[position];
+                        if (item.StartLine <= range.StartLine && item.StartColumn <= range.StartColumn &&
+                            item.EndLine >= range.EndLine && item.EndColumn >= range.EndColumn)
+                        {
+                            minimalContaining = item;
+                            ++position;
+                        }
+                        else break;
+                    } while (position <= right);
+
+                    if (!minimalContaining.Equals(Range.range.Zero))
+                    {
+                        Log.Debug("Found range {0}", minimalContaining.ToShortString());
+                        use = _map[minimalContaining];
+                        return true;
+                    }
+
+                    if (item.StartLine < range.StartLine || item.StartLine == range.StartLine && item.StartColumn < range.StartColumn)
+                    {
+                        left = position + 1;
+                        continue;
+                    }
+                    right = position - 1;
+                }
+
+                use = default;
+                return false;
+            }
+        }
+
         private IClassificationType _namespaceType;
         private IClassificationType _classType;
         private IClassificationType _recordType;
@@ -37,19 +143,19 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _structureType;
         private IClassificationType _propertyType;
         private IClassificationType _fieldType;
-        private IClassificationType _selfIdentifierName;
-        private IClassificationType _parameterName;
+        private IClassificationType _selfIdentifierType;
+        private IClassificationType _parameterType;
         private IClassificationType _enumType;
-        private IClassificationType _enumFieldName;
-        private IClassificationType _localBindingValueName;
-        private IClassificationType _moduleFunctionName;
-        private IClassificationType _methodName;
-        private IClassificationType _staticMethodName;
-        private IClassificationType _extensionMethodName;
-        private IClassificationType _moduleBindingValue;
+        private IClassificationType _enumFieldType;
+        private IClassificationType _localBindingValueType;
+        private IClassificationType _moduleFunctionType;
+        private IClassificationType _methodType;
+        private IClassificationType _staticMethodType;
+        private IClassificationType _extensionMethodType;
+        private IClassificationType _moduleBindingType;
         private IClassificationType _interfaceType;
         private IClassificationType _delegateType;
-        private IClassificationType _typeParammeterName;
+        private IClassificationType _typeParameterType;
 
         private static FSharpClassifierService _instance;
         private readonly ClassificationOptions _classificationOptions = new ClassificationOptions();
@@ -59,7 +165,7 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private List<ClassificationSpan> _result;
         private SnapshotSpan _snapshotSpan;
-        private Dictionary<Range.range, FSharpSymbolUse> _cache;
+        private SymbolUseMap _cache;
 
         private FSharpClassifierService(IReadOnlyDictionary<string, ClassificationInfo> classifications)
         {
@@ -72,17 +178,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         public List<ClassificationSpan> GetClassificationSpans(
             FSharpParseFileResults parseResults, FSharpCheckFileResults checkResults, SnapshotSpan span)
         {
-            var symbolsUse = FSharpAsync.RunSynchronously(checkResults.GetAllUsesOfAllSymbolsInFile(), null, null);
-
-            // TODO: would be better to use binary search?
-            var cache = new Dictionary<Range.range, FSharpSymbolUse>(symbolsUse.Length);
-            foreach (var symbolUse in symbolsUse)
-            {
-                if (!cache.TryAdd(symbolUse.RangeAlternate, symbolUse))
-                {
-                    Log.Debug($"Item already exist in the cache by range {symbolUse.RangeAlternate}");
-                }
-            }
+            var cache = new SymbolUseMap(checkResults);
 
             try
             {
@@ -100,7 +196,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
 
                 // TODO: iterate symbols isn't allowed to classify keywords => process untyped AST in the future
-                foreach (var item in symbolsUse)
+                foreach (var item in _cache.SymbolsUse)
                 {
                     var symbol = item.Symbol;
 
@@ -231,12 +327,12 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynMemberDefn.Inherit inherit:
-                    // AddIdents(inherit.Item2, );
+                    // TODO: whats' about AddIdents(inherit.Item2, );
                     Visit(inherit.Item1);
                     break;
 
                 case Ast.SynMemberDefn.ImplicitInherit inherit:
-                    // AddIdents(inherit.inheritAlias, );
+                    // TODO: whats' about AddIdents(inherit.inheritAlias, );
                     Visit(inherit.inheritType);
                     Visit(inherit.inheritArgs);
                     break;
@@ -303,12 +399,15 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 case Ast.SynSimplePat.Id id:
                     _context = _context.WithParams(_context.Params.Add(id.ident.idText));
-                    AddIdent(id.ident, _parameterName);
+                    AddIdent(id.ident, _parameterType);
                     break;
 
                 case Ast.SynSimplePat.Attrib attribute:
                     Visit(attribute.Item1);
-                    // TODO: attributes
+                    foreach (var item in attribute.Item2)
+                    {
+                        Visit(item);
+                    }
                     break;
 
                 case Ast.SynSimplePat.Typed typed:
@@ -422,7 +521,6 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynComponentInfo componentInfo)
         {
-            // TODO: attributes, type parameters
             foreach (var item in componentInfo.longId)
             {
                 // TODO: if the one id from longId was, for example, a class, does it mean that the all id from longId would be a class?
@@ -434,6 +532,11 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
 
             foreach (var item in componentInfo.typeParams)
+            {
+                Visit(item);
+            }
+
+            foreach (var item in componentInfo.attribs)
             {
                 Visit(item);
             }
@@ -461,7 +564,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynTypeDefnSimpleRepr.Enum @enum:
                     foreach (var item in @enum.Item1)
                     {
-                        AddIdent(item.ident, _enumFieldName);
+                        AddIdent(item.ident, _enumFieldType);
                     }
                     break;
 
@@ -523,7 +626,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                         case FSharpMemberOrFunctionOrValue some:
                             var classification =
                                 some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
-                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
+                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
                                 null;
 
                             if (classification.IsNotNull())
@@ -546,6 +649,11 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynBinding binding)
         {
+            foreach (var item in binding.attrs)
+            {
+                Visit(item);
+            }
+
             // TODO: context should be reset by per function. Is it must be here?
             var oldContext = _context;
             _context = _context.WithParent(binding);
@@ -570,21 +678,21 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 if (IsParameterByDefn(some))
                                 {
                                     _context = _context.WithParams(_context.Params.Add(some.LogicalName));
-                                    AddIdent(nameSyntax.Item2, _parameterName);
+                                    AddIdent(nameSyntax.Item2, _parameterType);
                                 }
                                 else if (_context.Params.Contains(some.LogicalName))
                                 {
                                     _context = _context.WithParams(_context.Params.Remove(some.LogicalName));
-                                    AddIdent(nameSyntax.Item2, _localBindingValueName);
+                                    AddIdent(nameSyntax.Item2, _localBindingValueType);
                                 }
                                 else
                                 {
                                     // TODO: another types
                                     var classification =
-                                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
-                                        some.IsModuleValueOrMember ? _moduleBindingValue :
-                                        some.FullType.IsFunctionType ? _localBindingValueName :
-                                        some.IsValue ? _localBindingValueName :
+                                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
+                                        some.IsModuleValueOrMember ? _moduleBindingType :
+                                        some.FullType.IsFunctionType ? _localBindingValueType :
+                                        some.IsValue ? _localBindingValueType :
                                         null;
 
                                     if (classification.IsNotNull())
@@ -683,39 +791,96 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 if (use.Symbol is FSharpMemberOrFunctionOrValue some && some.IsMemberThisValue)
                 {
-                    AddIdent(first, _selfIdentifierName);
+                    AddIdent(first, _selfIdentifierType);
                     idents = idents.Tail;
                 }
             }
 
-            // TODO: if the one id from idents was, for example, a field, does it mean that the all id from idents would be a field?
             foreach (var item in idents)
             {
-                if (_cache.TryGetValue(item.idRange, out use) && use.Symbol is FSharpMemberOrFunctionOrValue some)
+                if (!_cache.TryGetValue(item.idRange, out use))
                 {
+                    Log.Debug("Ident {0} doesn't have any symbol", item);
+                    continue;
+                }
+
+                if (use.Symbol is FSharpMemberOrFunctionOrValue some)
+                {
+                    if (some.IsConstructor)
+                    {
+                        if (TryClassifyType(some.ApparentEnclosingEntity, out var type))
+                        {
+                            AddIdent(item, type);
+                        }
+                        else
+                        {
+                            Log.Debug("FSharpEntity from .ctor isn't classified in long ident with dots");
+                        }
+                        continue;
+                    }
+
                     // TODO: fields?
                     var classification =
                         some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
-                        some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodName :
-                        IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodName :
-                        some.IsInstanceMember && some.FullType.IsFunctionType ? _methodName :
-                        some.IsMember && some.FullType.IsFunctionType ? _staticMethodName :
-                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionName :
-                        some.FullType.IsFunctionType ? _localBindingValueName :
+                        some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodType :
+                        IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodType :
+                        some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
+                        some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
+                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
+                        some.FullType.IsFunctionType ? _localBindingValueType :
                         null;
 
                     if (classification.IsNotNull())
                     {
                         AddIdent(item, classification);
                     }
+                    else
+                    {
+                        Log.Debug("FSharpMemberOrFunctionOrValue isn't classified in long ident with dots");
+                    }
+                }
+                else if (use.Symbol is FSharpEntity entity)
+                {
+                    if (TryClassifyType(entity, out var type))
+                    {
+                        AddIdent(item, type);
+                    }
+                    else
+                    {
+                        Log.Debug("FSharpEntity doesn't classify in long ident with dots");
+                    }
+                }
+                else if (use.Symbol is FSharpField field)
+                {
+                    var type = field.DeclaringEntity.IsSome() && field.DeclaringEntity.Value.IsEnum
+                        ? _enumFieldType
+                        : _fieldType;
+
+                    AddIdent(item, type);
+                }
+                else
+                {
+                    Log.Debug("Symbol type {0} doesn't support in long ident with dots", use.Symbol.GetType());
                 }
             }
         }
 
         private void Visit(Ast.SynTyparDecl typarDecl)
         {
-            // TODO: Attributes
             Visit(typarDecl.Item2);
+            foreach (var item in typarDecl.attributes)
+            {
+                Visit(item);
+            }
+        }
+
+        private void Visit(Ast.SynAttributeList attributeList)
+        {
+            foreach (var attribute in attributeList.Attributes)
+            {
+                Visit(attribute.TypeName);
+                Visit(attribute.ArgExpr);
+            }
         }
 
         private void Visit(Ast.SynExpr expression)
@@ -728,7 +893,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         if (use.Symbol is FSharpMemberOrFunctionOrValue some && IsParameterByUse(some))
                         {
-                            AddIdent(ident.Item, _parameterName);
+                            AddIdent(ident.Item, _parameterType);
                         }
                         else
                         {
@@ -950,7 +1115,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynExpr.For @for:
-                    AddIdent(@for.ident, _localBindingValueName);
+                    AddIdent(@for.ident, _localBindingValueType);
                     Visit(@for.identBody);
                     Visit(@for.toBody);
                     Visit(@for.doBody);
@@ -1050,7 +1215,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
                 if (use.Symbol is FSharpGenericParameter)
                 {
-                    AddIdent(synTypar.ident, _typeParammeterName);
+                    AddIdent(synTypar.ident, _typeParameterType);
                     return;
                 }
             }
@@ -1175,19 +1340,19 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.StructureName, ref _structureType);
             InitializeClassification(FSharpNames.PropertyName, ref _propertyType);
             InitializeClassification(FSharpNames.FieldName, ref _fieldType);
-            InitializeClassification(FSharpNames.SelfIdentifierName, ref _selfIdentifierName);
-            InitializeClassification(FSharpNames.ParameterName, ref _parameterName);
+            InitializeClassification(FSharpNames.SelfIdentifierName, ref _selfIdentifierType);
+            InitializeClassification(FSharpNames.ParameterName, ref _parameterType);
             InitializeClassification(FSharpNames.EnumName, ref _enumType);
-            InitializeClassification(FSharpNames.EnumFieldName, ref _enumFieldName);
-            InitializeClassification(FSharpNames.LocalBindingValueName, ref _localBindingValueName);
-            InitializeClassification(FSharpNames.ModuleFunctionName, ref _moduleFunctionName);
-            InitializeClassification(FSharpNames.MethodName, ref _methodName);
-            InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodName);
-            InitializeClassification(FSharpNames.ExtensionMethodName, ref _extensionMethodName);
-            InitializeClassification(FSharpNames.ModuleBindingValueName, ref _moduleBindingValue);
+            InitializeClassification(FSharpNames.EnumFieldName, ref _enumFieldType);
+            InitializeClassification(FSharpNames.LocalBindingValueName, ref _localBindingValueType);
+            InitializeClassification(FSharpNames.ModuleFunctionName, ref _moduleFunctionType);
+            InitializeClassification(FSharpNames.MethodName, ref _methodType);
+            InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodType);
+            InitializeClassification(FSharpNames.ExtensionMethodName, ref _extensionMethodType);
+            InitializeClassification(FSharpNames.ModuleBindingValueName, ref _moduleBindingType);
             InitializeClassification(FSharpNames.InterfaceName, ref _interfaceType);
             InitializeClassification(FSharpNames.DelegateName, ref _delegateType);
-            InitializeClassification(FSharpNames.TypeParameterName, ref _typeParammeterName);
+            InitializeClassification(FSharpNames.TypeParameterName, ref _typeParameterType);
 
             _classifications = builder.TryMoveToImmutable();
         }

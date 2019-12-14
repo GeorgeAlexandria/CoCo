@@ -92,6 +92,7 @@
     <Compile Include="Access\Parameters\FunctionParams.fs" />
     <Compile Include="Access\Parameters\MethodParams.fs" />
     <Compile Include="Access\Parameters\LambdaExpressionParams.fs" />
+    <Compile Include="Access\Attribute.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">
