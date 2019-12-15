@@ -63,6 +63,17 @@ namespace CoCo.Analyser.Classifications.FSharp
             private void Insert(List<Range.range> list, Range.range range)
             {
                 // NOTE: try to keep sorting of items and move to the firstly positions an item that contains another items
+
+                if (list.Count > 0)
+                {
+                    var last = list[list.Count - 1];
+                    if (last.StartLine < range.StartLine || last.StartLine == range.StartLine && last.StartColumn < range.StartColumn)
+                    {
+                        list.Add(range);
+                        return;
+                    }
+                }
+
                 var left = 0;
                 var right = list.Count - 1;
                 while (left <= right)
@@ -93,34 +104,17 @@ namespace CoCo.Analyser.Classifications.FSharp
                     return true;
                 }
 
+                // NOTE: a couple of entities like property or field access have range that is match a range of receiver and identifier together,
+                // So try to find the minimal range of symboluse that contains input range, to handle such of cases
                 Log.Debug("Try to find minimal containing range for {0}", range.ToShortString());
 
-                // NOTE: try to find the minimal range of symboluse that contains input range
+                // NOTE: firstly, find the first range which start point is more then start point of range
                 var left = 0;
                 var right = _ranges.Count - 1;
                 while (left <= right)
                 {
                     var position = left + ((right - left) >> 1);
-                    var minimalContaining = Range.range.Zero;
-                    var item = Range.range.Zero;
-                    do
-                    {
-                        item = _ranges[position];
-                        if (item.StartLine <= range.StartLine && item.StartColumn <= range.StartColumn &&
-                            item.EndLine >= range.EndLine && item.EndColumn >= range.EndColumn)
-                        {
-                            minimalContaining = item;
-                            ++position;
-                        }
-                        else break;
-                    } while (position <= right);
-
-                    if (!minimalContaining.Equals(Range.range.Zero))
-                    {
-                        Log.Debug("Found range {0}", minimalContaining.ToShortString());
-                        use = _map[minimalContaining];
-                        return true;
-                    }
+                    var item = _ranges[position];
 
                     if (item.StartLine < range.StartLine || item.StartLine == range.StartLine && item.StartColumn < range.StartColumn)
                     {
@@ -128,6 +122,20 @@ namespace CoCo.Analyser.Classifications.FSharp
                         continue;
                     }
                     right = position - 1;
+                }
+
+                // NOTE: secondly, find the minimal range that contains input range and is above of range from step 1
+                var start = left < _ranges.Count - 1 ? left : _ranges.Count - 1;
+                for (int i = start; i >= 0; --i)
+                {
+                    var item = _ranges[i];
+                    if (item.StartLine <= range.StartLine && item.StartColumn <= range.StartColumn &&
+                        item.EndLine >= range.EndLine && item.EndColumn >= range.EndColumn)
+                    {
+                        Log.Debug("Found range {0}", item.ToShortString());
+                        use = _map[item];
+                        return true;
+                    }
                 }
 
                 use = default;
@@ -178,6 +186,8 @@ namespace CoCo.Analyser.Classifications.FSharp
         public List<ClassificationSpan> GetClassificationSpans(
             FSharpParseFileResults parseResults, FSharpCheckFileResults checkResults, SnapshotSpan span)
         {
+            Log.Debug("Classify file {0}...", parseResults.FileName);
+
             var cache = new SymbolUseMap(checkResults);
 
             try
@@ -828,6 +838,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                         some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
                         some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
                         some.FullType.IsFunctionType ? _localBindingValueType :
+                        some.IsValue && IsParameterByUse(some) ? _parameterType :
+                        some.IsValue ? _localBindingValueType :
                         null;
 
                     if (classification.IsNotNull())
