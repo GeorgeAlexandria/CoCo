@@ -275,7 +275,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             switch (moduleDecl)
             {
                 case Ast.SynModuleDecl.Open openSyntax:
-                    AddIdents(openSyntax.longDotId.Lid, _namespaceType);
+                    Visit(openSyntax.longDotId);
                     break;
 
                 case Ast.SynModuleDecl.Types typeSyntax:
@@ -311,6 +311,10 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynModuleDecl.NamespaceFragment fragment:
                     Visit(fragment.Item);
+                    break;
+
+                case Ast.SynModuleDecl.Exception exception:
+                    Visit(exception.Item1);
                     break;
 
                 default:
@@ -495,14 +499,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynType.LongIdent ident:
-                    foreach (var item in ident.longDotId.Lid)
-                    {
-                        if (_cache.TryGetValue(item.idRange, out var use) && use.Symbol is FSharpEntity entity &&
-                            TryClassifyType(entity, out var classificationType))
-                        {
-                            AddIdent(item, classificationType);
-                        }
-                    }
+                    Visit(ident.longDotId);
                     break;
 
                 case Ast.SynType.Tuple tuple:
@@ -552,6 +549,15 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
         }
 
+        private void Visit(Ast.SynExceptionDefn exceptionDefn)
+        {
+            Visit(exceptionDefn.Item1);
+            foreach (var item in exceptionDefn.Item2)
+            {
+                Visit(item);
+            }
+        }
+
         private void Visit(Ast.SynTypeDefnSimpleRepr synTypeDefn)
         {
             // TODO:
@@ -578,15 +584,39 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynTypeDefnSimpleRepr.Exception exception:
+                    Visit(exception.Item);
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in simple type definition", synTypeDefn.GetType());
                     break;
             }
         }
 
+        private void Visit(Ast.SynExceptionDefnRepr defn)
+        {
+            foreach (var item in defn.Item1)
+            {
+                Visit(item);
+            }
+            if (defn.longId.IsSome())
+            {
+                AddIdents(defn.longId.Value, _classType);
+            }
+            Visit(defn.Item2);
+        }
+
         private void Visit(Ast.SynUnionCase unionCase)
         {
-            AddIdent(unionCase.ident, _unionType);
+            var type = _unionType;
+            if (_cache.TryGetValue(unionCase.ident.idRange, out var use) && use.Symbol is FSharpEntity entity &&
+                entity.IsFSharpExceptionDeclaration)
+            {
+                type = _classType;
+            }
+
+            AddIdent(unionCase.ident, type);
             Visit(unionCase.Item3);
         }
 

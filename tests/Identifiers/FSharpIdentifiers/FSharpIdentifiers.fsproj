@@ -67,6 +67,7 @@
     <Compile Include="Declarations\Types\InterfaceType.fs" />
     <Compile Include="Declarations\Types\DelegateType.fs" />
     <Compile Include="Declarations\Types\TypeParameterType.fs" />
+    <Compile Include="Declarations\Types\ExceptionType.fs" />
     <Compile Include="Declarations\Namespaces\Simple.fs" />
     <Compile Include="Declarations\Namespaces\Recursive.fs" />
     <Compile Include="Declarations\Namespaces\Nested.fs" />

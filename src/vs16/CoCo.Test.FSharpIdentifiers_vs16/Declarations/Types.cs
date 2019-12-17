@@ -114,5 +114,12 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Types\TypeParameterType.fs").GetClassifications().AssertContains(
                 FSharpNames.TypeParameterName.ClassifyAt(38, 7));
         }
+
+        [Test]
+        public void ExcceptionTest()
+        {
+            GetContext(@"Declarations\Types\ExceptionType.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(34, 6));
+        }
     }
 }
