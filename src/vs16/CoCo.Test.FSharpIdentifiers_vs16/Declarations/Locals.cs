@@ -33,7 +33,10 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.LocalBindingValueName.ClassifyAt(362, 5),
                 FSharpNames.LocalBindingValueName.ClassifyAt(385, 4),
                 FSharpNames.LocalBindingValueName.ClassifyAt(449, 5),
-                FSharpNames.LocalBindingValueName.ClassifyAt(473, 4));
+                FSharpNames.LocalBindingValueName.ClassifyAt(473, 4),
+                FSharpNames.LocalBindingValueName.ClassifyAt(551, 5),
+                FSharpNames.LocalBindingValueName.ClassifyAt(558, 5),
+                FSharpNames.LocalBindingValueName.ClassifyAt(581, 3));
         }
 
         [Test]

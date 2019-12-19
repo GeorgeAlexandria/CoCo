@@ -76,16 +76,6 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
         }
 
         [Test]
-        public void UnionTestWithArgument()
-        {
-            // NOTE: check that the argument in union case will not classified
-            GetContext(@"Declarations\Types\UnionTypeWithArgument.fs").GetClassifications().AssertIsEquivalent(
-                FSharpNames.ModuleName.ClassifyAt(7, 21),
-                FSharpNames.UnionName.ClassifyAt(37, 4),
-                FSharpNames.UnionName.ClassifyAt(51, 4));
-        }
-
-        [Test]
         public void EnumTest()
         {
             GetContext(@"Declarations\Types\EnumType.fs").GetClassifications().AssertContains(
@@ -120,6 +110,16 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
         {
             GetContext(@"Declarations\Types\ExceptionType.fs").GetClassifications().AssertContains(
                 FSharpNames.ClassName.ClassifyAt(34, 6));
+        }
+
+        [Test]
+        public void AbbreviationTest()
+        {
+            GetContext(@"Declarations\Types\Abbreviation.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(28, 5),
+                FSharpNames.NamespaceName.ClassifyAt(36, 6),
+                FSharpNames.NamespaceName.ClassifyAt(43, 2),
+                FSharpNames.ClassName.ClassifyAt(46, 4));
         }
     }
 }

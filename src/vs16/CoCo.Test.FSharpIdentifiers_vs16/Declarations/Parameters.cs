@@ -37,5 +37,12 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.ParameterName.ClassifyAt(64, 3),
                 FSharpNames.ParameterName.ClassifyAt(120, 3));
         }
+
+        [Test]
+        public void OptionalParameterTest()
+        {
+            GetContext(@"Declarations\Parameters\OptionalParameter.fs").GetClassifications().AssertContains(
+                FSharpNames.ParameterName.ClassifyAt(66, 3));
+        }
     }
 }

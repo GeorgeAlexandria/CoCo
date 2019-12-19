@@ -49,5 +49,12 @@ namespace CoCo.Test.FSharpIdentifiers.Access
             GetContext(@"Access\Parameters\LambdaExpressionParams.fs").GetClassifications().AssertContains(
                FSharpNames.ParameterName.ClassifyAt(52, 3));
         }
+
+        [Test]
+        public void UnionCtorParamTest()
+        {
+            GetContext(@"Access\Parameters\UnionCtorParameter.fs").GetClassifications().AssertContains(
+               FSharpNames.ParameterName.ClassifyAt(119, 5));
+        }
     }
 }

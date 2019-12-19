@@ -23,3 +23,8 @@ let some2 name =
     match name with
     | First(first) -> 0
     | Last(last) -> 5
+
+let ``func3`` (arg:list<int>) =
+    match arg with
+        | [some1; some2] -> 0
+        | any -> 5

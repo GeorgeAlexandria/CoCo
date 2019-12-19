@@ -53,6 +53,7 @@
     <Compile Include="Declarations\Members\AnonymousRecordField.fs" />
     <Compile Include="Declarations\Members\Properties.fs" />
     <Compile Include="Declarations\Members\IndexedProperties.fs" />
+    <Compile Include="Declarations\Members\UnionField.fs" />
     <Compile Include="Declarations\Types\TopLevelModule.fs" />
     <Compile Include="Declarations\Types\LocalModule.fs" />
     <Compile Include="Declarations\Types\NestedModule.fs" />
@@ -62,12 +63,12 @@
     <Compile Include="Declarations\Types\StructureType.fs" />
     <Compile Include="Declarations\Types\RecordType.fs" />
     <Compile Include="Declarations\Types\UnionType.fs" />
-    <Compile Include="Declarations\Types\UnionTypeWithArgument.fs" />
     <Compile Include="Declarations\Types\EnumType.fs" />
     <Compile Include="Declarations\Types\InterfaceType.fs" />
     <Compile Include="Declarations\Types\DelegateType.fs" />
     <Compile Include="Declarations\Types\TypeParameterType.fs" />
     <Compile Include="Declarations\Types\ExceptionType.fs" />
+    <Compile Include="Declarations\Types\Abbreviation.fs" />
     <Compile Include="Declarations\Namespaces\Simple.fs" />
     <Compile Include="Declarations\Namespaces\Recursive.fs" />
     <Compile Include="Declarations\Namespaces\Nested.fs" />
@@ -75,6 +76,7 @@
     <Compile Include="Declarations\Parameters\ModuleFunctionParams.fs" />
     <Compile Include="Declarations\Parameters\TypeFunctionParams.fs" />
     <Compile Include="Declarations\Parameters\TypeMethodParams.fs" />
+    <Compile Include="Declarations\Parameters\OptionalParameter.fs" />
     <Compile Include="Declarations\Methods\ModuleFunction.fs" />
     <Compile Include="Declarations\Methods\Method.fs" />
     <Compile Include="Declarations\Methods\StaticMethod.fs" />
@@ -93,7 +95,9 @@
     <Compile Include="Access\Parameters\FunctionParams.fs" />
     <Compile Include="Access\Parameters\MethodParams.fs" />
     <Compile Include="Access\Parameters\LambdaExpressionParams.fs" />
+    <Compile Include="Access\Parameters\UnionCtorParameter.fs" />
     <Compile Include="Access\Attribute.fs" />
+    <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

@@ -333,8 +333,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Log.Debug("Open was met as member definition");
                     break;
 
-                case Ast.SynMemberDefn.LetBindings letBinndings:
-                    foreach (var item in letBinndings.Item1)
+                case Ast.SynMemberDefn.LetBindings letBindings:
+                    foreach (var item in letBindings.Item1)
                     {
                         Visit(item);
                     }
@@ -560,7 +560,6 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynTypeDefnSimpleRepr synTypeDefn)
         {
-            // TODO:
             switch (synTypeDefn)
             {
                 case Ast.SynTypeDefnSimpleRepr.Record record:
@@ -586,6 +585,31 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynTypeDefnSimpleRepr.Exception exception:
                     Visit(exception.Item);
+                    break;
+
+                case Ast.SynTypeDefnSimpleRepr.TypeAbbrev abbrev:
+                    Visit(abbrev.Item2);
+                    break;
+
+                case Ast.SynTypeDefnSimpleRepr.General general:
+                    Log.Debug("General was met");
+                    foreach (var (type, _, ident) in general.Item2)
+                    {
+                        Visit(type);
+                        // TODO: what is type ident?
+                    }
+                    foreach (var (sig, _) in general.Item3)
+                    {
+                        Visit(sig);
+                    }
+                    foreach (var item in general.Item4)
+                    {
+                        Visit(item);
+                    }
+                    if (general.Item7.IsSome())
+                    {
+                        Visit(general.Item7.Value);
+                    }
                     break;
 
                 default:
@@ -627,10 +651,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynUnionCaseType.UnionCaseFields unionCaseFields:
                     foreach (var item in unionCaseFields.cases)
                     {
-                        var oldContext = _context;
-                        _context = _context.WithParent(unionCaseFields);
                         Visit(item);
-                        _context = oldContext;
                     }
                     break;
 
@@ -643,7 +664,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private void Visit(Ast.SynField field)
         {
             // NOTE: doesn't classify argument in union case declaration
-            if (field.Item3.IsSome() && !(_context.Parent is Ast.SynUnionCaseType.UnionCaseFields))
+            if (field.Item3.IsSome())
             {
                 AddIdent(field.Item3.Value, _fieldType);
             }
@@ -753,10 +774,10 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynPat.LongIdent longIndent:
                     // TODO: what's about another items?
+                    var isParentSynBinding = _context.Parent is Ast.SynBinding;
                     switch (longIndent.Item4)
                     {
                         case Ast.SynConstructorArgs.Pats pats:
-                            var isParentSynBinding = _context.Parent is Ast.SynBinding;
                             foreach (var item in pats.Item)
                             {
                                 if (!isParentSynBinding)
@@ -768,6 +789,24 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 var oldContext = _context;
                                 _context = _context.WithParent(pats);
                                 Visit(item);
+                                _context = oldContext.WithParams(_context.Params);
+                            }
+                            break;
+
+                        case Ast.SynConstructorArgs.NamePatPairs namePats:
+                            // TODO: do namePats can be a parameter declarations, not accesses?
+                            foreach (var (ident, pat) in namePats.Item1)
+                            {
+                                AddIdent(ident, _parameterType);
+                                if (!isParentSynBinding)
+                                {
+                                    Visit(pat);
+                                    continue;
+                                }
+
+                                var oldContext = _context;
+                                _context = _context.WithParent(namePats);
+                                Visit(pat);
                                 _context = oldContext.WithParams(_context.Params);
                             }
                             break;
@@ -813,6 +852,26 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynPat.Typed typed:
                     Visit(typed.Item1);
                     Visit(typed.Item2);
+                    break;
+
+                case Ast.SynPat.ArrayOrList arrayOrList:
+                    foreach (var item in arrayOrList.Item2)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynPat.OptionalVal optional:
+                    _context = _context.WithParams(_context.Params.Add(optional.Item1.idText));
+                    AddIdent(optional.Item1, _parameterType);
+                    break;
+
+                case Ast.SynPat.Attrib attrib:
+                    Visit(attrib.Item1);
+                    foreach (var item in attrib.Item2)
+                    {
+                        Visit(item);
+                    }
                     break;
 
                 default:
@@ -927,13 +986,12 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynExpr expression)
         {
-            // TODO:
             switch (expression)
             {
                 case Ast.SynExpr.Ident ident:
                     if (_cache.TryGetValue(ident.Item.idRange, out var use))
                     {
-                        if (use.Symbol is FSharpMemberOrFunctionOrValue some && IsParameterByUse(some))
+                        if (use.Symbol is FSharpMemberOrFunctionOrValue some && IsParameterByUse(some) || use.Symbol is FSharpParameter)
                         {
                             AddIdent(ident.Item, _parameterType);
                         }
@@ -1136,7 +1194,12 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynExpr.ObjExpr objExpr:
                     Visit(objExpr.objType);
-                    // TODO: argoptions?
+                    if (objExpr.argOptions.IsSome())
+                    {
+                        // TODO: what's about ident?
+                        var (exp, _) = objExpr.argOptions.Value;
+                        Visit(exp);
+                    }
                     foreach (var item in objExpr.bindings)
                     {
                         Visit(item);
@@ -1333,6 +1396,11 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private bool TryClassifyType(FSharpEntity entity, out IClassificationType type)
         {
+            if (entity.IsFSharpAbbreviation)
+            {
+                return TryClassifyType(entity.AbbreviatedType.TypeDefinition, out type);
+            }
+
             type =
                 entity.IsNamespace ? _namespaceType :
                 entity.IsFSharpModule ? _moduleType :

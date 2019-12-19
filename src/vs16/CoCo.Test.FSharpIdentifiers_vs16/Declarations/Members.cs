@@ -81,5 +81,16 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.PropertyName.ClassifyAt(218, 5),
                 FSharpNames.PropertyName.ClassifyAt(309, 5));
         }
+
+        [Test]
+        public void UnionFieldTest()
+        {
+            GetContext(@"Declarations\Members\UnionField.fs").GetClassifications().AssertIsEquivalent(
+                FSharpNames.ModuleName.ClassifyAt(7, 10),
+                FSharpNames.UnionName.ClassifyAt(26, 4),
+                FSharpNames.UnionName.ClassifyAt(40, 4),
+                FSharpNames.FieldName.ClassifyAt(48, 5),
+                FSharpNames.StructureName.ClassifyAt(56, 3));
+        }
     }
 }
