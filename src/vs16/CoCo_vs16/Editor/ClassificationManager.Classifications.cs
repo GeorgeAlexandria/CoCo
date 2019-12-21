@@ -68,11 +68,19 @@ namespace CoCo.Editor
             [FSharpNames.RecordName] = "class name".Enumerate(),
             [FSharpNames.ModuleName] = "module name".Enumerate(),
             [FSharpNames.EnumName] = new[] { "enum name", "struct name" },
+            [FSharpNames.DelegateName] = "delegate name".Enumerate(),
+            [FSharpNames.TypeParameterName] = "type parameter name".Enumerate(),
 
             [FSharpNames.NamespaceName] = "namespace name".Enumerate(),
             [FSharpNames.PropertyName] = new[] { "property name", "FSharp.Property", "static symbol" },
             [FSharpNames.FieldName] = new[] { "field name", "static symbol" },
             [FSharpNames.EnumFieldName] = new[] { "enum member name", "enum name" },
+            [FSharpNames.FieldName] = new[] { "field name", "static symbol" },
+            [FSharpNames.ExtensionMethodName] = new[] { "extension method name", "static symbol", "FSharp.Function" },
+            [FSharpNames.MethodName] = new[] { "method name", "static symbol", "FSharp.Function" },
+            [FSharpNames.LocalBindingValueName]= "local name".Enumerate(),
+            [FSharpNames.ParameterName] = "parameter name".Enumerate(),
+            [FSharpNames.StaticMethodName] = new[] { "method name", "static symbol", "FSharp.Function" },
         };
 
         private static Dictionary<string, string> _nonIdentifierClassifications;

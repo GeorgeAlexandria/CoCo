@@ -44,5 +44,12 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Parameters\OptionalParameter.fs").GetClassifications().AssertContains(
                 FSharpNames.ParameterName.ClassifyAt(66, 3));
         }
+
+        [Test]
+        public void AbstractMemberParameterTest()
+        {
+            GetContext(@"Declarations\Parameters\AbstractMemberParameter.fs").GetClassifications().AssertContains(
+                FSharpNames.ParameterName.ClassifyAt(67, 9));
+        }
     }
 }

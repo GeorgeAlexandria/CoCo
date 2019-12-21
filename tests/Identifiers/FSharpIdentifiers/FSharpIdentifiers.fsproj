@@ -77,6 +77,7 @@
     <Compile Include="Declarations\Parameters\TypeFunctionParams.fs" />
     <Compile Include="Declarations\Parameters\TypeMethodParams.fs" />
     <Compile Include="Declarations\Parameters\OptionalParameter.fs" />
+    <Compile Include="Declarations\Parameters\AbstractMemberParameter.fs" />
     <Compile Include="Declarations\Methods\ModuleFunction.fs" />
     <Compile Include="Declarations\Methods\Method.fs" />
     <Compile Include="Declarations\Methods\StaticMethod.fs" />
@@ -97,6 +98,7 @@
     <Compile Include="Access\Parameters\LambdaExpressionParams.fs" />
     <Compile Include="Access\Parameters\UnionCtorParameter.fs" />
     <Compile Include="Access\Attribute.fs" />
+    <Compile Include="Access\Types\InterfaceImplementation.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>
   <ItemGroup>

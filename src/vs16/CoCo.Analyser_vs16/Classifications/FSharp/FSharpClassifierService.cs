@@ -379,6 +379,17 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Visit(ctor.ctorArgs);
                     break;
 
+                case Ast.SynMemberDefn.Interface @interface:
+                    Visit(@interface.Item1);
+                    if (@interface.Item2.IsSome())
+                    {
+                        foreach (var item in @interface.Item2.Value)
+                        {
+                            Visit(item);
+                        }
+                    }
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in member definition", memberDefn.GetType());
                     break;
@@ -673,10 +684,12 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynValSig valSig)
         {
-            if (valSig.synExpr.IsSome())
+            foreach (var item in valSig.synAttributes)
             {
-                Visit(valSig.synExpr.Value);
+                Visit(item);
             }
+
+            Visit(valSig.arity);
 
             if (_cache.TryGetValue(valSig.ident.idRange, out var use))
             {
@@ -706,6 +719,36 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                 }
             }
+
+            if (valSig.synExpr.IsSome())
+            {
+                Visit(valSig.synExpr.Value);
+            }
+        }
+
+        private void Visit(Ast.SynValInfo valInfo)
+        {
+            foreach (var list in valInfo.Item1)
+            {
+                foreach (var item in list)
+                {
+                    Visit(item);
+                }
+            }
+        }
+
+        private void Visit(Ast.SynArgInfo argInfo)
+        {
+            foreach (var item in argInfo.Item1)
+            {
+                Visit(item);
+            }
+
+            if (argInfo.Item3.IsSome())
+            {
+                _context = _context.WithParams(_context.Params.Add(argInfo.Item3.Value.idText));
+                AddIdent(argInfo.Item3.Value, _parameterType);
+            }
         }
 
         private void Visit(Ast.SynBinding binding)
@@ -715,13 +758,14 @@ namespace CoCo.Analyser.Classifications.FSharp
                 Visit(item);
             }
 
-            // TODO: context should be reset by per function. Is it must be here?
             var oldContext = _context;
             _context = _context.WithParent(binding);
             Visit(binding.headPat);
             _context = oldContext.WithParams(_context.Params);
 
             Visit(binding.expr);
+            // NOTE: reset context by per function to not pass collected parameters from an one function to another
+            _context = oldContext;
         }
 
         private void Visit(Ast.SynPat pattern)
@@ -991,7 +1035,30 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynExpr.Ident ident:
                     if (_cache.TryGetValue(ident.Item.idRange, out var use))
                     {
-                        if (use.Symbol is FSharpMemberOrFunctionOrValue some && IsParameterByUse(some) || use.Symbol is FSharpParameter)
+                        if (use.Symbol is FSharpMemberOrFunctionOrValue some)
+                        {
+                            var classification =
+                                IsParameterByUse(some) ? _parameterType :
+                                some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                                some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodType :
+                                IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodType :
+                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
+                                some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
+                                some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
+                                some.FullType.IsFunctionType ? _localBindingValueType :
+                                some.IsValue ? _localBindingValueType :
+                                null;
+
+                            if (classification.IsNotNull())
+                            {
+                                AddIdent(ident.Item, classification);
+                            }
+                            else
+                            {
+                                Log.Debug("FSharpMemberOrFunctionOrValue isn't classified in ident expression");
+                            }
+                        }
+                        else if (use.Symbol is FSharpParameter)
                         {
                             AddIdent(ident.Item, _parameterType);
                         }
@@ -1396,7 +1463,8 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private bool TryClassifyType(FSharpEntity entity, out IClassificationType type)
         {
-            if (entity.IsFSharpAbbreviation)
+            // NOTE: make sure that abbreviation has type definition to avoid invalid operation exception
+            if (entity.IsFSharpAbbreviation && entity.AbbreviatedType.HasTypeDefinition)
             {
                 return TryClassifyType(entity.AbbreviatedType.TypeDefinition, out type);
             }
