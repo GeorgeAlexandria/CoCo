@@ -7,6 +7,7 @@ using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Control;
 using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -41,10 +42,9 @@ namespace CoCo.Analyser.Classifications.FSharp
             _textSnapshot = span.Snapshot;
 
             var sourceText = document.GetTextAsync().Result;
-            var projectOptions = GetOptions(workspace, document.Project);
+            var projectOptions = GetOptions(workspace, document);
 
-            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp,
-                ProjectChecker.Instance);
+            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp, ProjectChecker.Instance);
         }
 
         public List<ClassificationSpan> GetClassificationSpans(FSharpProjectOptions projectOptions,
@@ -65,6 +65,19 @@ namespace CoCo.Analyser.Classifications.FSharp
         {
             _cache = default;
             ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(new SnapshotSpan(_textSnapshot, 0, _textSnapshot.Length)));
+        }
+
+        private FSharpProjectOptions GetOptions(Workspace workspace, Document document)
+        {
+            if (string.IsNullOrWhiteSpace(document.Project.FilePath))
+            {
+                var checker = FSharpChecker.Create(null, false, false, null, null, null);
+                var task = checker.GetProjectOptionsFromScript(document.FilePath, new SourceTextWrapper(document.GetTextAsync().Result), 
+                    null, null, null, null, null, null, null, "CoCo_script_options");
+                return FSharpAsync.RunSynchronously(task, null, null).Item1;
+            }
+
+            return GetOptions(workspace, document.Project);
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Project project)
