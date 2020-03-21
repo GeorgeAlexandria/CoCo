@@ -21,8 +21,8 @@ namespace CoCo.Test.Common
         public List<ClassificationSpan> GetClassificationSpans(
             Workspace workspace, string itemPath, string code, SnapshotSpan snapshotSpan)
         {
-            return _textBufferClassifier.GetClassificationSpans(
-                _compilationUnit.Options, snapshotSpan, itemPath, SourceText.From(code), VersionStamp.Default);
+            return _textBufferClassifier.GetClassificationSpans(_compilationUnit.Options, snapshotSpan, itemPath,
+                SourceText.From(code), VersionStamp.Default, TestProjectChecker.Instance);
         }
     }
 }

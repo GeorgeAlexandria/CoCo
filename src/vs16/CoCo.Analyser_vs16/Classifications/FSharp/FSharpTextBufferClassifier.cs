@@ -7,18 +7,18 @@ using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.FSharp.Collections;
-using Microsoft.FSharp.Control;
 using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace CoCo.Analyser.Classifications.FSharp
 {
-    public class FSharpTextBufferClassifier : IClassifier
+    public class FSharpTextBufferClassifier : IClassifier, IListener
     {
         private readonly FSharpClassifierService _service;
 
         private (VersionStamp Version, List<ClassificationSpan> Spans) _cache;
+        private ITextSnapshot _textSnapshot;
 
         internal FSharpTextBufferClassifier(
             Dictionary<string, ClassificationInfo> classifications,
@@ -34,40 +34,37 @@ namespace CoCo.Analyser.Classifications.FSharp
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
             if (workspace is null) return Array.Empty<ClassificationSpan>();
 
-            return GetClassificationSpans(workspace, span);
-        }
-
-        public List<ClassificationSpan> GetClassificationSpans(Workspace workspace, SnapshotSpan span)
-        {
             var document = workspace.GetDocument(span.Snapshot.AsText());
             var versionStamp = document.GetTextVersionAsync().Result;
             if (versionStamp.Equals(_cache.Version)) return _cache.Spans;
 
+            _textSnapshot = span.Snapshot;
+
             var sourceText = document.GetTextAsync().Result;
             var projectOptions = GetOptions(workspace, document.Project);
 
-            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp);
+            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp,
+                ProjectChecker.Instance);
         }
 
-        public List<ClassificationSpan> GetClassificationSpans(FSharpProjectOptions projectOptions, SnapshotSpan snapshotSpan, 
-            string itemPath, SourceText itemContent, VersionStamp itemVersion)
+        public List<ClassificationSpan> GetClassificationSpans(FSharpProjectOptions projectOptions,
+            SnapshotSpan snapshotSpan, string itemPath, SourceText itemContent, VersionStamp itemVersion, IProjectChecker projectChecker)
         {
-            // TODO: would be better to use a custom ReferenceResolver implementaion?
-            var checker = FSharpChecker.Create(null, null, null, null, null, null);
-            var result = checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(),
-                new SourceTextWrapper(itemContent), projectOptions, null, "CoCo_Classifications");
-            var (parseResult, checkAnswer) = FSharpAsync.RunSynchronously(result, null, null).ToValueTuple();
+            var parseCheckResult = projectChecker.ParseAndCheckFileInProject(this, projectOptions, itemPath, itemContent,
+                itemVersion);
 
-            if (checkAnswer.IsSucceeded && checkAnswer is FSharpCheckFileAnswer.Succeeded succeeded)
-            {
-                var checkResult = succeeded.Item;
-                // TODO: append classification options
-                var spans = _service.GetClassificationSpans(parseResult, checkResult, snapshotSpan);
+            var spans = !parseCheckResult.IsDefault
+                ? _service.GetClassificationSpans(parseCheckResult.ParseResult, parseCheckResult.CheckResult, snapshotSpan)
+                : new List<ClassificationSpan>();
 
-                _cache = (itemVersion, spans);
-                return spans;
-            }
-            return new List<ClassificationSpan>();
+            _cache = (itemVersion, spans);
+            return spans;
+        }
+
+        public void Invoke()
+        {
+            _cache = default;
+            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(new SnapshotSpan(_textSnapshot, 0, _textSnapshot.Length)));
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Project project)
