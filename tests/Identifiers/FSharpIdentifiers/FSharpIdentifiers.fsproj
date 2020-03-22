@@ -98,7 +98,10 @@
     <Compile Include="Access\Parameters\LambdaExpressionParams.fs" />
     <Compile Include="Access\Parameters\UnionCtorParameter.fs" />
     <Compile Include="Access\Attribute.fs" />
+    <Compile Include="Access\AttributeAsModuleElement.fs" />
     <Compile Include="Access\Types\InterfaceImplementation.fs" />
+    <Compile Include="Access\Types\UnionCases.fs" />
+    <Compile Include="Access\Members\RecordFieldInPatternCase.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>
   <ItemGroup>

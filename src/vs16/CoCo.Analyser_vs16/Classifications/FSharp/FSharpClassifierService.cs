@@ -317,6 +317,13 @@ namespace CoCo.Analyser.Classifications.FSharp
                     Visit(exception.Item1);
                     break;
 
+                case Ast.SynModuleDecl.Attributes attributes:
+                    foreach (var item in attributes.Item1)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in module declaration", moduleDecl.GetType());
                     break;
@@ -918,6 +925,18 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynPat.Record record:
+                    foreach (var item in record.Item1)
+                    {
+                        var some = item.Item1;
+                        AddIdent(some.Item2, _fieldType);
+                        Visit(item.Item2);
+                    }
+                    break;
+
+                case Ast.SynPat.Wild _:
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in pattern", pattern.GetType());
                     break;
@@ -1003,6 +1022,11 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                     AddIdent(item, type);
                 }
+                else if (use.Symbol is FSharpUnionCase)
+                {
+                    // TODO: what's about fields?
+                    AddIdent(item, _unionType);
+                }
                 else
                 {
                     Log.Debug("Symbol type {0} doesn't support in long ident with dots", use.Symbol.GetType());
@@ -1061,6 +1085,11 @@ namespace CoCo.Analyser.Classifications.FSharp
                         else if (use.Symbol is FSharpParameter)
                         {
                             AddIdent(ident.Item, _parameterType);
+                        }
+                        else if (use.Symbol is FSharpUnionCase)
+                        {
+                            // TODO: what's about fields?
+                            AddIdent(ident.Item, _unionType);
                         }
                         else
                         {
@@ -1368,6 +1397,9 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 case Ast.SynExpr.Fixed @fixed:
                     Visit(@fixed);
+                    break;
+
+                case Ast.SynExpr.Const _:
                     break;
 
                 default:

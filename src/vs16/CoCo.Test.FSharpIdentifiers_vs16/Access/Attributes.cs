@@ -14,5 +14,12 @@ namespace CoCo.Test.FSharpIdentifiers.Access
                 FSharpNames.ClassName.ClassifyAt(131, 9),
                 FSharpNames.ClassName.ClassifyAt(142, 10));
         }
+
+        [Test]
+        public void AttributeAsModuleElementTest()
+        {
+            GetContext(@"Access\AttributeAsModuleElement.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(63, 22));
+        }
     }
 }
