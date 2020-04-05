@@ -527,6 +527,18 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynType.Var var:
+                    Visit(var.genericName);
+                    break;
+
+                case Ast.SynType.App app:
+                    Visit(app.typeName);
+                    foreach (var item in app.typeArgs)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in type", type.GetType());
                     break;
@@ -935,6 +947,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynPat.Wild _:
+                case Ast.SynPat.Const _:
                     break;
 
                 default:
@@ -1090,6 +1103,17 @@ namespace CoCo.Analyser.Classifications.FSharp
                         {
                             // TODO: what's about fields?
                             AddIdent(ident.Item, _unionType);
+                        }
+                        else if (use.Symbol is FSharpEntity entity)
+                        {
+                            if (TryClassifyType(entity, out var type))
+                            {
+                                AddIdent(ident.Item, type);
+                            }
+                            else
+                            {
+                                Log.Debug("FSharpEntity doesn't classify in expression ident");
+                            }
                         }
                         else
                         {
@@ -1511,6 +1535,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 entity.IsEnum ? _enumType :
                 entity.IsValueType ? _structureType :
                 entity.IsClass ? _classType :
+                entity.IsFSharpExceptionDeclaration ? _classType :
                 null;
 
             return type.IsNotNull();

@@ -71,7 +71,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         {
             if (string.IsNullOrWhiteSpace(document.Project.FilePath))
             {
-                var checker = FSharpChecker.Create(null, false, false, null, null, null);
+                var checker = FSharpChecker.Create(null, true, false, null, null, null);
                 var task = checker.GetProjectOptionsFromScript(document.FilePath, new SourceTextWrapper(document.GetTextAsync().Result), 
                     null, null, null, null, null, null, null, "CoCo_script_options");
                 return FSharpAsync.RunSynchronously(task, null, null).Item1;

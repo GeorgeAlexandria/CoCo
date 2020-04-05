@@ -25,5 +25,27 @@ namespace CoCo.Test.FSharpIdentifiers.Access
                 FSharpNames.UnionName.ClassifyAt(212, 5),
                 FSharpNames.UnionName.ClassifyAt(233, 6));
         }
+
+        [Test]
+        public void TypeParameterTest()
+        {
+            GetContext(@"Access\Types\TypeParameterType.fs").GetClassifications().AssertContains(
+                FSharpNames.TypeParameterName.ClassifyAt(94, 7));
+        }
+
+        [Test]
+        public void ExceptionTest()
+        {
+            GetContext(@"Access\Types\ExceptionType.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(60, 6));
+        }
+
+        [Test]
+        public void PostfixTypesTest()
+        {
+            GetContext(@"Access\Types\PostfixType.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(67, 4),
+                FSharpNames.ClassName.ClassifyAt(72, 4));
+        }
     }
 }
