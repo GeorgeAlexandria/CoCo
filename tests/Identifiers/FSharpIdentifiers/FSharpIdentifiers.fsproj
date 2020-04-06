@@ -104,6 +104,7 @@
     <Compile Include="Access\Types\TypeParameterType.fs" />
     <Compile Include="Access\Types\ExceptionType.fs" />
     <Compile Include="Access\Types\PostfixType.fs" />
+    <Compile Include="Access\Types\TypeAsExpression.fs" />
     <Compile Include="Access\Members\RecordFieldInPatternCase.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>

@@ -119,7 +119,9 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.ClassName.ClassifyAt(28, 5),
                 FSharpNames.NamespaceName.ClassifyAt(36, 6),
                 FSharpNames.NamespaceName.ClassifyAt(43, 2),
-                FSharpNames.ClassName.ClassifyAt(46, 4));
+                FSharpNames.ClassName.ClassifyAt(46, 4),
+                FSharpNames.ClassName.ClassifyAt(59, 4),
+                FSharpNames.RecordName.ClassifyAt(88, 4));
         }
     }
 }

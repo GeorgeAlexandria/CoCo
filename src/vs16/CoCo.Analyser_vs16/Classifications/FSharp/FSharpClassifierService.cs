@@ -539,6 +539,9 @@ namespace CoCo.Analyser.Classifications.FSharp
                     }
                     break;
 
+                case Ast.SynType.Anon _:
+                    break;
+
                 default:
                     Log.Debug("Ast type {0} doesn't support in type", type.GetType());
                     break;
@@ -1074,6 +1077,19 @@ namespace CoCo.Analyser.Classifications.FSharp
                     {
                         if (use.Symbol is FSharpMemberOrFunctionOrValue some)
                         {
+                            if (some.IsConstructor)
+                            {
+                                if (TryClassifyType(some.ApparentEnclosingEntity, out var type))
+                                {
+                                    AddIdent(ident.Item, type);
+                                }
+                                else
+                                {
+                                    Log.Debug("FSharpEntity from .ctor isn't classified in in ident expression");
+                                }
+                                return;
+                            }
+
                             var classification =
                                 IsParameterByUse(some) ? _parameterType :
                                 some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
@@ -1519,10 +1535,23 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private bool TryClassifyType(FSharpEntity entity, out IClassificationType type)
         {
-            // NOTE: make sure that abbreviation has type definition to avoid invalid operation exception
-            if (entity.IsFSharpAbbreviation && entity.AbbreviatedType.HasTypeDefinition)
+            if (entity.IsFSharpAbbreviation)
             {
-                return TryClassifyType(entity.AbbreviatedType.TypeDefinition, out type);
+                // NOTE: make sure that abbreviation has type definition to avoid invalid operation exception
+                var abbrev = entity.AbbreviatedType;
+                if (abbrev.HasTypeDefinition)
+                {
+                    return TryClassifyType(entity.AbbreviatedType.TypeDefinition, out type);
+                }
+
+                type =
+                    abbrev.IsAnonRecordType ? _recordType :
+                    // Does it delegate type?
+                    abbrev.IsFunctionType ? _classType :
+                    abbrev.IsStructTupleType ? _structureType :
+                    null;
+
+                return type.IsNotNull();
             }
 
             type =
@@ -1536,6 +1565,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                 entity.IsValueType ? _structureType :
                 entity.IsClass ? _classType :
                 entity.IsFSharpExceptionDeclaration ? _classType :
+                entity.IsOpaque ? _classType :
+                entity.IsArrayType ? _classType :
                 null;
 
             return type.IsNotNull();

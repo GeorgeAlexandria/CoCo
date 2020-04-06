@@ -47,5 +47,12 @@ namespace CoCo.Test.FSharpIdentifiers.Access
                 FSharpNames.ClassName.ClassifyAt(67, 4),
                 FSharpNames.ClassName.ClassifyAt(72, 4));
         }
+
+        [Test]
+        public void TypeAsExpression()
+        {
+            GetContext(@"Access\Types\TypeAsExpression.fs").GetClassifications().AssertContains(
+                FSharpNames.ClassName.ClassifyAt(62, 4));
+        }
     }
 }
