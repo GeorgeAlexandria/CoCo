@@ -59,5 +59,20 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
             GetContext(@"Declarations\Locals\TryWithValue.fs").GetClassifications().AssertContains(
                 FSharpNames.LocalBindingValueName.ClassifyAt(107, 3));
         }
+
+        [Test]
+        public void StaticLetBinding()
+        {
+            GetContext(@"Declarations\Locals\StaticLetBinding.fs").GetClassifications().AssertContains(
+                FSharpNames.LocalBindingValueName.ClassifyAt(57, 5),
+                FSharpNames.LocalBindingValueName.ClassifyAt(97, 6));
+        }
+
+        [Test]
+        public void UseBinding()
+        {
+            GetContext(@"Declarations\Locals\UseBinding.fs").GetClassifications().AssertContains(
+                FSharpNames.LocalBindingValueName.ClassifyAt(41, 4));
+        }
     }
 }

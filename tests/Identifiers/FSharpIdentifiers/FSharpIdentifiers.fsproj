@@ -54,6 +54,7 @@
     <Compile Include="Declarations\Members\Properties.fs" />
     <Compile Include="Declarations\Members\IndexedProperties.fs" />
     <Compile Include="Declarations\Members\UnionField.fs" />
+    <Compile Include="Declarations\Members\ModuleBindingValue.fs" />
     <Compile Include="Declarations\Types\TopLevelModule.fs" />
     <Compile Include="Declarations\Types\LocalModule.fs" />
     <Compile Include="Declarations\Types\NestedModule.fs" />
@@ -91,6 +92,8 @@
     <Compile Include="Declarations\Locals\ForValue.fs" />
     <Compile Include="Declarations\Locals\ForeachValue.fs" />
     <Compile Include="Declarations\Locals\TryWithValue.fs" />
+    <Compile Include="Declarations\Locals\StaticLetBinding.fs" />
+    <Compile Include="Declarations\Locals\UseBinding.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParams.fs" />
     <Compile Include="Access\Parameters\ImplicitCtorParamsShadowing.fs" />
     <Compile Include="Access\Parameters\FunctionParams.fs" />
@@ -106,6 +109,11 @@
     <Compile Include="Access\Types\PostfixType.fs" />
     <Compile Include="Access\Types\TypeAsExpression.fs" />
     <Compile Include="Access\Members\RecordFieldInPatternCase.fs" />
+    <Compile Include="Access\Members\Field.fs" />
+    <Compile Include="Access\Members\AnonymousRecordField.fs" />
+    <Compile Include="Access\Members\AutoPropertyWithImplicitCtor.fs" />
+    <Compile Include="Access\Members\Property.fs" />
+    <Compile Include="Access\Members\UnionField.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>
   <ItemGroup>

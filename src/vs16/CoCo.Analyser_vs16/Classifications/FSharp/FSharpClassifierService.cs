@@ -155,7 +155,7 @@ namespace CoCo.Analyser.Classifications.FSharp
         private IClassificationType _parameterType;
         private IClassificationType _enumType;
         private IClassificationType _enumFieldType;
-        private IClassificationType _localBindingValueType;
+        private IClassificationType _localBindingType;
         private IClassificationType _moduleFunctionType;
         private IClassificationType _methodType;
         private IClassificationType _staticMethodType;
@@ -202,43 +202,6 @@ namespace CoCo.Analyser.Classifications.FSharp
                     foreach (var moduleOrNamespace in implFile.Item.modules)
                     {
                         Visit(moduleOrNamespace);
-                    }
-                }
-
-                // TODO: iterate symbols isn't allowed to classify keywords => process untyped AST in the future
-                foreach (var item in _cache.SymbolsUse)
-                {
-                    var symbol = item.Symbol;
-
-                    // TODO: match symbols
-                    switch (symbol)
-                    {
-                        case FSharpActivePatternCase _:
-                            break;
-
-                        case FSharpEntity _:
-                            break;
-
-                        case FSharpField _:
-                            break;
-
-                        case FSharpGenericParameter _:
-                            break;
-
-                        case FSharpMemberOrFunctionOrValue _:
-                            break;
-
-                        case FSharpParameter _:
-                            break;
-
-                        case FSharpStaticParameter _:
-                            break;
-
-                        case FSharpUnionCase _:
-                            break;
-
-                        default:
-                            break;
                     }
                 }
 
@@ -810,7 +773,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 else if (_context.Params.Contains(some.LogicalName))
                                 {
                                     _context = _context.WithParams(_context.Params.Remove(some.LogicalName));
-                                    AddIdent(nameSyntax.Item2, _localBindingValueType);
+                                    AddIdent(nameSyntax.Item2, _localBindingType);
                                 }
                                 else
                                 {
@@ -818,8 +781,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                                     var classification =
                                         some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
                                         some.IsModuleValueOrMember ? _moduleBindingType :
-                                        some.FullType.IsFunctionType ? _localBindingValueType :
-                                        some.IsValue ? _localBindingValueType :
+                                        some.FullType.IsFunctionType ? _localBindingType :
+                                        some.IsValue ? _localBindingType :
                                         null;
 
                                     if (classification.IsNotNull())
@@ -1005,9 +968,9 @@ namespace CoCo.Analyser.Classifications.FSharp
                         some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
                         some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
                         some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
-                        some.FullType.IsFunctionType ? _localBindingValueType :
+                        some.FullType.IsFunctionType ? _localBindingType :
                         some.IsValue && IsParameterByUse(some) ? _parameterType :
-                        some.IsValue ? _localBindingValueType :
+                        some.IsValue ? _localBindingType :
                         null;
 
                     if (classification.IsNotNull())
@@ -1098,8 +1061,8 @@ namespace CoCo.Analyser.Classifications.FSharp
                                 some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
                                 some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
                                 some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
-                                some.FullType.IsFunctionType ? _localBindingValueType :
-                                some.IsValue ? _localBindingValueType :
+                                some.FullType.IsFunctionType ? _localBindingType :
+                                some.IsValue ? _localBindingType :
                                 null;
 
                             if (classification.IsNotNull())
@@ -1356,7 +1319,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynExpr.For @for:
-                    AddIdent(@for.ident, _localBindingValueType);
+                    AddIdent(@for.ident, _localBindingType);
                     Visit(@for.identBody);
                     Visit(@for.toBody);
                     Visit(@for.doBody);
@@ -1610,7 +1573,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassification(FSharpNames.ParameterName, ref _parameterType);
             InitializeClassification(FSharpNames.EnumName, ref _enumType);
             InitializeClassification(FSharpNames.EnumFieldName, ref _enumFieldType);
-            InitializeClassification(FSharpNames.LocalBindingValueName, ref _localBindingValueType);
+            InitializeClassification(FSharpNames.LocalBindingValueName, ref _localBindingType);
             InitializeClassification(FSharpNames.ModuleFunctionName, ref _moduleFunctionType);
             InitializeClassification(FSharpNames.MethodName, ref _methodType);
             InitializeClassification(FSharpNames.StaticMethodName, ref _staticMethodType);

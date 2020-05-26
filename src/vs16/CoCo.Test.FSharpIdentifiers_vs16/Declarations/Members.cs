@@ -92,5 +92,12 @@ namespace CoCo.Test.FSharpIdentifiers.Declarations
                 FSharpNames.FieldName.ClassifyAt(48, 5),
                 FSharpNames.StructureName.ClassifyAt(56, 3));
         }
+
+        [Test]
+        public void ModuleBindingValueTest()
+        {
+            GetContext(@"Declarations\Members\ModuleBindingValue.fs").GetClassifications().AssertContains(
+                FSharpNames.ModuleBindingValueName.ClassifyAt(33, 4));
+        }
     }
 }
