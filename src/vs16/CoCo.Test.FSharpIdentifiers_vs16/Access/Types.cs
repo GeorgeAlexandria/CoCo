@@ -54,5 +54,15 @@ namespace CoCo.Test.FSharpIdentifiers.Access
             GetContext(@"Access\Types\TypeAsExpression.fs").GetClassifications().AssertContains(
                 FSharpNames.ClassName.ClassifyAt(62, 4));
         }
+
+
+        [Test]
+        public void NamespaceAndTypeInAbbreviation()
+        {
+            GetContext(@"Access\Types\NamespaceAndTypeInAbbreviation.fs").GetClassifications().AssertContains(
+                FSharpNames.NamespaceName.ClassifyAt(50, 6),
+                FSharpNames.NamespaceName.ClassifyAt(57, 2),
+                FSharpNames.ClassName.ClassifyAt(60, 4));
+        }
     }
 }

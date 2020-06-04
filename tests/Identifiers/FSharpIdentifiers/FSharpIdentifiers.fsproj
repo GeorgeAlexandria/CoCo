@@ -108,12 +108,24 @@
     <Compile Include="Access\Types\ExceptionType.fs" />
     <Compile Include="Access\Types\PostfixType.fs" />
     <Compile Include="Access\Types\TypeAsExpression.fs" />
+    <Compile Include="Access\Types\NamespaceAndTypeInAbbreviation.fs" />
     <Compile Include="Access\Members\RecordFieldInPatternCase.fs" />
     <Compile Include="Access\Members\Field.fs" />
     <Compile Include="Access\Members\AnonymousRecordField.fs" />
     <Compile Include="Access\Members\AutoPropertyWithImplicitCtor.fs" />
     <Compile Include="Access\Members\Property.fs" />
     <Compile Include="Access\Members\UnionField.fs" />
+    <Compile Include="Access\Methods\ModuleFunction.fs" />
+    <Compile Include="Access\Methods\Methods.fs" />
+    <Compile Include="Access\Methods\IntrinsicExtensionMethod.fs" />
+    <Compile Include="Access\Methods\OptionalExtensionMethod.fs" />
+    <Compile Include="Access\Methods\ExtensionMethod.fs" />
+    <Compile Include="Access\Locals\LocalValueBinding.fs" />
+    <Compile Include="Access\Locals\LocalFunction.fs" />
+    <Compile Include="Access\Locals\Match.fs" />
+    <Compile Include="Access\Locals\ForAndForeachValue.fs" />
+    <Compile Include="Access\Locals\StaticLetBinding.fs" />
+    <Compile Include="Access\Locals\UseBinding.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
   </ItemGroup>
   <ItemGroup>
