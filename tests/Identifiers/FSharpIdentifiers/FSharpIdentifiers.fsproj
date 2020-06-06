@@ -127,6 +127,8 @@
     <Compile Include="Access\Locals\StaticLetBinding.fs" />
     <Compile Include="Access\Locals\UseBinding.fs" />
     <Compile Include="Constructions\ObjectExpression.fs" />
+    <Compile Include="Constructions\Raise.fs" />
+    <Compile Include="Constructions\TypeConstraints.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Core">

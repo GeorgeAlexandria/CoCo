@@ -539,6 +539,11 @@ namespace CoCo.Analyser.Classifications.FSharp
                 Visit(item);
             }
 
+            foreach (var item in componentInfo.constraints)
+            {
+                Visit(item);
+            }
+
             foreach (var item in componentInfo.attribs)
             {
                 Visit(item);
@@ -678,30 +683,45 @@ namespace CoCo.Analyser.Classifications.FSharp
 
             if (_cache.TryGetValue(valSig.ident.idRange, out var use))
             {
+                IClassificationType classification = null;
                 if (_context.Parent is Ast.SynMemberDefn)
                 {
-                    switch (use.Symbol)
+                    classification = use.Symbol switch
                     {
-                        case FSharpMemberOrFunctionOrValue some:
-                            var classification =
-                                some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
-                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
-                                null;
+                        FSharpMemberOrFunctionOrValue some =>
+                            some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                            some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
+                            null,
+                        _ => null
+                    };
+                }
+                // NOTE: handle member sig by type constraints
+                else if (_context.Parent is Ast.SynMemberSig.Member memberSig)
+                {
+                    classification = use.Symbol switch
+                    {
+                        FSharpMemberOrFunctionOrValue some =>
+                            some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                            some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
+                            null,
 
-                            if (classification.IsNotNull())
-                            {
-                                AddIdent(valSig.ident, classification);
-                            }
-                            else
-                            {
-                                Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
-                            }
-                            break;
+                        FSharpParameter _ => valSig.SynType is Ast.SynType.Fun
+                            ? memberSig.Item2.IsInstance
+                                ? _methodType
+                                : _staticMethodType
+                            : _propertyType,
 
-                        default:
-                            Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
-                            break;
-                    }
+                        _ => null,
+                    };
+                }
+
+                if (classification.IsNotNull())
+                {
+                    AddIdent(valSig.ident, classification);
+                }
+                else
+                {
+                    Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
                 }
             }
 
@@ -1028,6 +1048,78 @@ namespace CoCo.Analyser.Classifications.FSharp
             {
                 Visit(attribute.TypeName);
                 Visit(attribute.ArgExpr);
+            }
+        }
+
+        private void Visit(Ast.SynTypeConstraint constraint)
+        {
+            switch (constraint)
+            {
+                case Ast.SynTypeConstraint.WhereTyparDefaultsToType defalut:
+                    Visit(defalut.typeName);
+                    Visit(defalut.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsComparable comparable:
+                    Visit(comparable.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsDelegate @delegate:
+                    Visit(@delegate.genericName);
+                    foreach (var item in @delegate.Item2)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsEnum @enum:
+                    Visit(@enum.genericName);
+                    foreach (var item in @enum.Item2)
+                    {
+                        Visit(item);
+                    }
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsEquatable equatable:
+                    Visit(equatable.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsReferenceType reference:
+                    Visit(reference.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsUnmanaged unmanaged:
+                    Visit(unmanaged.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparIsValueType value:
+                    Visit(value.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparSubtypeOfType subType:
+                    Visit(subType.typeName);
+                    Visit(subType.genericName);
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparSupportsMember member:
+                    foreach (var item in member.genericNames)
+                    {
+                        Visit(item);
+                    }
+
+                    var oldContext = _context;
+                    _context = _context.WithParent(constraint);
+                    Visit(member.memberSig);
+                    _context = oldContext;
+                    break;
+
+                case Ast.SynTypeConstraint.WhereTyparSupportsNull @null:
+                    Visit(@null.genericName);
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in type constraint", constraint.GetType());
+                    break;
             }
         }
 
@@ -1431,7 +1523,27 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void Visit(Ast.SynMemberSig memberSig)
         {
-            Log.Debug("Ast type {0} doesn't support in member sig", memberSig.GetType());
+            switch (memberSig)
+            {
+                case Ast.SynMemberSig.Inherit inherit:
+                    Visit(inherit.typeName);
+                    break;
+
+                case Ast.SynMemberSig.Interface @interface:
+                    Visit(@interface.typeName);
+                    break;
+
+                case Ast.SynMemberSig.Member member:
+                    var oldContext = _context;
+                    _context = _context.WithParent(member);
+                    Visit(member.Item1);
+                    _context = oldContext;
+                    break;
+
+                default:
+                    Log.Debug("Ast type {0} doesn't support in member sig", memberSig.GetType());
+                    break;
+            }
         }
 
         private void Visit(Ast.SynMatchClause clause)
