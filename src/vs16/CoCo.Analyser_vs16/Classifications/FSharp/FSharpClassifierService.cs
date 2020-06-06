@@ -288,7 +288,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in module declaration", moduleDecl.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in module declaration", moduleDecl.GetType());
                     break;
             }
         }
@@ -361,7 +361,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in member definition", memberDefn.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in member definition", memberDefn.GetType());
                     break;
             }
         }
@@ -383,7 +383,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in simple pats", simplePats.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in simple pats", simplePats.GetType());
                     break;
             }
         }
@@ -411,7 +411,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in simple pat", simplePat.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in simple pat", simplePat.GetType());
                     break;
             }
         }
@@ -435,8 +435,7 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                     foreach (var item in members)
                     {
-                        if (item is Ast.SynMemberDefn.LetBindings bindings /*&& !bindings.Item1.IsEmpty &&
-                            bindings.Item1.Head.kind.IsDoBinding*/)
+                        if (item is Ast.SynMemberDefn.LetBindings)
                         {
                             var current = _context;
                             _context = ctorContext;
@@ -453,7 +452,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in type definition", typeDefnRepr.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in type definition", typeDefnRepr.GetType());
                     break;
             }
         }
@@ -506,7 +505,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in type", type.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in type", type.GetType());
                     break;
             }
         }
@@ -593,7 +592,6 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 case Ast.SynTypeDefnSimpleRepr.General general:
-                    Log.Debug("General was met");
                     foreach (var (type, _, ident) in general.Item2)
                     {
                         Visit(type);
@@ -614,7 +612,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in simple type definition", synTypeDefn.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in simple type definition", synTypeDefn.GetType());
                     break;
             }
         }
@@ -657,7 +655,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in union case type", unionCaseType.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in union case type", unionCaseType.GetType());
                     break;
             }
         }
@@ -721,7 +719,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                 }
                 else
                 {
-                    Log.Debug("Symbol type {0} doesn't support in valsig", use.Symbol.GetType());
+                    Log.Debug("Symbol type {0} wasn't handled in valsig", use.Symbol.GetType());
                 }
             }
 
@@ -810,12 +808,12 @@ namespace CoCo.Analyser.Classifications.FSharp
                                         AddIdent(nameSyntax.Item2, classification);
                                         break;
                                     }
-                                    Log.Debug("Symbol type {0} doesn't support in pattern", symbolUse.Symbol.GetType());
+                                    Log.Debug("Symbol type {0} wasn't handled in pattern", symbolUse.Symbol.GetType());
                                 }
                                 break;
 
                             default:
-                                Log.Debug("Symbol type {0} doesn't support in pattern", symbolUse.Symbol.GetType());
+                                Log.Debug("Symbol type {0} wasn't handled in pattern", symbolUse.Symbol.GetType());
                                 break;
                         }
                     }
@@ -861,7 +859,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                             break;
 
                         default:
-                            Log.Debug("Ast type {0} doesn't support in constructor args", longIndent.Item4.GetType());
+                            Log.Debug("Ast type {0} wasn't handled in constructor args", longIndent.Item4.GetType());
                             break;
                     }
                     Visit(longIndent.longDotId);
@@ -937,7 +935,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in pattern", pattern.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in pattern", pattern.GetType());
                     break;
             }
         }
@@ -967,69 +965,37 @@ namespace CoCo.Analyser.Classifications.FSharp
 
                 if (use.Symbol is FSharpMemberOrFunctionOrValue some)
                 {
-                    if (some.IsConstructor)
-                    {
-                        if (TryClassifyType(some.ApparentEnclosingEntity, out var type))
-                        {
-                            AddIdent(item, type);
-                        }
-                        else
-                        {
-                            Log.Debug("FSharpEntity from .ctor isn't classified in long ident with dots");
-                        }
-                        continue;
-                    }
-
-                    // TODO: fields?
-                    var classification =
-                        some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
-                        some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodType :
-                        IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodType :
-                        some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
-                        some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
-                        some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
-                        some.FullType.IsFunctionType ? _localBindingType :
-                        some.IsValue && IsParameterByUse(some) ? _parameterType :
-                        some.IsValue ? _localBindingType :
-                        null;
-
-                    if (classification.IsNotNull())
+                    if (TryClassifySome(some, out var classification))
                     {
                         AddIdent(item, classification);
-                    }
-                    else
-                    {
-                        Log.Debug("FSharpMemberOrFunctionOrValue isn't classified in long ident with dots");
+                        continue;
                     }
                 }
-                else if (use.Symbol is FSharpEntity entity)
+                if (use.Symbol is FSharpEntity entity)
                 {
                     if (TryClassifyType(entity, out var type))
                     {
                         AddIdent(item, type);
-                    }
-                    else
-                    {
-                        Log.Debug("FSharpEntity doesn't classify in long ident with dots");
+                        continue;
                     }
                 }
-                else if (use.Symbol is FSharpField field)
+                if (use.Symbol is FSharpField field)
                 {
                     var type = field.DeclaringEntity.IsSome() && field.DeclaringEntity.Value.IsEnum
                         ? _enumFieldType
                         : _fieldType;
 
                     AddIdent(item, type);
+                    continue;
                 }
-                else if (use.Symbol is FSharpUnionCase)
+                if (use.Symbol is FSharpUnionCase)
                 {
                     // TODO: what's about fields?
                     AddIdent(item, _unionType);
+                    continue;
                 }
-                else
-                {
-                    Log.Debug("Symbol type {0} doesn't support in long ident with dots", use.Symbol.GetType());
-                }
+
+                Log.Debug("Symbol type {0} wasn't handled in long ident with dots", use.Symbol.GetType());
             }
         }
 
@@ -1118,7 +1084,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in type constraint", constraint.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in type constraint", constraint.GetType());
                     break;
             }
         }
@@ -1130,66 +1096,28 @@ namespace CoCo.Analyser.Classifications.FSharp
                 case Ast.SynExpr.Ident ident:
                     if (_cache.TryGetValue(ident.Item.idRange, out var use))
                     {
-                        if (use.Symbol is FSharpMemberOrFunctionOrValue some)
+                        if (use.Symbol is FSharpMemberOrFunctionOrValue some && TryClassifySome(some, out var classification))
                         {
-                            if (some.IsConstructor)
-                            {
-                                if (TryClassifyType(some.ApparentEnclosingEntity, out var type))
-                                {
-                                    AddIdent(ident.Item, type);
-                                }
-                                else
-                                {
-                                    Log.Debug("FSharpEntity from .ctor isn't classified in in ident expression");
-                                }
-                                return;
-                            }
-
-                            var classification =
-                                IsParameterByUse(some) ? _parameterType :
-                                some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
-                                some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodType :
-                                IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodType :
-                                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
-                                some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
-                                some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
-                                some.FullType.IsFunctionType ? _localBindingType :
-                                some.IsValue ? _localBindingType :
-                                null;
-
-                            if (classification.IsNotNull())
-                            {
-                                AddIdent(ident.Item, classification);
-                            }
-                            else
-                            {
-                                Log.Debug("FSharpMemberOrFunctionOrValue isn't classified in ident expression");
-                            }
+                            AddIdent(ident.Item, classification);
+                            return;
                         }
-                        else if (use.Symbol is FSharpParameter)
+                        if (use.Symbol is FSharpParameter)
                         {
                             AddIdent(ident.Item, _parameterType);
+                            return;
                         }
-                        else if (use.Symbol is FSharpUnionCase)
+                        if (use.Symbol is FSharpUnionCase)
                         {
                             // TODO: what's about fields?
                             AddIdent(ident.Item, _unionType);
+                            return;
                         }
-                        else if (use.Symbol is FSharpEntity entity)
+                        if (use.Symbol is FSharpEntity entity && TryClassifyType(entity, out var type))
                         {
-                            if (TryClassifyType(entity, out var type))
-                            {
-                                AddIdent(ident.Item, type);
-                            }
-                            else
-                            {
-                                Log.Debug("FSharpEntity doesn't classify in expression ident");
-                            }
+                            AddIdent(ident.Item, type);
+                            return;
                         }
-                        else
-                        {
-                            Log.Debug("Symbol type {0} doesn't support in ident expression", use.Symbol.GetType());
-                        }
+                        Log.Debug("Symbol type {0} wasn't handled in ident expression", use.Symbol.GetType());
                     }
                     break;
 
@@ -1498,7 +1426,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in expression", expression.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in expression", expression.GetType());
                     break;
             }
         }
@@ -1518,7 +1446,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     return;
                 }
             }
-            Log.Debug("Ast type {0} wasn't handled as typar", synTypar.GetType());
+            Log.Debug("Ast type {0} wasn't handled in typar", synTypar.GetType());
         }
 
         private void Visit(Ast.SynMemberSig memberSig)
@@ -1541,7 +1469,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in member sig", memberSig.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in member sig", memberSig.GetType());
                     break;
             }
         }
@@ -1578,7 +1506,7 @@ namespace CoCo.Analyser.Classifications.FSharp
                     break;
 
                 default:
-                    Log.Debug("Ast type {0} doesn't support in indexer arg", arg.GetType());
+                    Log.Debug("Ast type {0} wasn't handled in indexer arg", arg.GetType());
                     break;
             }
         }
@@ -1645,6 +1573,30 @@ namespace CoCo.Analyser.Classifications.FSharp
                 null;
 
             return type.IsNotNull();
+        }
+
+        private bool TryClassifySome(FSharpMemberOrFunctionOrValue some, out IClassificationType classification)
+        {
+            if (some.IsConstructor)
+            {
+                return TryClassifyType(some.ApparentEnclosingEntity, out classification);
+            }
+
+            // TODO: fields?
+            classification =
+                IsParameterByUse(some) ? _parameterType :
+                some.IsProperty || some.IsPropertyGetterMethod || some.IsPropertySetterMethod ? _propertyType :
+                some.IsExtensionMember && some.FullType.IsFunctionType ? _extensionMethodType :
+                IsExtension(some) && some.FullType.IsFunctionType ? _extensionMethodType :
+                some.IsInstanceMember && some.FullType.IsFunctionType ? _methodType :
+                some.IsMember && some.FullType.IsFunctionType ? _staticMethodType :
+                some.IsModuleValueOrMember && some.FullType.IsFunctionType ? _moduleFunctionType :
+                some.FullType.IsFunctionType ? _localBindingType :
+                some.IsValue && IsParameterByUse(some) ? _parameterType :
+                some.IsValue ? _localBindingType :
+                null;
+
+            return classification.IsNotNull();
         }
 
         private bool IsExtension(FSharpMemberOrFunctionOrValue some)
