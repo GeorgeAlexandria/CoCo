@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using CoCo.Analyser;
 using CoCo.Analyser.Classifications;
 using CoCo.Analyser.Classifications.FSharp;
+using CoCo.Analyser.Editor;
 using CoCo.Editor;
 using CoCo.Settings;
 using CoCo.Utils;
@@ -25,6 +27,11 @@ namespace CoCo.Providers
         /// </summary>
         private bool _wereSettingsSet;
 
+        /// <summary>
+        /// Determines that classifications in editor is enable or not
+        /// </summary>
+        private bool _isEnable;
+
         public FSharpClassifierProvider()
         {
             _classificationsInfo = new Dictionary<string, ClassificationInfo>(FSharpNames.All.Length);
@@ -34,6 +41,7 @@ namespace CoCo.Providers
             }
 
             ClassificationChangingService.Instance.ClassificationChanged += OnClassificationsChanged;
+            GeneralChangingService.Instance.EditorOptionsChanged += OnEditorOptionsChanged;
         }
 
         // Disable "Field is never assigned to..." compiler's warning. The field is assigned by MEF.
@@ -66,7 +74,8 @@ namespace CoCo.Providers
             }
 
             return textBuffer.Properties.GetOrCreateSingletonProperty(() => new FSharpTextBufferClassifier(
-                _classificationsInfo, ClassificationChangingService.Instance));
+                _classificationsInfo, ClassificationChangingService.Instance, _isEnable, GeneralChangingService.Instance,
+                _textDocumentFactoryService, textBuffer));
         }
 
         private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
@@ -77,6 +86,14 @@ namespace CoCo.Providers
                 {
                     _classificationsInfo[classificationType.Classification] = new ClassificationInfo(classificationType, info);
                 }
+            }
+        }
+
+        private void OnEditorOptionsChanged(EditorChangedEventArgs args)
+        {
+            if (args.Changes.TryGetValue(Languages.FSharp, out var isEnable))
+            {
+                _isEnable = isEnable;
             }
         }
     }

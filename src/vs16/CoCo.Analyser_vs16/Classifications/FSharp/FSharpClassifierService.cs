@@ -180,8 +180,19 @@ namespace CoCo.Analyser.Classifications.FSharp
             InitializeClassifications(classifications);
         }
 
+        private FSharpClassifierService(
+            IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService)
+        {
+            InitializeClassifications(classifications);
+            analyzingService.ClassificationChanged += OnClassificationsChanged;
+        }
+
+        internal static FSharpClassifierService GetClassifier(
+            IReadOnlyDictionary<string, ClassificationInfo> classifications, IClassificationChangingService analyzingService) =>
+            _instance ??= new FSharpClassifierService(classifications, analyzingService);
+
         internal static FSharpClassifierService GetClassifier(IReadOnlyDictionary<string, ClassificationInfo> classifications) =>
-            _instance ?? (_instance = new FSharpClassifierService(classifications));
+           _instance ??= new FSharpClassifierService(classifications);
 
         public List<ClassificationSpan> GetClassificationSpans(
             FSharpParseFileResults parseResults, FSharpCheckFileResults checkResults, SnapshotSpan span)
@@ -1521,6 +1532,9 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void AddIdents<T>(T longIds, IClassificationType classificationType) where T : IEnumerable<Ast.Ident>
         {
+            var info = _classificationOptions[classificationType];
+            if (info.IsDisabled || info.IsDisabledInEditor) return;
+
             var snapshot = _snapshotSpan.Snapshot;
             foreach (var item in longIds)
             {
@@ -1531,6 +1545,9 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         private void AddIdent(Ast.Ident ident, IClassificationType classificationType)
         {
+            var info = _classificationOptions[classificationType];
+            if (info.IsDisabled || info.IsDisabledInEditor) return;
+
             var snapshot = _snapshotSpan.Snapshot;
             var span = ident.idRange.ToSpan(snapshot);
             _result.Add(new ClassificationSpan(new SnapshotSpan(snapshot, span.Start, span.Length), classificationType));
@@ -1612,6 +1629,17 @@ namespace CoCo.Analyser.Classifications.FSharp
 
             return HasExtensionAttribute(some.Attributes) && some.DeclaringEntity.IsSome() &&
                 HasExtensionAttribute(some.DeclaringEntity.Value.Attributes);
+        }
+
+        private void OnClassificationsChanged(ClassificationsChangedEventArgs args)
+        {
+            foreach (var classification in _classifications)
+            {
+                if (args.ChangedClassifications.TryGetValue(classification, out var option))
+                {
+                    _classificationOptions[classification] = option;
+                }
+            }
         }
 
         private void InitializeClassifications(IReadOnlyDictionary<string, ClassificationInfo> classifications)

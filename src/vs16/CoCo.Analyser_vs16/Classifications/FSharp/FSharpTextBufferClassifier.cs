@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CoCo.Analyser.Editor;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
@@ -17,9 +18,34 @@ namespace CoCo.Analyser.Classifications.FSharp
     public class FSharpTextBufferClassifier : IClassifier, IListener
     {
         private readonly FSharpClassifierService _service;
+        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
+        private readonly IEditorChangingService _editorChangingService;
+        private readonly ITextBuffer _textBuffer;
 
+        private bool _isEnable;
         private (VersionStamp Version, List<ClassificationSpan> Spans) _cache;
         private ITextSnapshot _textSnapshot;
+
+        internal FSharpTextBufferClassifier(
+            Dictionary<string, ClassificationInfo> classifications,
+            IClassificationChangingService classificationChangingService,
+            bool isEnable,
+            IEditorChangingService editorChangingService,
+            ITextDocumentFactoryService textDocumentFactoryService,
+            ITextBuffer buffer)
+        {
+            _service = FSharpClassifierService.GetClassifier(classifications, classificationChangingService);
+            _isEnable = isEnable;
+
+            _textBuffer = buffer;
+            _textDocumentFactoryService = textDocumentFactoryService;
+
+            _isEnable = isEnable;
+            _editorChangingService = editorChangingService;
+
+            _editorChangingService.EditorOptionsChanged += OnEditorOptionsChanged;
+            _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
+        }
 
         internal FSharpTextBufferClassifier(
             Dictionary<string, ClassificationInfo> classifications,
@@ -32,6 +58,8 @@ namespace CoCo.Analyser.Classifications.FSharp
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
+            if (!_isEnable) return Array.Empty<ClassificationSpan>();
+
             var workspace = span.Snapshot.TextBuffer.GetWorkspace();
             if (workspace is null) return Array.Empty<ClassificationSpan>();
 
@@ -67,12 +95,35 @@ namespace CoCo.Analyser.Classifications.FSharp
             ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(new SnapshotSpan(_textSnapshot, 0, _textSnapshot.Length)));
         }
 
+        private void OnEditorOptionsChanged(EditorChangedEventArgs args)
+        {
+            // NOTE: if the state of editor option was changed => raise that classifications were changed for the current buffer
+            if (args.Changes.TryGetValue(Languages.FSharp, out var isEnable) && isEnable != _isEnable)
+            {
+                _isEnable = isEnable;
+
+                var span = new SnapshotSpan(_textBuffer.CurrentSnapshot, new Span(0, _textBuffer.CurrentSnapshot.Length));
+                ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
+            }
+        }
+
+        // TODO: it's not good idea to subscribe on text document disposed. Try to subscribe on text
+        // document closed.
+        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
+        {
+            if (e.TextDocument.TextBuffer == _textBuffer)
+            {
+                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
+                _editorChangingService.EditorOptionsChanged -= OnEditorOptionsChanged;
+            }
+        }
+
         private FSharpProjectOptions GetOptions(Workspace workspace, Document document)
         {
             if (string.IsNullOrWhiteSpace(document.Project.FilePath))
             {
                 var checker = FSharpChecker.Create(null, true, false, null, null, null);
-                var task = checker.GetProjectOptionsFromScript(document.FilePath, new SourceTextWrapper(document.GetTextAsync().Result), 
+                var task = checker.GetProjectOptionsFromScript(document.FilePath, new SourceTextWrapper(document.GetTextAsync().Result),
                     null, null, null, null, null, null, null, "CoCo_script_options");
                 return FSharpAsync.RunSynchronously(task, null, null).Item1;
             }

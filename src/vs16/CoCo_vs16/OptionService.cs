@@ -148,7 +148,7 @@ namespace CoCo
         {
             var option = new GeneralOption();
 
-            foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic })
+            foreach (var language in new[] { Languages.CSharp, Languages.VisualBasic, Languages.FSharp })
             {
                 var generalLanguage = new GeneralLanguage(language);
 
@@ -322,6 +322,7 @@ namespace CoCo
             var preffixLength = 5 + 1 +
                 (language.Equals(Languages.CSharp) ? 6 :
                 language.Equals(Languages.VisualBasic) ? 12 :
+                language.Equals(Languages.FSharp) ? 6 :
                 language.Length);
 
             if (name.Length < preffixLength + 5) throw new ArgumentException("Name must contains more than 11 characters");
