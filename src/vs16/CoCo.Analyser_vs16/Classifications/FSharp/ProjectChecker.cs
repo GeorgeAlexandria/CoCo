@@ -109,8 +109,6 @@ namespace CoCo.Analyser.Classifications.FSharp
                 _checkLock.EnterWriteLock();
 
                 _checkedSources ??= new HashSet<string>();
-
-                var isFirst = _checkedSources.Add(args.Item1);
                 _pendingSources?.Remove(args.Item1);
                 if (_listeners.IsNotNull() && _listeners.TryRemove(args.Item1, out var listeners))
                 {

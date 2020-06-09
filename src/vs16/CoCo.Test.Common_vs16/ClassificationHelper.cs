@@ -120,7 +120,7 @@ namespace CoCo.Test.Common
             if (language == ProgrammingLanguage.FSharp)
             {
                 return new FSharpTestFileClassifier(compilation as FSharpCompilationUnit,
-                    new FSharpTextBufferClassifier(classificationTypes, null));
+                    new FSharpTextBufferClassifier(classificationTypes));
             }
 
             if (language == ProgrammingLanguage.VisualBasic)

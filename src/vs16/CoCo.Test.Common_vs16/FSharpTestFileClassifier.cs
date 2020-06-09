@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using CoCo.Analyser.Classifications.FSharp;
+using CoCo.Analyser.Editor;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;

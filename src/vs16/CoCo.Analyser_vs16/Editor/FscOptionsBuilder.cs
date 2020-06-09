@@ -6,7 +6,7 @@ using CoCo.Utils;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 
-namespace CoCo.Analyser.Classifications.FSharp
+namespace CoCo.Analyser.Editor
 {
     internal class FscOptionsBuilder
     {

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using CoCo.Analyser.Editor;
+using CoCo.Analyser.Classifications;
+using CoCo.Analyser.Classifications.FSharp;
 using FSharp.Compiler;
 using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
@@ -13,18 +14,21 @@ using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
-namespace CoCo.Analyser.Classifications.FSharp
+namespace CoCo.Analyser.Editor
 {
-    public class FSharpTextBufferClassifier : IClassifier, IListener
+    internal class FSharpTextBufferClassifier : TextBufferClassifier, IListener
     {
         private readonly FSharpClassifierService _service;
-        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
-        private readonly IEditorChangingService _editorChangingService;
-        private readonly ITextBuffer _textBuffer;
 
-        private bool _isEnable;
         private (VersionStamp Version, List<ClassificationSpan> Spans) _cache;
         private ITextSnapshot _textSnapshot;
+
+        protected override string Language => Languages.FSharp;
+
+        internal FSharpTextBufferClassifier(Dictionary<string, ClassificationInfo> classifications) : base()
+        {
+            _service = FSharpClassifierService.GetClassifier(classifications);
+        }
 
         internal FSharpTextBufferClassifier(
             Dictionary<string, ClassificationInfo> classifications,
@@ -32,47 +36,15 @@ namespace CoCo.Analyser.Classifications.FSharp
             bool isEnable,
             IEditorChangingService editorChangingService,
             ITextDocumentFactoryService textDocumentFactoryService,
-            ITextBuffer buffer)
+            ITextBuffer buffer) : base(isEnable, editorChangingService, textDocumentFactoryService, buffer)
         {
             _service = FSharpClassifierService.GetClassifier(classifications, classificationChangingService);
-            _isEnable = isEnable;
-
-            _textBuffer = buffer;
-            _textDocumentFactoryService = textDocumentFactoryService;
-
-            _isEnable = isEnable;
-            _editorChangingService = editorChangingService;
-
-            _editorChangingService.EditorOptionsChanged += OnEditorOptionsChanged;
-            _textDocumentFactoryService.TextDocumentDisposed += OnTextDocumentDisposed;
         }
 
-        internal FSharpTextBufferClassifier(
-            Dictionary<string, ClassificationInfo> classifications,
-            IClassificationChangingService classificationChangingService)
+        public void Invoke()
         {
-            _service = FSharpClassifierService.GetClassifier(classifications);
-        }
-
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
-
-        public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
-        {
-            if (!_isEnable) return Array.Empty<ClassificationSpan>();
-
-            var workspace = span.Snapshot.TextBuffer.GetWorkspace();
-            if (workspace is null) return Array.Empty<ClassificationSpan>();
-
-            var document = workspace.GetDocument(span.Snapshot.AsText());
-            var versionStamp = document.GetTextVersionAsync().Result;
-            if (versionStamp.Equals(_cache.Version)) return _cache.Spans;
-
-            _textSnapshot = span.Snapshot;
-
-            var sourceText = document.GetTextAsync().Result;
-            var projectOptions = GetOptions(workspace, document);
-
-            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp, ProjectChecker.Instance);
+            _cache = default;
+            RaiseClassificationChanded(new SnapshotSpan(_textSnapshot, 0, _textSnapshot.Length));
         }
 
         public List<ClassificationSpan> GetClassificationSpans(FSharpProjectOptions projectOptions,
@@ -89,33 +61,18 @@ namespace CoCo.Analyser.Classifications.FSharp
             return spans;
         }
 
-        public void Invoke()
+        protected override IList<ClassificationSpan> GetClassificationSpans(Workspace workspace, SnapshotSpan span)
         {
-            _cache = default;
-            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(new SnapshotSpan(_textSnapshot, 0, _textSnapshot.Length)));
-        }
+            var document = workspace.GetDocument(span.Snapshot.AsText());
+            var versionStamp = document.GetTextVersionAsync().Result;
+            if (versionStamp.Equals(_cache.Version)) return _cache.Spans;
 
-        private void OnEditorOptionsChanged(EditorChangedEventArgs args)
-        {
-            // NOTE: if the state of editor option was changed => raise that classifications were changed for the current buffer
-            if (args.Changes.TryGetValue(Languages.FSharp, out var isEnable) && isEnable != _isEnable)
-            {
-                _isEnable = isEnable;
+            _textSnapshot = span.Snapshot;
 
-                var span = new SnapshotSpan(_textBuffer.CurrentSnapshot, new Span(0, _textBuffer.CurrentSnapshot.Length));
-                ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
-            }
-        }
+            var sourceText = document.GetTextAsync().Result;
+            var projectOptions = GetOptions(workspace, document);
 
-        // TODO: it's not good idea to subscribe on text document disposed. Try to subscribe on text
-        // document closed.
-        private void OnTextDocumentDisposed(object sender, TextDocumentEventArgs e)
-        {
-            if (e.TextDocument.TextBuffer == _textBuffer)
-            {
-                _textDocumentFactoryService.TextDocumentDisposed -= OnTextDocumentDisposed;
-                _editorChangingService.EditorOptionsChanged -= OnEditorOptionsChanged;
-            }
+            return GetClassificationSpans(projectOptions, span, document.FilePath, sourceText, versionStamp, ProjectChecker.Instance);
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Document document)

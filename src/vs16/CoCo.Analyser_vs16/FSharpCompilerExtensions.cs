@@ -1,10 +1,9 @@
 ﻿using FSharp.Compiler;
-using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.Text;
 
-namespace CoCo.Analyser.Classifications.FSharp
+namespace CoCo.Analyser
 {
-    internal static class FSharpExtensions
+    internal static class FSharpCompilerExtensions
     {
         public static Range.range ToRange(this SnapshotSpan span)
         {
@@ -30,7 +29,5 @@ namespace CoCo.Analyser.Classifications.FSharp
 
             return new Span(startPosition, endPosition - startPosition);
         }
-
-        public static bool IsSome<T>(this FSharpOption<T> option) => !(option is null);
     }
 }
