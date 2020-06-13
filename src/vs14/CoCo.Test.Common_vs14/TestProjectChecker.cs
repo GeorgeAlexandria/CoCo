@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using CoCo.Analyser.Classifications.FSharp;
-using FSharp.Compiler;
-using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.FSharp.Collections;
+using Microsoft.FSharp.Compiler.SourceCodeServices;
 using Microsoft.FSharp.Control;
-using Microsoft.FSharp.Core;
 
 namespace CoCo.Test.Common
 {
@@ -28,9 +24,9 @@ namespace CoCo.Test.Common
             SourceText itemContent, VersionStamp itemVersion)
         {
             // TODO: would be better to use a custom ReferenceResolver implementaion?
-            var checker = FSharpChecker.Create(null, null, null, null, null, null);
+            var checker = FSharpChecker.Create(null, null, null);
             var result = checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(),
-                new SourceTextWrapper(itemContent), projectOptions, null, "CoCo_Classifications");
+                itemContent.ToString(), projectOptions, null, null);
             var (parseResult, checkAnswer) = FSharpAsync.RunSynchronously(result, null, null).ToValueTuple();
 
             if (checkAnswer.IsSucceeded && checkAnswer is FSharpCheckFileAnswer.Succeeded succeeded)
@@ -72,17 +68,13 @@ namespace CoCo.Test.Common
 
             return new FSharpProjectOptions(
                 project.ProjectPath,
-                Guid.NewGuid().ToString("D").ToLowerInvariant(),
                 project.CompileItems.ToArray(),
                 options.ToArray(),
                 referencedProjectsOptions.ToArray(),
                 false,
-                SourceFile.MustBeSingleFileProject(Path.GetFileName(project.ProjectPath)),
+                false/*SourceFile.MustBeSingleFileProject(Path.GetFileName(project.ProjectPath))*/,
                 DateTime.Now,
-                null,
-                FSharpList<Tuple<Range.range, string>>.Empty,
-                null,
-                FSharpOption<long>.Some(VersionStamp.Default.GetHashCode()));
+                null);
         }
     }
 }

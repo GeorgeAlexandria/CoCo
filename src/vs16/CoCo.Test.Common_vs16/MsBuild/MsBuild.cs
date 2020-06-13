@@ -9,7 +9,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 
-namespace CoCo.MsBuild
+namespace CoCo.Test.Common.MsBuild
 {
     // NOTE: to know more about input arguments in a common tasks just look at
     // https://github.com/Microsoft/msbuild/blob/master/src/Tasks/Microsoft.Common.CurrentVersion.targets

@@ -37,7 +37,7 @@ namespace CoCo.Analyser.Classifications.FSharp
             public ProjectCheckInfo()
             {
                 // TODO: would be better to use a custom ReferenceResolver implementaion?
-                _checker = FSharpChecker.Create(null, true, false, null, null, null);
+                _checker = FSharpChecker.Create(null, true, false, null, null);
                 _checker.ProjectChecked.AddHandler(OnProjectChecked);
                 _checker.FileChecked.AddHandler(OnSourceChecked);
 
@@ -47,14 +47,14 @@ namespace CoCo.Analyser.Classifications.FSharp
             public FSharpAsync<Tuple<FSharpParseFileResults, FSharpCheckFileAnswer>> ParseAndCheckFileInProject(
               FSharpProjectOptions projectOptions, string itemPath, VersionStamp itemVersion, SourceText itemContent)
             {
-                return _checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(), new SourceTextWrapper(itemContent),
+                return _checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(), itemContent.ToString(),
                     projectOptions, null, "CoCo_Classifications");
             }
 
             public bool TryGetRecentResults(FSharpProjectOptions projectOptions, string itemPath, VersionStamp itemVersion,
                 SourceText itemContent, out (FSharpParseFileResults, FSharpCheckFileResults) result)
             {
-                var recentResult = _checker.TryGetRecentCheckResultsForFile(itemPath, projectOptions, new SourceTextWrapper(itemContent),
+                var recentResult = _checker.TryGetRecentCheckResultsForFile(itemPath, projectOptions, itemContent.ToString(),
                     "CoCo_GetRecent");
                 if (recentResult.IsSome() && recentResult.Value.Item3 == itemVersion.GetHashCode())
                 {
@@ -159,9 +159,9 @@ namespace CoCo.Analyser.Classifications.FSharp
         {
             if (string.IsNullOrWhiteSpace(document.Project.FilePath))
             {
-                var checker = FSharpChecker.Create(null, true, false, null, null, null);
-                var task = checker.GetProjectOptionsFromScript(document.FilePath, new SourceTextWrapper(document.GetTextAsync().Result),
-                    null, null, null, null, null, null, null, "CoCo_script_options");
+                var checker = FSharpChecker.Create(null, true, false, null, null);
+                var task = checker.GetProjectOptionsFromScript(document.FilePath, document.GetTextAsync().Result.ToString(),
+                    null, null, null, null, null, null, "CoCo_script_options");
                 return FSharpAsync.RunSynchronously(task, null, null).Item1;
             }
 
@@ -172,11 +172,6 @@ namespace CoCo.Analyser.Classifications.FSharp
             SourceText itemContent, VersionStamp itemVersion)
         {
             // TODO: check must be splited by project path, by target framework and configuration
-
-            if (info is null)
-            {
-                info = new ProjectCheckInfo();
-            }
 
             // NOTE:
             // if source was pending or listening => start to listen it
@@ -219,28 +214,6 @@ namespace CoCo.Analyser.Classifications.FSharp
             }
 
             return default;
-        }
-
-        private HashSet<string> GetSources(FSharpProjectOptions projectOptions)
-        {
-            var set = new HashSet<string>();
-            void Collect(FSharpProjectOptions options)
-            {
-                foreach (var item in options.SourceFiles)
-                {
-                    if (item.EndsWith(".fs") || item.EndsWith(".fsi"))
-                    {
-                        set.Add(item);
-                    }
-                }
-                foreach (var item in options.ReferencedProjects)
-                {
-                    Collect(item.Item2);
-                }
-            }
-
-            Collect(projectOptions);
-            return set;
         }
 
         private FSharpProjectOptions GetOptions(Workspace workspace, Project project)
@@ -286,6 +259,28 @@ namespace CoCo.Analyser.Classifications.FSharp
                 FSharpList<Tuple<Range.range, string>>.Empty,
                 null,
                 FSharpOption<long>.Some(project.Version.GetHashCode()));
+        }
+
+        private HashSet<string> GetSources(FSharpProjectOptions projectOptions)
+        {
+            var set = new HashSet<string>();
+            void Collect(FSharpProjectOptions options)
+            {
+                foreach (var item in options.SourceFiles)
+                {
+                    if (item.EndsWith(".fs") || item.EndsWith(".fsi"))
+                    {
+                        set.Add(item);
+                    }
+                }
+                foreach (var item in options.ReferencedProjects)
+                {
+                    Collect(item.Item2);
+                }
+            }
+
+            Collect(projectOptions);
+            return set;
         }
     }
 }

@@ -8,9 +8,10 @@
     <OutputPath>..\..\bin\CoCo.Test_vs16\$(Configuration)\</OutputPath>
     <WarningsAsErrors />
     <LangVersion>latest</LangVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj" />
     <ProjectReference Include="..\CoCo.Analyser_vs16\CoCo.Analyser_vs16.csproj" />
     <ProjectReference Include="..\CoCo.Test.Common_vs16\CoCo.Test.Common_vs16.csproj" />
   </ItemGroup>

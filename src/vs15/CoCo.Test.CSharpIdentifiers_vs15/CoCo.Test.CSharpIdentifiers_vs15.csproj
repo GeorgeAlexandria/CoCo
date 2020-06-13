@@ -9,7 +9,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj" />
     <ProjectReference Include="..\CoCo.Analyser_vs15\CoCo.Analyser_vs15.csproj" />
     <ProjectReference Include="..\CoCo.Test.Common_vs15\CoCo.Test.Common_vs15.csproj" />
   </ItemGroup>

@@ -10,11 +10,13 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" />
-    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj" />
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
     <ProjectReference Include="..\CoCo.Analyser_vs15\CoCo.Analyser_vs15.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="15.9.20" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.9.20" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
@@ -41,6 +43,7 @@
   <ItemGroup>
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Test.Common_vs16\obj\**" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Test.Common_vs16\Properties\AssemblyInfo.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo.Test.Common_vs16\TestProjectChecker.cs" />
 
     <Compile Include="..\..\vs16\CoCo.Test.Common_vs16\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />

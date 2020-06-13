@@ -9,21 +9,16 @@ using CoCo.Analyser.Classifications.VisualBasic;
 using CoCo.Analyser.Editor;
 using CoCo.Logging;
 using CoCo.Utils;
-using FSharp.Compiler;
-using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.VisualBasic;
-using Microsoft.FSharp.Collections;
-using Microsoft.FSharp.Core;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Project = CoCo.MsBuild.ProjectInfo;
+using Project = CoCo.Test.Common.MsBuild.ProjectInfo;
 
 namespace CoCo.Test.Common
 {
-
     public static class ClassificationHelper
     {
         private static readonly List<SimplifiedClassificationSpan> _empty = new List<SimplifiedClassificationSpan>();
@@ -145,7 +140,7 @@ namespace CoCo.Test.Common
             var roslynCompilations = ExtractRoslynCompilationUnits(project);
             if (project.Language.EqualsNoCase("f#"))
             {
-                FSharpCompilationUnit compilation = GetOptions(project);
+                FSharpCompilationUnit compilation = TestProjectChecker.Instance.GetOptions(project);
 
                 var compilations = new CompilationUnit[roslynCompilations.Length + 1];
                 Array.Copy(roslynCompilations, 0, compilations, 0, roslynCompilations.Length);
@@ -220,50 +215,6 @@ namespace CoCo.Test.Common
                         .AddReferences(references)
                 };
             }
-        }
-
-        private static FSharpProjectOptions GetOptions(Project project)
-        {
-            var referencedProjectsOptions = new List<Tuple<string, FSharpProjectOptions>>();
-            foreach (var referencedProject in project.ProjectReferences)
-            {
-                if (string.Equals(project.Language, "F#"))
-                {
-                    var projectOptions = GetOptions(referencedProject);
-                    referencedProjectsOptions.Add((referencedProject.OutputFilePath, projectOptions).ToTuple());
-                }
-            }
-
-            var options = new List<string>();
-            foreach (var item in new FscOptionsBuilder(project.ProjectPath).Build())
-            {
-                if (!item.StartsWith("-r:"))
-                {
-                    options.Add(item);
-                }
-            }
-            foreach (var item in project.ProjectReferences)
-            {
-                options.Add("-r:" + item.OutputFilePath);
-            }
-            foreach (var item in project.AssemblyReferences)
-            {
-                options.Add("-r:" + item);
-            }
-
-            return new FSharpProjectOptions(
-                project.ProjectPath,
-                Guid.NewGuid().ToString("D").ToLowerInvariant(),
-                project.CompileItems.ToArray(),
-                options.ToArray(),
-                referencedProjectsOptions.ToArray(),
-                false,
-                SourceFile.MustBeSingleFileProject(Path.GetFileName(project.ProjectPath)),
-                DateTime.Now,
-                null,
-                FSharpList<Tuple<Range.range, string>>.Empty,
-                null,
-                FSharpOption<long>.Some(VersionStamp.Default.GetHashCode()));
         }
 
         private static bool IsUnknownClassification(string name) =>

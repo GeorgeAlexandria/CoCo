@@ -28,9 +28,9 @@ namespace CoCo.Test.Common
             SourceText itemContent, VersionStamp itemVersion)
         {
             // TODO: would be better to use a custom ReferenceResolver implementaion?
-            var checker = FSharpChecker.Create(null, null, null, null, null, null);
+            var checker = FSharpChecker.Create(null, null, null, null, null);
             var result = checker.ParseAndCheckFileInProject(itemPath, itemVersion.GetHashCode(),
-                new SourceTextWrapper(itemContent), projectOptions, null, "CoCo_Classifications");
+                itemContent.ToString(), projectOptions, null, "CoCo_Classifications");
             var (parseResult, checkAnswer) = FSharpAsync.RunSynchronously(result, null, null).ToValueTuple();
 
             if (checkAnswer.IsSucceeded && checkAnswer is FSharpCheckFileAnswer.Succeeded succeeded)

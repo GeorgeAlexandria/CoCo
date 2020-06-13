@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 
-namespace CoCo.MsBuild
+namespace CoCo.Test.Common.MsBuild
 {
     [DebuggerDisplay("{ProjectName}")]
     public sealed class ProjectInfo

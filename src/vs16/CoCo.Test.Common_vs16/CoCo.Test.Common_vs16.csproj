@@ -12,12 +12,14 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" />
-    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj" />
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
     <ProjectReference Include="..\CoCo.Analyser_vs16\CoCo.Analyser_vs16.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="16.6.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.6.0" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.6.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="3.0.0" />

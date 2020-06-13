@@ -6,7 +6,7 @@ using CoCo.Utils;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
 
-namespace CoCo.MsBuild
+namespace CoCo.Test.Common.MsBuild
 {
     internal sealed class MsBuildEngine : IBuildEngine5
     {

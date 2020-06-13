@@ -1,14 +1,13 @@
-﻿using CoCo.MsBuild;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace CoCo.Test.Common
 {
     [TestFixture]
     public abstract class CommonTests
     {
-        protected abstract ProjectInfo ProjectInfo { get; }
+        protected abstract MsBuild.ProjectInfo ProjectInfo { get; }
 
-        public static ProjectInfo SetUp(ref string projectPath)
+        public static MsBuild.ProjectInfo SetUp(ref string projectPath)
         {
             projectPath = TestHelper.GetPathRelativeToTest(projectPath);
             return MsBuild.MsBuild.GetProject(projectPath);

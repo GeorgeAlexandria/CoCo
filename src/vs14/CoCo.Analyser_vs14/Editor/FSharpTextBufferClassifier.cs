@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using CoCo.Analyser.Classifications;
 using CoCo.Analyser.Classifications.FSharp;
-using FSharp.Compiler.SourceCodeServices;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.FSharp.Compiler.SourceCodeServices;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 

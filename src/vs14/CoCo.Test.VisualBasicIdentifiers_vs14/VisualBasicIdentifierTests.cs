@@ -1,5 +1,5 @@
-﻿using CoCo.MsBuild;
-using CoCo.Test.Common;
+﻿using CoCo.Test.Common;
+using CoCo.Test.Common.MsBuild;
 
 namespace CoCo.Test.VisualBasicIdentifiers
 {

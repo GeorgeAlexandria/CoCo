@@ -13,6 +13,8 @@
     <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FSharp.Compiler.Service" Version="27.0.1" />
+    <PackageReference Include="Microsoft.Build" Version="15.9.20" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
@@ -34,6 +36,9 @@
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\ClassificationHelper.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\CSharp\CSharpClassifierService.cs" />
     <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\VisualBasic\VisualBasicClassifierService.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\FSharp\FSharpClassifierService.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\FSharp\ProjectChecker.cs" />
+    <LinkedItemsToExclude Include="..\..\vs16\CoCo.Analyser_vs16\Classifications\FSharp\SourceTextWrapper.cs" />
 
     <Compile Include="..\..\vs16\CoCo.Analyser_vs16\**\*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" Exclude="@(LinkedItemsToExclude)" />
     <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />

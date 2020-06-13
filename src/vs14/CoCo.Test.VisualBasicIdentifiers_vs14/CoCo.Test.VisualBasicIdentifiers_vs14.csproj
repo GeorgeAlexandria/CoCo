@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common\CoCo.MsBuild\CoCo.MsBuild.csproj" />
     <ProjectReference Include="..\CoCo.Analyser_vs14\CoCo.Analyser_vs14.csproj" />
     <ProjectReference Include="..\CoCo.Test.Common_vs14\CoCo.Test.Common_vs14.csproj" />
   </ItemGroup>

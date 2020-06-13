@@ -9,7 +9,6 @@
             Language = language;
         }
 
-
         public abstract bool TryGetSourceCode(string compileItemPath, out string code);
     }
 }

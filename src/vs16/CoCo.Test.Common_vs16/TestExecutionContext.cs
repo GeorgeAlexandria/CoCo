@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CoCo.MsBuild;
 
 namespace CoCo.Test.Common
 {
@@ -7,9 +6,9 @@ namespace CoCo.Test.Common
     {
         private readonly List<SimplifiedClassificationInfo> _infos = new List<SimplifiedClassificationInfo>();
         private readonly string _path;
-        private readonly ProjectInfo _projectInfo;
+        private readonly MsBuild.ProjectInfo _projectInfo;
 
-        public TestExecutionContext(string path, ProjectInfo projectInfo)
+        public TestExecutionContext(string path, MsBuild.ProjectInfo projectInfo)
         {
             _path = path;
             _projectInfo = projectInfo;
