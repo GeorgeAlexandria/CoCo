@@ -5,13 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CoCo.Analyser_vs14")]
-[assembly: AssemblyDescription("Contains logic of items analysis")]
+[assembly: AssemblyTitle("CoCo.Test.Identifiers_vs16")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("CoCo_vs14")]
-[assembly: InternalsVisibleTo("CoCo.Test.Identifiers_vs14")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -19,5 +17,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("1bdaac0f-3448-4cf5-a740-b5367acc8fe6")]
-
+[assembly: Guid("0b57bf2d-6001-4317-9527-96c7cf4b20d1")]

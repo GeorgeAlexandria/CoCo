@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <RootNamespace>CoCo.Test.Identifiers</RootNamespace>
+    <OutputPath>..\..\bin\CoCo.Test_vs16\$(Configuration)\</OutputPath>
+    <WarningsAsErrors />
+    <LangVersion>latest</LangVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" />
+    <ProjectReference Include="..\..\common\CoCo.Utils\CoCo.Utils.csproj" />
+    <ProjectReference Include="..\CoCo.Analyser_vs16\CoCo.Analyser_vs16.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build" Version="16.6.0" />
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.6.0" />
+    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.6.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Compilers" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.EditorFeatures.Text" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="3.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="16.0.467" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="16.0.467" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs" Link="Properties\AssemblyInfoCommon.cs" />
+  </ItemGroup>
+  
+</Project>
