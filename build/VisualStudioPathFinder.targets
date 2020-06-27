@@ -1,0 +1,13 @@
+<Project>
+  <UsingTask TaskName="GetVsInstallationPath" AssemblyFile="$(MsBuildThisFileDirectory)lib\VisualStudioPathFinder.dll" />
+
+  <Target Name="RetrieveVsIntallationPath" Condition="$(VsLaunchFile)==''">
+    <GetVsInstallationPath VsMajorVersion="$(VsMajorVersion)">
+      <Output TaskParameter="InstallationPath" PropertyName="VsLaunchFile" />
+    </GetVsInstallationPath> 
+
+    <PropertyGroup>
+      <VsLaunchArguments>/rootsuffix Exp /log</VsLaunchArguments>
+    </PropertyGroup>
+  </Target>
+</Project>

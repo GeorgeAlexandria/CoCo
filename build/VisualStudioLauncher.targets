@@ -1,0 +1,23 @@
+<Project>
+  <Import Project="VisualStudioPathFinder.targets" />
+
+  <UsingTask TaskName="RaiseExec" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <FilePath ParameterType="System.String" Required="true" />
+      <Arguments ParameterType="System.String" Required="false" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+          System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo(FilePath, Arguments);
+          info.UseShellExecute = true;
+          System.Diagnostics.Process.Start(info);
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="Run Visual Studio" AfterTargets="RetrieveVsIntallationPath">
+    <RaiseExec FilePath="&quot;$(VsLaunchFile)&quot;" Arguments="$(VsLaunchArguments)" />
+  </Target>
+</Project>

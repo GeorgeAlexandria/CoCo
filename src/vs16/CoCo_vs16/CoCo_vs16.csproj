@@ -16,6 +16,14 @@
     <OutputPath>..\..\bin\CoCo_vs16\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
+  <!-- Workaround: new versions of vs16 don't pass executable file path from properties to build, also they use RunCommand values
+  that were written staticaly in the .proj file. So use external target that will evaluate deployed visual studio version and launch it-->
+  <PropertyGroup>
+    <VsMajorVersion>16</VsMajorVersion>
+    <RunCommand>$(MsBuildBinPath)\MSBuild.exe</RunCommand>
+    <RunArguments>$(MsBuildThisFileDirectory)..\..\..\build\VisualStudioLauncher.targets -p:VsMajorVersion=$(VsMajorVersion)</RunArguments>
+  </PropertyGroup>
+
   <!--Workaround: to correctly build vsix project in sdk style sdk targets must be loaded directly and must be loaded before vssdk targets-->
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -27,7 +35,7 @@
       <VSIXSourceItem Include="$([System.String]::Format('$(OutputPath)Newtonsoft.Json.dll'))" ForceIncludeInVSIX="True" />
     </ItemGroup>
   </Target>
-  
+
   <ItemGroup>
     <PackageReference Include="EnvDTE100" Version="10.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="16.0.467" />
@@ -43,7 +51,7 @@
   <ItemGroup>
     <Reference Include="System.Xaml" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\..\common\CoCo.Logging\CoCo.Logging.csproj" Condition="'$(Configuration)' != 'Release'" />
     <ProjectReference Include="..\..\common\CoCo.Settings\CoCo.Settings.csproj" />

@@ -4,16 +4,18 @@
   <UsingTask TaskName="GetExtensionsPath" AssemblyFile="$(VsSDKAssemblyFile)" />
   <UsingTask TaskName="GetDeploymentPathFromVsixManifest" AssemblyFile="$(VsSDKAssemblyFile)" />
 
+  <Import Project="$(MsBuildThisFileDirectory)VisualStudioPathFinder.targets" />
+
   <Target
     Name="CorrectVsixDeploymentPath"
     Condition="'$(DeployExtension)'=='true' and '$(CreateVsixContainer)'=='true'"
+    DependsOnTargets="RetrieveVsIntallationPath"
     AfterTargets="GetVsixDeploymentPath" BeforeTargets="FindExistingDeploymentPath">
 
     <!-- Workaround: microsoft.vssdk.buildtask determines deployment path by the current launching version of visual studio, so 
-    to determine path which is relative by runnable visual studio version use run command or start program-->
+    to determine path which is relative by runnable visual studio version use VsLaunchFile from custom target that determines visual studio path-->
     <PropertyGroup>
-      <DeployTargetInstallationDirectory Condition="$(RunCommand)!=''">$([System.IO.Directory]::GetParent($(RunCommand)))</DeployTargetInstallationDirectory>
-      <DeployTargetInstallationDirectory Condition="$(StartProgram)!='' and $(RunCommand)==''">$([System.IO.Directory]::GetParent($(StartProgram)))</DeployTargetInstallationDirectory>
+      <DeployTargetInstallationDirectory Condition="$(VsLaunchFile)!=''">$([System.IO.Directory]::GetParent($(VsLaunchFile)))</DeployTargetInstallationDirectory>
     </PropertyGroup>
 
     <GetExtensionsPath
